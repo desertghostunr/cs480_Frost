@@ -163,3 +163,46 @@ GLint Shader::GetUniformLocation(const char* pUniformName)
 
     return Location;
 }
+
+// private member functions
+
+// LOAD SHADER SOURCE //////////////////
+/***************************************
+
+@brief loadShaderSource
+
+@details Loads a shaders source code from the file specified by fileName
+         and stores it in shaderSrcStr
+
+@param in: fileName: the name of the file to open
+
+@param out: shaderSrcStr: the string to store the shader in
+
+@notes The shader must compiled seperately.
+
+***************************************/
+bool Shader::loadShaderSource
+( 
+  const std::string& fileName, //the name of the file to get the shader from
+  std::string& shaderSrcStr //the shader src code to send out
+)
+{
+    std::ifstream fileIn( fileName.c_str() );
+
+    if( fileIn.fail( ) )
+    {
+        fileIn.close( );
+        return false;
+    }
+
+    shaderSrcStr = std::string( std::istreambuf_iterator<char>( fileIn ), std::istreambuf_iterator<char>( ) );
+
+    fileIn.close( );
+
+    if( shaderSrcStr.empty( ) )
+    {
+        return false;
+    }
+
+    return true;
+}

@@ -62,7 +62,7 @@ Object::Object()
 
   angle = 0.0f;
 
-  orbitalAngle = 0.0f; // Added by Andrew Frost 09/01/2016
+  orbitalAngle = 0.0f;
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -82,9 +82,10 @@ Object::~Object()
 void Object::Update(unsigned int dt)
 {
   angle += dt * M_PI/1000;
-  orbitalAngle -= dt * M_PI/5000; // Added by Andrew Frost 09/01/2016
-  model = glm::translate( glm::mat4(1.0f), // Added by Andrew Frost 09/01/2016
-  glm::vec3(8.0f * cos( orbitalAngle ), 0.0f, 8.0f * sin( orbitalAngle) ) ) // Added by Andrew Frost 09/01/2016
+  orbitalAngle -= dt * M_PI/5000;
+  model = glm::translate( glm::mat4(1.0f), 
+                          glm::vec3(7.5f * cos( orbitalAngle ), 0.0f,
+                                    7.5f * sin( orbitalAngle) ) )
    * glm::rotate( glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));  
 }
 

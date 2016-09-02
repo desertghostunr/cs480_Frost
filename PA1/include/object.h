@@ -22,8 +22,7 @@ class Object
     GLuint IB;
 
     float angle;
-    //added
-    float orbitalAngle; // Added by Andrew Frost 09/01/2016
+    float orbitalAngle; 
 
 };
 
