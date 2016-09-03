@@ -34,7 +34,9 @@ int main(int argc, char **argv)
     cout <<" are specified."<< endl;
     cout <<"Example usage: " << endl;
     cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
-    cout <<" -f shaders/cubeFragmentShader.glsl" << endl << endl;
+    cout <<"-f shaders/cubeFragmentShader.glsl" << endl << endl;
+
+    cout <<"Run ./Tutorial --h for help with using the program."<<endl<<endl;
 
     delete engine;
     engine = NULL;
@@ -42,7 +44,7 @@ int main(int argc, char **argv)
   }
 
   //initialize engine and run it
-  if(!engine->Initialize())
+  if(!engine->Initialize(shaderVector))
   {
     printf("The engine failed to start.\n");
     delete engine;
@@ -140,7 +142,7 @@ bool ProcessCommandLineParameters
 
       cout <<"Example usage: " << endl;
       cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
-      cout <<" -f shaders/cubeFragmentShader.glsl" << endl << endl;
+      cout <<"-f shaders/cubeFragmentShader.glsl" << endl << endl;
     }
     else 
     {
@@ -152,3 +154,4 @@ bool ProcessCommandLineParameters
   return ( vertShaderGiven && fragShaderGiven );
 
 }
+

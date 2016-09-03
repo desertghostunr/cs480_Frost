@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 #include "graphics_headers.h"
@@ -14,7 +15,8 @@ class Graphics
   public:
     Graphics();
     ~Graphics();
-    bool Initialize(int width, int height);
+    bool Initialize(int width, int height, 
+                    const std::vector<pair<GLenum, std::string>>& shaderInfo);
     void Update(unsigned int dt);
     void Render();
 

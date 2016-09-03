@@ -82,7 +82,7 @@ Object::~Object()
 void Object::Update(unsigned int dt)
 {
   angle += dt * M_PI/1000;
-  orbitalAngle -= dt * M_PI/5000;
+  orbitalAngle -= dt * M_PI/8500;
   model = glm::translate( glm::mat4(1.0f), 
                           glm::vec3(7.5f * cos( orbitalAngle ), 0.0f,
                                     7.5f * sin( orbitalAngle) ) )
