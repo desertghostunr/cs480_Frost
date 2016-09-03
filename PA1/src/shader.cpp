@@ -160,22 +160,24 @@ bool Shader::loadShaderSource
   std::string& shaderSrcStr //the shader src code to send out
 )
 {
-    std::ifstream fileIn( fileName.c_str() );
+  std::ifstream fileIn( fileName.c_str() );
 
-    if( fileIn.fail( ) )
-    {
-        fileIn.close( );
-        return false;
-    }
+  if( fileIn.fail( ) ) 
+  {
+      fileIn.close( );
+      return false;
+  }
 
-    shaderSrcStr = std::string( std::istreambuf_iterator<char>( fileIn ), std::istreambuf_iterator<char>( ) );
+  //read the entire shader in
+  shaderSrcStr = std::string( std::istreambuf_iterator<char>( fileIn ), 
+                                           std::istreambuf_iterator<char>( ) );
 
-    fileIn.close( );
+  fileIn.close( );
 
-    if( shaderSrcStr.empty( ) )
-    {
-        return false;
-    }
+  if( shaderSrcStr.empty( ) )
+  {
+      return false;
+  }
 
-    return true;
+  return true;
 }
