@@ -2,7 +2,6 @@
 #define SHADER_H
 
 #include <vector>
-#include <iostream>
 #include<fstream>
 #include <string>
 
@@ -15,7 +14,7 @@ class Shader
     ~Shader();
     bool Initialize();
     void Enable();
-    bool AddShader(GLenum ShaderType);    
+    bool AddShader(GLenum ShaderType); 
     bool Finalize();
     GLint GetUniformLocation(const char* pUniformName);
 
