@@ -13,14 +13,14 @@ sudo apt-get install libglew-dev libglm-dev libsdl2-dev
 ```
 
 ## Building and Running
-Please build this project using CMake. It is recommended to create build directory and to build the project there.
+Please build this project using CMake. It is recommended to create a build directory and to build the project there.
 
 Running the make in a separate directory will allow easy cleanup of the build data, and an easy way to prevent unnecessary data to be added to the git repository.
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get may be necessary.
 
-Example build and running:
+Example building and running:
 
 ```bash
 mkdir build
@@ -31,9 +31,9 @@ make
 ```
 
 ### Specific Instructions on Running
-Running the program requires specifying a vertex shader and a fragment shader. These shaders should have been moved into a directory under build named shaders.
+Running the program requires specifying a vertex shader and a fragment shader. Shaders will be found under a directory named shaders in the directory where the program was built. This must be included in the path name when specifying the shaders to be used.
 
-The program has three options to accomplish this: -v, -f, --h.
+The program has three options that can be used: -v, -f, --h.
 
 -v specifies the file path of the vertex shader.
 
@@ -41,14 +41,18 @@ The program has three options to accomplish this: -v, -f, --h.
 
 --h brings up a series of instructions for help using the program.
 
-The file path for the specified shader must come directly after the option identifier. If one of the option commands is found where a file path is expected the program will terminate.
+When running the program both a vertex shader and a fragment shader must be specified. Failure to specify both shaders will lead to the program to terminate.
+
+The file path for the specified shader must come directly after the option identifier. If one of the option identifiers is found where a file path is expected the program will terminate.
 
 Running this program is done in the following format:
 
-```bash
+
 ./Tutorial -[SHADER_OPTION] [SHADER_FILE_PATH] -[SHADER_OPTION] [SHADER_FILE_PATH]  
-```
+
+
 An example run command would look like:
+
 ```bash
 ./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl
 ```
