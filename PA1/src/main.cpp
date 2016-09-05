@@ -143,6 +143,9 @@ bool ProcessCommandLineParameters
       cout <<"Example usage: " << endl;
       cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
       cout <<"-f shaders/cubeFragmentShader.glsl" << endl << endl;
+
+      cout<<"Please see README.md in the project directory for any additional";
+      cout<<"information."<<endl<<endl;
     }
     else 
     {
