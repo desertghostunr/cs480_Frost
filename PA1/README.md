@@ -45,13 +45,12 @@ When running the program both a vertex shader and a fragment shader must be spec
 
 The file path for the specified shader must come directly after the option identifier. If one of the option identifiers is found where a file path is expected the program will terminate.
 
-Running this program is done in the following format:
+This program is run in the following format:
+
+./Tutorial -[SHADER_OPTION] [SHADER_FILE_PATH] -[SHADER_OPTION] [SHADER_FILE_PATH] 
 
 
-./Tutorial -[SHADER_OPTION] [SHADER_FILE_PATH] -[SHADER_OPTION] [SHADER_FILE_PATH]  
-
-
-An example run command would look like:
+An example of running this program:
 
 ```bash
 ./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl
