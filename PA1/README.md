@@ -41,7 +41,7 @@ The program has three options that can be used: -v, -f, --h.
 
 --h brings up a series of instructions for help using the program.
 
-When running the program both a vertex shader and a fragment shader must be specified. Failure to specify both shaders will lead to the program to terminate.
+When running the program both a vertex shader and a fragment shader must be specified. Failure to specify both shaders will cause the program to terminate.
 
 The file path for the specified shader must come directly after the option identifier. If one of the option identifiers is found where a file path is expected the program will terminate.
 
@@ -59,5 +59,5 @@ An example of running this program:
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./Tutorial
+/usr/NX/scripts/vgl/vglrun ./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl
 ```
