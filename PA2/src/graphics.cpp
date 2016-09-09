@@ -201,16 +201,55 @@ std::string Graphics::ErrorString(GLenum error)
 
 @details toggles the direction of rotation
 
+@param in: speedOfRotation: controls the speed of rotation
+
+@notes None
+
+***************************************/
+void Graphics::updateRotation( float speedOfRotation )
+{
+  if( m_cube != NULL )
+  {
+    m_cube->updateRotation( speedOfRotation );
+  }
+}
+
+// TOGGLE ROTATION DIRECTION //////////////////
+/***************************************
+
+@brief toggleRotationDirection
+
+@details toggles the direction the object is rotating and cancels the pause state
+
 @param None
 
 @notes None
 
 ***************************************/
-void Graphics::updateRotation( )
+void Graphics::toggleRotationDirection( )
 {
   if( m_cube != NULL )
   {
-    m_cube->updateRotationDirection( );
+    m_cube->toggleRotationDirection( );
   }
 }
 
+// TOGGLE ROTATION PAUSED //////////////////
+/***************************************
+
+@brief toggleRotationPaused
+
+@details toggles whether or not the rotation is paused
+
+@param None
+
+@notes None
+
+***************************************/
+void Graphics::toggleRotationPaused( )
+{
+  if( m_cube != NULL )
+  {
+    m_cube->toggleRotationPaused( );
+  }
+}

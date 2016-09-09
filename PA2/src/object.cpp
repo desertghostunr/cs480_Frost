@@ -61,10 +61,14 @@ Object::Object()
   }
 
   angle = 0.0f;
-
   orbitalAngle = 0.0f;
 
-  clockWiseRotation = true;
+  rotationRate = 1.0;
+  orbitRate = 1.0;
+
+  rotationControlMultiplier = 1.0;
+  orbitalControlMultiplier = -1.0;
+
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -83,16 +87,11 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  if( clockWiseRotation )
-  {
-    angle += dt * M_PI/1000;
-  }
-  else
-  {
-    angle -= dt * M_PI/1000;
-  }
-  
+ 
+  angle += rotationControlMultiplier * rotationRate * dt * M_PI/1000;
+
   orbitalAngle -= dt * M_PI/8500;
+
   model = glm::translate( glm::mat4(1.0f), 
                           glm::vec3(7.5f * cos( orbitalAngle ), 0.0f,
                                     7.5f * sin( orbitalAngle) ) )
@@ -121,19 +120,82 @@ void Object::Render()
   glDisableVertexAttribArray(1);
 }
 
-// UPDATE ROTATION DIRECTION //////////////////
+// UPDATE ROTATION //////////////////
 /***************************************
 
-@brief updateRotationDirection
+@brief updateRotation
 
-@details toggles the direction of rotation
+@details updates the objects rotation
+
+@param in: rotFactor: controls the direction and speed of the object's rotation
+
+@notes None
+
+***************************************/
+void Object::updateRotation( float rotFactor )
+{  
+  rotationRate = rotFactor;  
+}
+
+// TOGGLE ROTATION DIRECTION //////////////////
+/***************************************
+
+@brief toggleRotationDirection
+
+@details toggles the direction the object is rotating and cancels the pause state
 
 @param None
 
 @notes None
 
 ***************************************/
-void Object::updateRotationDirection( )
+void Object::toggleRotationDirection( )
 {
-  clockWiseRotation = !clockWiseRotation;
+  if( rotationControlMultiplier == 0.0 )
+  {
+    rotationControlMultiplier = 1.0;
+  }
+
+  rotationRate *= -1.0;
+}
+
+// GET RATE OF ROTATION //////////////////
+/***************************************
+
+@brief getRateOfRotation
+
+@details returns the rate of rotation
+
+@param None
+
+@notes None
+
+***************************************/
+float Object::getRateOfRotation( )
+{
+  return rotationRate;
+}
+
+// TOGGLE ROTATION PAUSED //////////////////
+/***************************************
+
+@brief toggleRotationPaused
+
+@details toggles whether or not the rotation is paused
+
+@param None
+
+@notes None
+
+***************************************/
+void Object::toggleRotationPaused( )
+{
+  if( rotationControlMultiplier == 0.0)
+  {
+    rotationControlMultiplier = 1.0;
+  }
+  else
+  {
+    rotationControlMultiplier = 0.0;
+  }
 }

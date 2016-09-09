@@ -20,7 +20,11 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-    void updateRotation( );
+    void updateRotation( float speedOfRotation );
+
+    void toggleRotationDirection( );
+    void toggleRotationPaused( );
+    
 
   private:
     std::string ErrorString(GLenum error);

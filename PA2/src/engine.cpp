@@ -88,11 +88,18 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
-    else
+    else if( m_event.type == SDLK_r )
     {
       if( m_graphics != NULL )
       {
-        m_graphics->updateRotation( );
+        m_graphics->toggleRotationDirection( );
+      }      
+    }
+    else if( m_event.type == SDLK_p )
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleRotationPaused( );
       }      
     }
   }
@@ -114,15 +121,18 @@ void Engine::Mouse( )
 {
   if( m_event.type == SDL_MOUSEBUTTONDOWN )
   {
-    if( ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_LEFT ) )
-       || ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_RIGHT) )
-       || ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_MIDDLE ) )
-       || ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_X1 ) )
-       || ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_X2 ) ) )
+    if( ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_LEFT ) ) )       
     {
       if( m_graphics != NULL )
       {
-        m_graphics->updateRotation( );
+        m_graphics->toggleRotationDirection( );
+      } 
+    }
+    else if( m_event.button.button == SDL_BUTTON( SDL_BUTTON_RIGHT) )
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleRotationPaused( );
       } 
     }
   }

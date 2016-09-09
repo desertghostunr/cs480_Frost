@@ -14,7 +14,13 @@ class Object
 
     glm::mat4 GetModel();
 
-    void updateRotationDirection( );
+    void updateRotation( float rotFactor );
+
+    void toggleRotationDirection( );
+
+    void toggleRotationPaused( );
+
+    float getRateOfRotation( );
 
   private:
     glm::mat4 model;
@@ -26,7 +32,11 @@ class Object
     float angle;
     float orbitalAngle;
 
-    bool clockWiseRotation;
+    float rotationRate;
+    float orbitRate;
+
+    float rotationControlMultiplier;
+    float orbitalControlMultiplier;
 
 };
 
