@@ -67,7 +67,7 @@ Object::Object()
   orbitRate = 1.0;
 
   rotationControlMultiplier = 1.0;
-  orbitalControlMultiplier = -1.0;
+  orbitControlMultiplier = -1.0;
 
 
   glGenBuffers(1, &VB);
@@ -90,7 +90,7 @@ void Object::Update(unsigned int dt)
  
   angle += rotationControlMultiplier * rotationRate * dt * M_PI/1000;
 
-  orbitalAngle -= dt * M_PI/8500;
+  orbitalAngle += orbitControlMultiplier * orbitRate * dt * M_PI/8500;
 
   model = glm::translate( glm::mat4(1.0f), 
                           glm::vec3(7.5f * cos( orbitalAngle ), 0.0f,
@@ -199,3 +199,111 @@ void Object::toggleRotationPaused( )
     rotationControlMultiplier = 0.0;
   }
 }
+
+
+// UPDATE ORBIT //////////////////
+/***************************************
+
+@brief updateOrbit
+
+@details updates the objects orbit
+
+@param in: orbitFactor: controls the direction and speed of the object's orbit
+
+@notes None
+
+***************************************/
+void Object::updateOrbit( float orbitFactor )
+{  
+  orbitRate = orbitFactor;  
+}
+
+// TOGGLE ORBIT DIRECTION //////////////////
+/***************************************
+
+@brief toggleOrbitDirection
+
+@details toggles the direction the object is orbiting and cancels the pause state
+
+@param None
+
+@notes None
+
+***************************************/
+void Object::toggleOrbitDirection( )
+{
+  if( orbitControlMultiplier == 0.0 )
+  {
+    orbitControlMultiplier = -1.0;
+  }
+
+  orbitRate *= -1.0;
+}
+
+// GET RATE OF ORBIT  //////////////////
+/***************************************
+
+@brief getRateOfOrbit
+
+@details returns the rate of orbit
+
+@param None
+
+@notes None
+
+***************************************/
+float Object::getRateOfOrbit( )
+{
+  return orbitRate;
+}
+
+// TOGGLE ORBIT PAUSED //////////////////
+/***************************************
+
+@brief toggleOrbitPaused
+
+@details toggles whether or not the orbit is paused
+
+@param None
+
+@notes None
+
+***************************************/
+void Object::toggleOrbitPaused( )
+{
+  if( orbitControlMultiplier == 0.0 )
+  {
+    orbitControlMultiplier = -1.0;
+  }
+  else
+  {
+    orbitControlMultiplier = 0.0;
+  }
+}
+
+// TOGGLE ALL PAUSED //////////////////
+/***************************************
+
+@brief toggleAllPaused
+
+@details toggles whether or not the orbit and rotation is paused
+
+@param None
+
+@notes None
+
+***************************************/
+void Object::toggleAllPaused( )
+{
+  if( ( rotationControlMultiplier == 0.0 ) && ( orbitControlMultiplier == 0.0 ) )
+  {
+    rotationControlMultiplier = 1.0;
+    orbitControlMultiplier = -1.0;
+  }
+  else
+  {
+    rotationControlMultiplier = 0.0;
+    orbitControlMultiplier = 0.0;
+  }
+}
+

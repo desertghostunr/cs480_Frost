@@ -22,6 +22,16 @@ class Object
 
     float getRateOfRotation( );
 
+    void updateOrbit( float orbitFactor );
+
+    void toggleOrbitDirection( );
+
+    void toggleOrbitPaused( );
+
+    float getRateOfOrbit( );
+
+    void toggleAllPaused( );
+
   private:
     glm::mat4 model;
     std::vector<Vertex> Vertices;
@@ -36,7 +46,7 @@ class Object
     float orbitRate;
 
     float rotationControlMultiplier;
-    float orbitalControlMultiplier;
+    float orbitControlMultiplier;
 
 };
 

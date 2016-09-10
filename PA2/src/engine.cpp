@@ -88,18 +88,25 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
-    else if( m_event.type == SDLK_r )
+    else if( m_event.key.keysym.sym == SDLK_r )
     {
       if( m_graphics != NULL )
       {
         m_graphics->toggleRotationDirection( );
       }      
     }
-    else if( m_event.type == SDLK_p )
+    else if( m_event.key.keysym.sym == SDLK_o )
     {
       if( m_graphics != NULL )
       {
-        m_graphics->toggleRotationPaused( );
+        m_graphics->toggleOrbitDirection( );
+      }      
+    }
+    else if( m_event.key.keysym.sym == SDLK_p )
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleAllPaused( );
       }      
     }
   }
@@ -125,7 +132,7 @@ void Engine::Mouse( )
     {
       if( m_graphics != NULL )
       {
-        m_graphics->toggleRotationDirection( );
+        m_graphics->toggleOrbitPaused( );
       } 
     }
     else if( m_event.button.button == SDL_BUTTON( SDL_BUTTON_RIGHT) )

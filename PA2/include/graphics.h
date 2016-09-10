@@ -21,10 +21,15 @@ class Graphics
     void Render();
 
     void updateRotation( float speedOfRotation );
+    void updateOrbit( float speedOfOrbit );
 
     void toggleRotationDirection( );
     void toggleRotationPaused( );
     
+    void toggleOrbitDirection( );
+    void toggleOrbitPaused( );
+
+    void toggleAllPaused( );
 
   private:
     std::string ErrorString(GLenum error);

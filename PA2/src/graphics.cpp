@@ -214,6 +214,28 @@ void Graphics::updateRotation( float speedOfRotation )
   }
 }
 
+
+// UPDATE ORBIT//////////////////
+/***************************************
+
+@brief updateOrbit
+
+@details toggles the direction of orbit
+
+@param in: speedOfOrbit: controls the speed of orbit
+
+@notes None
+
+***************************************/
+void Graphics::updateOrbit( float speedOfOrbit )
+{
+  if( m_cube != NULL )
+  {
+    m_cube->updateOrbit( speedOfOrbit );
+  }
+}
+
+
 // TOGGLE ROTATION DIRECTION //////////////////
 /***************************************
 
@@ -251,5 +273,67 @@ void Graphics::toggleRotationPaused( )
   if( m_cube != NULL )
   {
     m_cube->toggleRotationPaused( );
+  }
+}
+
+
+// TOGGLE ORBIT DIRECTION //////////////////
+/***************************************
+
+@brief toggleOrbitDirection
+
+@details toggles the direction the object is orbiting and cancels the pause state
+
+@param None
+
+@notes None
+
+***************************************/
+void Graphics::toggleOrbitDirection( )
+{
+  if( m_cube != NULL )
+  {
+    m_cube->toggleOrbitDirection( );
+  }
+}
+
+// TOGGLE ORBIT PAUSED //////////////////
+/***************************************
+
+@brief toggleOrbitPaused
+
+@details toggles whether or not the orbit is paused
+
+@param None
+
+@notes None
+
+***************************************/
+void Graphics::toggleOrbitPaused( )
+{
+  if( m_cube != NULL )
+  {
+    m_cube->toggleOrbitPaused( );
+  }
+}
+
+
+// TOGGLE ALL PAUSED //////////////////
+/***************************************
+
+@brief toggleAllPaused
+
+@details toggles whether or not the orbit and rotation is paused
+
+@param None
+
+@notes None
+
+***************************************/
+void Graphics::toggleAllPaused( )
+{
+  if( m_cube != NULL )
+  {
+    m_cube->toggleAllPaused( );
   }
 }
