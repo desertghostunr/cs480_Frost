@@ -88,21 +88,42 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
-    else if( m_event.key.keysym.sym == SDLK_r )
+    else if( ( m_event.key.keysym.sym == SDLK_UP ) 
+              || ( m_event.key.keysym.sym == SDLK_w ) )
+    {
+      if( m_graphics != NULL )
+      {        
+        m_graphics->toggleOrbitDirection( );
+      }      
+    }
+    else if( ( m_event.key.keysym.sym == SDLK_DOWN ) 
+              || ( m_event.key.keysym.sym == SDLK_s ) )
     {
       if( m_graphics != NULL )
       {
         m_graphics->toggleRotationDirection( );
-      }      
+      }    
     }
-    else if( m_event.key.keysym.sym == SDLK_o )
+    else if( ( m_event.key.keysym.sym == SDLK_RIGHT ) 
+              || ( m_event.key.keysym.sym == SDLK_d )
+              || ( m_event.key.keysym.sym == SDLK_o ) )
     {
       if( m_graphics != NULL )
       {
-        m_graphics->toggleOrbitDirection( );
+        m_graphics->toggleOrbitPaused( );
       }      
     }
-    else if( m_event.key.keysym.sym == SDLK_p )
+    else if( ( m_event.key.keysym.sym == SDLK_LEFT ) 
+             || ( m_event.key.keysym.sym == SDLK_a ) 
+             || ( m_event.key.keysym.sym == SDLK_r ))
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleRotationPaused( );
+      }      
+    }
+    else if( (m_event.key.keysym.sym == SDLK_p ) 
+              || ( m_event.key.keysym.sym == SDLK_SPACE ) )
     {
       if( m_graphics != NULL )
       {
@@ -128,18 +149,39 @@ void Engine::Mouse( )
 {
   if( m_event.type == SDL_MOUSEBUTTONDOWN )
   {
-    if( ( m_event.button.button == SDL_BUTTON( SDL_BUTTON_LEFT ) ) )       
+    if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_LEFT )  )       
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleOrbitDirection( );
+      } 
+    }
+    else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_RIGHT ) )
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleRotationDirection( );
+      } 
+    }
+    else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_MIDDLE ) )
+    {
+      if( m_graphics != NULL )
+      {
+        m_graphics->toggleAllPaused( );
+      } 
+    }
+    else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_X1 ) )
+    {
+      if( m_graphics != NULL )
+      {        
+        m_graphics->toggleRotationPaused( );
+      } 
+    }
+    else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_X2 ) )
     {
       if( m_graphics != NULL )
       {
         m_graphics->toggleOrbitPaused( );
-      } 
-    }
-    else if( m_event.button.button == SDL_BUTTON( SDL_BUTTON_RIGHT) )
-    {
-      if( m_graphics != NULL )
-      {
-        m_graphics->toggleRotationPaused( );
       } 
     }
   }

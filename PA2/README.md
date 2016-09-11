@@ -56,6 +56,52 @@ An example of running this program:
 ./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl
 ```
 
+### Controls
+
+The controls used to augment the cube's orbit and rotation are as follows:
+
+Pressing the left mouse button, the w key, or the up key will toggle the cube's direction of orbit.
+
+Pressing the right mouse button, the s key, or the down key will toggle the cube's direction of rotation.
+
+Pressing the X1 mouse button, the d key, the o key, or the right key will toggle if the cube's orbit is paused.
+
+Pressing the X2 mouse button, the a key, the r key, or the left key will toggle if the cube's rotation is paused.
+
+Pressing the middle mouse button, the space bar, or the p key will toggle the pause state of all of the cube's movement.
+
+#### Quick Reference
+
+Any of the following keys can be used for their specified purpose.
+
+##### Toggle Orbit 
+left mouse button
+w key
+up key
+
+##### Toggle Rotation
+right mouse button
+s key
+down key
+
+##### Toggle Oribt Paused
+X1 mouse button
+d key
+o key
+right key
+
+##### Toggle Rotation Paused
+X2 mouse button
+a key
+r key
+left key
+
+##### Toggle All Paused
+middle mouse button
+space bar
+p key
+
+
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
 ```bash
