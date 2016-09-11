@@ -75,31 +75,31 @@ Pressing the middle mouse button, the space bar, or the p key will toggle the pa
 Any of the following keys can be used for their specified purpose.
 
 ##### Toggle Orbit 
-left mouse button
-w key
-up key
+###### left mouse button
+###### w key
+###### up arrow key
 
 ##### Toggle Rotation
-right mouse button
-s key
-down key
+###### right mouse button
+###### s key
+###### down arrow key
 
 ##### Toggle Oribt Paused
-X1 mouse button
-d key
-o key
-right key
+###### X1 mouse button
+###### d key
+###### o key
+###### right arrow key
 
 ##### Toggle Rotation Paused
-X2 mouse button
-a key
-r key
-left key
+###### X2 mouse button
+###### a key
+###### r key
+###### left arrow key
 
 ##### Toggle All Paused
-middle mouse button
-space bar
-p key
+###### middle mouse button
+###### space bar
+###### p key
 
 
 ## Ubuntu.cse.unr.edu
