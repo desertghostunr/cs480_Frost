@@ -20,16 +20,16 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-    void updateRotation( float speedOfRotation );
-    void updateOrbit( float speedOfOrbit );
+    bool updateRotation( int objectID, float speedOfRotation );
+    bool updateOrbit( int objectID, float speedOfOrbit );
 
-    void toggleRotationDirection( );
-    void toggleRotationPaused( );
+    bool toggleRotationDirection( int objectID );
+    bool toggleRotationPaused( int objectID );
     
-    void toggleOrbitDirection( );
-    void toggleOrbitPaused( );
+    bool toggleOrbitDirection( int objectID );
+    bool toggleOrbitPaused( int objectID );
 
-    void toggleAllPaused( );
+    bool toggleAllPaused( int objectID );
 
   private:
     std::string ErrorString(GLenum error);
@@ -41,8 +41,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    Object *m_cube;
-    Object *m_moon;
+    std::vector<Object> objectVector;
 };
 
 #endif /* GRAPHICS_H */

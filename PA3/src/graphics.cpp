@@ -52,17 +52,17 @@ bool Graphics::Initialize
   }
 
   // Create the object
-  m_cube = new Object();
-  m_moon = new Object();
+  objectVector.push_back(Object());
+  objectVector.push_back(Object());
 
   //initialize the object's orbit rate 
-  m_cube->updateOrbitRate(0.35f);
-  m_cube->setOrbitalRadius(6.0f);
-  m_cube->updateRotationRate(0.9f);
+  objectVector[0].updateOrbitRate(0.35f);
+  objectVector[0].setOrbitalRadius(5.5f);
+  objectVector[0].updateRotationRate(1.0f);
 
-  m_moon->updateOrbitRate(2.25f);
-  m_moon->setOrbitalRadius(3.5f);
-  m_moon->updateRotationRate(1.8f);
+  objectVector[1].updateOrbitRate(1.8f);
+  objectVector[1].setOrbitalRadius(3.5f);
+  objectVector[1].updateRotationRate(1.8f);
 
   // Set up the shaders
   m_shader = new Shader();
@@ -129,13 +129,15 @@ bool Graphics::Initialize
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  m_cube->Update(dt);
-  m_moon->setOrigin(m_cube->getCurrentPositionOfOrbit());
-  m_moon->Update(dt);
+  objectVector[0].Update(dt);
+  objectVector[1].setOrigin(objectVector[0].GetModel( ));
+  objectVector[1].Update(dt);
 }
 
 void Graphics::Render()
 {
+  int index;
+
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -147,11 +149,12 @@ void Graphics::Render()
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
-  // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
-  m_cube->Render();
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_moon->GetModel()));
-  m_moon->Render();
+  // Render the objects
+  for( index = 0; index < objectVector.size( ); index++ )
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objectVector[index].GetModel()));
+    objectVector[index].Render();
+  }
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -201,17 +204,21 @@ std::string Graphics::ErrorString(GLenum error)
 
 @details toggles the direction of rotation
 
+@param in: objectID: the id or index of the Object
+
 @param in: speedOfRotation: controls the speed of rotation
 
 @notes None
 
 ***************************************/
-void Graphics::updateRotation( float speedOfRotation )
+bool Graphics::updateRotation( int objectID, float speedOfRotation )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->updateRotationRate( speedOfRotation );
+    objectVector[objectID].updateRotationRate( speedOfRotation );
+    return true;
   }
+  return false;
 }
 
 
@@ -222,17 +229,21 @@ void Graphics::updateRotation( float speedOfRotation )
 
 @details toggles the direction of orbit
 
+@param in: objectID: the id or index of the Object
+
 @param in: speedOfOrbit: controls the speed of orbit
 
 @notes None
 
 ***************************************/
-void Graphics::updateOrbit( float speedOfOrbit )
+bool Graphics::updateOrbit( int objectID, float speedOfOrbit )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->updateOrbitRate( speedOfOrbit );
+    objectVector[objectID].updateOrbitRate( speedOfOrbit );
+    return true;
   }
+  return false;
 }
 
 
@@ -243,17 +254,19 @@ void Graphics::updateOrbit( float speedOfOrbit )
 
 @details toggles the direction the object is rotating and cancels the pause state
 
-@param None
+@param in: objectID: the id or index of the Object
 
 @notes None
 
 ***************************************/
-void Graphics::toggleRotationDirection( )
+bool Graphics::toggleRotationDirection( int objectID )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->toggleRotationDirection( );
+    objectVector[objectID].toggleRotationDirection( );
+    return true;
   }
+  return false;
 }
 
 // TOGGLE ROTATION PAUSED //////////////////
@@ -263,17 +276,19 @@ void Graphics::toggleRotationDirection( )
 
 @details toggles whether or not the rotation is paused
 
-@param None
+@param in: objectID: the id or index of the Object
 
 @notes None
 
 ***************************************/
-void Graphics::toggleRotationPaused( )
+bool Graphics::toggleRotationPaused( int objectID )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->toggleRotationPaused( );
+    objectVector[objectID].toggleRotationPaused( );
+    return true;
   }
+  return false;
 }
 
 
@@ -284,17 +299,19 @@ void Graphics::toggleRotationPaused( )
 
 @details toggles the direction the object is orbiting and cancels the pause state
 
-@param None
+@param in: objectID: the id or index of the Object
 
 @notes None
 
 ***************************************/
-void Graphics::toggleOrbitDirection( )
+bool Graphics::toggleOrbitDirection( int objectID )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->toggleOrbitDirection( );
+    objectVector[objectID].toggleOrbitDirection( );
+    return true;
   }
+  return false;
 }
 
 // TOGGLE ORBIT PAUSED //////////////////
@@ -304,19 +321,20 @@ void Graphics::toggleOrbitDirection( )
 
 @details toggles whether or not the orbit is paused
 
-@param None
+@param in: objectID: the id or index of the Object
 
 @notes None
 
 ***************************************/
-void Graphics::toggleOrbitPaused( )
+bool Graphics::toggleOrbitPaused( int objectID )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->toggleOrbitPaused( );
+    objectVector[objectID].toggleOrbitPaused( );
+    return true;
   }
+  return false;
 }
-
 
 // TOGGLE ALL PAUSED //////////////////
 /***************************************
@@ -325,15 +343,17 @@ void Graphics::toggleOrbitPaused( )
 
 @details toggles whether or not the orbit and rotation is paused
 
-@param None
+@param in: objectID: the id or index of the Object
 
 @notes None
 
 ***************************************/
-void Graphics::toggleAllPaused( )
+bool Graphics::toggleAllPaused( int objectID )
 {
-  if( m_cube != NULL )
+  if( objectID < objectVector.size( ) )
   {
-    m_cube->toggleAllPaused( );
+    objectVector[objectID].toggleAllPaused( );
+    return true;
   }
+  return false;
 }

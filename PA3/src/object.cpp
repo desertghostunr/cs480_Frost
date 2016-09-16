@@ -71,8 +71,7 @@ Object::Object()
   rotationControlMultiplier = 1.0f;
   orbitControlMultiplier = -1.0f;
 
-  origin = glm::vec3(0.0f, 0.0f,0.0f);
-  positionInOribit = glm::vec3(0.0f, 0.0f,0.0f);
+  origin = glm::mat4(1.0f);
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -96,15 +95,13 @@ void Object::Update(unsigned int dt)
 
   orbitalAngle += orbitControlMultiplier * orbitRate * dt * M_PI/1000;
 
-  //calculate the position in the object's orbit
-  positionInOribit = glm::vec3( orbitalRadius * cos( orbitalAngle ), 
-                                0.0f,
-                                orbitalRadius * sin( orbitalAngle) );
-
   //based on matrix multiplication the transforms are applied
   //rotation -> orbital position -> origin
-  model = glm::translate(glm::mat4(1.0f), origin) //move object to origin
-        * glm::translate( glm::mat4(1.0f), positionInOribit ) //move the object to oribital position
+  model = origin //move object to origin
+        * glm::translate( glm::mat4(1.0f),
+                          glm::vec3( orbitalRadius * cos( orbitalAngle ), 
+                                     0.0f,
+                                     orbitalRadius * sin( orbitalAngle) ) ) //move the object to oribital position
         * glm::rotate( glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0)); //rotate the object
 }
 
@@ -334,23 +331,6 @@ void Object::setOrbitalRadius( float radius )
   orbitalRadius = radius;
 }
 
-// GET CURRENT POSITION OF ORBIT //////////////////
-/***************************************
-
-@brief getCurrentPositionOfOrbit
-
-@details gets the object's current position of orbit
-
-@param None
-
-@notes None
-
-***************************************/
-glm::vec3 Object::getCurrentPositionOfOrbit( )
-{
-  return positionInOribit;
-}
-
 // SET ORIGIN //////////////////
 /***************************************
 
@@ -363,7 +343,7 @@ glm::vec3 Object::getCurrentPositionOfOrbit( )
 @notes None
 
 ***************************************/
-void Object::setOrigin( const glm::vec3 & newOrigin )
+void Object::setOrigin( const glm::mat4 & newOrigin )
 {
   origin = newOrigin;
 }

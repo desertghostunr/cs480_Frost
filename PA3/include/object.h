@@ -34,14 +34,11 @@ class Object
 
     void setOrbitalRadius( float radius );
 
-    glm::vec3 getCurrentPositionOfOrbit( );
-
-    void setOrigin( const glm::vec3 & newOrigin );
+    void setOrigin( const glm::mat4 & newOrigin );
 
   private:
     glm::mat4 model;
-    glm::vec3 origin; //the offset for the model's location
-    glm::vec3 positionInOribit; //the relative position in the object's orbit
+    glm::mat4 origin; //the offset for the model's location
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
     GLuint VB;
