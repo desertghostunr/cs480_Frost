@@ -1,5 +1,6 @@
 #include "object.h"
 
+
 Object::Object()
 {  
   /*
@@ -73,6 +74,8 @@ Object::Object()
 
   origin = glm::mat4(1.0f);
 
+  isChildFlag = false;
+  
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
@@ -103,6 +106,53 @@ void Object::Update(unsigned int dt)
                                      0.0f,
                                      orbitalRadius * sin( orbitalAngle) ) ) //move the object to oribital position
         * glm::rotate( glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0)); //rotate the object
+}
+
+// UPDATE CHILDREN //////////////////
+/***************************************
+
+@brief updateChildren
+
+@details updates the object's children
+
+@param in: dt: the time delta
+
+@param in: the table containing all objects
+
+@param in: setParentAsOrigin: whether or not to set the parent as the origin of 
+                              the child
+
+@notes Recursively calls this on the childs children
+
+***************************************/
+void Object::UpdateChildren
+( 
+  unsigned int dt, 
+  std::vector<Object>& objectTable,
+  bool setParentAsOrigin
+)
+{
+  int index, worldIndex;
+  
+  for( index = 0; index < childrenVector.size( ); index++ )
+  {
+    worldIndex = getChildsWorldID( index );
+
+    if( ( worldIndex >= 0 ) && ( worldIndex < objectTable.size() ) ) 
+    {
+      if( setParentAsOrigin )
+      {
+      
+        objectTable[ worldIndex ].setOrigin( model );
+      }
+
+      objectTable[ worldIndex ].Update( dt );
+      
+      //recursive call to children
+      objectTable[ worldIndex ].UpdateChildren( dt, objectTable, 
+                                                setParentAsOrigin );
+    }   
+  }
 }
 
 glm::mat4 Object::GetModel()
@@ -346,5 +396,96 @@ void Object::setOrbitalRadius( float radius )
 void Object::setOrigin( const glm::mat4 & newOrigin )
 {
   origin = newOrigin;
+}
+
+// ADD CHILD //////////////////
+/***************************************
+
+@brief addChild
+
+@details adds a childsWorldID to the table
+
+@param in: childsWorldID: the id of the child in object table
+
+@notes None
+
+***************************************/
+void Object::addChild( int childsWorldID )
+{
+  childrenVector.push_back( childsWorldID );
+}
+
+// GET CHILDS WORLD ID /////////////////////
+/***************************************
+
+@brief getChildsWorldID
+
+@details gets the location of the child in object table
+
+@param in: childsLocalID: the local ID of the child
+
+@notes returns -1 if id is out of bounds
+
+***************************************/
+
+int Object::getChildsWorldID( int childsLocalID )
+{
+  if( ( childsLocalID >= 0 ) && ( childsLocalID < childrenVector.size() ) )
+  {
+    return childrenVector[ childsLocalID ];
+  }
+
+  return -1;
+}
+
+// GET NUMBER OF CHILDREN /////////////////////
+/***************************************
+
+@brief getNumberOfChildren
+
+@details returns the number of children an object has.
+
+@param None
+
+@notes None
+
+***************************************/
+int Object::getNumberOfChildren( )
+{
+  return childrenVector.size( );
+}
+
+// SET CHILD STATUS FLAG /////////////////////
+/***************************************
+
+@brief setChildStatusFlag
+
+@details sets the child status flag
+
+@param in: flag: the flag value
+
+@notes none
+
+***************************************/
+void Object::setChildStatusFlag( bool flag )
+{
+  isChildFlag = flag;
+}
+
+// IS CHILD /////////////////////
+/***************************************
+
+@brief isChild
+
+@details returns true if the object is a child of another object
+
+@param None
+
+@notes none
+
+***************************************/
+bool Object::isChild( )
+{
+  return isChildFlag;
 }
 

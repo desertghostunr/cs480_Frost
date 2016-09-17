@@ -10,6 +10,11 @@ class Object
     Object();
     ~Object();
     void Update(unsigned int dt);
+
+    void UpdateChildren( unsigned int dt, 
+                         std::vector<Object>& objectTable, 
+                         bool setParentAsOrigin = true );
+
     void Render();
 
     glm::mat4 GetModel();
@@ -36,6 +41,16 @@ class Object
 
     void setOrigin( const glm::mat4 & newOrigin );
 
+    void addChild( int childsWorldID );
+
+    int getChildsWorldID( int childsLocalID );
+
+    int getNumberOfChildren( );
+
+    void setChildStatusFlag( bool flag );
+
+    bool isChild( );
+
   private:
     glm::mat4 model;
     glm::mat4 origin; //the offset for the model's location
@@ -55,6 +70,10 @@ class Object
     float rotationControlMultiplier;
     float orbitControlMultiplier;
 
+    //children vector containg the worldID's of the objects children
+    std::vector<int> childrenVector;
+
+    bool isChildFlag;
 };
 
 #endif /* OBJECT_H */

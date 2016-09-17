@@ -60,9 +60,12 @@ bool Graphics::Initialize
   objectVector[0].setOrbitalRadius(5.5f);
   objectVector[0].updateRotationRate(1.0f);
 
-  objectVector[1].updateOrbitRate(1.8f);
+  objectVector[1].updateOrbitRate(1.2f);
   objectVector[1].setOrbitalRadius(3.5f);
-  objectVector[1].updateRotationRate(1.8f);
+  objectVector[1].updateRotationRate(1.2f);
+
+  objectVector[ 0 ].addChild( 1 );
+  objectVector[ 1 ].setChildStatusFlag( true );
 
   // Set up the shaders
   m_shader = new Shader();
@@ -128,10 +131,18 @@ bool Graphics::Initialize
 
 void Graphics::Update(unsigned int dt)
 {
-  // Update the object
-  objectVector[0].Update(dt);
-  objectVector[1].setOrigin(objectVector[0].GetModel( ));
-  objectVector[1].Update(dt);
+  int index;
+  // Update the objects
+  for( index = 0; index < objectVector.size( ); index++ )
+  {
+
+    if( !objectVector[ index ].isChild( ) )
+    {
+      objectVector[ index ].Update( dt );
+      objectVector[ index ].UpdateChildren( dt, objectVector, true );
+    }
+    
+  }
 }
 
 void Graphics::Render()
@@ -152,7 +163,8 @@ void Graphics::Render()
   // Render the objects
   for( index = 0; index < objectVector.size( ); index++ )
   {
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objectVector[index].GetModel()));
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE,
+                       glm::value_ptr(objectVector[index].GetModel()));
     objectVector[index].Render();
   }
 

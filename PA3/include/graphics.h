@@ -41,7 +41,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    std::vector<Object> objectVector;
+    std::vector<Object> objectVector; //this vector holds the scene's objects
 };
 
 #endif /* GRAPHICS_H */
