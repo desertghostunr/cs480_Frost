@@ -51,9 +51,13 @@ class Object
 
     bool isChild( );
 
+    void setScale( const glm::vec3& scale );
+    glm::vec3 getScale( );
+
   private:
     glm::mat4 model;
     glm::mat4 origin; //the offset for the model's location
+    glm::vec3 scaleFactor; //scale factor
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
     GLuint VB;

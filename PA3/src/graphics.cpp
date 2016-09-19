@@ -66,6 +66,7 @@ bool Graphics::Initialize
 
   objectVector[ 0 ].addChild( 1 );
   objectVector[ 1 ].setChildStatusFlag( true );
+  objectVector[ 1 ].setScale( glm::vec3( 0.6f, 0.63f, 0.6f ) );
 
   // Set up the shaders
   m_shader = new Shader();

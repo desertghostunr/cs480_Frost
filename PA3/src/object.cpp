@@ -75,6 +75,8 @@ Object::Object()
   origin = glm::mat4(1.0f);
 
   isChildFlag = false;
+
+  scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
   
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -99,13 +101,14 @@ void Object::Update(unsigned int dt)
   orbitalAngle += orbitControlMultiplier * orbitRate * dt * M_PI/1000;
 
   //based on matrix multiplication the transforms are applied
-  //rotation -> orbital position -> origin
+  //scale -> rotation -> orbital position -> origin
   model = origin //move object to origin
         * glm::translate( glm::mat4(1.0f),
                           glm::vec3( orbitalRadius * cos( orbitalAngle ), 
                                      0.0f,
                                      orbitalRadius * sin( orbitalAngle) ) ) //move the object to oribital position
-        * glm::rotate( glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0)); //rotate the object
+        * glm::rotate( glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0)) //rotate the object
+        * glm::scale( scaleFactor ); //scale the object
 }
 
 // UPDATE CHILDREN //////////////////
@@ -489,3 +492,36 @@ bool Object::isChild( )
   return isChildFlag;
 }
 
+// SET SCALE  /////////////////////
+/***************************************
+
+@brief setScale
+
+@details sets the scale of the object
+
+@param in: scale: the objects new scale
+
+@notes none
+
+***************************************/
+void Object::setScale( const glm::vec3& scale )
+{
+  scaleFactor = scale;
+}
+
+// SET SCALE  /////////////////////
+/***************************************
+
+@brief getScale
+
+@details gets the scale of the object
+
+@param None
+
+@notes none
+
+***************************************/
+glm::vec3 Object::getScale( )
+{
+  return scaleFactor;
+}
