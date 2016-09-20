@@ -60,9 +60,9 @@ bool Graphics::Initialize
   objectVector[0].setOrbitalRadius(5.5f);
   objectVector[0].updateRotationRate(1.0f);
 
-  objectVector[1].updateOrbitRate(1.2f);
+  objectVector[1].updateOrbitRate(0.4f);
   objectVector[1].setOrbitalRadius(3.5f);
-  objectVector[1].updateRotationRate(1.2f);
+  objectVector[1].updateRotationRate(0.4f);
 
   objectVector[ 0 ].addChild( 1 );
   objectVector[ 1 ].setChildStatusFlag( true );
@@ -369,4 +369,49 @@ bool Graphics::toggleAllPaused( int objectID )
     return true;
   }
   return false;
+}
+
+// TOGGLE ALL OBJECTS PAUSED //////////////////
+/***************************************
+
+@brief toggleAllObjectsPaused
+
+@details toggles whether or not the orbit and rotation is paused for all objects
+
+@param None
+
+@notes None
+
+***************************************/
+void Graphics::toggleAllObjectsPaused( )
+{
+  bool allPausedAtCall = true;
+  int index;
+
+  for( index = 0; index < objectVector.size( ); index++ )
+  {
+    if( !objectVector[ index ].isPaused( ) )
+    {
+      objectVector[ index ].toggleAllPaused( );
+      allPausedAtCall = false;
+    }
+  }
+
+  //if some objects weren't paused at function call, 
+  //then we've paused all of them
+  if( !allPausedAtCall )
+  {
+    return;
+  }
+
+  //however, if they all were paused
+  //then we need to unpause them
+  for( index = 0; index < objectVector.size( ); index++ )
+  {
+    if( objectVector[ index ].isPaused( ) )
+    {
+      objectVector[ index ].toggleAllPaused( );
+    }
+  }
+
 }

@@ -30,6 +30,7 @@ class Graphics
     bool toggleOrbitPaused( int objectID );
 
     bool toggleAllPaused( int objectID );
+    void toggleAllObjectsPaused( );
 
   private:
     std::string ErrorString(GLenum error);

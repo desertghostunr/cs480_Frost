@@ -52,7 +52,10 @@ class Object
     bool isChild( );
 
     void setScale( const glm::vec3& scale );
+
     glm::vec3 getScale( );
+
+    bool isPaused( );
 
   private:
     glm::mat4 model;

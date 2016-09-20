@@ -525,3 +525,22 @@ glm::vec3 Object::getScale( )
 {
   return scaleFactor;
 }
+
+
+// IS PAUSED  /////////////////////
+/***************************************
+
+@brief isPaused( )
+
+@details returns whether or not the object is paused
+
+@param None
+
+@notes none
+
+***************************************/
+bool Object::isPaused( )
+{
+  return ( ( rotationControlMultiplier == 0.0 ) 
+            && ( orbitControlMultiplier == 0.0 ) );
+}

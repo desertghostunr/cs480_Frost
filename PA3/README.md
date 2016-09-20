@@ -1,4 +1,4 @@
-# PA1: Spinning Cube
+# PA3
 
 # Dependencies, Building, and Running
 
@@ -60,46 +60,71 @@ An example of running this program:
 
 The controls used to augment the cube's orbit and rotation are as follows:
 
-Pressing the left mouse button, the w key, or the up key will toggle the cube's direction of orbit.
+Pressing the left mouse button or the up arrow key will toggle the planet's direction of orbit.
 
-Pressing the right mouse button, the s key, or the down key will toggle the cube's direction of rotation.
+Pressing the right mouse button or the down arrow key will toggle the planet's direction of rotation.
 
-Pressing the X1 mouse button, the d key, the o key, or the right key will toggle if the cube's orbit is paused.
+Pressing the X1 mouse button or the right arrow key will toggle if the planet's orbit is paused.
 
-Pressing the X2 mouse button, the a key, the r key, or the left key will toggle if the cube's rotation is paused.
+Pressing the X2 mouse button or the left arrow key will toggle if the planet's rotation is paused.
 
-Pressing the middle mouse button, the space bar, or the p key will toggle the pause state of all of the cube's movement.
+Pressing the middle mouse button or the p key will toggle the pause state of all of the planet's movement.
+
+Pressing the the w key will toggle the moon's direction of orbit.
+
+Pressing the the s key will toggle the moon's direction of rotation.
+
+Pressing the the d key or the o key will toggle if the moon's orbit is paused.
+
+Pressing the the a key or the r key will toggle if the moon's rotation is paused.
+
+Pressing the the m key will toggle the pause state of all of the moon's movement.
+
+Pressing the space bar will toggle the pause state of the planet and the moon.
 
 #### Quick Reference
 
 Any of the following keys can be used for their specified purpose.
 
-##### Toggle Orbit 
+##### Toggle Planet Orbit 
 ###### left mouse button
-###### w key
 ###### up arrow key
 
-##### Toggle Rotation
+##### Toggle Planet Rotation
 ###### right mouse button
-###### s key
 ###### down arrow key
 
-##### Toggle Oribt Paused
+##### Toggle Planet Oribt Paused
 ###### X1 mouse button
-###### d key
-###### o key
 ###### right arrow key
 
-##### Toggle Rotation Paused
+##### Toggle Planet Rotation Paused
 ###### X2 mouse button
-###### a key
-###### r key
 ###### left arrow key
 
-##### Toggle All Paused
+##### Toggle Planet All Paused
 ###### middle mouse button
-###### space bar
 ###### p key
+
+##### Toggle Moon Orbit 
+###### w key
+
+##### Toggle Moon Rotation
+###### s key
+
+##### Toggle Moon Oribt Paused
+###### d key
+###### o key
+
+##### Toggle Moon Rotation Paused
+###### a key
+###### r key
+
+##### Toggle Moon All Paused
+###### m key
+
+##### Toggle Moon and Planet All Paused
+###### space bar
 
 
 ## Ubuntu.cse.unr.edu

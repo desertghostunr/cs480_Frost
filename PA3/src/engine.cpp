@@ -77,7 +77,6 @@ void Engine::Run()
 
 void Engine::Keyboard()
 {
-  int index;
 
   if(m_event.type == SDL_QUIT)
   {
@@ -166,12 +165,7 @@ void Engine::Keyboard()
     {
       if( m_graphics != NULL )
       {
-        index = 0;
-
-        while( m_graphics->toggleAllPaused( index ) )
-        {
-          index++;
-        }
+        m_graphics->toggleAllObjectsPaused( );
       }      
     }
   }
