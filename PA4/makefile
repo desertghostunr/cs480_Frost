@@ -28,6 +28,7 @@ INDLUDES=-I../include
 all: $(O_FILES)
 	$(CC) $(CXXFLAGS) -o Tutorial $(O_FILES) $(LIBS) #$(PATHI) $(PATHL)
 	cp -r ../shaders .
+	cp -r ../models .
 
 main.o: ../src/main.cpp
 	$(CC) $(CXXFLAGS) -c ../src/main.cpp -o main.o $(INDLUDES)

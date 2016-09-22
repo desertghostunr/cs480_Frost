@@ -44,6 +44,9 @@ add_custom_target("${PROJECT_NAME}_SUCCESSFUL" ALL
                   COMMAND ${CMAKE_COMMAND} -E echo "====================="
                   COMMAND ${CMAKE_COMMAND} -E echo "${CMAKE_CURRENT_BINARY_DIR}"
                   COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/shaders/ ${CMAKE_CURRENT_BINARY_DIR}/shaders
+                  COMMAND ${CMAKE_COMMAND} -E echo "Copied ${PROJECT_SOURCE_DIR}/shaders/ to ${CMAKE_CURRENT_BINARY_DIR}/shaders"
+                  COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/models/ ${CMAKE_CURRENT_BINARY_DIR}/models
+                  COMMAND ${CMAKE_COMMAND} -E echo "Copied ${PROJECT_SOURCE_DIR}/models/ to ${CMAKE_CURRENT_BINARY_DIR}/models"
                  )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${OPENGL_LIBRARY} ${SDL2_LIBRARY})
