@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include <vector>
+#include <string>
 #include "graphics_headers.h"
 
 class Object
@@ -9,6 +10,7 @@ class Object
   public:
     Object();
     ~Object();
+
     void Update(unsigned int dt);
 
     void UpdateChildren( unsigned int dt, 
@@ -18,6 +20,8 @@ class Object
     void Render();
 
     glm::mat4 GetModel();
+
+    bool loadOBJ( const std::string& fileName );
 
     void updateRotationRate( float rotFactor );
 
@@ -88,16 +92,27 @@ class Object
     void createSatelliteTransform( );
 
   private:
+    
+    // model information
     glm::mat4 model;
-    glm::mat4 origin; //the offset for the model's location
-    glm::vec3 scaleFactor; //scale factor
-    glm::vec3 translationVector; //translation in cartesian space
-    glm::vec3 rotationVector; //rotation vector in cartesian space
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
 
+    //children vector containg the worldID's of the objects children
+    std::vector<int> childrenVector;
+
+    //transform information
+    glm::mat4 origin; //the offset for the model's location
+    glm::vec3 scaleFactor; //scale factor
+    glm::vec3 translationVector; //translation in cartesian space
+    glm::vec3 rotationVector; //rotation vector in cartesian space
+
+    //vector of transforms to apply to the object 
+    std::vector<glm::mat4> transformVector;
+
+    //angle of rotation / orbit information (specialization)
     float angle;
     float orbitalAngle;
 
@@ -107,12 +122,8 @@ class Object
     float orbitRate;
 
     float rotationControlMultiplier;
-    float orbitControlMultiplier;
-
-    //vector of transforms to apply to the object 
-    std::vector<glm::mat4> transformVector;
-    //children vector containg the worldID's of the objects children
-    std::vector<int> childrenVector;
+    float orbitControlMultiplier;   
+    
 
     bool isChildFlag;
 };

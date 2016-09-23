@@ -1,4 +1,5 @@
 #include "object.h"
+#include <fstream>
 
 
 Object::Object()
@@ -29,7 +30,7 @@ Object::Object()
     f 5 1 8
   */
 
-  Vertices = {
+ /* Vertices = {
     {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
     {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
     {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
@@ -59,7 +60,7 @@ Object::Object()
   for(unsigned int i = 0; i < Indices.size(); i++)
   {
     Indices[i] = Indices[i] - 1;
-  }
+  }*/
 
   model = glm::mat4(1.0f);
 
@@ -81,14 +82,41 @@ Object::Object()
   isChildFlag = false;
 
   scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
+
+  std::cout<<loadOBJ( "models/Box.obj" )<<std::endl;
+  std::cout<<"Verts"<<std::endl;
+
+  for( unsigned int index = 0; index <  Vertices.size( ); index++ )
+  {
+    std::cout<<"Vertex: "<<Vertices[ index ].vertex.x<<" ";
+    std::cout<<Vertices[ index ].vertex.y<<" "<<Vertices[ index ].vertex.z<<std::endl;
+
+    std::cout<<"Color: "<<Vertices[ index ].color.x<<" ";
+    std::cout<<Vertices[ index ].color.y<<" "<<Vertices[ index ].color.z<<std::endl;
+
+  }
+
+  for( unsigned int index = 0; index <  Vertices.size( ); index++ )
+  {
+    std::cout<<"Vertex: "<<Vertices[ index ].vertex.x<<" ";
+    std::cout<<Vertices[ index ].vertex.y<<" "<<Vertices[ index ].vertex.z<<std::endl;
+
+    std::cout<<"Color: "<<Vertices[ index ].color.x<<" ";
+    std::cout<<Vertices[ index ].color.y<<" "<<Vertices[ index ].color.z<<std::endl;    
+  }
   
-  glGenBuffers(1, &VB);
+  for( unsigned int index = 0; index <  Indices.size( ); index++ )
+  {
+    std::cout<<"Index "<<Indices[ index ] + 1 <<std::endl;    
+  }
+
+  /*glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);*/
 }
 
 Object::~Object()
@@ -140,7 +168,7 @@ void Object::Update( unsigned int dt )
 
 @param in: dt: the time delta
 
-@param in: the table containing all objects
+@param in: objectTable: the table containing all objects
 
 @param in: setParentAsOrigin: whether or not to set the parent as the origin of 
                               the child
@@ -184,6 +212,100 @@ void Object::UpdateChildren
 glm::mat4 Object::GetModel()
 {
   return model;
+}
+
+
+// LOAD OBJ //////////////////
+/***************************************
+
+@brief loadOBJ
+
+@details loads an obj from file
+
+@param in: fileName: the file name of the object we are loading.
+
+@notes File must have triangular faces
+
+***************************************/
+bool Object::loadOBJ( const std::string& fileName )
+{
+  std::vector<Vertex> tmpVertices;
+  std::vector<unsigned int> tmpIndices;
+
+  std::ifstream fileIn( fileName.c_str() );
+  std::string bufferString;
+  Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+  float tmpFloat;
+  int tmpInt;
+  char delim;
+
+  if( fileIn.fail( ) ) 
+  {
+      fileIn.close( );
+      return false;
+  }
+
+  while( ( !fileIn.eof( ) ) && ( fileIn.good( ) ) )
+  {
+
+    bufferString.clear( );
+
+    fileIn >> bufferString;
+    
+    if( bufferString == "v" )
+    {
+      fileIn >> tmpFloat;
+      tmpVert.vertex.x = tmpFloat;
+
+      fileIn >> tmpFloat;
+      tmpVert.vertex.y = tmpFloat;
+
+      fileIn >> tmpFloat;
+      tmpVert.vertex.z = tmpFloat;
+
+      tmpVertices.push_back( tmpVert );
+    }
+    else if ( bufferString == "f" )
+    {
+      while( fileIn.peek( ) !=  '\n' )
+      {
+        fileIn >> tmpInt;
+        tmpIndices.push_back( ( tmpInt - 1 ) );
+
+        while( fileIn.peek( ) == '/' )
+        {
+          fileIn >> delim;
+        }
+
+        fileIn >> tmpInt;
+      }
+    }
+    else if( bufferString == "usemtl" )
+    {
+      
+    }    
+    else if( bufferString == "mtllib" )
+    {
+      
+    }
+
+    std::getline( fileIn, bufferString );
+  }
+
+  fileIn.close( );
+
+  Vertices = tmpVertices;
+  Indices = tmpIndices;
+
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+  return true;
 }
 
 void Object::Render()
