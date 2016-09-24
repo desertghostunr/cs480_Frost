@@ -60,6 +60,8 @@ bool Graphics::Initialize
   objectVector[0].setOrbitalRadius(5.5f);
   objectVector[0].updateRotationRate(1.0f);
 
+  objectVector[ 0 ].setRotationVector( glm::vec3( 1.0f, 0.0f, 0.0f ));
+
   objectVector[1].updateOrbitRate(0.4f);
   objectVector[1].setOrbitalRadius(3.5f);
   objectVector[1].updateRotationRate(0.4f);

@@ -23,6 +23,9 @@ class Object
 
     bool loadOBJ( const std::string& fileName );
 
+    bool loadMTL( const std::string& fileName, 
+                  std::vector<std::pair<std::string, glm::vec3>>& mtlDiffuseInfo );
+
     void updateRotationRate( float rotFactor );
 
     void toggleRotationDirection( );

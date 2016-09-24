@@ -83,9 +83,10 @@ Object::Object()
 
   scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
-  std::cout<<loadOBJ( "models/Box.obj" )<<std::endl;
-  std::cout<<"Verts"<<std::endl;
+  loadOBJ( "models/Box.obj" );
 
+  //debug
+  /*
   for( unsigned int index = 0; index <  Vertices.size( ); index++ )
   {
     std::cout<<"Vertex: "<<Vertices[ index ].vertex.x<<" ";
@@ -109,6 +110,7 @@ Object::Object()
   {
     std::cout<<"Index "<<Indices[ index ] + 1 <<std::endl;    
   }
+  */
 
   /*glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -230,14 +232,18 @@ glm::mat4 Object::GetModel()
 bool Object::loadOBJ( const std::string& fileName )
 {
   std::vector<Vertex> tmpVertices;
-  std::vector<unsigned int> tmpIndices;
+  std::vector<std::pair<std::string, unsigned int>> tmpIndices;
+  std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
 
   std::ifstream fileIn( fileName.c_str() );
   std::string bufferString;
+  std::string mtlFileName, mtlMaterial;
   Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
   float tmpFloat;
   int tmpInt;
   char delim;
+
+  unsigned int indicesIndex, mtlIndex, vertIndex;
 
   if( fileIn.fail( ) ) 
   {
@@ -245,8 +251,15 @@ bool Object::loadOBJ( const std::string& fileName )
       return false;
   }
 
-  while( ( !fileIn.eof( ) ) && ( fileIn.good( ) ) )
+  while( !fileIn.eof( ) )
   {
+
+    if( !fileIn.good( ) )
+    {
+      std::cout<<"Failed to load "<<fileName<<std::endl;
+      fileIn.close( );
+      return false;
+    }
 
     bufferString.clear( );
 
@@ -270,7 +283,8 @@ bool Object::loadOBJ( const std::string& fileName )
       while( fileIn.peek( ) !=  '\n' )
       {
         fileIn >> tmpInt;
-        tmpIndices.push_back( ( tmpInt - 1 ) );
+        tmpIndices.push_back( std::pair<std::string, unsigned int>( mtlMaterial, 
+                                                                    ( tmpInt - 1 ) ) );
 
         while( fileIn.peek( ) == '/' )
         {
@@ -282,20 +296,51 @@ bool Object::loadOBJ( const std::string& fileName )
     }
     else if( bufferString == "usemtl" )
     {
-      
+      mtlMaterial.clear( );
+
+      fileIn >> mtlMaterial;
     }    
     else if( bufferString == "mtllib" )
     {
-      
+      fileIn >> mtlFileName;
     }
 
     std::getline( fileIn, bufferString );
   }
 
-  fileIn.close( );
+  fileIn.close( );  
+
+  if( ( !mtlFileName.empty( ) ) && loadMTL( "models/" + mtlFileName, mtlDiffuseColors ) )
+  {
+    for( indicesIndex = 0; indicesIndex < tmpIndices.size( ); indicesIndex++ )
+    {
+      for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
+      {
+        if( mtlDiffuseColors[ mtlIndex ].first 
+            == tmpIndices[ indicesIndex ].first )
+        {
+          if( tmpIndices[ indicesIndex ].second < tmpVertices.size( ) )
+          {
+            tmpVertices[ tmpIndices[ indicesIndex ].second ].color 
+                                           = mtlDiffuseColors[ mtlIndex ].second;
+          }                                
+        }
+      }
+    }
+  }
 
   Vertices = tmpVertices;
-  Indices = tmpIndices;
+  Indices.clear( );
+
+  for( indicesIndex = 0; indicesIndex <tmpIndices.size( ); indicesIndex++ )
+  {
+    
+    Indices.push_back( tmpIndices[ indicesIndex ].second );
+  }
+
+  tmpVertices.clear( );
+  tmpIndices.clear( );
+  mtlDiffuseColors.clear( );
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -304,6 +349,76 @@ bool Object::loadOBJ( const std::string& fileName )
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+  return true;
+}
+
+// LOAD MTL //////////////////
+/***************************************
+
+@brief loadMTL
+
+@details loads an mtl file; only loads the diffuse color for each material
+
+@param in: fileName: the file name of the object we are loading.
+
+@notes None
+
+***************************************/
+bool Object::loadMTL
+( 
+  const std::string& fileName,
+  std::vector<std::pair<std::string, glm::vec3>>& mtlDiffuseInfo 
+)
+{
+  std::ifstream fileIn( fileName.c_str() );
+  glm::vec3 color;
+  std::string bufferString, mtlString;
+  float tmpFloat;  
+
+  if( fileIn.fail( ) ) 
+  {
+      fileIn.close( );
+      return false;
+  }
+
+  while( !fileIn.eof( ) )
+  {
+    if( !fileIn.good( ) )
+    {
+      std::cout<<"Failed to load "<<fileName<<std::endl;
+      fileIn.close( );
+      return false;
+    }
+
+    bufferString.clear( );
+
+    fileIn >> bufferString; 
+    
+    if( bufferString == "newmtl" )
+    {
+      mtlString.clear( );
+
+      fileIn >> mtlString;
+    }
+    else if ( bufferString == "Kd" )
+    {
+      fileIn >> tmpFloat;
+      color.r = tmpFloat;
+
+      fileIn >> tmpFloat;
+      color.g = tmpFloat;
+
+      fileIn >> tmpFloat;
+      color.b = tmpFloat;
+
+      mtlDiffuseInfo.push_back( std::pair<std::string, glm::vec3>( mtlString, 
+                                                                   color ) );
+    }
+    std::getline( fileIn, bufferString );
+  }
+
+  fileIn.close( );
 
   return true;
 }
