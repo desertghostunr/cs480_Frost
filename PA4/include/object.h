@@ -50,9 +50,13 @@ class Object
 
     void addChild( int childsWorldID );
 
-    int getChildsWorldID( int childsLocalID );
+    unsigned int getChildsWorldID( unsigned int childsLocalID );
 
-    int getNumberOfChildren( );
+    void setObjectsID( unsigned int id );
+
+    unsigned int getObjectsID( );
+
+    unsigned int getNumberOfChildren( );
 
     void setChildStatusFlag( bool flag );
 
@@ -129,6 +133,8 @@ class Object
     
 
     bool isChildFlag;
+
+    unsigned int objectID;
 };
 
 #endif /* OBJECT_H */

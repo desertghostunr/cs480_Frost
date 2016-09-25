@@ -15,7 +15,7 @@ class Engine
     Engine(string name, int width, int height);
     Engine(string name);
     ~Engine();
-    bool Initialize( const vector<pair<GLenum, string>>& inShaderVec );
+    bool Initialize( const GraphicsInfo& progInfo );
     void Run();
     void Keyboard();
     void Mouse();

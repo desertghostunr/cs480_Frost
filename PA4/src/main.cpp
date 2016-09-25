@@ -8,13 +8,14 @@
 //Global Constants //////////////////////////
 const string FRAGMENT_SHADER_OPT = "-f";
 const string VERTEX_SHADER_OPT = "-v";
+const string MODEL_PATH_OPT = "-m";
 const string HELP_OPT = "--h";
 
 const char TAB_CHAR = '\t';
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
-                                   vector<pair<GLenum, string>>& shaderVector );
+                                                        GraphicsInfo& progInfo);
 
 // main ///////////////////////////////////
 
@@ -22,10 +23,10 @@ int main(int argc, char **argv)
 {
   // Start an engine and run it then cleanup after
   Engine *engine = new Engine("Tutorial Window Name", 800, 600);
-  vector<pair<GLenum, string>> shaderVector;
+  GraphicsInfo progInfo;
 
   //handle cmd line parameters
-  if( !ProcessCommandLineParameters( argc, argv, shaderVector ) )
+  if( !ProcessCommandLineParameters( argc, argv, progInfo ) )
   {
     cout << endl;
     cout <<"Insufficient or incorrect command line parameters to run."<< endl;
@@ -34,7 +35,8 @@ int main(int argc, char **argv)
     cout <<" are specified."<< endl;
     cout <<"Example usage: " << endl;
     cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
-    cout <<"-f shaders/cubeFragmentShader.glsl" << endl << endl;
+    cout <<"-f shaders/cubeFragmentShader.glsl ";
+    cout <<"-m models/Box.obj" << endl << endl;
 
     cout <<"Run ./Tutorial --h for help with using the program."<<endl<<endl;
 
@@ -44,7 +46,7 @@ int main(int argc, char **argv)
   }
 
   //initialize engine and run it
-  if(!engine->Initialize(shaderVector))
+  if(!engine->Initialize(progInfo))
   {
     printf("The engine failed to start.\n");
     delete engine;
@@ -69,7 +71,7 @@ int main(int argc, char **argv)
 
 @param in: argVector: the argument vector
 
-@param out: shaderVector: a vector containing shaders and their type
+@param out: GraphicsInfo: a struct containing shaders, their type, and model file names
 
 @notes none
 
@@ -78,13 +80,13 @@ bool ProcessCommandLineParameters
 ( 
   int argCount, // the number of arguments
   char **argVector, // the argument vector
-  vector<pair<GLenum, string>>& shaderVector // a vector containing shader files
+  GraphicsInfo& progInfo // a struct containing the info
 )
 {
   GLenum shaderType;
   string tmpStr;
   int index;
-  bool vertShaderGiven = false, fragShaderGiven = false;
+  bool vertShaderGiven = false, fragShaderGiven = false, modelGiven = false;
 
   for( index = 1; index < argCount; index++ )
   {
@@ -110,12 +112,32 @@ bool ProcessCommandLineParameters
           || ( tmpStr == FRAGMENT_SHADER_OPT ) 
           || ( tmpStr == HELP_OPT ) )
       {
-        cout << "No shader file found after: " << argVector[ index -1 ] << endl;
+        cout << "No shader file found after: " << argVector[ index - 1 ] << endl;
         cout << "Terminating the program." <<endl;
         return false;
       }
 
-      shaderVector.push_back( pair<GLenum, string>(shaderType, tmpStr ) );
+      progInfo.shaderVector.push_back( pair<GLenum, string>(shaderType, tmpStr ) );
+    }
+    else if( tmpStr == MODEL_PATH_OPT )
+    {
+      index++;
+      tmpStr = argVector[ index ];
+
+      if( ( tmpStr == VERTEX_SHADER_OPT ) 
+          || ( tmpStr == FRAGMENT_SHADER_OPT ) 
+          || ( tmpStr == HELP_OPT )
+          || ( tmpStr == MODEL_PATH_OPT ) )
+      {
+        cout << "No model file found after: " << argVector[ index - 1 ] << endl;
+        cout << "Terminating the program." <<endl;
+        return false;
+      }
+
+      progInfo.modelVector.push_back( tmpStr );
+
+      modelGiven = true;
+      
     }
     else if( tmpStr == HELP_OPT )
     {
@@ -123,9 +145,10 @@ bool ProcessCommandLineParameters
 
       cout << "This program is ran as follows: " << endl;
       cout << " ./Tutorial -[SHADER_OPTION] [SHADER_FILE_PATH]";
-      cout << " -[SHADER_OPTION] [SHADER_FILE_PATH]" << endl << endl;
+      cout << " -[SHADER_OPTION] [SHADER_FILE_PATH]";
+      cout << " -[MODEL_OPTION] [MODEL_FILE_PATH]" << endl << endl;
 
-      cout<< "If only one type of shader is";
+      cout<< "If only one type of shader is specified or the model isn't";
       cout << " specified the program will terminate." << endl << endl;
       
       cout << "Options include: " <<endl;
@@ -133,6 +156,8 @@ bool ProcessCommandLineParameters
       cout << "specifing the vertex shader file path." << endl;
       cout << TAB_CHAR << FRAGMENT_SHADER_OPT << " [SHADER_FILE_PATH] : ";
       cout << "specifing the fragment shader file path." << endl << endl;
+      cout << TAB_CHAR << MODEL_PATH_OPT << " [MODEL_FILE_PATH] : ";
+      cout << "specifing the model file path." << endl << endl;
       
       cout << "Shader Information: " << endl;
       cout << "Typically shader files will be found in" << endl;
@@ -140,9 +165,16 @@ bool ProcessCommandLineParameters
       cout << "When ran this must be included in the shader file path." << endl;
       cout << "The path should look like: shaders/[SHADER_FILE]" << endl << endl;
 
+      cout << "Model Information: " << endl;
+      cout << "Typically model files will be found in" << endl;
+      cout << "[CURRENT_DIR]/models" <<  endl;
+      cout << "When ran this must be included in the model file path." << endl;
+      cout << "The path should look like: models/[MODEL_FILE]" << endl << endl;
+
       cout <<"Example usage: " << endl;
       cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
-      cout <<"-f shaders/cubeFragmentShader.glsl" << endl << endl;
+      cout <<"-f shaders/cubeFragmentShader.glsl ";
+      cout <<"-m models/Box.obj" << endl << endl;
 
       cout<<"Please see README.md in the project directory for any additional";
       cout<<"information."<<endl<<endl;
@@ -154,7 +186,7 @@ bool ProcessCommandLineParameters
     }
   }
 
-  return ( vertShaderGiven && fragShaderGiven );
+  return ( vertShaderGiven && fragShaderGiven && modelGiven );
 
 }
 

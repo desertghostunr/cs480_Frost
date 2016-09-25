@@ -10,13 +10,15 @@ using namespace std;
 #include "shader.h"
 #include "object.h"
 
+#include "GraphicsInfo.h"
+
 class Graphics
 {
   public:
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, 
-                    const std::vector<pair<GLenum, std::string>>& shaderInfo);
+                    const GraphicsInfo& progInfo );
     void Update(unsigned int dt);
     void Render();
 

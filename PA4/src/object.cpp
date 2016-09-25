@@ -4,64 +4,7 @@
 
 Object::Object()
 {  
-  /*
-    # Blender File for a Cube
-    o Cube
-    v 1.000000 -1.000000 -1.000000
-    v 1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 -1.000000
-    v 1.000000 1.000000 -0.999999
-    v 0.999999 1.000000 1.000001
-    v -1.000000 1.000000 1.000000
-    v -1.000000 1.000000 -1.000000
-    s off
-    f 2 3 4
-    f 8 7 6
-    f 1 5 6
-    f 2 6 7
-    f 7 8 4
-    f 1 4 8
-    f 1 2 4
-    f 5 8 6
-    f 2 1 6
-    f 3 2 7
-    f 3 7 4
-    f 5 1 8
-  */
-
- /* Vertices = {
-    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
-    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}},
-    {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
-  };
-
-  Indices = {
-    2, 3, 4,
-    8, 7, 6,
-    1, 5, 6,
-    2, 6, 7,
-    7, 8, 4,
-    1, 4, 8,
-    1, 2, 4,
-    5, 8, 6,
-    2, 1, 6,
-    3, 2, 7,
-    3, 7, 4,
-    5, 1, 8
-  };
-
-  // The index works at a 0th index
-  for(unsigned int i = 0; i < Indices.size(); i++)
-  {
-    Indices[i] = Indices[i] - 1;
-  }*/
-
+  
   model = glm::mat4(1.0f);
 
   rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
@@ -83,42 +26,8 @@ Object::Object()
 
   scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
-  loadOBJ( "models/Box.obj" );
+  objectID = -1;
 
-  //debug
-  /*
-  for( unsigned int index = 0; index <  Vertices.size( ); index++ )
-  {
-    std::cout<<"Vertex: "<<Vertices[ index ].vertex.x<<" ";
-    std::cout<<Vertices[ index ].vertex.y<<" "<<Vertices[ index ].vertex.z<<std::endl;
-
-    std::cout<<"Color: "<<Vertices[ index ].color.x<<" ";
-    std::cout<<Vertices[ index ].color.y<<" "<<Vertices[ index ].color.z<<std::endl;
-
-  }
-
-  for( unsigned int index = 0; index <  Vertices.size( ); index++ )
-  {
-    std::cout<<"Vertex: "<<Vertices[ index ].vertex.x<<" ";
-    std::cout<<Vertices[ index ].vertex.y<<" "<<Vertices[ index ].vertex.z<<std::endl;
-
-    std::cout<<"Color: "<<Vertices[ index ].color.x<<" ";
-    std::cout<<Vertices[ index ].color.y<<" "<<Vertices[ index ].color.z<<std::endl;    
-  }
-  
-  for( unsigned int index = 0; index <  Indices.size( ); index++ )
-  {
-    std::cout<<"Index "<<Indices[ index ] + 1 <<std::endl;    
-  }
-  */
-
-  /*glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);*/
 }
 
 Object::~Object()
@@ -308,9 +217,14 @@ bool Object::loadOBJ( const std::string& fileName )
     std::getline( fileIn, bufferString );
   }
 
-  fileIn.close( );  
+  fileIn.close( );
 
-  if( ( !mtlFileName.empty( ) ) && loadMTL( "models/" + mtlFileName, mtlDiffuseColors ) )
+  bufferString.clear( );
+
+  bufferString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
+
+  if( ( !mtlFileName.empty( ) ) 
+      && loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
   {
     for( indicesIndex = 0; indicesIndex < tmpIndices.size( ); indicesIndex++ )
     {
@@ -691,7 +605,7 @@ void Object::addChild( int childsWorldID )
 
 ***************************************/
 
-int Object::getChildsWorldID( int childsLocalID )
+unsigned int Object::getChildsWorldID( unsigned int childsLocalID )
 {
   if( ( childsLocalID >= 0 ) && ( childsLocalID < childrenVector.size() ) )
   {
@@ -699,6 +613,40 @@ int Object::getChildsWorldID( int childsLocalID )
   }
 
   return -1;
+}
+
+// SET OBJECTS ID /////////////////////
+/***************************************
+
+@brief setObjectsID
+
+@details sets the objects id
+
+@param in: id: the id of the object
+
+@notes none
+
+***************************************/
+void Object::setObjectsID( unsigned int id )
+{
+  objectID = id;
+}
+
+// GET OBJECTS ID /////////////////////
+/***************************************
+
+@brief getObjectsID
+
+@details gets the objects id
+
+@param None
+
+@notes returns -1 if the id hasn't been set yet
+
+***************************************/
+unsigned int Object::getObjectsID( )
+{
+  return objectID;
 }
 
 // GET NUMBER OF CHILDREN /////////////////////
@@ -713,7 +661,7 @@ int Object::getChildsWorldID( int childsLocalID )
 @notes None
 
 ***************************************/
-int Object::getNumberOfChildren( )
+unsigned int Object::getNumberOfChildren( )
 {
   return childrenVector.size( );
 }

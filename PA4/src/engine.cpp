@@ -25,7 +25,7 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
-bool Engine::Initialize( const vector<pair<GLenum, string>>& inShaderVec )
+bool Engine::Initialize( const GraphicsInfo& progInfo )
 {
   // Start a window
   m_window = new Window();
@@ -37,7 +37,7 @@ bool Engine::Initialize( const vector<pair<GLenum, string>>& inShaderVec )
 
   // Start the graphics
   m_graphics = new Graphics();
-  if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, inShaderVec ))
+  if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, progInfo ))
   {
     printf("The graphics failed to initialize.\n");
     return false;

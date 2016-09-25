@@ -14,7 +14,7 @@ bool Graphics::Initialize
 (
   int width, 
   int height, 
-  const std::vector<pair<GLenum, std::string>>& shaderInfo
+  const GraphicsInfo& progInfo
 )
 {
   // Used for the linux OS
@@ -53,7 +53,13 @@ bool Graphics::Initialize
 
   // Create the object
   objectVector.push_back(Object());
-  objectVector.push_back(Object());
+  if( !objectVector[ 0 ].loadOBJ( progInfo.modelVector[ 0 ] ) )
+  {
+    std::cout<<"Failed to load the obj file"<<std::endl;
+    return false;
+  }
+  objectVector.push_back( Object() );
+  objectVector[ 1 ].loadOBJ( "models/Box.obj" );
 
   //initialize the object's orbit rate 
   objectVector[0].updateOrbitRate(0.35f);
@@ -78,11 +84,12 @@ bool Graphics::Initialize
     return false;
   }
   
-  for( index = 0; index < shaderInfo.size(); index++ )
+  for( index = 0; index < progInfo.shaderVector.size(); index++ )
   {
-    if(!m_shader->AddShader(shaderInfo[index].first, shaderInfo[index].second))
+    if(!m_shader->AddShader( progInfo.shaderVector[index].first, 
+                                        progInfo.shaderVector[index].second ) )
     {
-      if(shaderInfo[index].first == GL_VERTEX_SHADER)
+      if( progInfo.shaderVector[index].first == GL_VERTEX_SHADER )
       {
         printf("Vertex Shader failed to Initialize\n");
       }
