@@ -140,8 +140,8 @@ glm::mat4 Object::GetModel()
 ***************************************/
 bool Object::loadOBJ( const std::string& fileName )
 {
-  std::vector<Vertex> tmpVertices;
-  std::vector<std::pair<std::string, unsigned int>> tmpIndices;
+  std::vector<std::string> mtlNames;
+  std::vector<std::vector<unsigned int>> tmpIndices;
   std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
 
   std::ifstream fileIn( fileName.c_str() );
@@ -152,7 +152,7 @@ bool Object::loadOBJ( const std::string& fileName )
   int tmpInt;
   char delim;
 
-  unsigned int indicesIndex, mtlIndex, vertIndex;
+  unsigned int indicesIndex, mtlIndex, mtlNameIndex;
 
   if( fileIn.fail( ) ) 
   {
@@ -160,6 +160,7 @@ bool Object::loadOBJ( const std::string& fileName )
       return false;
   }
 
+  Vertices.clear( );
   while( !fileIn.eof( ) )
   {
 
@@ -185,15 +186,18 @@ bool Object::loadOBJ( const std::string& fileName )
       fileIn >> tmpFloat;
       tmpVert.vertex.z = tmpFloat;
 
-      tmpVertices.push_back( tmpVert );
+      Vertices.push_back( tmpVert );
     }
     else if ( bufferString == "f" )
     {
+      if( tmpIndices.empty( ) )
+      {
+        tmpIndices.push_back( std::vector<unsigned int>( ) );
+      }
       while( fileIn.peek( ) !=  '\n' )
       {
         fileIn >> tmpInt;
-        tmpIndices.push_back( std::pair<std::string, unsigned int>( mtlMaterial, 
-                                                                    ( tmpInt - 1 ) ) );
+        tmpIndices[ tmpIndices.size( ) - 1 ].push_back( ( tmpInt - 1 ) );
 
         while( fileIn.peek( ) == '/' )
         {
@@ -208,6 +212,9 @@ bool Object::loadOBJ( const std::string& fileName )
       mtlMaterial.clear( );
 
       fileIn >> mtlMaterial;
+
+      mtlNames.push_back( mtlMaterial );
+      tmpIndices.push_back( std::vector<unsigned int>( ) );
     }    
     else if( bufferString == "mtllib" )
     {
@@ -226,36 +233,47 @@ bool Object::loadOBJ( const std::string& fileName )
   if( ( !mtlFileName.empty( ) ) 
       && loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
   {
-    for( indicesIndex = 0; indicesIndex < tmpIndices.size( ); indicesIndex++ )
+
+    for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
     {
-      for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
+      for( indicesIndex = 0; 
+           indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
       {
-        if( mtlDiffuseColors[ mtlIndex ].first 
-            == tmpIndices[ indicesIndex ].first )
+        for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
         {
-          if( tmpIndices[ indicesIndex ].second < tmpVertices.size( ) )
+
+        
+          if( mtlDiffuseColors[ mtlIndex ].first == mtlNames[ mtlNameIndex ] )
           {
-            tmpVertices[ tmpIndices[ indicesIndex ].second ].color 
+            if( tmpIndices[ mtlNameIndex ][ indicesIndex ] < Vertices.size( ) )
+            {
+              Vertices[ 
+                 tmpIndices[ mtlNameIndex ][ indicesIndex ] ].color 
                                            = mtlDiffuseColors[ mtlIndex ].second;
-          }                                
+            }                                
+          }
         }
       }
     }
+    
   }
 
-  Vertices = tmpVertices;
   Indices.clear( );
 
-  for( indicesIndex = 0; indicesIndex <tmpIndices.size( ); indicesIndex++ )
+  for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
   {
+    for( indicesIndex = 0; 
+         indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
+    {
     
-    Indices.push_back( tmpIndices[ indicesIndex ].second );
-  }
+      Indices.push_back( tmpIndices[ mtlNameIndex ][ indicesIndex ] );
+    }
+  }  
 
-  tmpVertices.clear( );
   tmpIndices.clear( );
   mtlDiffuseColors.clear( );
 
+  
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);

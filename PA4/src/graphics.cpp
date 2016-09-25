@@ -58,7 +58,8 @@ bool Graphics::Initialize
     std::cout<<"Failed to load the obj file"<<std::endl;
     return false;
   }
-  objectVector.push_back( Object() );
+
+  /*objectVector.push_back( Object() );
   objectVector[ 1 ].loadOBJ( "models/Box.obj" );
 
   //initialize the object's orbit rate 
@@ -74,7 +75,7 @@ bool Graphics::Initialize
 
   objectVector[ 0 ].addChild( 1 );
   objectVector[ 1 ].setChildStatusFlag( true );
-  objectVector[ 1 ].setScale( glm::vec3( 0.6f, 0.63f, 0.6f ) );
+  objectVector[ 1 ].setScale( glm::vec3( 0.6f, 0.63f, 0.6f ) );*/
 
   // Set up the shaders
   m_shader = new Shader();
@@ -148,14 +149,14 @@ void Graphics::Update(unsigned int dt)
 
     if( !objectVector[ index ].isChild( ) )
     {
-      objectVector[ index ].incrementAngle( dt );
-      objectVector[ index ].incrementOrbitAngle( dt );
+      //objectVector[ index ].incrementAngle( dt );
+      //objectVector[ index ].incrementOrbitAngle( dt );
 
-      objectVector[ index ].createSatelliteTransform( );
+      //objectVector[ index ].createSatelliteTransform( );
 
       objectVector[ index ].Update( dt );
       
-      objectVector[ index ].UpdateChildren( dt, objectVector, true );
+      //objectVector[ index ].UpdateChildren( dt, objectVector, true );
     }
     
   }
