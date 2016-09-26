@@ -177,6 +177,7 @@ bool Object::loadOBJ( const std::string& fileName )
     
     if( bufferString == "v" )
     {
+     
       fileIn >> tmpFloat;
       tmpVert.vertex.x = tmpFloat;
 
@@ -190,21 +191,35 @@ bool Object::loadOBJ( const std::string& fileName )
     }
     else if ( bufferString == "f" )
     {
+
       if( tmpIndices.empty( ) )
       {
         tmpIndices.push_back( std::vector<unsigned int>( ) );
       }
-      while( fileIn.peek( ) !=  '\n' )
+
+      while( ( fileIn.peek( ) !=  '\n' ) 
+             && ( fileIn.peek( ) != '\r' ) 
+             && ( fileIn.good( ) ) )
       {
+        
         fileIn >> tmpInt;
         tmpIndices[ tmpIndices.size( ) - 1 ].push_back( ( tmpInt - 1 ) );
 
-        while( fileIn.peek( ) == '/' )
+        //make sure that we don't have a number equal to the integer value of '/'
+        while( ( fileIn.peek( ) == '/' ) 
+               && ( fileIn.peek( ) != ' ' ) 
+               && ( fileIn.good( ) ) ) 
         {
-          fileIn >> delim;
-        }
+          while( fileIn.peek( ) == '/' )
+          {
+            fileIn >> delim;
+          }
 
-        fileIn >> tmpInt;
+          fileIn >> tmpInt;
+
+        }      
+
+        
       }
     }
     else if( bufferString == "usemtl" )
@@ -225,6 +240,7 @@ bool Object::loadOBJ( const std::string& fileName )
   }
 
   fileIn.close( );
+
 
   bufferString.clear( );
 
