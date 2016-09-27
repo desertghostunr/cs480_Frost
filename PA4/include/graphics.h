@@ -23,16 +23,16 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-    bool updateRotation( int objectID, float speedOfRotation );
-    bool updateOrbit( int objectID, float speedOfOrbit );
+    bool updateRotation( unsigned int objectID, float speedOfRotation );
+    bool updateOrbit( unsigned int objectID, float speedOfOrbit );
 
-    bool toggleRotationDirection( int objectID );
-    bool toggleRotationPaused( int objectID );
+    bool toggleRotationDirection( unsigned int objectID );
+    bool toggleRotationPaused( unsigned int objectID );
     
-    bool toggleOrbitDirection( int objectID );
-    bool toggleOrbitPaused( int objectID );
+    bool toggleOrbitDirection( unsigned int objectID );
+    bool toggleOrbitPaused( unsigned int objectID );
 
-    bool toggleAllPaused( int objectID );
+    bool toggleAllPaused( unsigned int objectID );
     void toggleAllObjectsPaused( );
 
   private:

@@ -225,7 +225,7 @@ std::string Graphics::ErrorString(GLenum error)
 @notes None
 
 ***************************************/
-bool Graphics::updateRotation( int objectID, float speedOfRotation )
+bool Graphics::updateRotation( unsigned int objectID, float speedOfRotation )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
@@ -250,7 +250,7 @@ bool Graphics::updateRotation( int objectID, float speedOfRotation )
 @notes None
 
 ***************************************/
-bool Graphics::updateOrbit( int objectID, float speedOfOrbit )
+bool Graphics::updateOrbit( unsigned int objectID, float speedOfOrbit )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
@@ -273,7 +273,7 @@ bool Graphics::updateOrbit( int objectID, float speedOfOrbit )
 @notes None
 
 ***************************************/
-bool Graphics::toggleRotationDirection( int objectID )
+bool Graphics::toggleRotationDirection( unsigned int objectID )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
@@ -295,7 +295,7 @@ bool Graphics::toggleRotationDirection( int objectID )
 @notes None
 
 ***************************************/
-bool Graphics::toggleRotationPaused( int objectID )
+bool Graphics::toggleRotationPaused( unsigned int objectID )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
@@ -318,7 +318,7 @@ bool Graphics::toggleRotationPaused( int objectID )
 @notes None
 
 ***************************************/
-bool Graphics::toggleOrbitDirection( int objectID )
+bool Graphics::toggleOrbitDirection( unsigned int objectID )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
@@ -340,7 +340,7 @@ bool Graphics::toggleOrbitDirection( int objectID )
 @notes None
 
 ***************************************/
-bool Graphics::toggleOrbitPaused( int objectID )
+bool Graphics::toggleOrbitPaused( unsigned int objectID )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
@@ -362,7 +362,7 @@ bool Graphics::toggleOrbitPaused( int objectID )
 @notes None
 
 ***************************************/
-bool Graphics::toggleAllPaused( int objectID )
+bool Graphics::toggleAllPaused( unsigned int objectID )
 {
   if( objectID < objectRegistry.getSize( ) )
   {
