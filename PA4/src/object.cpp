@@ -118,7 +118,7 @@ bool Object::loadOBJ( const std::string& fileName )
 
     if( !fileIn.good( ) )
     {
-      std::cout<<"Failed to load "<<fileName<<std::endl;
+      std::cout<<"File stream corrupted while loading "<<fileName<<std::endl;
       fileIn.close( );
       return false;
     }
@@ -165,13 +165,11 @@ bool Object::loadOBJ( const std::string& fileName )
              && ( fileIn.peek( ) != '\r' ) 
              && ( fileIn.good( ) ) )
       {
-        
+
         fileIn >> tmpInt;
         tmpIndices[ tmpIndices.size( ) - 1 ].push_back( ( tmpInt - 1 ) );
 
-        //make sure that we don't have a number equal to the integer value of '/'
-        while( ( fileIn.peek( ) == '/' ) 
-               && ( fileIn.peek( ) != ' ' ) 
+        while( ( fileIn.peek( ) == '/' )
                && ( fileIn.good( ) ) ) 
         {
           while( fileIn.peek( ) == '/' )
@@ -182,6 +180,19 @@ bool Object::loadOBJ( const std::string& fileName )
           fileIn >> tmpInt;
 
         }
+
+        while( ( fileIn.peek( ) == ' ' ) || ( fileIn.peek( ) == '\t' )  )
+        {
+          while( fileIn.peek( ) == ' ' )
+          {
+            std::getline( fileIn, bufferString, ' ' );
+          }
+
+          while( fileIn.peek( ) == '\t' )
+          {
+            std::getline( fileIn, bufferString, '\t' );
+          }
+        }  
 
       }
     }

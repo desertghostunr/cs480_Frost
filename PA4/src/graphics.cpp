@@ -56,7 +56,7 @@ bool Graphics::Initialize
   
   if( !objectRegistry[ 0 ].loadOBJ( progInfo.modelVector[ 0 ] ) )
   {
-    std::cout<<"Failed to load the obj file"<<std::endl;
+    std::cout<<"Failed to load "<<progInfo.modelVector[ 0 ]<<"."<<std::endl;
     return false;
   }
 
