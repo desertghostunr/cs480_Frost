@@ -41,7 +41,7 @@ bool Graphics::Initialize
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
-  int index;
+  unsigned int index;
 
   // Init Camera
   m_camera = new Camera();
@@ -149,7 +149,7 @@ void Graphics::Update(unsigned int dt)
 
 void Graphics::Render()
 {
-  int index;
+  unsigned int index;
 
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
@@ -387,7 +387,7 @@ bool Graphics::toggleAllPaused( unsigned int objectID )
 void Graphics::toggleAllObjectsPaused( )
 {
   bool allPausedAtCall = true;
-  int index;
+  unsigned int index;
 
   for( index = 0; index < objectRegistry.getSize( ); index++ )
   {

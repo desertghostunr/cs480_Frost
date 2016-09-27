@@ -39,7 +39,7 @@ void Object::Update( unsigned int dt )
 {
   glm::mat4 lhMat, rhMat;
 
-  int index;
+  unsigned int index;
 
   if( transformVector.empty( ) )
   {
@@ -599,7 +599,7 @@ bool Object::addChild( unsigned int childsWorldID )
 {
   if( ( childsWorldID != objectID ) 
       && ( childsWorldID != parentID ) 
-      && ( childsWorldID != -1 ) )
+      && ( ( int ) childsWorldID != -1 ) )
   {
     childrenVector.push_back( childsWorldID );
     return true;
@@ -634,7 +634,7 @@ bool Object::addParent( unsigned int parentsWorldID )
   }
 
   if( ( parentsWorldID != objectID ) 
-      && ( parentsWorldID != -1 ) )
+      && ( ( int ) parentsWorldID != -1 ) )
   {
     parentID = parentsWorldID;
 
@@ -712,7 +712,7 @@ bool Object::setObjectsID( unsigned int id )
   }
 
   if( ( id != parentID ) 
-      && ( id != -1 ) )
+      && ( ( int ) id != -1 ) )
   {
     objectID = id;
 
