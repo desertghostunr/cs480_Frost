@@ -11,6 +11,7 @@ using namespace std;
 #include "object.h"
 
 #include "GraphicsInfo.h"
+#include "ObjectTable.h"
 
 class Graphics
 {
@@ -44,7 +45,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    std::vector<Object> objectVector; //this vector holds the scene's objects
+    ObjectTable objectRegistry; //holds the scene's objects
 };
 
 #endif /* GRAPHICS_H */

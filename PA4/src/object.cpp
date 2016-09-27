@@ -1,10 +1,10 @@
 #include "object.h"
 #include <fstream>
+#include <algorithm>
 
 
 Object::Object()
 {  
-  
   model = glm::mat4(1.0f);
 
   rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
@@ -22,11 +22,10 @@ Object::Object()
 
   origin = glm::mat4(1.0f);
 
-  isChildFlag = false;
-
   scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
   objectID = -1;
+  parentID = -1;
 
 }
 
@@ -70,55 +69,6 @@ void Object::Update( unsigned int dt )
   transformVector.clear( );
 }
 
-// UPDATE CHILDREN //////////////////
-/***************************************
-
-@brief updateChildren
-
-@details updates the object's children
-
-@param in: dt: the time delta
-
-@param in: objectTable: the table containing all objects
-
-@param in: setParentAsOrigin: whether or not to set the parent as the origin of 
-                              the child
-
-@notes Recursively calls this on the childs children
-
-***************************************/
-void Object::UpdateChildren
-( 
-  unsigned int dt, 
-  std::vector<Object>& objectTable,
-  bool setParentAsOrigin
-)
-{
-  int index, worldIndex;
-  
-  for( index = 0; index < childrenVector.size( ); index++ )
-  {
-    worldIndex = getChildsWorldID( index );
-
-    if( ( worldIndex >= 0 ) && ( worldIndex < objectTable.size() ) ) 
-    {
-      if( setParentAsOrigin )
-      {
-      
-        objectTable[ worldIndex ].setOrigin( model );
-      }
-      objectTable[ worldIndex ].incrementAngle( dt );
-      objectTable[ worldIndex ].incrementOrbitAngle( dt );
-      objectTable[ worldIndex ].createSatelliteTransform( );
-
-      objectTable[ worldIndex ].Update( dt );
-      
-      //recursive call to children
-      objectTable[ worldIndex ].UpdateChildren( dt, objectTable, 
-                                                setParentAsOrigin );
-    }   
-  }
-}
 
 glm::mat4 Object::GetModel()
 {
@@ -140,19 +90,21 @@ glm::mat4 Object::GetModel()
 ***************************************/
 bool Object::loadOBJ( const std::string& fileName )
 {
-  std::vector<std::string> mtlNames;
-  std::vector<std::vector<unsigned int>> tmpIndices;
-  std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
 
   std::ifstream fileIn( fileName.c_str() );
   std::string bufferString;
   std::string mtlFileName, mtlMaterial;
-  Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+  Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 0.0f, 0.0f, 0.0f ) );
   float tmpFloat;
   int tmpInt;
   char delim;
 
   unsigned int indicesIndex, mtlIndex, mtlNameIndex;
+
+
+  std::vector<std::string> mtlNames;
+  std::vector<std::vector<unsigned int>> tmpIndices;
+  std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
 
   if( fileIn.fail( ) ) 
   {
@@ -174,6 +126,18 @@ bool Object::loadOBJ( const std::string& fileName )
     bufferString.clear( );
 
     fileIn >> bufferString;
+
+    //remove unwanted characters
+    bufferString.erase( std::remove( bufferString.begin( ), 
+                             bufferString.end( ), ' ' ), bufferString.end( ) );
+
+    bufferString.erase( std::remove( bufferString.begin( ), 
+                            bufferString.end( ), '\t' ), bufferString.end( ) );
+
+    bufferString.erase( std::remove( bufferString.begin( ), 
+                            bufferString.end( ), '\n' ), bufferString.end( ) );
+
+    
     
     if( bufferString == "v" )
     {
@@ -217,9 +181,8 @@ bool Object::loadOBJ( const std::string& fileName )
 
           fileIn >> tmpInt;
 
-        }      
+        }
 
-        
       }
     }
     else if( bufferString == "usemtl" )
@@ -246,32 +209,33 @@ bool Object::loadOBJ( const std::string& fileName )
 
   bufferString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
 
-  if( ( !mtlFileName.empty( ) ) 
-      && loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
+  if( !mtlFileName.empty( ) ) 
+  {
+    if( !loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
+    {
+      std::cout<<"Failed to load mtl file."<<std::endl;
+    }
+  }
+     
+  for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
   {
 
-    for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
+    for( indicesIndex = 0; 
+         indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
     {
-      for( indicesIndex = 0; 
-           indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
+      for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
       {
-        for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
+        if( (  mtlDiffuseColors.size( ) == 1 ) 
+            || ( mtlDiffuseColors[ mtlIndex ].first == mtlNames[ mtlNameIndex ] ) )
         {
-
-        
-          if( mtlDiffuseColors[ mtlIndex ].first == mtlNames[ mtlNameIndex ] )
-          {
-            if( tmpIndices[ mtlNameIndex ][ indicesIndex ] < Vertices.size( ) )
-            {
-              Vertices[ 
-                 tmpIndices[ mtlNameIndex ][ indicesIndex ] ].color 
+          if( tmpIndices[ mtlNameIndex ][ indicesIndex ] < Vertices.size( ) )
+          {  
+            Vertices[ tmpIndices[ mtlNameIndex ][ indicesIndex ] ].color 
                                            = mtlDiffuseColors[ mtlIndex ].second;
-            }                                
-          }
+          }                                
         }
       }
-    }
-    
+    }    
   }
 
   Indices.clear( );
@@ -341,7 +305,17 @@ bool Object::loadMTL
 
     bufferString.clear( );
 
-    fileIn >> bufferString; 
+    fileIn >> bufferString;
+
+    //remove unwanted characters
+    bufferString.erase( std::remove( bufferString.begin( ), 
+                            bufferString.end( ), ' ' ), bufferString.end( ) );
+
+    bufferString.erase( std::remove( bufferString.begin( ), 
+                            bufferString.end( ), '\t' ), bufferString.end( ) );
+
+    bufferString.erase( std::remove( bufferString.begin( ), 
+                            bufferString.end( ), '\n' ), bufferString.end( ) );
     
     if( bufferString == "newmtl" )
     {
@@ -377,8 +351,8 @@ void Object::Render()
   glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+  glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
+  glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (void*)offsetof( Vertex, color ) );
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
@@ -621,9 +595,54 @@ void Object::setOrigin( const glm::mat4 & newOrigin )
 @notes None
 
 ***************************************/
-void Object::addChild( int childsWorldID )
+bool Object::addChild( unsigned int childsWorldID )
 {
-  childrenVector.push_back( childsWorldID );
+  if( ( childsWorldID != objectID ) 
+      && ( childsWorldID != parentID ) 
+      && ( childsWorldID != -1 ) )
+  {
+    childrenVector.push_back( childsWorldID );
+    return true;
+  }
+
+  return false;
+  
+}
+
+// ADD PARENT //////////////////
+/***************************************
+
+@brief addParent
+
+@details adds a parentsWorldID to the table
+
+@param in: parentsWorldID: the id of the parent in object table
+
+@notes None
+
+***************************************/
+bool Object::addParent( unsigned int parentsWorldID )
+{ 
+  unsigned int index;
+
+  for( index = 0; index < childrenVector.size( ); index++ )
+  {
+    if( parentsWorldID == childrenVector[ index ] )
+    {
+      return false;
+    }
+  }
+
+  if( ( parentsWorldID != objectID ) 
+      && ( parentsWorldID != -1 ) )
+  {
+    parentID = parentsWorldID;
+
+    return true;
+  }
+
+  return false;
+  
 }
 
 // GET CHILDS WORLD ID /////////////////////
@@ -649,6 +668,25 @@ unsigned int Object::getChildsWorldID( unsigned int childsLocalID )
   return -1;
 }
 
+// GET PARENTS WORLD ID /////////////////////
+/***************************************
+
+@brief getParentsWorldID
+
+@details gets the location of the parent in object table
+
+@param None
+
+@notes returns -1 if id is not set
+
+***************************************/
+
+unsigned int Object::getParentsWorldID( )
+{
+  return parentID;
+}
+
+
 // SET OBJECTS ID /////////////////////
 /***************************************
 
@@ -661,9 +699,28 @@ unsigned int Object::getChildsWorldID( unsigned int childsLocalID )
 @notes none
 
 ***************************************/
-void Object::setObjectsID( unsigned int id )
+bool Object::setObjectsID( unsigned int id )
 {
-  objectID = id;
+  unsigned int index;
+
+  for( index = 0; index < childrenVector.size( ); index++ )
+  {
+    if( id == childrenVector[ index ] )
+    {
+      return false;
+    }
+  }
+
+  if( ( id != parentID ) 
+      && ( id != -1 ) )
+  {
+    objectID = id;
+
+    return true;
+  }
+
+  return false;
+  
 }
 
 // GET OBJECTS ID /////////////////////
@@ -697,24 +754,9 @@ unsigned int Object::getObjectsID( )
 ***************************************/
 unsigned int Object::getNumberOfChildren( )
 {
+
   return childrenVector.size( );
-}
 
-// SET CHILD STATUS FLAG /////////////////////
-/***************************************
-
-@brief setChildStatusFlag
-
-@details sets the child status flag
-
-@param in: flag: the flag value
-
-@notes none
-
-***************************************/
-void Object::setChildStatusFlag( bool flag )
-{
-  isChildFlag = flag;
 }
 
 // IS CHILD /////////////////////
@@ -731,7 +773,7 @@ void Object::setChildStatusFlag( bool flag )
 ***************************************/
 bool Object::isChild( )
 {
-  return isChildFlag;
+  return ( ( int ) parentID != -1 );
 }
 
 // SET SCALE  /////////////////////

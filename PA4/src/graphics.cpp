@@ -52,30 +52,17 @@ bool Graphics::Initialize
   }
 
   // Create the object
-  objectVector.push_back(Object());
-  if( !objectVector[ 0 ].loadOBJ( progInfo.modelVector[ 0 ] ) )
+  objectRegistry.addObject( );
+  
+  if( !objectRegistry[ 0 ].loadOBJ( progInfo.modelVector[ 0 ] ) )
   {
     std::cout<<"Failed to load the obj file"<<std::endl;
     return false;
   }
 
-  /*objectVector.push_back( Object() );
-  objectVector[ 1 ].loadOBJ( "models/Box.obj" );
+  objectRegistry[ 0 ].setRotationVector( glm::vec3( 1.0f, 1.0f, -1.0f ) );
 
-  //initialize the object's orbit rate 
-  objectVector[0].updateOrbitRate(0.35f);
-  objectVector[0].setOrbitalRadius(5.5f);
-  objectVector[0].updateRotationRate(1.0f);
-
-  objectVector[ 0 ].setRotationVector( glm::vec3( 1.0f, 0.0f, 0.0f ));
-
-  objectVector[1].updateOrbitRate(0.4f);
-  objectVector[1].setOrbitalRadius(3.5f);
-  objectVector[1].updateRotationRate(0.4f);
-
-  objectVector[ 0 ].addChild( 1 );
-  objectVector[ 1 ].setChildStatusFlag( true );
-  objectVector[ 1 ].setScale( glm::vec3( 0.6f, 0.63f, 0.6f ) );*/
+  objectRegistry[ 0 ].updateRotationRate( 0.1f );
 
   // Set up the shaders
   m_shader = new Shader();
@@ -142,21 +129,19 @@ bool Graphics::Initialize
 
 void Graphics::Update(unsigned int dt)
 {
-  int index;
+  unsigned int index;
   // Update the objects
-  for( index = 0; index < objectVector.size( ); index++ )
+  for( index = 0; index < objectRegistry.getSize( ); index++ )
   {
 
-    if( !objectVector[ index ].isChild( ) )
+    if( !objectRegistry[ index ].isChild( ) )
     {
-      //objectVector[ index ].incrementAngle( dt );
-      //objectVector[ index ].incrementOrbitAngle( dt );
+      objectRegistry[ index ].incrementAngle( dt );
 
-      //objectVector[ index ].createSatelliteTransform( );
+      objectRegistry[ index ].commitRotation( );
 
-      objectVector[ index ].Update( dt );
-      
-      //objectVector[ index ].UpdateChildren( dt, objectVector, true );
+      objectRegistry[ index ].Update( dt );
+
     }
     
   }
@@ -178,11 +163,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the objects
-  for( index = 0; index < objectVector.size( ); index++ )
+  for( index = 0; index < objectRegistry.getSize( ); index++ )
   {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE,
-                       glm::value_ptr(objectVector[index].GetModel()));
-    objectVector[index].Render();
+                       glm::value_ptr(objectRegistry[index].GetModel()));
+    objectRegistry[index].Render();
   }
 
   // Get any errors from OpenGL
@@ -242,9 +227,9 @@ std::string Graphics::ErrorString(GLenum error)
 ***************************************/
 bool Graphics::updateRotation( int objectID, float speedOfRotation )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].updateRotationRate( speedOfRotation );
+    objectRegistry[objectID].updateRotationRate( speedOfRotation );
     return true;
   }
   return false;
@@ -267,9 +252,9 @@ bool Graphics::updateRotation( int objectID, float speedOfRotation )
 ***************************************/
 bool Graphics::updateOrbit( int objectID, float speedOfOrbit )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].updateOrbitRate( speedOfOrbit );
+    objectRegistry[objectID].updateOrbitRate( speedOfOrbit );
     return true;
   }
   return false;
@@ -290,9 +275,9 @@ bool Graphics::updateOrbit( int objectID, float speedOfOrbit )
 ***************************************/
 bool Graphics::toggleRotationDirection( int objectID )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].toggleRotationDirection( );
+    objectRegistry[objectID].toggleRotationDirection( );
     return true;
   }
   return false;
@@ -312,9 +297,9 @@ bool Graphics::toggleRotationDirection( int objectID )
 ***************************************/
 bool Graphics::toggleRotationPaused( int objectID )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].toggleRotationPaused( );
+    objectRegistry[objectID].toggleRotationPaused( );
     return true;
   }
   return false;
@@ -335,9 +320,9 @@ bool Graphics::toggleRotationPaused( int objectID )
 ***************************************/
 bool Graphics::toggleOrbitDirection( int objectID )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].toggleOrbitDirection( );
+    objectRegistry[objectID].toggleOrbitDirection( );
     return true;
   }
   return false;
@@ -357,9 +342,9 @@ bool Graphics::toggleOrbitDirection( int objectID )
 ***************************************/
 bool Graphics::toggleOrbitPaused( int objectID )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].toggleOrbitPaused( );
+    objectRegistry[objectID].toggleOrbitPaused( );
     return true;
   }
   return false;
@@ -379,9 +364,9 @@ bool Graphics::toggleOrbitPaused( int objectID )
 ***************************************/
 bool Graphics::toggleAllPaused( int objectID )
 {
-  if( objectID < objectVector.size( ) )
+  if( objectID < objectRegistry.getSize( ) )
   {
-    objectVector[objectID].toggleAllPaused( );
+    objectRegistry[objectID].toggleAllPaused( );
     return true;
   }
   return false;
@@ -404,11 +389,11 @@ void Graphics::toggleAllObjectsPaused( )
   bool allPausedAtCall = true;
   int index;
 
-  for( index = 0; index < objectVector.size( ); index++ )
+  for( index = 0; index < objectRegistry.getSize( ); index++ )
   {
-    if( !objectVector[ index ].isPaused( ) )
+    if( !objectRegistry[ index ].isPaused( ) )
     {
-      objectVector[ index ].toggleAllPaused( );
+      objectRegistry[ index ].toggleAllPaused( );
       allPausedAtCall = false;
     }
   }
@@ -422,11 +407,11 @@ void Graphics::toggleAllObjectsPaused( )
 
   //however, if they all were paused
   //then we need to unpause them
-  for( index = 0; index < objectVector.size( ); index++ )
+  for( index = 0; index < objectRegistry.getSize( ); index++ )
   {
-    if( objectVector[ index ].isPaused( ) )
+    if( objectRegistry[ index ].isPaused( ) )
     {
-      objectVector[ index ].toggleAllPaused( );
+      objectRegistry[ index ].toggleAllPaused( );
     }
   }
 
