@@ -17,6 +17,8 @@ class Object
 
     glm::mat4 GetModel();
 
+    bool loadModelFromFile( const std::string& fileName );
+
     bool loadOBJ( const std::string& fileName );
 
     bool loadMTL( const std::string& fileName, 

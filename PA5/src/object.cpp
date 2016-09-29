@@ -1,7 +1,9 @@
 #include "object.h"
 #include <fstream>
 #include <algorithm>
-
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 Object::Object()
 {  
@@ -75,6 +77,24 @@ glm::mat4 Object::GetModel()
   return model;
 }
 
+// LOAD MODEL FROM FILE //////////////////
+/***************************************
+
+@brief loadModelFromFile
+
+@details loads a model from file
+
+@param in: fileName: the file name of the object we are loading.
+
+@notes File must have triangular faces
+
+***************************************/
+bool Object::loadModelFromFile( const std::string& fileName )
+{
+  //to do: implement ///////////////////////////////////////
+  return false;
+  //////////////////////////////////////////////////////////
+}
 
 // LOAD OBJ //////////////////
 /***************************************

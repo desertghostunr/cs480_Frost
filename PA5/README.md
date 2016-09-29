@@ -3,13 +3,13 @@
 # Dependencies, Building, and Running
 
 ## Dependency Instructions
-To run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), and [SDL2](https://wiki.libsdl.org/Tutorials).
+To run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), and [ASSIMP] .
 
 This project uses OpenGL 3.3.
 
 ### Ubuntu/Linux
 ```bash
-sudo apt-get install libglew-dev libglm-dev libsdl2-dev
+sudo apt-get install libglew-dev libglm-dev libsdl2-dev libassimp-dev
 ```
 
 ## Building and Running
