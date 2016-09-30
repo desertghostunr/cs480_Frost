@@ -6,79 +6,79 @@
 #include <assimp/postprocess.h>
 
 #if defined( _WIN64 ) || defined( _WIN32 )
-  #define M_PI    3.14159265358979323846264338327950288
+    #define M_PI        3.14159265358979323846264338327950288
 #endif
 
 Object::Object()
-{  
-  model = glm::mat4(1.0f);
+{    
+    model = glm::mat4(1.0f);
 
-  rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
+    rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
 
-  angle = 0.0f;
-  orbitalAngle = 0.0f;
+    angle = 0.0f;
+    orbitalAngle = 0.0f;
 
-  orbitalRadius = 1.0f;
+    orbitalRadius = 1.0f;
 
-  rotationRate = 1.0f;
-  orbitRate = 1.0f;
+    rotationRate = 1.0f;
+    orbitRate = 1.0f;
 
-  rotationControlMultiplier = 1.0f;
-  orbitControlMultiplier = -1.0f;
+    rotationControlMultiplier = 1.0f;
+    orbitControlMultiplier = -1.0f;
 
-  origin = glm::mat4(1.0f);
+    origin = glm::mat4(1.0f);
 
-  scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
+    scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
-  objectID = -1;
-  parentID = -1;
+    objectID = -1;
+    parentID = -1;
 
 }
 
 Object::~Object()
 {
-  Vertices.clear();
-  Indices.clear();
+    Vertices.clear();
+    Indices.clear();
 }
 
 void Object::Update( unsigned int dt )
 {
-  glm::mat4 lhMat, rhMat;
+    glm::mat4 lhMat, rhMat;
 
-  unsigned int index;
+    unsigned int index;
 
-  if( transformVector.empty( ) )
-  {
-    return;
-  }
+    if( transformVector.empty( ) )
+    {
+        return;
+    }
 
-  if( transformVector.size( ) == 1 )
-  {
-    model = transformVector[ 0 ];
+    if( transformVector.size( ) == 1 )
+    {
+        model = transformVector[ 0 ];
+
+        transformVector.clear( );
+
+        return;
+    }
+
+    //apply all transforms in the order they were added
+    rhMat = transformVector[ 0 ];
+
+    for( index = 1; index < transformVector.size( ); index++ )
+    {
+        lhMat = transformVector[ index ];
+        rhMat = lhMat * rhMat;
+    }
+
+    model = rhMat;
 
     transformVector.clear( );
-
-    return;
-  }
-
-  //apply all transforms in the order they were added
-  rhMat = transformVector[ 0 ];
-
-  for( index = 1; index < transformVector.size( ); index++ )
-  {
-    lhMat = transformVector[ index ];
-    rhMat = lhMat * rhMat;
-  }
-
-  model = rhMat;
-
-  transformVector.clear( );
 }
 
 
 glm::mat4 Object::GetModel()
 {
-  return model;
+    return model;
 }
 
 // LOAD MODEL FROM FILE //////////////////
@@ -95,9 +95,9 @@ glm::mat4 Object::GetModel()
 ***************************************/
 bool Object::loadModelFromFile( const std::string& fileName )
 {
-  //to do: implement ///////////////////////////////////////
-  return false;
-  //////////////////////////////////////////////////////////
+    //to do: implement ///////////////////////////////////////
+    return false;
+    //////////////////////////////////////////////////////////
 }
 
 // LOAD OBJ //////////////////
@@ -115,189 +115,189 @@ bool Object::loadModelFromFile( const std::string& fileName )
 bool Object::loadOBJ( const std::string& fileName )
 {
 
-  std::ifstream fileIn( fileName.c_str() );
-  std::string bufferString;
-  std::string mtlFileName, mtlMaterial;
-  Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 0.0f, 0.0f, 0.0f ) );
-  float tmpFloat;
-  int tmpInt;
-  char delim;
+    std::ifstream fileIn( fileName.c_str() );
+    std::string bufferString;
+    std::string mtlFileName, mtlMaterial;
+    Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 0.0f, 0.0f, 0.0f ) );
+    float tmpFloat;
+    int tmpInt;
+    char delim;
 
-  unsigned int indicesIndex, mtlIndex, mtlNameIndex;
+    unsigned int indicesIndex, mtlIndex, mtlNameIndex;
 
 
-  std::vector<std::string> mtlNames;
-  std::vector<std::vector<unsigned int>> tmpIndices;
-  std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
+    std::vector<std::string> mtlNames;
+    std::vector<std::vector<unsigned int>> tmpIndices;
+    std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
 
-  if( fileIn.fail( ) ) 
-  {
-      fileIn.close( );
-      return false;
-  }
-
-  Vertices.clear( );
-  while( !fileIn.eof( ) )
-  {
-
-    if( !fileIn.good( ) )
+    if( fileIn.fail( ) ) 
     {
-      std::cout<<"File stream corrupted while loading "<<fileName<<std::endl;
-      fileIn.close( );
-      return false;
+            fileIn.close( );
+            return false;
     }
+
+    Vertices.clear( );
+    while( !fileIn.eof( ) )
+    {
+
+        if( !fileIn.good( ) )
+        {
+            std::cout<<"File stream corrupted while loading "<<fileName<<std::endl;
+            fileIn.close( );
+            return false;
+        }
+
+        bufferString.clear( );
+
+        fileIn >> bufferString;
+
+        //remove unwanted characters
+        bufferString.erase( std::remove( bufferString.begin( ), 
+                                                         bufferString.end( ), ' ' ), bufferString.end( ) );
+
+        bufferString.erase( std::remove( bufferString.begin( ), 
+                                                        bufferString.end( ), '\t' ), bufferString.end( ) );
+
+        bufferString.erase( std::remove( bufferString.begin( ), 
+                                                        bufferString.end( ), '\n' ), bufferString.end( ) );
+
+        
+        
+        if( bufferString == "v" )
+        {
+         
+            fileIn >> tmpFloat;
+            tmpVert.vertex.x = tmpFloat;
+
+            fileIn >> tmpFloat;
+            tmpVert.vertex.y = tmpFloat;
+
+            fileIn >> tmpFloat;
+            tmpVert.vertex.z = tmpFloat;
+
+            Vertices.push_back( tmpVert );
+        }
+        else if ( bufferString == "f" )
+        {
+
+            if( tmpIndices.empty( ) )
+            {
+                tmpIndices.push_back( std::vector<unsigned int>( ) );
+            }
+
+            while( ( fileIn.peek( ) !=    '\n' ) 
+                         && ( fileIn.peek( ) != '\r' ) 
+                         && ( fileIn.good( ) ) )
+            {
+
+                fileIn >> tmpInt;
+                tmpIndices[ tmpIndices.size( ) - 1 ].push_back( ( tmpInt - 1 ) );
+
+                while( ( fileIn.peek( ) == '/' )
+                             && ( fileIn.good( ) ) ) 
+                {
+                    while( fileIn.peek( ) == '/' )
+                    {
+                        fileIn >> delim;
+                    }
+
+                    fileIn >> tmpInt;
+
+                }
+
+                while( ( fileIn.peek( ) == ' ' ) || ( fileIn.peek( ) == '\t' )    )
+                {
+                    while( fileIn.peek( ) == ' ' )
+                    {
+                        std::getline( fileIn, bufferString, ' ' );
+                    }
+
+                    while( fileIn.peek( ) == '\t' )
+                    {
+                        std::getline( fileIn, bufferString, '\t' );
+                    }
+                }    
+
+            }
+        }
+        else if( bufferString == "usemtl" )
+        {
+            mtlMaterial.clear( );
+
+            fileIn >> mtlMaterial;
+
+            mtlNames.push_back( mtlMaterial );
+            tmpIndices.push_back( std::vector<unsigned int>( ) );
+        }        
+        else if( bufferString == "mtllib" )
+        {
+            fileIn >> mtlFileName;
+        }
+
+        std::getline( fileIn, bufferString );
+    }
+
+    fileIn.close( );
+
 
     bufferString.clear( );
 
-    fileIn >> bufferString;
+    bufferString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
 
-    //remove unwanted characters
-    bufferString.erase( std::remove( bufferString.begin( ), 
-                             bufferString.end( ), ' ' ), bufferString.end( ) );
-
-    bufferString.erase( std::remove( bufferString.begin( ), 
-                            bufferString.end( ), '\t' ), bufferString.end( ) );
-
-    bufferString.erase( std::remove( bufferString.begin( ), 
-                            bufferString.end( ), '\n' ), bufferString.end( ) );
-
-    
-    
-    if( bufferString == "v" )
+    if( !mtlFileName.empty( ) ) 
     {
-     
-      fileIn >> tmpFloat;
-      tmpVert.vertex.x = tmpFloat;
-
-      fileIn >> tmpFloat;
-      tmpVert.vertex.y = tmpFloat;
-
-      fileIn >> tmpFloat;
-      tmpVert.vertex.z = tmpFloat;
-
-      Vertices.push_back( tmpVert );
-    }
-    else if ( bufferString == "f" )
-    {
-
-      if( tmpIndices.empty( ) )
-      {
-        tmpIndices.push_back( std::vector<unsigned int>( ) );
-      }
-
-      while( ( fileIn.peek( ) !=  '\n' ) 
-             && ( fileIn.peek( ) != '\r' ) 
-             && ( fileIn.good( ) ) )
-      {
-
-        fileIn >> tmpInt;
-        tmpIndices[ tmpIndices.size( ) - 1 ].push_back( ( tmpInt - 1 ) );
-
-        while( ( fileIn.peek( ) == '/' )
-               && ( fileIn.good( ) ) ) 
+        if( !loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
         {
-          while( fileIn.peek( ) == '/' )
-          {
-            fileIn >> delim;
-          }
-
-          fileIn >> tmpInt;
-
+            std::cout<<"Failed to load mtl file."<<std::endl;
         }
+    }
+         
+    for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
+    {
 
-        while( ( fileIn.peek( ) == ' ' ) || ( fileIn.peek( ) == '\t' )  )
+        for( indicesIndex = 0; 
+                 indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
         {
-          while( fileIn.peek( ) == ' ' )
-          {
-            std::getline( fileIn, bufferString, ' ' );
-          }
-
-          while( fileIn.peek( ) == '\t' )
-          {
-            std::getline( fileIn, bufferString, '\t' );
-          }
-        }  
-
-      }
-    }
-    else if( bufferString == "usemtl" )
-    {
-      mtlMaterial.clear( );
-
-      fileIn >> mtlMaterial;
-
-      mtlNames.push_back( mtlMaterial );
-      tmpIndices.push_back( std::vector<unsigned int>( ) );
-    }    
-    else if( bufferString == "mtllib" )
-    {
-      fileIn >> mtlFileName;
+            for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
+            {
+                if( (    mtlDiffuseColors.size( ) == 1 ) 
+                        || ( mtlDiffuseColors[ mtlIndex ].first == mtlNames[ mtlNameIndex ] ) )
+                {
+                    if( tmpIndices[ mtlNameIndex ][ indicesIndex ] < Vertices.size( ) )
+                    {    
+                        Vertices[ tmpIndices[ mtlNameIndex ][ indicesIndex ] ].color 
+                                                                                     = mtlDiffuseColors[ mtlIndex ].second;
+                    }                                                                
+                }
+            }
+        }        
     }
 
-    std::getline( fileIn, bufferString );
-  }
+    Indices.clear( );
 
-  fileIn.close( );
-
-
-  bufferString.clear( );
-
-  bufferString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
-
-  if( !mtlFileName.empty( ) ) 
-  {
-    if( !loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
+    for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
     {
-      std::cout<<"Failed to load mtl file."<<std::endl;
-    }
-  }
-     
-  for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
-  {
-
-    for( indicesIndex = 0; 
-         indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
-    {
-      for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
-      {
-        if( (  mtlDiffuseColors.size( ) == 1 ) 
-            || ( mtlDiffuseColors[ mtlIndex ].first == mtlNames[ mtlNameIndex ] ) )
+        for( indicesIndex = 0; 
+                 indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
         {
-          if( tmpIndices[ mtlNameIndex ][ indicesIndex ] < Vertices.size( ) )
-          {  
-            Vertices[ tmpIndices[ mtlNameIndex ][ indicesIndex ] ].color 
-                                           = mtlDiffuseColors[ mtlIndex ].second;
-          }                                
+        
+            Indices.push_back( tmpIndices[ mtlNameIndex ][ indicesIndex ] );
         }
-      }
     }    
-  }
 
-  Indices.clear( );
+    tmpIndices.clear( );
+    mtlDiffuseColors.clear( );
 
-  for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
-  {
-    for( indicesIndex = 0; 
-         indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
-    {
     
-      Indices.push_back( tmpIndices[ mtlNameIndex ][ indicesIndex ] );
-    }
-  }  
+    glGenBuffers(1, &VB);
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
-  tmpIndices.clear( );
-  mtlDiffuseColors.clear( );
+    glGenBuffers(1, &IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 
-  
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
-  return true;
+    return true;
 }
 
 // LOAD MTL //////////////////
@@ -314,87 +314,87 @@ bool Object::loadOBJ( const std::string& fileName )
 ***************************************/
 bool Object::loadMTL
 ( 
-  const std::string& fileName,
-  std::vector<std::pair<std::string, glm::vec3>>& mtlDiffuseInfo 
+    const std::string& fileName,
+    std::vector<std::pair<std::string, glm::vec3>>& mtlDiffuseInfo 
 )
 {
-  std::ifstream fileIn( fileName.c_str() );
-  glm::vec3 color;
-  std::string bufferString, mtlString;
-  float tmpFloat;  
+    std::ifstream fileIn( fileName.c_str() );
+    glm::vec3 color;
+    std::string bufferString, mtlString;
+    float tmpFloat;    
 
-  if( fileIn.fail( ) ) 
-  {
-      fileIn.close( );
-      return false;
-  }
-
-  while( !fileIn.eof( ) )
-  {
-    if( !fileIn.good( ) )
+    if( fileIn.fail( ) ) 
     {
-      std::cout<<"Failed to load "<<fileName<<std::endl;
-      fileIn.close( );
-      return false;
+            fileIn.close( );
+            return false;
     }
 
-    bufferString.clear( );
-
-    fileIn >> bufferString;
-
-    //remove unwanted characters
-    bufferString.erase( std::remove( bufferString.begin( ), 
-                            bufferString.end( ), ' ' ), bufferString.end( ) );
-
-    bufferString.erase( std::remove( bufferString.begin( ), 
-                            bufferString.end( ), '\t' ), bufferString.end( ) );
-
-    bufferString.erase( std::remove( bufferString.begin( ), 
-                            bufferString.end( ), '\n' ), bufferString.end( ) );
-    
-    if( bufferString == "newmtl" )
+    while( !fileIn.eof( ) )
     {
-      mtlString.clear( );
+        if( !fileIn.good( ) )
+        {
+            std::cout<<"Failed to load "<<fileName<<std::endl;
+            fileIn.close( );
+            return false;
+        }
 
-      fileIn >> mtlString;
+        bufferString.clear( );
+
+        fileIn >> bufferString;
+
+        //remove unwanted characters
+        bufferString.erase( std::remove( bufferString.begin( ), 
+                                                        bufferString.end( ), ' ' ), bufferString.end( ) );
+
+        bufferString.erase( std::remove( bufferString.begin( ), 
+                                                        bufferString.end( ), '\t' ), bufferString.end( ) );
+
+        bufferString.erase( std::remove( bufferString.begin( ), 
+                                                        bufferString.end( ), '\n' ), bufferString.end( ) );
+        
+        if( bufferString == "newmtl" )
+        {
+            mtlString.clear( );
+
+            fileIn >> mtlString;
+        }
+        else if ( bufferString == "Kd" )
+        {
+            fileIn >> tmpFloat;
+            color.r = tmpFloat;
+
+            fileIn >> tmpFloat;
+            color.g = tmpFloat;
+
+            fileIn >> tmpFloat;
+            color.b = tmpFloat;
+
+            mtlDiffuseInfo.push_back( std::pair<std::string, glm::vec3>( mtlString, 
+                                                                                                                                     color ) );
+        }
+        std::getline( fileIn, bufferString );
     }
-    else if ( bufferString == "Kd" )
-    {
-      fileIn >> tmpFloat;
-      color.r = tmpFloat;
 
-      fileIn >> tmpFloat;
-      color.g = tmpFloat;
+    fileIn.close( );
 
-      fileIn >> tmpFloat;
-      color.b = tmpFloat;
-
-      mtlDiffuseInfo.push_back( std::pair<std::string, glm::vec3>( mtlString, 
-                                                                   color ) );
-    }
-    std::getline( fileIn, bufferString );
-  }
-
-  fileIn.close( );
-
-  return true;
+    return true;
 }
 
 void Object::Render()
 {
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
-  glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (void*)offsetof( Vertex, color ) );
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
+    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (void*)offsetof( Vertex, color ) );
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
-  glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
-  glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
 }
 
 // UPDATE ROTATION RATE //////////////////
@@ -410,8 +410,8 @@ void Object::Render()
 
 ***************************************/
 void Object::updateRotationRate( float rotFactor )
-{  
-  rotationRate = rotFactor;  
+{    
+    rotationRate = rotFactor;    
 }
 
 // TOGGLE ROTATION DIRECTION //////////////////
@@ -428,12 +428,12 @@ void Object::updateRotationRate( float rotFactor )
 ***************************************/
 void Object::toggleRotationDirection( )
 {
-  if( rotationControlMultiplier == 0.0 )
-  {
-    rotationControlMultiplier = 1.0;
-  }
+    if( rotationControlMultiplier == 0.0 )
+    {
+        rotationControlMultiplier = 1.0;
+    }
 
-  rotationRate *= -1.0;
+    rotationRate *= -1.0;
 }
 
 // GET RATE OF ROTATION //////////////////
@@ -450,7 +450,7 @@ void Object::toggleRotationDirection( )
 ***************************************/
 float Object::getRateOfRotation( )
 {
-  return rotationRate;
+    return rotationRate;
 }
 
 // TOGGLE ROTATION PAUSED //////////////////
@@ -467,14 +467,14 @@ float Object::getRateOfRotation( )
 ***************************************/
 void Object::toggleRotationPaused( )
 {
-  if( rotationControlMultiplier == 0.0)
-  {
-    rotationControlMultiplier = 1.0;
-  }
-  else
-  {
-    rotationControlMultiplier = 0.0;
-  }
+    if( rotationControlMultiplier == 0.0)
+    {
+        rotationControlMultiplier = 1.0;
+    }
+    else
+    {
+        rotationControlMultiplier = 0.0;
+    }
 }
 
 
@@ -491,8 +491,8 @@ void Object::toggleRotationPaused( )
 
 ***************************************/
 void Object::updateOrbitRate( float orbitFactor )
-{  
-  orbitRate = orbitFactor;  
+{    
+    orbitRate = orbitFactor;    
 }
 
 // TOGGLE ORBIT DIRECTION //////////////////
@@ -509,15 +509,15 @@ void Object::updateOrbitRate( float orbitFactor )
 ***************************************/
 void Object::toggleOrbitDirection( )
 {
-  if( orbitControlMultiplier == 0.0 )
-  {
-    orbitControlMultiplier = -1.0;
-  }
+    if( orbitControlMultiplier == 0.0 )
+    {
+        orbitControlMultiplier = -1.0;
+    }
 
-  orbitRate *= -1.0;
+    orbitRate *= -1.0;
 }
 
-// GET RATE OF ORBIT  //////////////////
+// GET RATE OF ORBIT    //////////////////
 /***************************************
 
 @brief getRateOfOrbit
@@ -531,7 +531,7 @@ void Object::toggleOrbitDirection( )
 ***************************************/
 float Object::getRateOfOrbit( )
 {
-  return orbitRate;
+    return orbitRate;
 }
 
 // TOGGLE ORBIT PAUSED //////////////////
@@ -548,14 +548,14 @@ float Object::getRateOfOrbit( )
 ***************************************/
 void Object::toggleOrbitPaused( )
 {
-  if( orbitControlMultiplier == 0.0 )
-  {
-    orbitControlMultiplier = -1.0;
-  }
-  else
-  {
-    orbitControlMultiplier = 0.0;
-  }
+    if( orbitControlMultiplier == 0.0 )
+    {
+        orbitControlMultiplier = -1.0;
+    }
+    else
+    {
+        orbitControlMultiplier = 0.0;
+    }
 }
 
 // TOGGLE ALL PAUSED //////////////////
@@ -572,16 +572,16 @@ void Object::toggleOrbitPaused( )
 ***************************************/
 void Object::toggleAllPaused( )
 {
-  if( ( rotationControlMultiplier == 0.0 ) && ( orbitControlMultiplier == 0.0 ) )
-  {
-    rotationControlMultiplier = 1.0;
-    orbitControlMultiplier = -1.0;
-  }
-  else
-  {
-    rotationControlMultiplier = 0.0;
-    orbitControlMultiplier = 0.0;
-  }
+    if( ( rotationControlMultiplier == 0.0 ) && ( orbitControlMultiplier == 0.0 ) )
+    {
+        rotationControlMultiplier = 1.0;
+        orbitControlMultiplier = -1.0;
+    }
+    else
+    {
+        rotationControlMultiplier = 0.0;
+        orbitControlMultiplier = 0.0;
+    }
 }
 
 // SET ORBITAL RADIUS //////////////////
@@ -598,7 +598,7 @@ void Object::toggleAllPaused( )
 ***************************************/
 void Object::setOrbitalRadius( float radius )
 {
-  orbitalRadius = radius;
+    orbitalRadius = radius;
 }
 
 // SET ORIGIN //////////////////
@@ -615,7 +615,7 @@ void Object::setOrbitalRadius( float radius )
 ***************************************/
 void Object::setOrigin( const glm::mat4 & newOrigin )
 {
-  origin = newOrigin;
+    origin = newOrigin;
 }
 
 // ADD CHILD //////////////////
@@ -632,16 +632,16 @@ void Object::setOrigin( const glm::mat4 & newOrigin )
 ***************************************/
 bool Object::addChild( unsigned int childsWorldID )
 {
-  if( ( childsWorldID != objectID ) 
-      && ( childsWorldID != parentID ) 
-      && ( ( int ) childsWorldID != -1 ) )
-  {
-    childrenVector.push_back( childsWorldID );
-    return true;
-  }
+    if( ( childsWorldID != objectID ) 
+            && ( childsWorldID != parentID ) 
+            && ( ( int ) childsWorldID != -1 ) )
+    {
+        childrenVector.push_back( childsWorldID );
+        return true;
+    }
 
-  return false;
-  
+    return false;
+    
 }
 
 // ADD PARENT //////////////////
@@ -658,26 +658,26 @@ bool Object::addChild( unsigned int childsWorldID )
 ***************************************/
 bool Object::addParent( unsigned int parentsWorldID )
 { 
-  unsigned int index;
+    unsigned int index;
 
-  for( index = 0; index < childrenVector.size( ); index++ )
-  {
-    if( parentsWorldID == childrenVector[ index ] )
+    for( index = 0; index < childrenVector.size( ); index++ )
     {
-      return false;
+        if( parentsWorldID == childrenVector[ index ] )
+        {
+            return false;
+        }
     }
-  }
 
-  if( ( parentsWorldID != objectID ) 
-      && ( ( int ) parentsWorldID != -1 ) )
-  {
-    parentID = parentsWorldID;
+    if( ( parentsWorldID != objectID ) 
+            && ( ( int ) parentsWorldID != -1 ) )
+    {
+        parentID = parentsWorldID;
 
-    return true;
-  }
+        return true;
+    }
 
-  return false;
-  
+    return false;
+    
 }
 
 // GET CHILDS WORLD ID /////////////////////
@@ -695,12 +695,12 @@ bool Object::addParent( unsigned int parentsWorldID )
 
 unsigned int Object::getChildsWorldID( unsigned int childsLocalID )
 {
-  if( ( childsLocalID >= 0 ) && ( childsLocalID < childrenVector.size() ) )
-  {
-    return childrenVector[ childsLocalID ];
-  }
+    if( ( childsLocalID >= 0 ) && ( childsLocalID < childrenVector.size() ) )
+    {
+        return childrenVector[ childsLocalID ];
+    }
 
-  return -1;
+    return -1;
 }
 
 // GET PARENTS WORLD ID /////////////////////
@@ -718,7 +718,7 @@ unsigned int Object::getChildsWorldID( unsigned int childsLocalID )
 
 unsigned int Object::getParentsWorldID( )
 {
-  return parentID;
+    return parentID;
 }
 
 
@@ -736,26 +736,26 @@ unsigned int Object::getParentsWorldID( )
 ***************************************/
 bool Object::setObjectsID( unsigned int id )
 {
-  unsigned int index;
+    unsigned int index;
 
-  for( index = 0; index < childrenVector.size( ); index++ )
-  {
-    if( id == childrenVector[ index ] )
+    for( index = 0; index < childrenVector.size( ); index++ )
     {
-      return false;
+        if( id == childrenVector[ index ] )
+        {
+            return false;
+        }
     }
-  }
 
-  if( ( id != parentID ) 
-      && ( ( int ) id != -1 ) )
-  {
-    objectID = id;
+    if( ( id != parentID ) 
+            && ( ( int ) id != -1 ) )
+    {
+        objectID = id;
 
-    return true;
-  }
+        return true;
+    }
 
-  return false;
-  
+    return false;
+    
 }
 
 // GET OBJECTS ID /////////////////////
@@ -772,7 +772,7 @@ bool Object::setObjectsID( unsigned int id )
 ***************************************/
 unsigned int Object::getObjectsID( )
 {
-  return objectID;
+    return objectID;
 }
 
 // GET NUMBER OF CHILDREN /////////////////////
@@ -790,7 +790,7 @@ unsigned int Object::getObjectsID( )
 unsigned int Object::getNumberOfChildren( )
 {
 
-  return childrenVector.size( );
+    return childrenVector.size( );
 
 }
 
@@ -808,10 +808,10 @@ unsigned int Object::getNumberOfChildren( )
 ***************************************/
 bool Object::isChild( )
 {
-  return ( ( int ) parentID != -1 );
+    return ( ( int ) parentID != -1 );
 }
 
-// SET SCALE  /////////////////////
+// SET SCALE    /////////////////////
 /***************************************
 
 @brief setScale
@@ -825,10 +825,10 @@ bool Object::isChild( )
 ***************************************/
 void Object::setScale( const glm::vec3& scale )
 {
-  scaleFactor = scale;
+    scaleFactor = scale;
 }
 
-// SET SCALE  /////////////////////
+// SET SCALE    /////////////////////
 /***************************************
 
 @brief getScale
@@ -842,7 +842,7 @@ void Object::setScale( const glm::vec3& scale )
 ***************************************/
 glm::vec3 Object::getScale( )
 {
-  return scaleFactor;
+    return scaleFactor;
 }
 
 // CREATE ORBIT IN TRANSLATION VECTOR /////////////////////
@@ -863,14 +863,14 @@ glm::vec3 Object::getScale( )
 ***************************************/
 void Object::createOrbitInTranslationVector
 ( 
-  const glm::vec3& angle,
-  const glm::vec3& radius,
-  const glm::vec3& localOffset 
+    const glm::vec3& angle,
+    const glm::vec3& radius,
+    const glm::vec3& localOffset 
 )
 {
-  translationVector = glm::vec3( radius.x * cos( angle.x ), 
-                                 radius.y * tan( angle.y ),
-                                 radius.z * sin( angle.z ) );
+    translationVector = glm::vec3( radius.x * cos( angle.x ), 
+                                                                 radius.y * tan( angle.y ),
+                                                                 radius.z * sin( angle.z ) );
 }
 
 // SET TRANSLATION VECTOR /////////////////////
@@ -887,7 +887,7 @@ void Object::createOrbitInTranslationVector
 ***************************************/
 void Object::setTranslationVector( const glm::vec3& transVec )
 {
-  translationVector = transVec;
+    translationVector = transVec;
 }
 
 // SET ROTATION VECTOR /////////////////////
@@ -904,7 +904,7 @@ void Object::setTranslationVector( const glm::vec3& transVec )
 ***************************************/
 void Object::setRotationVector( const glm::vec3 rotVec )
 {
-  rotationVector = rotVec;
+    rotationVector = rotVec;
 }
 
 // COMMIT TRANSLATION /////////////////////
@@ -921,8 +921,8 @@ void Object::setRotationVector( const glm::vec3 rotVec )
 ***************************************/
 void Object::commitTranslation( )
 {
-  transformVector.push_back( glm::translate( glm::mat4(1.0f),
-                                             translationVector ) );
+    transformVector.push_back( glm::translate( glm::mat4(1.0f),
+                                                                                         translationVector ) );
 }
 
 // COMMIT ROTATION/////////////////////
@@ -937,10 +937,10 @@ void Object::commitTranslation( )
 @notes none
 
 ***************************************/
-void Object::commitRotation(  )
+void Object::commitRotation(    )
 {
-  transformVector.push_back( glm::rotate( glm::mat4(1.0f), 
-                                          (angle), rotationVector ) );
+    transformVector.push_back( glm::rotate( glm::mat4(1.0f), 
+                                                                                    (angle), rotationVector ) );
 }
 
 // COMMIT SCALE /////////////////////
@@ -957,7 +957,7 @@ void Object::commitRotation(  )
 ***************************************/
 void Object::commitScale( )
 {
-  transformVector.push_back( glm::scale( scaleFactor ) );
+    transformVector.push_back( glm::scale( scaleFactor ) );
 }
 
 // COMMIT ORIGIN /////////////////////
@@ -974,7 +974,7 @@ void Object::commitScale( )
 ***************************************/
 void Object::commitOrigin( )
 {
-  transformVector.push_back( origin );
+    transformVector.push_back( origin );
 }
 
 // INCREMENT ANGLE /////////////////////
@@ -991,7 +991,7 @@ void Object::commitOrigin( )
 ***************************************/
 void Object::incrementAngle( unsigned int dt )
 {
-  angle += rotationControlMultiplier * rotationRate * dt * M_PI/1000;
+    angle += rotationControlMultiplier * rotationRate * dt * M_PI/1000;
 }
 
 // GET ANGLE /////////////////////
@@ -1008,7 +1008,7 @@ void Object::incrementAngle( unsigned int dt )
 ***************************************/
 float Object::getAngle( )
 {
-  return angle;
+    return angle;
 }
 
 // SET ANGLE /////////////////////
@@ -1025,7 +1025,7 @@ float Object::getAngle( )
 ***************************************/
 void Object::setAngle( float newAngle )
 {
-  angle = newAngle;
+    angle = newAngle;
 }
 
 // INCREMENT ORBIT ANGLE /////////////////////
@@ -1042,7 +1042,7 @@ void Object::setAngle( float newAngle )
 ***************************************/
 void Object::incrementOrbitAngle( unsigned int dt )
 {
-  orbitalAngle += orbitControlMultiplier * orbitRate * dt * M_PI/1000;
+    orbitalAngle += orbitControlMultiplier * orbitRate * dt * M_PI/1000;
 }
 
 // GET ORBITAL ANGLE /////////////////////
@@ -1059,7 +1059,7 @@ void Object::incrementOrbitAngle( unsigned int dt )
 ***************************************/
 float Object::getOrbitAngle( )
 {
-  return orbitalAngle;
+    return orbitalAngle;
 }
 
 // SET ORBIT ANGLE /////////////////////
@@ -1076,11 +1076,11 @@ float Object::getOrbitAngle( )
 ***************************************/
 void Object::setOrbitAngle( float newAngle )
 {
-  orbitalAngle = newAngle;
+    orbitalAngle = newAngle;
 }
 
 
-// IS PAUSED  /////////////////////
+// IS PAUSED    /////////////////////
 /***************************************
 
 @brief isPaused( )
@@ -1094,11 +1094,11 @@ void Object::setOrbitAngle( float newAngle )
 ***************************************/
 bool Object::isPaused( )
 {
-  return ( ( rotationControlMultiplier == 0.0 ) 
-            && ( orbitControlMultiplier == 0.0 ) );
+    return ( ( rotationControlMultiplier == 0.0 ) 
+                        && ( orbitControlMultiplier == 0.0 ) );
 }
 
-// CREATE SATELLITE TRANSFORM  /////////////////////
+// CREATE SATELLITE TRANSFORM    /////////////////////
 /***************************************
 
 @brief createSatelliteTransform
@@ -1112,11 +1112,11 @@ bool Object::isPaused( )
 ***************************************/
 void Object::createSatelliteTransform( )
 {
-  createOrbitInTranslationVector( glm::vec3( orbitalAngle, 0.0f, orbitalAngle ),
-                                  glm::vec3( orbitalRadius, 0.0f, orbitalRadius ),
-                                  glm::vec3( 0.0f, 0.0f, 0.0f ) );
-  commitScale( );
-  commitRotation( );
-  commitTranslation( );
-  commitOrigin( );
+    createOrbitInTranslationVector( glm::vec3( orbitalAngle, 0.0f, orbitalAngle ),
+                                                                    glm::vec3( orbitalRadius, 0.0f, orbitalRadius ),
+                                                                    glm::vec3( 0.0f, 0.0f, 0.0f ) );
+    commitScale( );
+    commitRotation( );
+    commitTranslation( );
+    commitOrigin( );
 }

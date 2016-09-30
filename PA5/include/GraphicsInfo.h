@@ -16,15 +16,15 @@
 
 struct GraphicsInfo
 {
-  //members
-  std::vector<std::pair<GLenum, std::string>> shaderVector;
-  std::vector<std::string> modelVector;
+    //members
+    std::vector<std::pair<GLenum, std::string>> shaderVector;
+    std::vector<std::string> modelVector;
 
-  //constructors
-  GraphicsInfo( ) { }
+    //constructors
+    GraphicsInfo( ) { }
 
-  GraphicsInfo( const GraphicsInfo& src ): shaderVector( src.shaderVector ), 
-                                             modelVector( src.modelVector ) { }
+    GraphicsInfo( const GraphicsInfo& src ): shaderVector( src.shaderVector ),
+                  modelVector( src.modelVector ) { }
 };
 
 #endif /* GRAPHICSINFO_H */

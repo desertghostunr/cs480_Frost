@@ -29,7 +29,7 @@
 ***************************************/
 ObjectTable::ObjectTable( ): data( )
 {
-  //nothing to do
+    //nothing to do
 }
 
 // COPY CONSTRUCTOR //////////////////
@@ -46,7 +46,7 @@ ObjectTable::ObjectTable( ): data( )
 ***************************************/
 ObjectTable::ObjectTable( const ObjectTable& src ): data( src.data )
 {
-  //nothing to do
+    //nothing to do
 }
 
 //destructor
@@ -64,7 +64,7 @@ ObjectTable::ObjectTable( const ObjectTable& src ): data( src.data )
 ***************************************/
 ObjectTable::~ObjectTable( )
 {
-  data.clear( );
+    data.clear( );
 }
 
 //set methods
@@ -80,27 +80,27 @@ ObjectTable::~ObjectTable( )
 @notes parentId must be valid, returns the object's id
 
 ***************************************/
-unsigned int ObjectTable::addObject(  unsigned int parent )
+unsigned int ObjectTable::addObject(    unsigned int parent )
 {
-  if( (  ( int ) parent < -1 ) &&  ( parent < data.size( ) ) )
-  {
-    return -1;
-  }
+    if( (    ( int ) parent < -1 ) &&    ( parent < data.size( ) ) )
+    {
+        return -1;
+    }
 
-  data.push_back( Object( ) );
+    data.push_back( Object( ) );
 
-  if( ( int ) parent == -1 )
-  {
-    //do nothing, not a child
-  }
-  else 
-  {
-    data[ data.size( ) - 1 ].addParent( parent );
+    if( ( int ) parent == -1 )
+    {
+        //do nothing, not a child
+    }
+    else 
+    {
+        data[ data.size( ) - 1 ].addParent( parent );
 
-    data[ parent ].addChild( data.size( ) - 1 );
-  }
+        data[ parent ].addChild( data.size( ) - 1 );
+    }
 
-  return ( data.size( ) - 1 );
+    return ( data.size( ) - 1 );
 }
 
 // SET CHILD //////////////////
@@ -110,7 +110,7 @@ unsigned int ObjectTable::addObject(  unsigned int parent )
 
 @details set an obj as a child
 
-@param in: objID: the  obj being made into a child
+@param in: objID: the    obj being made into a child
 
 @param in: parentToBeID: the parent id
 
@@ -119,21 +119,21 @@ unsigned int ObjectTable::addObject(  unsigned int parent )
 ***************************************/
 bool ObjectTable::setChild( unsigned int objID, unsigned int parentToBeID )
 {
-  if( (  ( int ) parentToBeID >= 0 ) &&  ( parentToBeID < data.size( ) ) )
-  {
-    return false;
-  }
+    if( (    ( int ) parentToBeID >= 0 ) &&    ( parentToBeID < data.size( ) ) )
+    {
+        return false;
+    }
 
-  if( (  ( int ) objID >= 0 ) &&  ( objID < data.size( ) ) )
-  {
-    return false;
-  }
+    if( (    ( int ) objID >= 0 ) &&    ( objID < data.size( ) ) )
+    {
+        return false;
+    }
 
-  data[ parentToBeID ].addChild( objID );
+    data[ parentToBeID ].addChild( objID );
 
-  data[ objID ].addParent( parentToBeID );
+    data[ objID ].addParent( parentToBeID );
 
-  return true;
+    return true;
 }
 
 //get methods
@@ -151,7 +151,7 @@ bool ObjectTable::setChild( unsigned int objID, unsigned int parentToBeID )
 ***************************************/
 unsigned int ObjectTable::getSize( )
 {
-  return ( unsigned int ) data.size( );
+    return ( unsigned int ) data.size( );
 }
 
 // [ ] //////////////////
@@ -168,7 +168,7 @@ unsigned int ObjectTable::getSize( )
 ***************************************/
 Object& ObjectTable::operator [ ] ( unsigned int index )
 {
-  return data[ index ];
+    return data[ index ];
 }
 
 // [ ] //////////////////
@@ -185,5 +185,5 @@ Object& ObjectTable::operator [ ] ( unsigned int index )
 ***************************************/
 const Object& ObjectTable::operator [ ] ( unsigned int index ) const 
 {
-  return data[ index ];
+    return data[ index ];
 }

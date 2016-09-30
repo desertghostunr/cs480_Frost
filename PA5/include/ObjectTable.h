@@ -16,28 +16,28 @@
 
 class ObjectTable
 {
-  public: 
+    public: 
 
-    //constructors
-    ObjectTable( );
-    ObjectTable( const ObjectTable& src );
+        //constructors
+        ObjectTable( );
+        ObjectTable( const ObjectTable& src );
 
-    //destructor
-    ~ObjectTable( );
+        //destructor
+        ~ObjectTable( );
 
-    //set methods
-    unsigned int addObject( unsigned int parent = -1 );
+        //set methods
+        unsigned int addObject( unsigned int parent = -1 );
 
-    bool setChild( unsigned int objID, unsigned int parentToBeID );
+        bool setChild( unsigned int objID, unsigned int parentToBeID );
 
-    //get methods
-    unsigned int getSize( );
+        //get methods
+        unsigned int getSize( );
 
-    Object& operator [ ] ( unsigned int index );
+        Object& operator [ ] ( unsigned int index );
 
-    const Object& operator [ ] ( unsigned int index ) const;
+        const Object& operator [ ] ( unsigned int index ) const;
 
-  private:
-    std::vector<Object> data;
+    private:
+        std::vector<Object> data;
 
 };

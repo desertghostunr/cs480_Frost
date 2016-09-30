@@ -15,37 +15,37 @@ using namespace std;
 
 class Graphics
 {
-  public:
-    Graphics();
-    ~Graphics();
-    bool Initialize(int width, int height, 
-                    const GraphicsInfo& progInfo );
-    void Update(unsigned int dt);
-    void Render();
+    public:
+        Graphics();
+        ~Graphics();
+        bool Initialize(int width, int height, 
+                                        const GraphicsInfo& progInfo );
+        void Update(unsigned int dt);
+        void Render();
 
-    bool updateRotation( unsigned int objectID, float speedOfRotation );
-    bool updateOrbit( unsigned int objectID, float speedOfOrbit );
+        bool updateRotation( unsigned int objectID, float speedOfRotation );
+        bool updateOrbit( unsigned int objectID, float speedOfOrbit );
 
-    bool toggleRotationDirection( unsigned int objectID );
-    bool toggleRotationPaused( unsigned int objectID );
-    
-    bool toggleOrbitDirection( unsigned int objectID );
-    bool toggleOrbitPaused( unsigned int objectID );
+        bool toggleRotationDirection( unsigned int objectID );
+        bool toggleRotationPaused( unsigned int objectID );
+        
+        bool toggleOrbitDirection( unsigned int objectID );
+        bool toggleOrbitPaused( unsigned int objectID );
 
-    bool toggleAllPaused( unsigned int objectID );
-    void toggleAllObjectsPaused( );
+        bool toggleAllPaused( unsigned int objectID );
+        void toggleAllObjectsPaused( );
 
-  private:
-    std::string ErrorString(GLenum error);
+    private:
+        std::string ErrorString(GLenum error);
 
-    Camera *m_camera;
-    Shader *m_shader;
+        Camera *m_camera;
+        Shader *m_shader;
 
-    GLint m_projectionMatrix;
-    GLint m_viewMatrix;
-    GLint m_modelMatrix;
+        GLint m_projectionMatrix;
+        GLint m_viewMatrix;
+        GLint m_modelMatrix;
 
-    ObjectTable objectRegistry; //holds the scene's objects
+        ObjectTable objectRegistry; //holds the scene's objects
 };
 
 #endif /* GRAPHICS_H */

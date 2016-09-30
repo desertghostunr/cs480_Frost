@@ -9,23 +9,23 @@
 
 class Shader
 {
-  public:
-    Shader();
-    ~Shader();
-    bool Initialize();
-    void Enable();
-    bool AddShader(GLenum ShaderType, const std::string& fileName); 
-    bool Finalize();
-    GLint GetUniformLocation(const char* pUniformName);
+    public:
+        Shader();
+        ~Shader();
+        bool Initialize();
+        void Enable();
+        bool AddShader(GLenum ShaderType, const std::string& fileName); 
+        bool Finalize();
+        GLint GetUniformLocation(const char* pUniformName);
 
-  private:
-    GLuint m_shaderProg;    
-    std::vector<GLuint> m_shaderObjList;
+    private:
+        GLuint m_shaderProg;        
+        std::vector<GLuint> m_shaderObjList;
 
-    // private member functions
+        // private member functions
 
-    bool loadShaderSource( const std::string& fileName, 
+        bool loadShaderSource( const std::string& fileName,
                                  std::string& shaderSrcStr );
 };
 
-#endif  /* SHADER_H */
+#endif    /* SHADER_H */
