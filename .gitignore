@@ -27,3 +27,10 @@
 *.out
 *.app
 build/
+/PA5/Release/vc140.pdb
+/PA5/Release
+/PA5/.vs/PA5/v14
+/PA5/packages
+/PA5/PA5.VC.db
+/PA5/PA5.VC.VC.opendb
+/PA5/packages.config

@@ -19,6 +19,10 @@ bool ProcessCommandLineParameters( int argCount, char **argVector,
 
 // main ///////////////////////////////////
 
+#if defined( _WIN64 ) || ( _WIN32 )
+  #undef main
+#endif
+
 int main(int argc, char **argv)
 {
   // Start an engine and run it then cleanup after

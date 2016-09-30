@@ -1,7 +1,12 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include <sys/time.h>
+#if defined( _WIN64 ) || ( _WIN32 )
+  #include<Windows.h>
+#else
+  #include <sys/time.h>
+#endif
+
 #include <assert.h>
 
 #include<vector>

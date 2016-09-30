@@ -237,8 +237,23 @@ unsigned int Engine::getDT()
 
 long long Engine::GetCurrentTimeMillis()
 {
+#if defined( _WIN64 ) || ( _WIN32 )
+  FILETIME fileTime;
+  LARGE_INTEGER largeInt;
+  uint64_t time;
+
+  GetSystemTimeAsFileTime( &fileTime );
+  largeInt.LowPart = fileTime.dwLowDateTime;
+  largeInt.HighPart = fileTime.dwHighDateTime;
+
+  time = largeInt.QuadPart;
+  time -= 116444736000000000LL;
+  time /= 10000;
+  return ( long long ) time;
+#else
   timeval t;
   gettimeofday(&t, NULL);
   long long ret = t.tv_sec * 1000 + t.tv_usec / 1000;
   return ret;
+#endif
 }
