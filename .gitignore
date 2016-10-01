@@ -36,3 +36,5 @@ build/
 /PA5/packages.config
 /PA5/x64/Release/PA5.tlog
 /PA5/x64/Release
+/PA5/.vs/PA5-Graphics/v14
+/PA5/x64/Debug

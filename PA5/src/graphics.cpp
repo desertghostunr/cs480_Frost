@@ -54,7 +54,7 @@ bool Graphics::Initialize
     // Create the object
     objectRegistry.addObject( );
     
-    if( !objectRegistry[ 0 ].loadOBJ( progInfo.modelVector[ 0 ] ) )
+    if( !objectRegistry[ 0 ].loadModelFromFile( progInfo.modelVector[ 0 ] ) )
     {
         std::cout<<"Failed to load "<<progInfo.modelVector[ 0 ]<<"."<<std::endl;
         return false;
@@ -75,7 +75,7 @@ bool Graphics::Initialize
     for( index = 0; index < progInfo.shaderVector.size(); index++ )
     {
         if(!m_shader->AddShader( progInfo.shaderVector[index].first, 
-                                                                                progInfo.shaderVector[index].second ) )
+                                 progInfo.shaderVector[index].second ) )
         {
             if( progInfo.shaderVector[index].first == GL_VERTEX_SHADER )
             {

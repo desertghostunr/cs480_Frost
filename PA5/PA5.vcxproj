@@ -102,6 +102,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SDL2_LIBRARY)x86\SDL2.dll" "$(ProjectDir)build"
+xcopy /y /d  "$(ASSIMP_BIN)Release\assimp-vc140-mt.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
 xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
     </PostBuildEvent>
@@ -125,6 +126,7 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SDL2_LIBRARY)x86\SDL2.dll" "$(ProjectDir)build"
+xcopy /y /d  "$(ASSIMP_BIN)Release\assimp-vc140-mt.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
 xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
     </PostBuildEvent>

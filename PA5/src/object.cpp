@@ -4,6 +4,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/color4.h>
 
 #if defined( _WIN64 ) || defined( _WIN32 )
     #define M_PI        3.14159265358979323846264338327950288
@@ -95,10 +96,54 @@ glm::mat4 Object::GetModel()
 ***************************************/
 bool Object::loadModelFromFile( const std::string& fileName )
 {
-    aiScene* scene = NULL;
-    //to do: implement ///////////////////////////////////////
-    return false;
-    //////////////////////////////////////////////////////////
+    Assimp::Importer importer;
+    Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    const aiScene* scene = importer.ReadFile( fileName.c_str( ), aiProcess_Triangulate );
+
+    unsigned int mIndex, fIndex, vIndex, iIndex;
+
+    if( scene == NULL )
+    {
+        std::cout << "Failed to load " << fileName << std::endl;
+        return false;
+    }
+
+    Vertices.clear( );
+    Indices.clear( );
+    
+    for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
+    {
+        for( vIndex = 0; vIndex < scene->mMeshes[ mIndex ]->mNumVertices; vIndex++ )
+        {
+            tmpVert.vertex.x = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].x;
+            tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
+            tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;
+
+            std::cout << "v " << tmpVert.vertex.x << ", " << tmpVert.vertex.y << ", " << tmpVert.vertex.z << std::endl;
+
+            Vertices.push_back( tmpVert );
+        }
+
+        for( fIndex = 0; fIndex < scene->mMeshes[mIndex]->mNumFaces; fIndex++ )
+        {
+            for( iIndex = 0; iIndex < scene->mMeshes[mIndex ]->mFaces[fIndex].mNumIndices; iIndex++ )
+            {
+                std::cout << scene->mMeshes[ mIndex ]->mFaces[ fIndex ].mNumIndices << std::endl;
+                Indices.push_back( scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
+
+            }
+        }
+    }
+
+    glGenBuffers( 1, &VB );
+    glBindBuffer( GL_ARRAY_BUFFER, VB );
+    glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * Vertices.size( ), &Vertices[ 0 ], GL_STATIC_DRAW );
+
+    glGenBuffers( 1, &IB );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned int ) * Indices.size( ), &Indices[ 0 ], GL_STATIC_DRAW );
+
+    return true;
 }
 
 // LOAD OBJ //////////////////
