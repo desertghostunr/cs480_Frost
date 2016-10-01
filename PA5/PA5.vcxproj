@@ -74,6 +74,16 @@
     <TargetName>Tutorial</TargetName>
     <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)build\</OutDir>
+    <TargetName>Tutorial</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)build\</OutDir>
+    <TargetName>Tutorial</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -117,6 +127,30 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
       <Command>xcopy /y /d  "$(SDL2_LIBRARY)x86\SDL2.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
 xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(ASSIMP_LIBRARY)Release\;$(SDL2_LIBRARY)x64\;$(GLEW_LIBRARY)Release\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;SDL2.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include;$(GLM_INCLUDE)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y /d  "$(SDL2_LIBRARY)x86\SDL2.dll" "$(ProjectDir)build"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(ASSIMP_LIBRARY)Release\;$(SDL2_LIBRARY)x64\;$(GLEW_LIBRARY)Release\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;SDL2.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include;$(GLM_INCLUDE)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y /d  "$(SDL2_LIBRARY)x86\SDL2.dll" "$(ProjectDir)build"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -95,6 +95,7 @@ glm::mat4 Object::GetModel()
 ***************************************/
 bool Object::loadModelFromFile( const std::string& fileName )
 {
+    aiScene* scene = NULL;
     //to do: implement ///////////////////////////////////////
     return false;
     //////////////////////////////////////////////////////////

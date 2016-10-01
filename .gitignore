@@ -34,3 +34,5 @@ build/
 /PA5/PA5.VC.db
 /PA5/PA5.VC.VC.opendb
 /PA5/packages.config
+/PA5/x64/Release/PA5.tlog
+/PA5/x64/Release
