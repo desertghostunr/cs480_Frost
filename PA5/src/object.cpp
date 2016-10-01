@@ -115,16 +115,22 @@ bool Object::loadModelFromFile( const std::string& fileName )
     Indices.clear( );
     IB.clear( );
     
+
+    std::cout << scene->mNumMaterials << std::endl;
+
     for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
     {
         mtlPtr = scene->mMaterials[ scene->mMeshes[ mIndex ]->mMaterialIndex ];
 
-        if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
+        if( mtlPtr != NULL )
         {
-            tmpVert.color.r = mColor.r;
-            tmpVert.color.g = mColor.g;
-            tmpVert.color.b = mColor.b;
-        }
+            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
+            {
+                tmpVert.color.r = mColor.r;
+                tmpVert.color.g = mColor.g;
+                tmpVert.color.b = mColor.b;
+            }
+        }        
 
         Vertices.push_back( std::vector<Vertex>( ) );
         Indices.push_back( std::vector<unsigned int>( ) );
@@ -150,7 +156,6 @@ bool Object::loadModelFromFile( const std::string& fileName )
     
     for( vIndex = 0; vIndex < VB.size( ); vIndex++ )
     {
-        std::cout << vIndex << std::endl;
         glGenBuffers( 1, &VB[ vIndex ] );
         glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
         glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * Vertices[ vIndex ].size( ), &Vertices[ vIndex ][ 0 ], GL_STATIC_DRAW );
@@ -158,7 +163,6 @@ bool Object::loadModelFromFile( const std::string& fileName )
     
     for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
     {
-        std::cout << iIndex << std::endl;
         glGenBuffers( 1, &IB[ iIndex ] );
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
         glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned int ) * Indices[ iIndex ].size( ), &Indices[ iIndex ][ 0 ], GL_STATIC_DRAW );
@@ -170,30 +174,26 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
 void Object::Render()
 {
-    unsigned int vIndex, iIndex;
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    unsigned int index;
+    
 
-    std::cout << "Render" << std::endl;
-
-    for( vIndex = 0; vIndex < VB.size( ); vIndex++ )
+    for( index = 0; index < std::min( VB.size( ), IB.size( ) ); index++ )
     {
-        std::cout << vIndex << std::endl;
-        glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
+        glEnableVertexAttribArray( 0 );
+        glEnableVertexAttribArray( 1 );
+
+        glBindBuffer( GL_ARRAY_BUFFER, VB[ index ] );
         glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
         glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( void* ) offsetof( Vertex, color ) );
-    }
+
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ index ] );
+        glDrawElements( GL_TRIANGLES, Indices[ index ].size( ), GL_UNSIGNED_INT, 0 );
+
+        glDisableVertexAttribArray( 0 );
+        glDisableVertexAttribArray( 1 );
+    }   
+
     
-    for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
-    {
-        std::cout << iIndex << std::endl;
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
-
-        glDrawElements( GL_TRIANGLES, Indices[ iIndex ].size( ), GL_UNSIGNED_INT, 0 );
-    }    
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
 }
 
 // UPDATE ROTATION RATE //////////////////

@@ -165,8 +165,8 @@ void Graphics::Render()
     // Render the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
     {
-        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE,
-                                             glm::value_ptr(objectRegistry[index].GetModel()));
+        glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
+                            glm::value_ptr(objectRegistry[index].GetModel()));
         objectRegistry[index].Render();
     }
 
