@@ -19,11 +19,6 @@ class Object
 
         bool loadModelFromFile( const std::string& fileName );
 
-        bool loadOBJ( const std::string& fileName );
-
-        bool loadMTL( const std::string& fileName, 
-                      std::vector<std::pair<std::string, glm::vec3>>& mtlDiffuseInfo );
-
         void updateRotationRate( float rotFactor );
 
         void toggleRotationDirection( );
@@ -102,10 +97,10 @@ class Object
         
         // model information
         glm::mat4 model;
-        std::vector<Vertex> Vertices;
-        std::vector<unsigned int> Indices;
-        GLuint VB;
-        GLuint IB;
+        std::vector<std::vector<Vertex>> Vertices;
+        std::vector<std::vector<unsigned int>> Indices;
+        std::vector<GLuint> VB;
+        std::vector<GLuint> IB;
 
         //children vector containg the worldID's of the objects children
         std::vector<unsigned int> childrenVector;

@@ -99,6 +99,8 @@ bool Object::loadModelFromFile( const std::string& fileName )
     Assimp::Importer importer;
     Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
     const aiScene* scene = importer.ReadFile( fileName.c_str( ), aiProcess_Triangulate );
+    aiMaterial* mtlPtr = NULL;
+    aiColor4D mColor;
 
     unsigned int mIndex, fIndex, vIndex, iIndex;
 
@@ -109,335 +111,86 @@ bool Object::loadModelFromFile( const std::string& fileName )
     }
 
     Vertices.clear( );
+    VB.clear( );
     Indices.clear( );
+    IB.clear( );
     
     for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
     {
-        for( vIndex = 0; vIndex < scene->mMeshes[ mIndex ]->mNumVertices; vIndex++ )
+        mtlPtr = scene->mMaterials[ scene->mMeshes[ mIndex ]->mMaterialIndex ];
+
+        if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
         {
-            tmpVert.vertex.x = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].x;
-            tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
-            tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;
-
-            std::cout << "v " << tmpVert.vertex.x << ", " << tmpVert.vertex.y << ", " << tmpVert.vertex.z << std::endl;
-
-            Vertices.push_back( tmpVert );
+            tmpVert.color.r = mColor.r;
+            tmpVert.color.g = mColor.g;
+            tmpVert.color.b = mColor.b;
         }
+
+        Vertices.push_back( std::vector<Vertex>( ) );
+        Indices.push_back( std::vector<unsigned int>( ) );
 
         for( fIndex = 0; fIndex < scene->mMeshes[mIndex]->mNumFaces; fIndex++ )
         {
             for( iIndex = 0; iIndex < scene->mMeshes[mIndex ]->mFaces[fIndex].mNumIndices; iIndex++ )
             {
-                std::cout << scene->mMeshes[ mIndex ]->mFaces[ fIndex ].mNumIndices << std::endl;
-                Indices.push_back( scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
+                vIndex = scene->mMeshes[ mIndex ]->mFaces[ fIndex ].mIndices[ iIndex ];
+                tmpVert.vertex.x = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].x;
+                tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
+                tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;                
+
+                Vertices[ mIndex ].push_back( tmpVert );
+                Indices[ mIndex ].push_back( scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
 
             }
         }
     }
 
-    glGenBuffers( 1, &VB );
-    glBindBuffer( GL_ARRAY_BUFFER, VB );
-    glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * Vertices.size( ), &Vertices[ 0 ], GL_STATIC_DRAW );
-
-    glGenBuffers( 1, &IB );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned int ) * Indices.size( ), &Indices[ 0 ], GL_STATIC_DRAW );
-
-    return true;
-}
-
-// LOAD OBJ //////////////////
-/***************************************
-
-@brief loadOBJ
-
-@details loads an obj from file
-
-@param in: fileName: the file name of the object we are loading.
-
-@notes File must have triangular faces
-
-***************************************/
-bool Object::loadOBJ( const std::string& fileName )
-{
-
-    std::ifstream fileIn( fileName.c_str() );
-    std::string bufferString;
-    std::string mtlFileName, mtlMaterial;
-    Vertex tmpVert( glm::vec3( 0.0f, 0.0f, 0.0f ), glm::vec3( 0.0f, 0.0f, 0.0f ) );
-    float tmpFloat;
-    int tmpInt;
-    char delim;
-
-    unsigned int indicesIndex, mtlIndex, mtlNameIndex;
-
-
-    std::vector<std::string> mtlNames;
-    std::vector<std::vector<unsigned int>> tmpIndices;
-    std::vector<std::pair<std::string, glm::vec3>> mtlDiffuseColors;
-
-    if( fileIn.fail( ) ) 
-    {
-            fileIn.close( );
-            return false;
-    }
-
-    Vertices.clear( );
-    while( !fileIn.eof( ) )
-    {
-
-        if( !fileIn.good( ) )
-        {
-            std::cout<<"File stream corrupted while loading "<<fileName<<std::endl;
-            fileIn.close( );
-            return false;
-        }
-
-        bufferString.clear( );
-
-        fileIn >> bufferString;
-
-        //remove unwanted characters
-        bufferString.erase( std::remove( bufferString.begin( ), 
-                                                         bufferString.end( ), ' ' ), bufferString.end( ) );
-
-        bufferString.erase( std::remove( bufferString.begin( ), 
-                                                        bufferString.end( ), '\t' ), bufferString.end( ) );
-
-        bufferString.erase( std::remove( bufferString.begin( ), 
-                                                        bufferString.end( ), '\n' ), bufferString.end( ) );
-
-        
-        
-        if( bufferString == "v" )
-        {
-         
-            fileIn >> tmpFloat;
-            tmpVert.vertex.x = tmpFloat;
-
-            fileIn >> tmpFloat;
-            tmpVert.vertex.y = tmpFloat;
-
-            fileIn >> tmpFloat;
-            tmpVert.vertex.z = tmpFloat;
-
-            Vertices.push_back( tmpVert );
-        }
-        else if ( bufferString == "f" )
-        {
-
-            if( tmpIndices.empty( ) )
-            {
-                tmpIndices.push_back( std::vector<unsigned int>( ) );
-            }
-
-            while( ( fileIn.peek( ) !=    '\n' ) 
-                         && ( fileIn.peek( ) != '\r' ) 
-                         && ( fileIn.good( ) ) )
-            {
-
-                fileIn >> tmpInt;
-                tmpIndices[ tmpIndices.size( ) - 1 ].push_back( ( tmpInt - 1 ) );
-
-                while( ( fileIn.peek( ) == '/' )
-                             && ( fileIn.good( ) ) ) 
-                {
-                    while( fileIn.peek( ) == '/' )
-                    {
-                        fileIn >> delim;
-                    }
-
-                    fileIn >> tmpInt;
-
-                }
-
-                while( ( fileIn.peek( ) == ' ' ) || ( fileIn.peek( ) == '\t' )    )
-                {
-                    while( fileIn.peek( ) == ' ' )
-                    {
-                        std::getline( fileIn, bufferString, ' ' );
-                    }
-
-                    while( fileIn.peek( ) == '\t' )
-                    {
-                        std::getline( fileIn, bufferString, '\t' );
-                    }
-                }    
-
-            }
-        }
-        else if( bufferString == "usemtl" )
-        {
-            mtlMaterial.clear( );
-
-            fileIn >> mtlMaterial;
-
-            mtlNames.push_back( mtlMaterial );
-            tmpIndices.push_back( std::vector<unsigned int>( ) );
-        }        
-        else if( bufferString == "mtllib" )
-        {
-            fileIn >> mtlFileName;
-        }
-
-        std::getline( fileIn, bufferString );
-    }
-
-    fileIn.close( );
-
-
-    bufferString.clear( );
-
-    bufferString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
-
-    if( !mtlFileName.empty( ) ) 
-    {
-        if( !loadMTL( bufferString + mtlFileName, mtlDiffuseColors ) )
-        {
-            std::cout<<"Failed to load mtl file."<<std::endl;
-        }
-    }
-         
-    for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
-    {
-
-        for( indicesIndex = 0; 
-                 indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
-        {
-            for( mtlIndex = 0; mtlIndex < mtlDiffuseColors.size( ); mtlIndex++ )
-            {
-                if( (    mtlDiffuseColors.size( ) == 1 ) 
-                        || ( mtlDiffuseColors[ mtlIndex ].first == mtlNames[ mtlNameIndex ] ) )
-                {
-                    if( tmpIndices[ mtlNameIndex ][ indicesIndex ] < Vertices.size( ) )
-                    {    
-                        Vertices[ tmpIndices[ mtlNameIndex ][ indicesIndex ] ].color 
-                                                                                     = mtlDiffuseColors[ mtlIndex ].second;
-                    }                                                                
-                }
-            }
-        }        
-    }
-
-    Indices.clear( );
-
-    for( mtlNameIndex = 0; mtlNameIndex < mtlNames.size( ); mtlNameIndex++ )
-    {
-        for( indicesIndex = 0; 
-                 indicesIndex < tmpIndices[ mtlNameIndex ].size( ); indicesIndex++ )
-        {
-        
-            Indices.push_back( tmpIndices[ mtlNameIndex ][ indicesIndex ] );
-        }
-    }    
-
-    tmpIndices.clear( );
-    mtlDiffuseColors.clear( );
-
+    VB.resize( Vertices.size( ) );
+    IB.resize( Indices.size( ) );
     
-    glGenBuffers(1, &VB);
-    glBindBuffer(GL_ARRAY_BUFFER, VB);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-    glGenBuffers(1, &IB);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+    for( vIndex = 0; vIndex < VB.size( ); vIndex++ )
+    {
+        std::cout << vIndex << std::endl;
+        glGenBuffers( 1, &VB[ vIndex ] );
+        glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
+        glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * Vertices[ vIndex ].size( ), &Vertices[ vIndex ][ 0 ], GL_STATIC_DRAW );
+    }
+    
+    for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
+    {
+        std::cout << iIndex << std::endl;
+        glGenBuffers( 1, &IB[ iIndex ] );
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
+        glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned int ) * Indices[ iIndex ].size( ), &Indices[ iIndex ][ 0 ], GL_STATIC_DRAW );
+    }
 
     return true;
 }
 
-// LOAD MTL //////////////////
-/***************************************
-
-@brief loadMTL
-
-@details loads an mtl file; only loads the diffuse color for each material
-
-@param in: fileName: the file name of the object we are loading.
-
-@notes None
-
-***************************************/
-bool Object::loadMTL
-( 
-    const std::string& fileName,
-    std::vector<std::pair<std::string, glm::vec3>>& mtlDiffuseInfo 
-)
-{
-    std::ifstream fileIn( fileName.c_str() );
-    glm::vec3 color;
-    std::string bufferString, mtlString;
-    float tmpFloat;    
-
-    if( fileIn.fail( ) ) 
-    {
-            fileIn.close( );
-            return false;
-    }
-
-    while( !fileIn.eof( ) )
-    {
-        if( !fileIn.good( ) )
-        {
-            std::cout<<"Failed to load "<<fileName<<std::endl;
-            fileIn.close( );
-            return false;
-        }
-
-        bufferString.clear( );
-
-        fileIn >> bufferString;
-
-        //remove unwanted characters
-        bufferString.erase( std::remove( bufferString.begin( ), 
-                                                        bufferString.end( ), ' ' ), bufferString.end( ) );
-
-        bufferString.erase( std::remove( bufferString.begin( ), 
-                                                        bufferString.end( ), '\t' ), bufferString.end( ) );
-
-        bufferString.erase( std::remove( bufferString.begin( ), 
-                                                        bufferString.end( ), '\n' ), bufferString.end( ) );
-        
-        if( bufferString == "newmtl" )
-        {
-            mtlString.clear( );
-
-            fileIn >> mtlString;
-        }
-        else if ( bufferString == "Kd" )
-        {
-            fileIn >> tmpFloat;
-            color.r = tmpFloat;
-
-            fileIn >> tmpFloat;
-            color.g = tmpFloat;
-
-            fileIn >> tmpFloat;
-            color.b = tmpFloat;
-
-            mtlDiffuseInfo.push_back( std::pair<std::string, glm::vec3>( mtlString, 
-                                                                                                                                     color ) );
-        }
-        std::getline( fileIn, bufferString );
-    }
-
-    fileIn.close( );
-
-    return true;
-}
 
 void Object::Render()
 {
+    unsigned int vIndex, iIndex;
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VB);
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
-    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), (void*)offsetof( Vertex, color ) );
+    std::cout << "Render" << std::endl;
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    for( vIndex = 0; vIndex < VB.size( ); vIndex++ )
+    {
+        std::cout << vIndex << std::endl;
+        glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
+        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( void* ) offsetof( Vertex, color ) );
+    }
+    
+    for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
+    {
+        std::cout << iIndex << std::endl;
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
 
-    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements( GL_TRIANGLES, Indices[ iIndex ].size( ), GL_UNSIGNED_INT, 0 );
+    }    
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
