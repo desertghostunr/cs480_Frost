@@ -114,9 +114,6 @@ bool Object::loadModelFromFile( const std::string& fileName )
     VB.clear( );
     Indices.clear( );
     IB.clear( );
-    
-
-    std::cout << scene->mNumMaterials << std::endl;
 
     for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
     {
@@ -175,7 +172,6 @@ bool Object::loadModelFromFile( const std::string& fileName )
 void Object::Render()
 {
     unsigned int index;
-    
 
     for( index = 0; index < std::min( VB.size( ), IB.size( ) ); index++ )
     {
@@ -191,9 +187,8 @@ void Object::Render()
 
         glDisableVertexAttribArray( 0 );
         glDisableVertexAttribArray( 1 );
-    }   
-
-    
+    }
+        
 }
 
 // UPDATE ROTATION RATE //////////////////
