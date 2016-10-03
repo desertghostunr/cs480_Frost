@@ -19,4 +19,9 @@ See PA3 README.md for more information.
 
 See PA4 README.md for more information.
 
+## PA5: Assimp Model Loading
+
+See PA5 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
 

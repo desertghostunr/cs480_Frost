@@ -1,9 +1,13 @@
 # PA5
 
+#Contributors
+* Andy Frost
+* J.J. Sibley
+
 # Dependencies, Building, and Running
 
 ## Dependency Instructions
-To run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), and [ASSIMP] .
+To run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), and [ASSIMP](http://www.assimp.org/).
 
 This project uses OpenGL 3.3.
 
@@ -16,6 +20,8 @@ sudo apt-get install libglew-dev libglm-dev libsdl2-dev libassimp-dev
 Please build this project using CMake. It is recommended to create a build directory and to build the project there.
 
 Running the make in a separate directory will allow easy cleanup of the build data, and an easy way to prevent unnecessary data to be added to the git repository.
+
+Note: If CMake fails for any reason, the makefile is also kept up to date. Again, CMake is the preferred build method.
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get may be necessary.
