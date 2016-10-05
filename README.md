@@ -25,3 +25,9 @@ See PA5 README.md for more information.
 
 Contributors: Andy Frost, J.J. Sibley
 
+## PA6: Assimp Texture Loading
+
+See PA6 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
+
