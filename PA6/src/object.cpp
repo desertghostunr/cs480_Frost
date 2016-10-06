@@ -7,7 +7,7 @@
 #include <assimp/color4.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
-#include<opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #if defined( _WIN64 ) || defined( _WIN32 )
     #define M_PI        3.14159265358979323846264338327950288
@@ -132,8 +132,9 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
         if( mtlPtr != NULL )
         {
-            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, 
-                                                  AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
+            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, //pointer to material object
+                                                  AI_MATKEY_COLOR_DIFFUSE, //the color to grab
+                                                  &mColor ) ) //the color object
             {
                 tmpVert.color.r = mColor.r;
                 tmpVert.color.g = mColor.g;
@@ -179,20 +180,20 @@ bool Object::loadModelFromFile( const std::string& fileName )
     {
         glGenBuffers( 1, &VB[ vIndex ] );
         glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
-        glBufferData( GL_ARRAY_BUFFER, 
-                      sizeof( Vertex ) * Vertices[ vIndex ].size( ), 
-                      &Vertices[ vIndex ][ 0 ], 
-                      GL_STATIC_DRAW );
+        glBufferData( GL_ARRAY_BUFFER, //buffer type
+                      sizeof( Vertex ) * Vertices[ vIndex ].size( ), //size
+                      &Vertices[ vIndex ][ 0 ], //data
+                      GL_STATIC_DRAW ); //draw mode
     }
     
     for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
     {
         glGenBuffers( 1, &IB[ iIndex ] );
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
-        glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
-                      sizeof( unsigned int ) * Indices[ iIndex ].size( ), 
-                      &Indices[ iIndex ][ 0 ], 
-                      GL_STATIC_DRAW );
+        glBufferData( GL_ELEMENT_ARRAY_BUFFER, //buffer type
+                      sizeof( unsigned int ) * Indices[ iIndex ].size( ), //size
+                      &Indices[ iIndex ][ 0 ], //data
+                      GL_STATIC_DRAW ); //draw mode
     }
 
     return true;
