@@ -38,3 +38,9 @@ build/
 /PA5/x64/Release
 /PA5/.vs/PA5-Graphics/v14
 /PA5/x64/Debug
+/PA6/.vs/PA6/v14
+/PA6/Debug
+/PA6/packages
+/PA6/x64
+*.db
+*.opendb

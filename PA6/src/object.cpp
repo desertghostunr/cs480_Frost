@@ -6,6 +6,8 @@
 #include <assimp/postprocess.h>
 #include <assimp/color4.h>
 #include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
+#include<opencv2/imgproc/imgproc.hpp>
 
 #if defined( _WIN64 ) || defined( _WIN32 )
     #define M_PI        3.14159265358979323846264338327950288
@@ -100,7 +102,8 @@ bool Object::loadModelFromFile( const std::string& fileName )
     //assimp
     Assimp::Importer importer;
     Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    const aiScene* scene = importer.ReadFile( fileName.c_str( ), aiProcess_Triangulate );
+    const aiScene* scene = importer.ReadFile( fileName.c_str( ), 
+                                              aiProcess_Triangulate );
     aiMaterial* mtlPtr = NULL;
     aiColor4D mColor;
 
@@ -109,6 +112,7 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
     //image reading using opencv
     cv::Mat textureImg;
+    std::string textureFileName;
 
     if( scene == NULL )
     {
@@ -121,13 +125,15 @@ bool Object::loadModelFromFile( const std::string& fileName )
     Indices.clear( );
     IB.clear( );
 
+    //load vertices and faces
     for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
     {
         mtlPtr = scene->mMaterials[ scene->mMeshes[ mIndex ]->mMaterialIndex ];
 
         if( mtlPtr != NULL )
         {
-            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
+            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, 
+                                                  AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
             {
                 tmpVert.color.r = mColor.r;
                 tmpVert.color.g = mColor.g;
@@ -140,7 +146,9 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
         for( fIndex = 0; fIndex < scene->mMeshes[mIndex]->mNumFaces; fIndex++ )
         {
-            for( iIndex = 0; iIndex < scene->mMeshes[mIndex ]->mFaces[fIndex].mNumIndices; iIndex++ )
+            for( iIndex = 0; 
+                 iIndex < scene->mMeshes[mIndex ]->mFaces[fIndex].mNumIndices; 
+                 iIndex++ )
             {
                 vIndex = scene->mMeshes[ mIndex ]->mFaces[ fIndex ].mIndices[ iIndex ];
                 tmpVert.vertex.x = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].x;
@@ -148,10 +156,20 @@ bool Object::loadModelFromFile( const std::string& fileName )
                 tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;                
 
                 Vertices[ mIndex ].push_back( tmpVert );
-                Indices[ mIndex ].push_back( scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
+                Indices[ mIndex ].push_back( 
+                    scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
 
             }
         }
+    }
+
+    //load texture
+
+    textureImg = cv::imread( textureFileName, CV_LOAD_IMAGE_UNCHANGED );
+
+    if( textureImg.empty( ) )
+    {
+        std::cout << "Error opening texture file." << std::endl;
     }
 
     VB.resize( Vertices.size( ) );
@@ -161,14 +179,20 @@ bool Object::loadModelFromFile( const std::string& fileName )
     {
         glGenBuffers( 1, &VB[ vIndex ] );
         glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
-        glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * Vertices[ vIndex ].size( ), &Vertices[ vIndex ][ 0 ], GL_STATIC_DRAW );
+        glBufferData( GL_ARRAY_BUFFER, 
+                      sizeof( Vertex ) * Vertices[ vIndex ].size( ), 
+                      &Vertices[ vIndex ][ 0 ], 
+                      GL_STATIC_DRAW );
     }
     
     for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
     {
         glGenBuffers( 1, &IB[ iIndex ] );
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
-        glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned int ) * Indices[ iIndex ].size( ), &Indices[ iIndex ][ 0 ], GL_STATIC_DRAW );
+        glBufferData( GL_ELEMENT_ARRAY_BUFFER, 
+                      sizeof( unsigned int ) * Indices[ iIndex ].size( ), 
+                      &Indices[ iIndex ][ 0 ], 
+                      GL_STATIC_DRAW );
     }
 
     return true;
