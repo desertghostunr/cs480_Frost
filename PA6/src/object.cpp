@@ -1,10 +1,12 @@
 #include "object.h"
-#include <fstream>
-#include <algorithm>
+
+//assimp
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/color4.h>
+
+//opencv
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -100,19 +102,24 @@ glm::mat4 Object::GetModel()
 bool Object::loadModelFromFile( const std::string& fileName )
 {
     //assimp
-    Assimp::Importer importer;
-    Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    const aiScene* scene = importer.ReadFile( fileName.c_str( ), 
-                                              aiProcess_Triangulate );
+    Assimp::Importer importer;    
     aiMaterial* mtlPtr = NULL;
     aiColor4D mColor;
 
-    //indexing
-    unsigned int mIndex, fIndex, vIndex, iIndex, offset;
+    //open the model file 
+    const aiScene* scene = importer.ReadFile( fileName.c_str( ),
+                                              aiProcess_Triangulate );
 
-    //image reading using opencv
-    cv::Mat textureImg;
-    std::string textureFileName;
+    //vertex to temporarily store data
+    Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+
+
+    //indexing
+    unsigned int mIndex, fIndex, vIndex, iIndex, tIndex, offset;
+
+    //image container using opencv
+    std::vector<cv::Mat> textureImg; //image matrix
+    std::vector<std::string> textureFileNames;
 
     if( scene == NULL )
     {
@@ -120,6 +127,7 @@ bool Object::loadModelFromFile( const std::string& fileName )
         return false;
     }
 
+    //clear old vertices content
     Vertices.clear( );
     Indices.clear( );
 
@@ -130,17 +138,19 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
         if( mtlPtr != NULL )
         {
-            if( AI_SUCCESS 
+            if( AI_SUCCESS //flag for the success of an ai return
                 == aiGetMaterialColor( mtlPtr, //pointer to material object
                                        AI_MATKEY_COLOR_DIFFUSE, //the color to grab
                                        &mColor ) ) //the color object
             {
+                //assign colors for this mesh
                 tmpVert.color.r = mColor.r;
                 tmpVert.color.g = mColor.g;
                 tmpVert.color.b = mColor.b;
             }
         }
 
+        //create offset for the concatenation of meshes into one VBO and IBO
         offset = Vertices.size( );
 
         for( fIndex = 0; fIndex < scene->mMeshes[mIndex]->mNumFaces; fIndex++ )
@@ -149,25 +159,44 @@ bool Object::loadModelFromFile( const std::string& fileName )
                  iIndex < scene->mMeshes[mIndex ]->mFaces[fIndex].mNumIndices; 
                  iIndex++ )
             {
+                //get index to access vertices at
                 vIndex = scene->mMeshes[ mIndex ]->mFaces[ fIndex ].mIndices[ iIndex ];
+
+                //assign vertices
                 tmpVert.vertex.x = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].x;
                 tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
                 tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;                
 
+                //push back vertices
                 Vertices.push_back( tmpVert );
-                Indices.push_back( offset + 
+
+                //push back indices
+                Indices.push_back( offset + //add offset
                     scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
 
             }
         }
     }
 
-    //load texture
-    textureImg = cv::imread( textureFileName, CV_LOAD_IMAGE_UNCHANGED );
+    //load texture without altering the contents of the data; note that 
+    //this function can also be set to force the pixels to processed
+    //as 8-bit, 16-bit, 32-bit, or grayscale.
+    //The color channels are store contiguously for each pixel as BGR
+    //the Mat::convertTo function can also be used to convert the image
+    //to 8-bit, 16-bit, 32-bit, single precision floating-point,
+    //or double precision floating-point.
+    //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
+    for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
+    {
+        textureImg.push_back( cv::imread( textureFileNames[ tIndex ],
+                                          CV_LOAD_IMAGE_UNCHANGED ).clone( ) );
+    }
+    
 
+    //in the case that the loading of the texture image failed
     if( textureImg.empty( ) )
     {
-        std::cout << "Error opening texture file." << std::endl;
+        std::cout << "Error opening texture file(s)." << std::endl;
     }
 
     glGenBuffers( 1, &VB );
