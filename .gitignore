@@ -43,3 +43,4 @@ build/
 /PA6/x64
 *.db
 *.opendb
+*.config
