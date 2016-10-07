@@ -10,7 +10,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #if defined( _WIN64 ) || defined( _WIN32 )
-    #define M_PI        3.14159265358979323846264338327950288
+    #define M_PI 3.14159265358979323846264338327950288
 #endif
 
 Object::Object()
@@ -108,7 +108,7 @@ bool Object::loadModelFromFile( const std::string& fileName )
     aiColor4D mColor;
 
     //indexing
-    unsigned int mIndex, fIndex, vIndex, iIndex;
+    unsigned int mIndex, fIndex, vIndex, iIndex, offset;
 
     //image reading using opencv
     cv::Mat textureImg;
@@ -121,9 +121,7 @@ bool Object::loadModelFromFile( const std::string& fileName )
     }
 
     Vertices.clear( );
-    VB.clear( );
     Indices.clear( );
-    IB.clear( );
 
     //load vertices and faces
     for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
@@ -132,18 +130,18 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
         if( mtlPtr != NULL )
         {
-            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, //pointer to material object
-                                                  AI_MATKEY_COLOR_DIFFUSE, //the color to grab
-                                                  &mColor ) ) //the color object
+            if( AI_SUCCESS 
+                == aiGetMaterialColor( mtlPtr, //pointer to material object
+                                       AI_MATKEY_COLOR_DIFFUSE, //the color to grab
+                                       &mColor ) ) //the color object
             {
                 tmpVert.color.r = mColor.r;
                 tmpVert.color.g = mColor.g;
                 tmpVert.color.b = mColor.b;
             }
-        }        
+        }
 
-        Vertices.push_back( std::vector<Vertex>( ) );
-        Indices.push_back( std::vector<unsigned int>( ) );
+        offset = Vertices.size( );
 
         for( fIndex = 0; fIndex < scene->mMeshes[mIndex]->mNumFaces; fIndex++ )
         {
@@ -156,8 +154,8 @@ bool Object::loadModelFromFile( const std::string& fileName )
                 tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
                 tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;                
 
-                Vertices[ mIndex ].push_back( tmpVert );
-                Indices[ mIndex ].push_back( 
+                Vertices.push_back( tmpVert );
+                Indices.push_back( offset + 
                     scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
 
             }
@@ -165,7 +163,6 @@ bool Object::loadModelFromFile( const std::string& fileName )
     }
 
     //load texture
-
     textureImg = cv::imread( textureFileName, CV_LOAD_IMAGE_UNCHANGED );
 
     if( textureImg.empty( ) )
@@ -173,28 +170,19 @@ bool Object::loadModelFromFile( const std::string& fileName )
         std::cout << "Error opening texture file." << std::endl;
     }
 
-    VB.resize( Vertices.size( ) );
-    IB.resize( Indices.size( ) );
-    
-    for( vIndex = 0; vIndex < VB.size( ); vIndex++ )
-    {
-        glGenBuffers( 1, &VB[ vIndex ] );
-        glBindBuffer( GL_ARRAY_BUFFER, VB[ vIndex ] );
-        glBufferData( GL_ARRAY_BUFFER, //buffer type
-                      sizeof( Vertex ) * Vertices[ vIndex ].size( ), //size
-                      &Vertices[ vIndex ][ 0 ], //data
-                      GL_STATIC_DRAW ); //draw mode
-    }
-    
-    for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
-    {
-        glGenBuffers( 1, &IB[ iIndex ] );
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
-        glBufferData( GL_ELEMENT_ARRAY_BUFFER, //buffer type
-                      sizeof( unsigned int ) * Indices[ iIndex ].size( ), //size
-                      &Indices[ iIndex ][ 0 ], //data
-                      GL_STATIC_DRAW ); //draw mode
-    }
+    glGenBuffers( 1, &VB );
+    glBindBuffer( GL_ARRAY_BUFFER, VB );
+    glBufferData( GL_ARRAY_BUFFER, //buffer type
+                  sizeof( Vertex ) * Vertices.size( ), //size
+                  &Vertices[ 0 ], //data
+                  GL_STATIC_DRAW ); //draw mode
+
+    glGenBuffers( 1, &IB );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, //buffer type
+                  sizeof( unsigned int ) * Indices.size( ), //size
+                  &Indices[ 0 ], //data
+                  GL_STATIC_DRAW ); //draw mode
 
     return true;
 }
@@ -202,24 +190,19 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
 void Object::Render()
 {
-    unsigned int index;
+    glEnableVertexAttribArray( 0 );
+    glEnableVertexAttribArray( 1 );
 
-    for( index = 0; index < std::min( VB.size( ), IB.size( ) ); index++ )
-    {
-        glEnableVertexAttribArray( 0 );
-        glEnableVertexAttribArray( 1 );
+    glBindBuffer( GL_ARRAY_BUFFER, VB );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
+    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
+                           ( void* ) offsetof( Vertex, color ) );
 
-        glBindBuffer( GL_ARRAY_BUFFER, VB[ index ] );
-        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
-        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( void* ) offsetof( Vertex, color ) );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
+    glDrawElements( GL_TRIANGLES, Indices.size( ), GL_UNSIGNED_INT, 0 );
 
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ index ] );
-        glDrawElements( GL_TRIANGLES, Indices[ index ].size( ), GL_UNSIGNED_INT, 0 );
-
-        glDisableVertexAttribArray( 0 );
-        glDisableVertexAttribArray( 1 );
-    }
-        
+    glDisableVertexAttribArray( 0 );
+    glDisableVertexAttribArray( 1 );        
 }
 
 // UPDATE ROTATION RATE //////////////////

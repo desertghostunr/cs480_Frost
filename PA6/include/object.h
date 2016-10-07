@@ -97,10 +97,10 @@ class Object
         
         // model information
         glm::mat4 model;
-        std::vector<std::vector<Vertex>> Vertices;
-        std::vector<std::vector<unsigned int>> Indices;
-        std::vector<GLuint> VB;
-        std::vector<GLuint> IB;
+        std::vector<Vertex> Vertices;
+        std::vector<unsigned int> Indices;
+        GLuint VB;
+        GLuint IB;
 
         //children vector containg the worldID's of the objects children
         std::vector<unsigned int> childrenVector;
