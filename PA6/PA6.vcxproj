@@ -169,6 +169,7 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\object.cpp" />
+    <ClCompile Include="src\ObjectModel.cpp" />
     <ClCompile Include="src\ObjectTable.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\window.cpp" />
@@ -180,6 +181,7 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
     <ClInclude Include="include\GraphicsInfo.h" />
     <ClInclude Include="include\graphics_headers.h" />
     <ClInclude Include="include\object.h" />
+    <ClInclude Include="include\ObjectModel.h" />
     <ClInclude Include="include\ObjectTable.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\window.h" />

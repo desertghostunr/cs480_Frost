@@ -1,16 +1,5 @@
 #include "object.h"
 
-//assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <assimp/color4.h>
-
-//opencv
-#include <opencv2/core/core.hpp>
-#include <opencv2/opencv.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-
 #if defined( _WIN64 ) || defined( _WIN32 )
     #define M_PI 3.14159265358979323846264338327950288
 #endif
@@ -39,12 +28,18 @@ Object::Object()
     objectID = -1;
     parentID = -1;
 
+    objModelPtr = NULL;
 }
 
 Object::~Object()
 {
-    Vertices.clear();
-    Indices.clear();
+    if( objModelPtr != NULL )
+    {
+        objModelPtr->clear( );
+        delete objModelPtr;
+
+        objModelPtr = NULL;
+    }
 }
 
 void Object::Update( unsigned int dt )
@@ -101,134 +96,31 @@ glm::mat4 Object::GetModel()
 ***************************************/
 bool Object::loadModelFromFile( const std::string& fileName )
 {
-    //assimp
-    Assimp::Importer importer;    
-    aiMaterial* mtlPtr = NULL;
-    aiColor4D mColor;
+    objModelPtr = new ObjectModel( );
 
-    //open the model file 
-    const aiScene* scene = importer.ReadFile( fileName.c_str( ),
-                                              aiProcess_Triangulate );
-
-    //vertex to temporarily store data
-    Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
-
-
-    //indexing
-    unsigned int mIndex, fIndex, vIndex, iIndex, tIndex, offset;
-
-    //image container using opencv
-    std::vector<cv::Mat> textureImg; //image matrix
-    std::vector<std::string> textureFileNames;
-
-    if( scene == NULL )
-    {
-        std::cout << "Failed to load " << fileName << std::endl;
-        return false;
-    }
-
-    //clear old vertices content
-    Vertices.clear( );
-    Indices.clear( );
-
-    //load vertices and faces
-    for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
-    {
-        mtlPtr = scene->mMaterials[ scene->mMeshes[ mIndex ]->mMaterialIndex ];
-
-        if( mtlPtr != NULL )
-        {
-            if( AI_SUCCESS //flag for the success of an ai return
-                == aiGetMaterialColor( mtlPtr, //pointer to material object
-                                       AI_MATKEY_COLOR_DIFFUSE, //the color to grab
-                                       &mColor ) ) //the color object
-            {
-                //assign colors for this mesh
-                tmpVert.color.r = mColor.r;
-                tmpVert.color.g = mColor.g;
-                tmpVert.color.b = mColor.b;
-            }
-        }
-
-        //create offset for the concatenation of meshes into one VBO and IBO
-        offset = Vertices.size( );
-
-        for( fIndex = 0; fIndex < scene->mMeshes[mIndex]->mNumFaces; fIndex++ )
-        {
-            for( iIndex = 0; 
-                 iIndex < scene->mMeshes[mIndex ]->mFaces[fIndex].mNumIndices; 
-                 iIndex++ )
-            {
-                //get index to access vertices at
-                vIndex = scene->mMeshes[ mIndex ]->mFaces[ fIndex ].mIndices[ iIndex ];
-
-                //assign vertices
-                tmpVert.vertex.x = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].x;
-                tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
-                tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;                
-
-                //push back vertices
-                Vertices.push_back( tmpVert );
-
-                //push back indices
-                Indices.push_back( offset + //add offset
-                    scene->mMeshes[ mIndex ]->mFaces[fIndex].mIndices[ iIndex ] );
-
-            }
-        }
-    }
-
-    //load texture without altering the contents of the data; note that 
-    //this function can also be set to force the pixels to processed
-    //as 8-bit, 16-bit, 32-bit, or grayscale.
-    //The color channels are store contiguously for each pixel as BGR
-    //the Mat::convertTo function can also be used to convert the image
-    //to 8-bit, 16-bit, 32-bit, single precision floating-point,
-    //or double precision floating-point.
-    //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
-    for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
-    {
-        textureImg.push_back( cv::imread( textureFileNames[ tIndex ],
-                                          CV_LOAD_IMAGE_UNCHANGED ).clone( ) );
-    }
-    
-
-    //in the case that the loading of the texture image failed
-    if( textureImg.empty( ) )
-    {
-        std::cout << "Error opening texture file(s)." << std::endl;
-    }
-
-    glGenBuffers( 1, &VB );
-    glBindBuffer( GL_ARRAY_BUFFER, VB );
-    glBufferData( GL_ARRAY_BUFFER, //buffer type
-                  sizeof( Vertex ) * Vertices.size( ), //size
-                  &Vertices[ 0 ], //data
-                  GL_STATIC_DRAW ); //draw mode
-
-    glGenBuffers( 1, &IB );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, //buffer type
-                  sizeof( unsigned int ) * Indices.size( ), //size
-                  &Indices[ 0 ], //data
-                  GL_STATIC_DRAW ); //draw mode
-
-    return true;
+    return objModelPtr->loadModelFromFile( fileName );
 }
 
 
 void Object::Render()
 {
+    //no model, nothing to render
+    if( objModelPtr == NULL )
+    {
+        return;
+    }
+
     glEnableVertexAttribArray( 0 );
     glEnableVertexAttribArray( 1 );
 
-    glBindBuffer( GL_ARRAY_BUFFER, VB );
+    glBindBuffer( GL_ARRAY_BUFFER, objModelPtr->vertexBuffer( ) );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
     glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
                            ( void* ) offsetof( Vertex, color ) );
 
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
-    glDrawElements( GL_TRIANGLES, Indices.size( ), GL_UNSIGNED_INT, 0 );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( ) );
+    glDrawElements( GL_TRIANGLES, 
+                    objModelPtr->getIndices( ).size( ), GL_UNSIGNED_INT, 0 );
 
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );        

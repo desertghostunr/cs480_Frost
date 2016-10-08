@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "graphics_headers.h"
+#include "ObjectModel.h"
 
 class Object
 {
@@ -97,10 +98,7 @@ class Object
         
         // model information
         glm::mat4 model;
-        std::vector<Vertex> Vertices;
-        std::vector<unsigned int> Indices;
-        GLuint VB;
-        GLuint IB;
+        ObjectModel* objModelPtr;
 
         //children vector containg the worldID's of the objects children
         std::vector<unsigned int> childrenVector;
@@ -131,3 +129,5 @@ class Object
 };
 
 #endif /* OBJECT_H */
+
+

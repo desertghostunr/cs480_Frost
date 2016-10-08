@@ -1,3 +1,6 @@
+#ifndef OBJECTTABLE_H
+#define OBJECTTABLE_H
+
 /***************************************
 
 @file ObjectTable.h 
@@ -41,3 +44,5 @@ class ObjectTable
         std::vector<Object> data;
 
 };
+
+#endif
