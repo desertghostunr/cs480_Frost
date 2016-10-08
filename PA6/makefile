@@ -4,11 +4,11 @@ UNAME_S := $(shell uname -s)
 # Linux
 ifeq ($(UNAME_S), Linux)
 	CC=g++
-	LIBS=-lSDL2 -lGLEW -lGL -lassimp -lopencv_core
+	LIBS=-lSDL2 -lGLEW -lGL -lassimp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann
 # Mac
 else
 	CC=clang++
-	LIBS=-lSDL2 -framework OpenGL -framework Cocoa -lGLEW -lassimp -stdlib=libc++
+	LIBS=-lSDL2 -framework OpenGL -framework Cocoa -lGLEW -lassimp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -stdlib=libc++
 endif
 
 # Paths, use this to set Include directories, or library directories; uncomment in all: if used
@@ -19,7 +19,7 @@ endif
 CXXFLAGS=-g -Wall -std=c++0x
 
 # .o Compilation
-O_FILES=main.o camera.o engine.o graphics.o object.o shader.o window.o ObjectTable.o
+O_FILES=main.o camera.o engine.o graphics.o object.o shader.o window.o ObjectTable.o ObjectModel.o
 
 # Point to includes of local directories
 INCLUDES=-I../include
@@ -53,6 +53,10 @@ window.o: ../src/window.cpp
 
 ObjectTable.o: ../src/ObjectTable.cpp
 	$(CC) $(CXXFLAGS) -c ../src/ObjectTable.cpp -o ObjectTable.o $(INCLUDES)
+
+ObjectModel.o: ../src/ObjectModel.cpp
+	$(CC) $(CXXFLAGS) -c ../src/ObjectModel.cpp -o ObjectModel.o $(INCLUDES)
+
 
 clean:
 	-@if rm *.o Tutorial 2>/dev/null || true; then echo "Main Removed"; else echo "No Main"; fi
