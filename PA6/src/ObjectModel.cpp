@@ -259,11 +259,12 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     aiColor4D mColor;
 
     //open the model file 
-    const aiScene* scene = importer.ReadFile( fileName.c_str( ),
-                                              aiProcess_Triangulate );
+    const aiScene* scene = importer.ReadFile( fileName.c_str( ), //file to open
+                                              aiProcess_Triangulate ); //triangulate faces
 
     //vertex to temporarily store data
-    Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), //vertex
+                    glm::vec3( 1.0f, 1.0f, 1.0f ) ); //color
 
 
     //indexing

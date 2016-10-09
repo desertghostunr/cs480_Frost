@@ -598,8 +598,8 @@ void Object::createOrbitInTranslationVector
 )
 {
     translationVector = glm::vec3( radius.x * cos( angle.x ), 
-                                                                 radius.y * tan( angle.y ),
-                                                                 radius.z * sin( angle.z ) );
+                                   radius.y * tan( angle.y ),
+                                   radius.z * sin( angle.z ) );
 }
 
 // SET TRANSLATION VECTOR /////////////////////
@@ -651,7 +651,7 @@ void Object::setRotationVector( const glm::vec3 rotVec )
 void Object::commitTranslation( )
 {
     transformVector.push_back( glm::translate( glm::mat4(1.0f),
-                                                                                         translationVector ) );
+                                               translationVector ) );
 }
 
 // COMMIT ROTATION/////////////////////
@@ -666,10 +666,10 @@ void Object::commitTranslation( )
 @notes none
 
 ***************************************/
-void Object::commitRotation(    )
+void Object::commitRotation( )
 {
-    transformVector.push_back( glm::rotate( glm::mat4(1.0f), 
-                                                                                    (angle), rotationVector ) );
+    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ), 
+                               ( angle ), rotationVector ) );
 }
 
 // COMMIT SCALE /////////////////////
@@ -823,8 +823,8 @@ void Object::setOrbitAngle( float newAngle )
 ***************************************/
 bool Object::isPaused( )
 {
-    return ( ( rotationControlMultiplier == 0.0 ) 
-                        && ( orbitControlMultiplier == 0.0 ) );
+    return ( ( rotationControlMultiplier == 0.0 )
+             && ( orbitControlMultiplier == 0.0 ) );
 }
 
 // CREATE SATELLITE TRANSFORM    /////////////////////
@@ -841,9 +841,14 @@ bool Object::isPaused( )
 ***************************************/
 void Object::createSatelliteTransform( )
 {
-    createOrbitInTranslationVector( glm::vec3( orbitalAngle, 0.0f, orbitalAngle ),
-                                                                    glm::vec3( orbitalRadius, 0.0f, orbitalRadius ),
-                                                                    glm::vec3( 0.0f, 0.0f, 0.0f ) );
+    createOrbitInTranslationVector( glm::vec3( orbitalAngle, 
+                                               0.0f, 
+                                               orbitalAngle ),
+                                    glm::vec3( orbitalRadius, 
+                                               0.0f, 
+                                               orbitalRadius ),
+                                    glm::vec3( 0.0f, 0.0f, 0.0f ) );
+
     commitScale( );
     commitRotation( );
     commitTranslation( );
