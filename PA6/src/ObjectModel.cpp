@@ -395,7 +395,6 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
     for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
     {
-        std::cout << pathString + textureFileNames[ tIndex ] << std::endl;
         tmpImg = cv::imread( pathString + textureFileNames[ tIndex ], 
                              CV_LOAD_IMAGE_COLOR );
 

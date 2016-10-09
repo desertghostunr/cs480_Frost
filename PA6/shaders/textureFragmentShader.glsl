@@ -1,6 +1,6 @@
 #version 330
 
-flat in vec2 uv;
+smooth in vec2 uv;
 
 out vec4 frag_color;
 
