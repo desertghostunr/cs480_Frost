@@ -82,6 +82,12 @@ glm::mat4 Object::GetModel()
     return model;
 }
 
+
+ObjectModel & Object::getObjectModel( )
+{
+    return *objModelPtr;
+}
+
 // LOAD MODEL FROM FILE //////////////////
 /***************************************
 
@@ -104,26 +110,43 @@ bool Object::loadModelFromFile( const std::string& fileName )
 
 void Object::Render()
 {
+    unsigned int index;
     //no model, nothing to render
     if( objModelPtr == NULL )
     {
         return;
     }
+    
+    
 
-    glEnableVertexAttribArray( 0 );
-    glEnableVertexAttribArray( 1 );
+    for( index = 0; index < objModelPtr->getNumberOfIBs( ); index++ )
+    {
+        glEnableVertexAttribArray( 0 );
+        glEnableVertexAttribArray( 1 );
+        glEnableVertexAttribArray( objModelPtr->TextureUniformLocation( ) );
 
-    glBindBuffer( GL_ARRAY_BUFFER, objModelPtr->vertexBuffer( ) );
-    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
-    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
-                           ( void* ) offsetof( Vertex, color ) );
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( GL_TEXTURE_2D, objModelPtr->Texture( index ) );
 
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( ) );
-    glDrawElements( GL_TRIANGLES, 
-                    objModelPtr->getIndices( ).size( ), GL_UNSIGNED_INT, 0 );
+        //glVertexAttribPointer( objModelPtr->TextureUniformLocation( ), 3, GL_UNSIGNED_BYTE, GL_FALSE, sizeof( char ), 0 );
 
-    glDisableVertexAttribArray( 0 );
-    glDisableVertexAttribArray( 1 );        
+        //glUniform1i( objModelPtr->TextureUniformLocation( ), 0 );
+
+        glBindBuffer( GL_ARRAY_BUFFER, objModelPtr->vertexBuffer( ) );
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
+        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
+                               ( void* ) offsetof( Vertex, uv ) );
+
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( index ) );
+        glDrawElements( GL_TRIANGLES,
+                        objModelPtr->getIndices( index ).size( ), 
+                        GL_UNSIGNED_INT, 0 );
+
+        glDisableVertexAttribArray( 0 );
+        glDisableVertexAttribArray( 1 );
+        glDisableVertexAttribArray( objModelPtr->TextureUniformLocation( ) );
+
+    }          
 }
 
 // UPDATE ROTATION RATE //////////////////

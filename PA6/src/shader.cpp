@@ -70,6 +70,7 @@ bool Shader::AddShader(GLenum ShaderType, const std::string& fileName)
         GLchar InfoLog[1024];
         glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
         std::cerr << "Error compiling: " << InfoLog << std::endl;
+        std::cout << "Error compiling: " << InfoLog << std::endl;
         return false;
     }
 

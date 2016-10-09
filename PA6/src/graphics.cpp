@@ -42,6 +42,7 @@ bool Graphics::Initialize
     glBindVertexArray(vao);
 
     unsigned int index;
+    GLint tmpTextLoc;
 
     // Init Camera
     m_camera = new Camera();
@@ -118,6 +119,20 @@ bool Graphics::Initialize
     {
         printf("m_modelMatrix not found\n");
         return false;
+    }
+
+    tmpTextLoc = m_shader->GetUniformLocation( "textureSampler" );
+
+    if( tmpTextLoc == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "texture location uniform not found!!!\n" );
+        return false;
+    }
+
+    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    {
+        objectRegistry[ index ]
+            .getObjectModel( ).TextureUniformLocation( ) = tmpTextLoc;
     }
 
     //enable depth testing

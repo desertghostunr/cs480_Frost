@@ -122,14 +122,14 @@ const GLuint & ObjectModel::getVB( )
 
 @details returns a constant reference to the IB
 
-@param None
+@param in index: which IB to return
 
 @notes None
 
 ***************************************/
-const GLuint & ObjectModel::getIB( )
+const GLuint & ObjectModel::getIB( unsigned int index )
 {
-    return IB;
+    return IB[index ];
 }
 
 
@@ -157,14 +157,14 @@ const std::vector<Vertex>& ObjectModel::getVertices( )
 
 @details returns a constant reference to the Indices
 
-@param None
+@param in index: which IB to return
 
 @notes None
 
 ***************************************/
-const std::vector<unsigned int>& ObjectModel::getIndices( )
+const std::vector<unsigned int>& ObjectModel::getIndices( unsigned int index )
 {
-    return Indices;
+    return Indices[ index ];
 }
 
 
@@ -193,14 +193,31 @@ GLuint & ObjectModel::vertexBuffer( )
 
 @details returns a reference to the IB
 
-@param None
+@param in index: which IB to return
 
 @notes None
 
 ***************************************/
-GLuint & ObjectModel::indexBuffer( )
+GLuint & ObjectModel::indexBuffer( unsigned int index )
 {
-    return IB;
+    return IB[index ];
+}
+
+// TEXTURE ///////////////////
+/***************************************
+
+@brief Texture
+
+@details returns a reference to the Texture
+
+@param in index: which texture to return
+
+@notes None
+
+***************************************/
+GLuint & ObjectModel::Texture( unsigned int index )
+{
+    return texture[ index ];
 }
 
 // VERTICES ///////////////////
@@ -228,14 +245,37 @@ std::vector<Vertex>& ObjectModel::vertices( )
 
 @details returns a reference to the IB
 
+@param in index: which IB to return
+
+@notes None
+
+***************************************/
+std::vector<unsigned int>& ObjectModel::indices( unsigned int index )
+{
+    return Indices[ index ];
+}
+
+GLint & ObjectModel::TextureUniformLocation( )
+{
+    return textUniLoc;
+}
+
+
+// GET NUMBER OF IBS///////////////////
+/***************************************
+
+@brief getNumberOfIBs
+
+@details returns the size of the IBO
+
 @param None
 
 @notes None
 
 ***************************************/
-std::vector<unsigned int>& ObjectModel::indices( )
+unsigned int ObjectModel::getNumberOfIBs( )
 {
-    return Indices;
+    return IB.size( );
 }
 
 
@@ -256,7 +296,9 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //assimp
     Assimp::Importer importer;
     aiMaterial* mtlPtr = NULL;
-    aiColor4D mColor;
+    aiVector3D uv;
+
+    aiString textFPath;
 
     //open the model file 
     const aiScene* scene = importer.ReadFile( fileName.c_str( ), //file to open
@@ -264,15 +306,18 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
     //vertex to temporarily store data
     Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), //vertex
-                    glm::vec3( 1.0f, 1.0f, 1.0f ) ); //color
+                    glm::vec2( 0.0f, 0.0f ) ); //uv
 
 
     //indexing
     unsigned int mIndex, fIndex, vIndex, iIndex, tIndex, offset;
 
     //image container using opencv
+    cv::Mat tmpImg;
     std::vector<cv::Mat> textureImg; //image matrix
     std::vector<std::string> textureFileNames;
+
+    std::string pathString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
 
     if( scene == NULL )
     {
@@ -287,19 +332,19 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //load vertices and faces
     for( mIndex = 0; mIndex < scene->mNumMeshes; mIndex++ )
     {
+        Indices.push_back( std::vector<unsigned int>( ) );
+
         mtlPtr = scene->mMaterials[ scene->mMeshes[ mIndex ]->mMaterialIndex ];
 
         if( mtlPtr != NULL )
         {
-            if( AI_SUCCESS //flag for the success of an ai return
-                == aiGetMaterialColor( mtlPtr, //pointer to material object
-                                       AI_MATKEY_COLOR_DIFFUSE, //the color to grab
-                                       &mColor ) ) //the color object
+            for( tIndex = 0;
+                 tIndex < mtlPtr->GetTextureCount( aiTextureType_DIFFUSE );
+                 tIndex++ )
             {
-                //assign colors for this mesh
-                tmpVert.color.r = mColor.r;
-                tmpVert.color.g = mColor.g;
-                tmpVert.color.b = mColor.b;
+                mtlPtr->GetTexture( aiTextureType_DIFFUSE, tIndex, &textFPath );
+
+                textureFileNames.push_back( textFPath.C_Str( ) );                
             }
         }
 
@@ -320,11 +365,19 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                 tmpVert.vertex.y = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].y;
                 tmpVert.vertex.z = scene->mMeshes[ mIndex ]->mVertices[ vIndex ].z;
 
+                if( scene->mMeshes[ mIndex ]->HasTextureCoords( 0 ) )
+                {
+                    uv = scene->mMeshes[ mIndex ]->mTextureCoords[ 0 ][ vIndex ];
+
+                    tmpVert.uv.x = uv.x;
+                    tmpVert.uv.y = uv.y;
+                }                
+
                 //push back vertices
                 Vertices.push_back( tmpVert );
 
                 //push back indices
-                Indices.push_back( offset + //add offset
+                Indices[ mIndex ].push_back( offset + //add offset
                                    scene->mMeshes[ mIndex ]->
                                           mFaces[ fIndex ].mIndices[ iIndex ] );
 
@@ -332,7 +385,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
         }
     }
 
-    //load texture without altering the contents of the data; note that 
+    //load texture as 8-bit bgr; note that 
     //this function can also be set to force the pixels to processed
     //as 8-bit, 16-bit, 32-bit, or grayscale.
     //The color channels are store contiguously for each pixel as BGR
@@ -342,8 +395,12 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
     for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
     {
-        textureImg.push_back( cv::imread( textureFileNames[ tIndex ],
-                                          CV_LOAD_IMAGE_UNCHANGED ).clone( ) );
+        tmpImg = cv::imread( pathString + textureFileNames[ tIndex ], 
+                             CV_LOAD_IMAGE_COLOR );
+
+        textureImg.push_back( tmpImg.clone( ) );
+
+        tmpImg.release( );
     }
 
 
@@ -360,12 +417,42 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                   &Vertices[ 0 ], //data
                   GL_STATIC_DRAW ); //draw mode
 
-    glGenBuffers( 1, &IB );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, //buffer type
-                  sizeof( unsigned int ) * Indices.size( ), //size
-                  &Indices[ 0 ], //data
-                  GL_STATIC_DRAW ); //draw mode
+    IB.resize( Indices.size( ) );
+
+    
+
+    for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
+    {
+        glGenBuffers( 1, &IB[ iIndex ] );
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, IB[ iIndex ] );
+        glBufferData( GL_ELEMENT_ARRAY_BUFFER, //buffer type
+                      sizeof( unsigned int ) * Indices[ iIndex ].size( ), //size
+                      &Indices[iIndex][ 0 ], //data
+                      GL_STATIC_DRAW ); //draw mode
+    }
+
+    texture.resize( textureImg.size( ) );
+
+    for( tIndex = 0; tIndex < texture.size( ); tIndex++ )
+    {
+
+        glGenTextures( 1, &texture[ tIndex ] );
+
+        glActiveTexture( GL_TEXTURE0 );
+
+        glBindTexture( GL_TEXTURE_2D, texture[ tIndex ] );
+
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 
+                      textureImg[ tIndex ].size( ).width, 
+                      textureImg[ tIndex ].size( ).height, 0, 
+                      GL_BGR, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );
+
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+        textureImg[ tIndex ].release( );
+    }
 
     return true;
 }

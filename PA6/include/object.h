@@ -18,6 +18,8 @@ class Object
 
         glm::mat4 GetModel();
 
+        ObjectModel& getObjectModel( );
+
         bool loadModelFromFile( const std::string& fileName );
 
         void updateRotationRate( float rotFactor );
