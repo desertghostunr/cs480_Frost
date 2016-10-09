@@ -395,6 +395,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
     for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
     {
+        std::cout << pathString + textureFileNames[ tIndex ] << std::endl;
         tmpImg = cv::imread( pathString + textureFileNames[ tIndex ], 
                              CV_LOAD_IMAGE_COLOR );
 
@@ -417,9 +418,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                   &Vertices[ 0 ], //data
                   GL_STATIC_DRAW ); //draw mode
 
-    IB.resize( Indices.size( ) );
-
-    
+    IB.resize( Indices.size( ) );   
 
     for( iIndex = 0; iIndex < IB.size( ); iIndex++ )
     {
@@ -435,10 +434,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
     for( tIndex = 0; tIndex < texture.size( ); tIndex++ )
     {
-
-        glGenTextures( 1, &texture[ tIndex ] );
-
-        glActiveTexture( GL_TEXTURE0 );
+        glGenTextures( 1, &texture[ tIndex ] );        
 
         glBindTexture( GL_TEXTURE_2D, texture[ tIndex ] );
 
