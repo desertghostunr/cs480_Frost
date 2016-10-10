@@ -1,4 +1,5 @@
 #include "object.h"
+#include <algorithm>
 
 #if defined( _WIN64 ) || defined( _WIN32 )
     #define M_PI 3.14159265358979323846264338327950288
@@ -82,30 +83,91 @@ glm::mat4 Object::GetModel()
     return model;
 }
 
+// GET OBJECT MODEL //////////////////
+/***************************************
 
+@brief getObjectModel
+
+@details returns a reference to the object's Object Model
+
+@param None
+
+@notes None
+
+***************************************/
 ObjectModel & Object::getObjectModel( )
 {
     return *objModelPtr;
 }
 
-// LOAD MODEL FROM FILE //////////////////
+
+// HAS OBJECT MODEL //////////////////
 /***************************************
 
-@brief loadModelFromFile
+@brief hasObjectModel
 
-@details loads a model from file
+@details returns a true if the objModelPtr has been allocated
+
+@param None
+
+@notes Does not guarantee pointer validity!!!
+
+***************************************/
+bool Object::hasObjectModel( )
+{
+    if( objModelPtr != NULL )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// INITIALIZE //////////////////
+/***************************************
+
+@brief Initialize
+
+@details Initializes the object with an ObjectModel
 
 @param in: fileName: the file name of the object we are loading.
 
 @notes File must have triangular faces
 
 ***************************************/
-bool Object::loadModelFromFile( const std::string& fileName )
+bool Object::Initialize( const std::string& fileName )
 {
     objModelPtr = new ObjectModel( );
 
     return objModelPtr->loadModelFromFile( fileName );
 }
+
+
+// INITIALIZE //////////////////
+/***************************************
+
+@brief Initialize
+
+@details Initializes the object with an ObjectModel
+
+@param in: srcPtr: the object model to instance
+
+@notes Not tested!!!
+
+***************************************/
+bool Object::Initalize( ObjectModel * const srcPtr )
+{
+    if( srcPtr == NULL )
+    {
+        return false;
+    }
+
+    objModelPtr = srcPtr;
+
+    return true;
+}
+
+
 
 
 void Object::Render()
@@ -126,14 +188,21 @@ void Object::Render()
     glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
         ( void* ) offsetof( Vertex, uv ) );
 
-    for( index = 0; index < objModelPtr->getNumberOfIBs( ); index++ )
+    for( index = 0; 
+         index < std::max( objModelPtr->getNumberOfIBs( ), //get max size
+                                      objModelPtr->getNumberOfTextures( ) ); 
+         index++ )
     {
         glUniform1i( objModelPtr->TextureUniformLocation( ), 0 );
         glActiveTexture( GL_TEXTURE0 );        
-        glBindTexture( GL_TEXTURE_2D, objModelPtr->Texture( index ) );
+        glBindTexture( GL_TEXTURE_2D, objModelPtr->Texture( 
+            std::min( index, objModelPtr->getNumberOfTextures( ) - 1 ) ) ); //prevent out of bounds
         
 
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( index ) );
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( 
+            std::min( index, objModelPtr->getNumberOfIBs( ) - 1 ) ) ); //prevent out of bounds
+
+        //draw faces associated with a texture
         glDrawElements( GL_TRIANGLES,
                         objModelPtr->getIndices( index ).size( ), 
                         GL_UNSIGNED_INT, 0 );        

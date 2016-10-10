@@ -20,7 +20,11 @@ class Object
 
         ObjectModel& getObjectModel( );
 
-        bool loadModelFromFile( const std::string& fileName );
+        bool hasObjectModel( );
+
+        bool Initialize( const std::string& fileName );
+
+        bool Initalize( ObjectModel * const srcPtr );
 
         void updateRotationRate( float rotFactor );
 

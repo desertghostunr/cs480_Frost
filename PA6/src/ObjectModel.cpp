@@ -255,6 +255,18 @@ std::vector<unsigned int>& ObjectModel::indices( unsigned int index )
     return Indices[ index ];
 }
 
+// TEXTURE UNIFORM LOCATION ///////////////////
+/***************************************
+
+@brief TextureUniformLocation
+
+@details returns the location of the Texture uniform in the shader program
+
+@param None
+
+@notes None
+
+***************************************/
 GLint & ObjectModel::TextureUniformLocation( )
 {
     return textUniLoc;
@@ -276,6 +288,24 @@ GLint & ObjectModel::TextureUniformLocation( )
 unsigned int ObjectModel::getNumberOfIBs( )
 {
     return IB.size( );
+}
+
+
+// GET NUMBER OF TEXTURES ///////////////////
+/***************************************
+
+@brief getNumberOfTextures
+
+@details returns the size of the Texture vector
+
+@param None
+
+@notes None
+
+***************************************/
+unsigned int ObjectModel::getNumberOfTextures( )
+{
+    return texture.size( );
 }
 
 

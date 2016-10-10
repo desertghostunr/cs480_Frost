@@ -47,6 +47,8 @@ class ObjectModel
 
         unsigned int getNumberOfIBs( );
 
+        unsigned int getNumberOfTextures( );
+
         //file I/O
         bool loadModelFromFile( const std::string& fileName );
 

@@ -55,7 +55,7 @@ bool Graphics::Initialize
     // Create the object
     objectRegistry.addObject( );
     
-    if( !objectRegistry[ 0 ].loadModelFromFile( progInfo.modelVector[ 0 ] ) )
+    if( !objectRegistry[ 0 ].Initialize( progInfo.modelVector[ 0 ] ) )
     {
         std::cout<<"Failed to load "<<progInfo.modelVector[ 0 ]<<"."<<std::endl;
         return false;
