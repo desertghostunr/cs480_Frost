@@ -38,9 +38,9 @@ int main(int argc, char **argv)
         cout <<"Please ensure that both the vertex shader and the fragment shader";
         cout <<" are specified."<< endl;
         cout <<"Example usage: " << endl;
-        cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
-        cout <<"-f shaders/cubeFragmentShader.glsl ";
-        cout <<"-m models/Box.obj" << endl << endl;
+        cout <<" ./Tutorial -v shaders/textureVertexShader.glsl ";
+        cout <<"-f shaders/textureFragmentShader.glsl ";
+        cout <<"-m models/BoxT.obj" << endl << endl;
 
         cout <<"Run ./Tutorial --h for help with using the program."<<endl<<endl;
 
@@ -176,12 +176,12 @@ bool ProcessCommandLineParameters
             cout << "The path should look like: models/[MODEL_FILE]" << endl << endl;
 
             cout <<"Example usage: " << endl;
-            cout <<" ./Tutorial -v shaders/cubeVertexShader.glsl ";
-            cout <<"-f shaders/cubeFragmentShader.glsl ";
-            cout <<"-m models/Box.obj" << endl << endl;
+            cout <<" ./Tutorial -v shaders/textureVertexShader.glsl ";
+            cout <<"-f shaders/textureFragmentShader.glsl ";
+            cout <<"-m models/BoxT.obj" << endl << endl;
 
             cout<<"Please see README.md in the project directory for any additional";
-            cout<<"information."<<endl<<endl;
+            cout<<" information."<<endl<<endl;
         }
         else 
         {

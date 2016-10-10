@@ -26,14 +26,23 @@ Note: If CMake fails for any reason, the makefile is also kept up to date. Again
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get may be necessary.
 
-Example building and running:
+Example building and running with CMake:
 
 ```bash
 mkdir build
 cd build
 cmake ..
 make
-./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl -m models/Box.obj
+./Tutorial -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
+```
+Please only use the makefile in the event CMake fails.
+Example building and running with the makefile:
+```bash
+mkdir build
+cd build
+cp ../makefile .
+make
+./Tutorial -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
 ```
 
 ### Specific Instructions on Running
@@ -61,11 +70,11 @@ This program is run in the following format:
 An example of running this program:
 
 ```bash
-./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl -m models/Box.obj
+./Tutorial -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
 ```
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./Tutorial -v shaders/cubeVertexShader.glsl -f shaders/cubeFragmentShader.glsl -m models/Box.obj
+/usr/NX/scripts/vgl/vglrun ./Tutorial -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
 ```

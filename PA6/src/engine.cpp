@@ -7,6 +7,9 @@ Engine::Engine(string name, int width, int height)
     m_WINDOW_WIDTH = width;
     m_WINDOW_HEIGHT = height;
     m_FULLSCREEN = false;
+
+    m_graphics = NULL;
+    m_window = NULL;
 }
 
 Engine::Engine(string name)
@@ -15,12 +18,24 @@ Engine::Engine(string name)
     m_WINDOW_HEIGHT = 0;
     m_WINDOW_WIDTH = 0;
     m_FULLSCREEN = true;
+
+    m_graphics = NULL;
+    m_window = NULL;
 }
 
 Engine::~Engine()
 {
-    delete m_window;
-    delete m_graphics;
+    if( m_graphics != NULL )
+    {
+        delete m_graphics;
+        m_graphics = NULL;
+    }
+    if( m_window != NULL )
+    {
+        delete m_window;
+        m_window = NULL;
+    }
+    
     m_window = NULL;
     m_graphics = NULL;
 }
