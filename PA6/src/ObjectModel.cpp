@@ -500,3 +500,30 @@ void ObjectModel::clear( )
     Vertices.clear( );
     Indices.clear( );
 }
+
+// ASSIGNMENT OPERATOR ///////////////////
+/***************************************
+
+@brief operator=
+
+@details assigns another ModelObject to this
+
+@param in: rhObjectModel: the object we are copying
+
+@notes None
+
+***************************************/
+const ObjectModel & ObjectModel::operator=( const ObjectModel & rhObjModel )
+{
+    if( this != &rhObjModel )
+    {
+        Vertices = rhObjModel.Vertices;
+        Indices = rhObjModel.Indices;
+        VB = rhObjModel.VB;
+        IB = rhObjModel.IB;
+        texture = rhObjModel.texture;
+        textUniLoc = rhObjModel.textUniLoc;
+    }
+
+    return *this;
+}

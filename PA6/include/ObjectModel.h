@@ -55,6 +55,9 @@ class ObjectModel
         //clear
         void clear( );
 
+        //overloaded operators
+        const ObjectModel& operator = ( const ObjectModel & rhObjModel );
+
     private:
         std::vector<Vertex> Vertices;
         std::vector<std::vector<unsigned int>> Indices;
