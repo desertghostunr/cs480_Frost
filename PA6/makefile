@@ -61,3 +61,4 @@ ObjectModel.o: ../src/ObjectModel.cpp
 clean:
 	-@if rm *.o Tutorial 2>/dev/null || true; then echo "Main Removed"; else echo "No Main"; fi
 	rm shaders -rf
+	rm models -rf

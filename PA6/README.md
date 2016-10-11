@@ -11,19 +11,26 @@ To run this project installation of these three programs are required [GLEW](htt
 
 This project uses OpenGL 3.3.
 
+This project supports OpenCV 2.4.9.1 and OpenCV 3.1.
+
+This project requires CMake 2.8 +. If this is not available, please use the makefile instead.
+
 ### Ubuntu/Linux
 ```bash
 sudo apt-get install libglew-dev libglm-dev libsdl2-dev libassimp-dev libopencv-dev
 ```
 
 ## Building and Running
-Please build this project using CMake. It is recommended to create a build directory and to build the project there.
+Please build this project using CMake 2.8 +. It is recommended to create a build directory and to build the project there.
 
 Running the make in a separate directory will allow easy cleanup of the build data, and an easy way to prevent unnecessary data to be added to the git repository.
 
 Note: If CMake fails for any reason, the makefile is also kept up to date. Again, CMake is the preferred build method.
 
 ### CMake Instructions
+
+The minimum required version of CMake is 2.8. 
+
 The building of the project is done using CMake, installation with apt-get may be necessary.
 
 Example building and running with CMake:
@@ -35,7 +42,9 @@ cmake ..
 make
 ./Tutorial -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
 ```
-Please only use the makefile in the event CMake fails.
+
+### makefile Instructions
+
 Example building and running with the makefile:
 ```bash
 mkdir build
