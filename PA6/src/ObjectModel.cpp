@@ -400,7 +400,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                     uv = scene->mMeshes[ mIndex ]->mTextureCoords[ 0 ][ vIndex ];
 
                     tmpVert.uv.x = uv.x;
-                    tmpVert.uv.y = uv.y;
+                    tmpVert.uv.y = 0.0f - uv.y;
                 }                
 
                 //push back vertices

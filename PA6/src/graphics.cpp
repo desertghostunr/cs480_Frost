@@ -151,6 +151,8 @@ void Graphics::Update(unsigned int dt)
 
         if( !objectRegistry[ index ].isChild( ) )
         {
+            objectRegistry[ index ].setScale( glm::vec3( 2.5, 2.5, 2.5 ) );
+            objectRegistry[ index ].commitScale( );
             objectRegistry[ index ].incrementAngle( dt );
 
             objectRegistry[ index ].commitRotation( );
