@@ -186,17 +186,20 @@ void Object::Render()
     glBindBuffer( GL_ARRAY_BUFFER, objModelPtr->vertexBuffer( ) );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
     glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
-        ( void* ) offsetof( Vertex, uv ) );
+                           ( void* ) offsetof( Vertex, uv ) );
 
     for( index = 0; 
          index < std::max( objModelPtr->getNumberOfIBs( ), //get max size
                                       objModelPtr->getNumberOfTextures( ) ); 
          index++ )
     {
-        glUniform1i( objModelPtr->TextureUniformLocation( ), 0 );
-        glActiveTexture( GL_TEXTURE0 );        
-        glBindTexture( GL_TEXTURE_2D, objModelPtr->Texture( 
-            std::min( index, objModelPtr->getNumberOfTextures( ) - 1 ) ) ); //prevent out of bounds
+        if( index < objModelPtr->getNumberOfTextures( ) )
+        {
+            glUniform1i( objModelPtr->TextureUniformLocation( ), 0 );
+            glActiveTexture( GL_TEXTURE0 );
+            glBindTexture( GL_TEXTURE_2D, objModelPtr->Texture( index ) );
+        }
+        
         
 
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( 
