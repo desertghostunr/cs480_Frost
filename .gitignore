@@ -44,3 +44,6 @@ build/
 *.db
 *.opendb
 *.config
+/PA7/x64
+/PA7/packages
+/PA7/.vs/PA7/v14

@@ -26,7 +26,6 @@ struct PlanetInfo
     float rotRate;
     glm::vec3 orbitRad;
     glm::vec3 locLocal;
-    glm::ce3 tilt;
 
     PlanetInfo( ){ }
     PlanetInfo( const PlanetInfo& planInfo ): 
@@ -37,8 +36,7 @@ struct PlanetInfo
         tilt( planInfo.tilt ),
         rotRate( planInfo.rotRate ),
         orbitRad( planInfo.orbitRad ),
-        locLocal( planInfo.locLocal ),
-        tilt( planInfo.tilt )
+        locLocal( planInfo.locLocal )
 
     {
         //nothing to do
