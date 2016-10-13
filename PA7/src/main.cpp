@@ -1,5 +1,6 @@
 // header files ///////////////////////////////
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include "engine.h"
@@ -15,7 +16,10 @@ const char TAB_CHAR = '\t';
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
-                                   GraphicsInfo& progInfo);
+                                   GraphicsInfo& progInfo );
+
+bool ProcessConfigurationFile( const std::string& fileName, 
+                               GraphicsInfo& progInfo );
 
 // main ///////////////////////////////////
 
@@ -69,13 +73,13 @@ int main(int argc, char **argv)
 
 @brief ProcessCommandLineParameters
 
-@details    goes through the command line parameters and processes them
+@details goes through the command line parameters and processes them
 
 @param in: argCount: the number of arguments
 
 @param in: argVector: the argument vector
 
-@param out: GraphicsInfo: a struct containing shaders, their type, and model file names
+@param out: progInfo: a struct containing shaders, their type, and model file names
 
 @notes none
 
@@ -193,4 +197,32 @@ bool ProcessCommandLineParameters
     return ( vertShaderGiven && fragShaderGiven && modelGiven );
 
 }
+
+// PROCESS CONFIGURATION FILE //////////
+/***************************************
+
+@brief ProcessConfigurationFile
+
+@details processes the configuration file specified in the command prompt parameters
+
+@param in: fileName: the name of the file to load
+
+@param out: progInfo: a struct containing shaders, their type, and model file names
+
+@notes none
+
+***************************************/
+bool ProcessConfigurationFile
+( 
+    const std::string & fileName, //the configuration file
+    GraphicsInfo & progInfo //the program information to pass to the engine
+)
+{
+    bool success = true;
+
+    //to do: implement
+
+    return success;
+}
+
 
