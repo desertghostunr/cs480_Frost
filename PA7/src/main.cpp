@@ -3,20 +3,58 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <sstream>
 #include "engine.h"
 
 
 //Global Constants //////////////////////////
+//frag options
 const string FRAGMENT_SHADER_OPT = "-f";
 const string VERTEX_SHADER_OPT = "-v";
+
+//object options
+const string PLANET_OPT = "-p";
+
+const string CHILD_OPT = "-c";
+
 const string MODEL_PATH_OPT = "-m";
+
+const string SCALE_OPT = "-s";
+
+const string ROT_RATE_OPT = "-r";
+
+const string ORBIT_RATE_OPT = "-o";
+
+const string LOC_LOCAL_OPT = "-l";
+
+const string TILT_OPT = "-t";
+
+const size_t CONFIG_OPT_SIZE = 3;
+
+
+const string PRIMARY_OPTIONS[ ] = { PLANET_OPT,
+                                    VERTEX_SHADER_OPT,
+                                    FRAGMENT_SHADER_OPT };
+const unsigned int P_OPT_SIZE = 3;
+
+const unsigned int PLANET_INDEX = 0;
+
+const unsigned int VERTEX_SHADER_INDEX = 1;
+
+const unsigned int FRAGMENT_SHADER_INDEX = 2;
+
+
+//help options
 const string HELP_OPT = "--h";
 
+//general characters
 const char TAB_CHAR = '\t';
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
                                    GraphicsInfo& progInfo );
+
+bool ProcessLine( const std::string& line, GraphicsInfo& progInfo );
 
 bool ProcessConfigurationFile( const std::string& fileName, 
                                GraphicsInfo& progInfo );
@@ -79,7 +117,7 @@ int main(int argc, char **argv)
 
 @param in: argVector: the argument vector
 
-@param out: progInfo: a struct containing shaders, their type, and model file names
+@param out: progInfo: a struct containing program information
 
 @notes none
 
@@ -94,7 +132,8 @@ bool ProcessCommandLineParameters
     GLenum shaderType;
     string tmpStr;
     int index;
-    bool vertShaderGiven = false, fragShaderGiven = false, modelGiven = false;
+
+    bool successFlag = true;
 
     for( index = 1; index < argCount; index++ )
     {
@@ -105,12 +144,10 @@ bool ProcessCommandLineParameters
             if( tmpStr == VERTEX_SHADER_OPT )
             {
                 shaderType = GL_VERTEX_SHADER;
-                vertShaderGiven = true;
             }
             else
             {
                 shaderType = GL_FRAGMENT_SHADER;
-                fragShaderGiven = true;
             }
 
             index++;
@@ -143,8 +180,6 @@ bool ProcessCommandLineParameters
             }
 
             progInfo.modelVector.push_back( tmpStr );
-
-            modelGiven = true;
             
         }
         else if( tmpStr == HELP_OPT )
@@ -194,8 +229,57 @@ bool ProcessCommandLineParameters
         }
     }
 
-    return ( vertShaderGiven && fragShaderGiven && modelGiven );
+    return ( ( progInfo.shaderVector.size( ) > 1 ) 
+             && ( progInfo.modelVector.size( ) > 0 ) && successFlag );
 
+}
+
+// PROCESS LINE //////////
+/***************************************
+
+@brief ProcessLine
+
+@details processes a single string of configuration information
+
+@param in: line: the line to process
+
+@param out: progInfo: a struct containing program information
+
+@notes none
+
+***************************************/
+bool ProcessLine( const std::string & line, GraphicsInfo & progInfo )
+{
+   
+    bool successFlag = true;
+    GLenum shaderType;
+
+    unsigned int optIndex;
+
+    size_t strIndex;
+
+    for( optIndex = 0; optIndex < P_OPT_SIZE; optIndex++ )
+    {
+        strIndex = line.find( PRIMARY_OPTIONS[ optIndex ] );
+
+        if( strIndex != string::npos )
+        {
+            if( optIndex == PLANET_INDEX )
+            {
+
+            }
+            else if( optIndex == VERTEX_SHADER_INDEX )
+            {
+
+            }
+            else if( optIndex == FRAGMENT_SHADER_INDEX )
+            {
+                
+            }
+        }
+    }
+
+    return successFlag;
 }
 
 // PROCESS CONFIGURATION FILE //////////
@@ -207,7 +291,7 @@ bool ProcessCommandLineParameters
 
 @param in: fileName: the name of the file to load
 
-@param out: progInfo: a struct containing shaders, their type, and model file names
+@param out: progInfo: a struct containing program information
 
 @notes none
 
@@ -218,11 +302,11 @@ bool ProcessConfigurationFile
     GraphicsInfo & progInfo //the program information to pass to the engine
 )
 {
-    bool success = true;
+    bool successFlag = true;
 
     //to do: implement
 
-    return success;
+    return successFlag;
 }
 
 

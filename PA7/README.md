@@ -15,8 +15,6 @@
 
 -f [fragment shader complete path]
 
---h display help
-
 -p -c -m -s -r -o -l -t [planet information]
 
 #### Parts of a planet
