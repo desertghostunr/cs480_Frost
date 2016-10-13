@@ -1,20 +1,25 @@
 # PA7 Solar System
 
-#Things to do:
-##Create Configuration File Loading Function
+# Things to do:
+
+## Create Configuration File Loading Function
 * Add a function to main for loading a configuration file.
 * The order of components in the configuration file should not matter.
 * The object number, parent number, and model path are mandatory for an object.
 * The other parameters are optional and will be filled with defaults if not provided.
 * Let me know if I forgot any.
-###The configuration file is structured as follows:
+
+### The configuration file is structured as follows:
 
 -v [vertex shader complete path]
+
 -f [fragment shader complete path]
+
 --h display help
+
 -p -c -m -s -r -o -l -t [planet information]
 
-####Parts of a planet
+#### Parts of a planet
 -p [planet/object number (sun is zero)] 
 -c [child object's number (can be more than one)]
 -m [model for object path]
@@ -24,13 +29,14 @@
 -l [location in local space]
 -t [three floating point values of the tilt of the planet]
 
-##Load object update information in the graphics initialization function
+## Load object update information in the graphics initialization function
 * This requires the set and update functions to set the parameters passed in
 
-##Models and Textures
+## Models and Textures
 * Pretty self explanatory
 
-##In the graphics initialization add a table that coordinates the object's for instancing
+## In the graphics initialization add a table that coordinates the object's for instancing
+
 ### Table will have this format
 struct Instance
 {
@@ -55,7 +61,7 @@ This second structure requires removing the delete objModelPtr call from the obj
 
 
 
-#Contributors
+# Contributors
 * Andy Frost
 * J.J. Sibley
 
