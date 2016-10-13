@@ -7,7 +7,7 @@
 * The order of components in the configuration file should not matter.
 * The object number, parent number, and model path are mandatory for an object.
 * The other parameters are optional and will be filled with defaults if not provided.
-* Let me know if I forgot any.
+* Add settings to adjust the location of the view point.
 
 ### The configuration file is structured as follows:
 
@@ -20,46 +20,34 @@
 -p -c -m -s -r -o -l -t [planet information]
 
 #### Parts of a planet
--p [planet/object number (sun is zero)] 
+-p [planet/object number (sun is zero)]
+
 -c [child object's number (can be more than one)]
+
 -m [model for object path]
+
 -s [three floating point values of the objects size relative to earth]
+
 -r [the rotation rate]
+
 -o [three values expressing the planets orbital radius in the x, y, z]
+
 -l [location in local space]
+
 -t [three floating point values of the tilt of the planet]
 
+
 ## Load object update information in the graphics initialization function
+
 * This requires the set and update functions to set the parameters passed in
 
 ## Models and Textures
+
 * Pretty self explanatory
 
-## In the graphics initialization add a table that coordinates the object's for instancing
+## View point
 
-### Table will have this format
-struct Instance
-{
-    std::string modelPath; //model path
-    Object* objPtr; //pointer to object "container" model used for instancing
-};
-
-std::vector<Instance> instanceTable;
-
-this table will filled as each model is loaded to reduce the number of calls
-to the load function.
-
-Alternatively, the Instance struct could look like this:
-
-struct Instance
-{
-    std::string modelPath; //model path
-    ObjectModel objModel; //the actual vertex data of that file
-};
-
-This second structure requires removing the delete objModelPtr call from the object destructor.
-
-
+* Something new to learn
 
 # Contributors
 * Andy Frost

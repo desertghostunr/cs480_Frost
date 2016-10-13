@@ -13,6 +13,8 @@ using namespace std;
 #include "GraphicsInfo.h"
 #include "ObjectTable.h"
 
+#include"Instance.h"
+
 class Graphics
 {
     public:
@@ -50,6 +52,8 @@ class Graphics
         GLint m_modelMatrix;
 
         ObjectTable objectRegistry; //holds the scene's objects
+
+        std::vector<Instance> modelRegistry;
 };
 
 #endif /* GRAPHICS_H */

@@ -56,9 +56,20 @@ bool Graphics::Initialize
     objectRegistry.addObject( );
     objectRegistry.addObject( 0 );
     
-    if( !objectRegistry[ 0 ].Initialize( progInfo.modelVector[ 0 ] ) )
+    modelRegistry.push_back( Instance( ) );
+    modelRegistry[ 0 ].objModel.incrementReference( );
+
+    modelRegistry[ 0 ].modelPath = progInfo.modelVector[ 0 ];
+
+    if( !modelRegistry[0].objModel.loadModelFromFile( progInfo.modelVector[ 0 ] ) )
     {
-        std::cout<<"Failed to load "<<progInfo.modelVector[ 0 ]<<"."<<std::endl;
+        std::cout << "Failed to load " << progInfo.modelVector[ 0 ] << "." << std::endl;
+        return false;
+    }
+    
+    if( !objectRegistry[ 0 ].Initialize( &modelRegistry[ 0 ].objModel ) )
+    {
+        std::cout << "Failed to load instance." << std::endl;
         return false;
     }
 
@@ -258,6 +269,18 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     objectRegistry[ objectID ].incrementAngle( dt );
 
     objectRegistry[ objectID ].commitRotation( );
+
+    if( objectRegistry[ objectID ].isChild( ) )
+    {
+        objectRegistry[ objectID ].incrementOrbitAngle( dt );
+
+        objectRegistry[ objectID ].createOrbitInTranslationVector( 
+            glm::vec3( 1.0f, 0.01f, 1.0f ), 
+            glm::vec3( 5.0f, 9.0f, 7.5f ), 
+            glm::vec3( 0, 0, 0 ) );
+
+        objectRegistry[ objectID ].commitTranslation( );
+    }
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////

@@ -74,6 +74,9 @@
     <ClInclude Include="include\ObjectModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Instance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

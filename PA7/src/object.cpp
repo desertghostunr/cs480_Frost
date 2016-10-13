@@ -37,15 +37,8 @@ Object::~Object()
     if( objModelPtr != NULL )
     {
         objModelPtr->decrementReference( );
-
-        if( objModelPtr->getReferenceCount( ) == 0 )
-        {
-            objModelPtr->clear( );
-            delete objModelPtr; 
-        }
-
-        objModelPtr = NULL;
-    }    
+    }
+    objModelPtr = NULL;
 }
 
 void Object::Update( unsigned int dt )
@@ -126,27 +119,6 @@ bool Object::hasObjectModel( )
     }
 
     return false;
-}
-
-// INITIALIZE //////////////////
-/***************************************
-
-@brief Initialize
-
-@details Initializes the object with an ObjectModel
-
-@param in: fileName: the file name of the object we are loading.
-
-@notes File must have triangular faces
-
-***************************************/
-bool Object::Initialize( const std::string& fileName )
-{
-    objModelPtr = new ObjectModel( );
-
-    objModelPtr->incrementReference( );
-
-    return objModelPtr->loadModelFromFile( fileName );
 }
 
 
@@ -679,7 +651,7 @@ glm::vec3 Object::getScale( )
 
 @details creates an orbit in the translation
 
-@param in: angle: a vector of angles to use_facet
+@param in: angleMult: a vector of multipliers to apply to the angle
 
 @param in: radius: a vector of radii to apply
 
@@ -690,14 +662,14 @@ glm::vec3 Object::getScale( )
 ***************************************/
 void Object::createOrbitInTranslationVector
 ( 
-    const glm::vec3& angle,
+    const glm::vec3& angleMult,
     const glm::vec3& radius,
     const glm::vec3& localOffset 
 )
 {
-    translationVector = glm::vec3( radius.x * cos( angle.x ), 
-                                   radius.y * tan( angle.y ),
-                                   radius.z * sin( angle.z ) );
+    translationVector = glm::vec3( radius.x * cos( angleMult.x * orbitalAngle ), 
+                                   radius.y * tan( angleMult.y * orbitalAngle ),
+                                   radius.z * sin( angleMult.z * orbitalAngle ) );
 }
 
 // SET TRANSLATION VECTOR /////////////////////

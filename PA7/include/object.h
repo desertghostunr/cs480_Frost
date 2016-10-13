@@ -22,8 +22,6 @@ class Object
 
         bool hasObjectModel( );
 
-        bool Initialize( const std::string& fileName );
-
         bool Initialize( ObjectModel * const srcPtr );
 
         void updateRotationRate( float rotFactor );

@@ -185,6 +185,7 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
     <ClInclude Include="include\ObjectTable.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\window.h" />
+    <ClInclude Include="Instance.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
