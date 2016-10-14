@@ -2,12 +2,23 @@
 <SolarSystem>
   <Object name="Sun">
     <Path>"models/sun.obj"</Path>
+    <NumberOfChildren>9</NumberOfChildren>
     <Object name ="Planet">
       <Path>"models/mercury.obj"</Path>
+      <NumberOfChildren>0</NumberOfChildren>      
+    </Object>
+    <Object name ="Planet">
+      <Path>"models/venus.obj"</Path>
+      <NumberOfChildren>0</NumberOfChildren>
+    </Object>
+    <Object name="Planet">
+      <Path>"models/earth.obj"</Path>
+      <NumberOfChildren>1</NumberOfChildren>
       <Object name ="Moon">
         <Path>"models/moon.obj"</Path>
       </Object>
     </Object>
+    
   </Object>
   <Shader name="Vertex">
     <Path>"shaders/textureVertexShader.glsl"</Path>
