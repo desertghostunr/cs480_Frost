@@ -1,9 +1,9 @@
 // header files ///////////////////////////////
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
-#include <sstream>
+#include <fstream>
+#include "rapidxml/rapidxml.hpp"
 #include "engine.h"
 
 
@@ -58,6 +58,8 @@ bool ProcessLine( const std::string& line, GraphicsInfo& progInfo );
 
 bool ProcessConfigurationFile( const std::string& fileName, 
                                GraphicsInfo& progInfo );
+
+bool ReadConfigurationFile( const std::string& fileName, GraphicsInfo& progInfo );
 
 // main ///////////////////////////////////
 
@@ -307,6 +309,45 @@ bool ProcessConfigurationFile
     //to do: implement
 
     return successFlag;
+}
+
+// READ CONFIGURATION FILE //////////
+/***************************************
+
+@brief ReadConfigurationFile
+
+@details Reads the configuration file using rapidxml
+
+@param in: fileName: the name of the file to load
+
+@param out: progInfo: a struct containing program information
+
+@notes none
+
+***************************************/
+bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInfo )
+{
+    ifstream fileOpen( fileName.c_str( ) );
+    vector<char> buffer;
+
+    if( fileOpen.fail( ) )
+    {
+        std::cout << "Failure reading in the file: " << fileName << "!!!" << std::endl;
+
+        fileOpen.close( );
+
+        return false;
+    }
+
+    buffer = vector<char>( istreambuf_iterator<char>( fileOpen ),
+                           istreambuf_iterator<char>( ) );
+
+    buffer.push_back( '\0' );
+
+
+    fileOpen.close( );
+
+    return true;
 }
 
 
