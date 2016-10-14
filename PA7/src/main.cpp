@@ -329,6 +329,8 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 {
     ifstream fileOpen( fileName.c_str( ) );
     vector<char> buffer;
+    rapidxml::xml_document<> doc;
+    rapidxml::xml_node<> *rootNode, *solarNode;
 
     if( fileOpen.fail( ) )
     {
@@ -342,10 +344,20 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
     buffer = vector<char>( istreambuf_iterator<char>( fileOpen ),
                            istreambuf_iterator<char>( ) );
 
+    fileOpen.close( );
+
     buffer.push_back( '\0' );
 
+    doc.parse<0>( &buffer[ 0 ] );
 
-    fileOpen.close( );
+    rootNode = doc.first_node( "SolarSystem" );
+
+    for( solarNode = rootNode->first_node( "Sun" ); 
+         solarNode; 
+         solarNode = solarNode->next_sibling( ) )
+    {
+
+    }
 
     return true;
 }

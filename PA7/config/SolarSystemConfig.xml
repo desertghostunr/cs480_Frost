@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SolarSystem>
+  <Object name="Sun">
+    <Path>"models/sun.obj"</Path>
+    <Object name ="Planet">
+      <Path>"models/mercury.obj"</Path>
+      <Object name ="Moon">
+        <Path>"models/moon.obj"</Path>
+      </Object>
+    </Object>
+  </Object>
+  <Shader name="Vertex">
+    <Path>"shaders/textureVertexShader.glsl"</Path>
+  </Shader>
+  <Shader name="Fragment">
+    <Path>"shaders/textureFragmentShader.glsl"</Path>
+  </Shader>
+</SolarSystem>
