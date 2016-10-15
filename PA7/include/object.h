@@ -42,7 +42,7 @@ class Object
 
         void toggleAllPaused( );
 
-        void setOrbitalRadius( float radius );
+        void setOrbitalRadius( glm::vec2 radius );
 
         void setOrigin( const glm::mat4 & newOrigin );
 
@@ -64,23 +64,25 @@ class Object
 
         void setScale( const glm::vec3& scale );
 
-        glm::vec3 getScale( );
-
-        void createOrbitInTranslationVector( const glm::vec3& angle, 
-                                             const glm::vec3& radius, 
-                                             const glm::vec3& localOffset );
+        glm::vec3 getScale( );        
 
         void setTranslationVector( const glm::vec3& transVec );
 
         void setRotationVector( const glm::vec3 rotVec );
 
+        void setTiltAngle( float tilt );
+
         void commitTranslation( );
 
         void commitRotation( );
 
+        void commitTilt( );
+
         void commitScale( );
 
         void commitOrigin( );
+
+        void commitOrbitalTranslation( );
 
         void incrementAngle( unsigned int dt );
 
@@ -95,8 +97,6 @@ class Object
         void setOrbitAngle( float newAngle );
 
         bool isPaused( );
-
-        void createSatelliteTransform( );
 
     private:
         
@@ -118,9 +118,10 @@ class Object
 
         //angle of rotation / orbit information (specialization)
         float angle;
+        float tiltAngle;
         float orbitalAngle;
 
-        float orbitalRadius;
+        glm::vec2 orbitalRadius;
 
         float rotationRate;
         float orbitRate;

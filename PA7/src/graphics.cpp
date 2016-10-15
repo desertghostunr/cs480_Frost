@@ -52,6 +52,31 @@ bool Graphics::Initialize
         return false;
     }
 
+
+    // INTIALIZATION OF THE SOLAR SYSTEM MODELS AND TRANSFORMS /////////////////
+    /***************************************************************************
+        The API for the Object class works off a series of "constants", 
+        set/update functions, and commit functions.
+
+        Here in the code you need to parse the progInfo struct:
+        *see the PlanetInfo struct in GraphicsInfo.h for the structure
+        *each model needs to be loaded into the model registry
+        *a pointer needs to be attached to the proper index  of the model 
+        registryfor each object
+        *the various set/update functions need to be set for each of the
+        constants
+        *commits must be applied in the updateList function
+        for these functions to take effect
+
+        here is the cmd line parameter that will run the solar system as is:
+
+        ./SolarSystem -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/earth.obj
+
+        Run this to see what the example transforms do
+
+    ***************************************************************************/
+
+
     // Create the object
     objectRegistry.addObject( );
     objectRegistry.addObject( 0 );
@@ -79,13 +104,28 @@ bool Graphics::Initialize
         return false;
     }
 
-    objectRegistry[ 0 ].setRotationVector( glm::vec3( 1.0f, 1.0f, -1.0f ) );
+    // hardcoded example use of the object transform API, see updateList
+    // for commit calls
+    objectRegistry[ 0 ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
     objectRegistry[ 0 ].updateRotationRate( 0.1f );
 
-    objectRegistry[ 1 ].setRotationVector( glm::vec3( 1.0f, 12.0f, 13.0f ) );
+    objectRegistry[ 0 ].setOrbitalRadius( glm::vec2( 0, 0 ) );
+
+    objectRegistry[ 0 ].updateOrbitRate( 0 );
+
+    objectRegistry[ 0 ].setTiltAngle( 0.408f );
+
+    objectRegistry[ 1 ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
     objectRegistry[ 1 ].updateRotationRate( 2.0f );
+
+    objectRegistry[ 1 ].setOrbitalRadius( glm::vec2( 12.6f, 5.8f ) );
+
+    objectRegistry[ 1 ].setTiltAngle( 0.87f );
+
+
+    ////////////////////////////////////////////////////////////////////////////
 
     // Set up the shaders
     m_shader = new Shader();
@@ -184,7 +224,7 @@ void Graphics::Render()
     unsigned int index;
 
     //clear the screen
-    glClearColor(0.0, 0.0, 0.2, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Start the correct program
@@ -255,7 +295,6 @@ std::string Graphics::ErrorString(GLenum error)
 @param in: dt: the time delta
 
 @notes Must be filled in for the use with a program by the programmer
-       e.g. PUT TRANSFORM INFO FOR ALL OBJECTS HERE
 
 ***************************************/
 bool Graphics::updateList( unsigned int objectID, unsigned int dt )
@@ -265,22 +304,19 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
          return false;
     }
 
-    // write transforms here //////////////////////////
+    //here is an example for the general call of transforms for a planet
+    //This does the basic operations... I still don't know how to tilt orbits
+    //Play around with changing the order of events / things
+    // write transforms here //////////////////////////    
     objectRegistry[ objectID ].incrementAngle( dt );
 
     objectRegistry[ objectID ].commitRotation( );
 
-    if( objectRegistry[ objectID ].isChild( ) )
-    {
-        objectRegistry[ objectID ].incrementOrbitAngle( dt );
+    objectRegistry[ objectID ].commitTilt( );
 
-        objectRegistry[ objectID ].createOrbitInTranslationVector( 
-            glm::vec3( 1.0f, 0.01f, 1.0f ), 
-            glm::vec3( 5.0f, 9.0f, 7.5f ), 
-            glm::vec3( 0, 0, 0 ) );
+    objectRegistry[ objectID ].incrementOrbitAngle( dt );    
 
-        objectRegistry[ objectID ].commitTranslation( );
-    }
+    objectRegistry[ objectID ].commitOrbitalTranslation( );
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////

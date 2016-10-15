@@ -1,5 +1,12 @@
 # PA7 Solar System
 
+# J.J.:
+
+I have added some comments and example usage of the object transform functions
+in the Graphics class.
+
+See Graphics::Initialize( ) for my notes on this.
+
 # Things to do:
 
 ## Create Configuration File Loading Function

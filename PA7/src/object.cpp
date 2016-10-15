@@ -12,15 +12,17 @@ Object::Object()
     rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
 
     angle = 0.0f;
+    tiltAngle = 0.0f;
     orbitalAngle = 0.0f;
 
-    orbitalRadius = 1.0f;
+    orbitalRadius.x = 1.0f;
+    orbitalRadius.y = 1.0f;
 
     rotationRate = 1.0f;
     orbitRate = 1.0f;
 
     rotationControlMultiplier = 1.0f;
-    orbitControlMultiplier = -1.0f;
+    orbitControlMultiplier = 1.0f;
 
     origin = glm::mat4(1.0f);
 
@@ -310,13 +312,13 @@ void Object::toggleOrbitDirection( )
 {
     if( orbitControlMultiplier == 0.0 )
     {
-        orbitControlMultiplier = -1.0;
+        orbitControlMultiplier = 1.0;
     }
 
     orbitRate *= -1.0;
 }
 
-// GET RATE OF ORBIT    //////////////////
+// GET RATE OF ORBIT //////////////////
 /***************************************
 
 @brief getRateOfOrbit
@@ -349,7 +351,7 @@ void Object::toggleOrbitPaused( )
 {
     if( orbitControlMultiplier == 0.0 )
     {
-        orbitControlMultiplier = -1.0;
+        orbitControlMultiplier = 1.0f;
     }
     else
     {
@@ -374,7 +376,7 @@ void Object::toggleAllPaused( )
     if( ( rotationControlMultiplier == 0.0 ) && ( orbitControlMultiplier == 0.0 ) )
     {
         rotationControlMultiplier = 1.0;
-        orbitControlMultiplier = -1.0;
+        orbitControlMultiplier = 1.0;
     }
     else
     {
@@ -395,7 +397,7 @@ void Object::toggleAllPaused( )
 @notes None
 
 ***************************************/
-void Object::setOrbitalRadius( float radius )
+void Object::setOrbitalRadius( glm::vec2 radius )
 {
     orbitalRadius = radius;
 }
@@ -644,34 +646,6 @@ glm::vec3 Object::getScale( )
     return scaleFactor;
 }
 
-// CREATE ORBIT IN TRANSLATION VECTOR /////////////////////
-/***************************************
-
-@brief createOrbitInTranslationVector
-
-@details creates an orbit in the translation
-
-@param in: angleMult: a vector of multipliers to apply to the angle
-
-@param in: radius: a vector of radii to apply
-
-@param in: localOffset: a vector of offsets within the orbit calculation
-
-@notes none
-
-***************************************/
-void Object::createOrbitInTranslationVector
-( 
-    const glm::vec3& angleMult,
-    const glm::vec3& radius,
-    const glm::vec3& localOffset 
-)
-{
-    translationVector = glm::vec3( radius.x * cos( angleMult.x * orbitalAngle ), 
-                                   radius.y * tan( angleMult.y * orbitalAngle ),
-                                   radius.z * sin( angleMult.z * orbitalAngle ) );
-}
-
 // SET TRANSLATION VECTOR /////////////////////
 /***************************************
 
@@ -704,6 +678,23 @@ void Object::setTranslationVector( const glm::vec3& transVec )
 void Object::setRotationVector( const glm::vec3 rotVec )
 {
     rotationVector = rotVec;
+}
+
+// SET TILT ANGLE /////////////////////
+/***************************************
+
+@brief setTiltAngle
+
+@details sets the Tilt of an object
+
+@param in: tilt: the tilt of the object
+
+@notes none
+
+***************************************/
+void Object::setTiltAngle( float tilt )
+{
+    tiltAngle = tilt;
 }
 
 // COMMIT TRANSLATION /////////////////////
@@ -742,6 +733,24 @@ void Object::commitRotation( )
                                ( angle ), rotationVector ) );
 }
 
+// COMMIT TILT/////////////////////
+/***************************************
+
+@brief commitTilt
+
+@details commits the tilt for the object
+
+@param None
+
+@notes none
+
+***************************************/
+void Object::commitTilt( )
+{
+    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
+                              ( tiltAngle ), glm::vec3( 1.0f, 0.0f, 0.0f ) ) );
+}
+
 // COMMIT SCALE /////////////////////
 /***************************************
 
@@ -774,6 +783,29 @@ void Object::commitScale( )
 void Object::commitOrigin( )
 {
     transformVector.push_back( origin );
+}
+
+// COMMIT ORBITAL TRANSLATION /////////////////////
+/***************************************
+
+@brief commitOrbitalTranslation
+
+@details commits the \orbital translation based off of the orbital radius
+         and the orbitalAngle
+
+@param None
+
+@notes none
+
+***************************************/
+void Object::commitOrbitalTranslation( )
+{
+    transformVector.push_back( glm::translate( glm::mat4( 1.0f ), 
+                                               glm::vec3( orbitalRadius.x 
+                                                            * cos( orbitalAngle ),
+                                                          0.0f,
+                                                          orbitalRadius.y 
+                                                            * sin( orbitalAngle ) ) ) );
 }
 
 // INCREMENT ANGLE /////////////////////
@@ -897,30 +929,3 @@ bool Object::isPaused( )
              && ( orbitControlMultiplier == 0.0 ) );
 }
 
-// CREATE SATELLITE TRANSFORM    /////////////////////
-/***************************************
-
-@brief createSatelliteTransform
-
-@details creates the transforms necessary for a satellite
-
-@param None
-
-@notes none
-
-***************************************/
-void Object::createSatelliteTransform( )
-{
-    createOrbitInTranslationVector( glm::vec3( orbitalAngle, 
-                                               0.0f, 
-                                               orbitalAngle ),
-                                    glm::vec3( orbitalRadius, 
-                                               0.0f, 
-                                               orbitalRadius ),
-                                    glm::vec3( 0.0f, 0.0f, 0.0f ) );
-
-    commitScale( );
-    commitRotation( );
-    commitTranslation( );
-    commitOrigin( );
-}
