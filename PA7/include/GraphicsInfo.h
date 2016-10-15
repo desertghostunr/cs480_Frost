@@ -21,7 +21,7 @@ struct PlanetInfo
 
     std::vector<unsigned int> childID; //children IDs that correspond to others in the table
 
-    float scale; //scale of the object relative to earth
+    glm::vec3 scale; //scale of the object relative to earth
     float tilt; //tilt of the planet
     float orbitTilt; //tilt of the orbit
     float rotRate; //the rate of rotations
@@ -41,6 +41,7 @@ struct PlanetInfo
         orbitRad( planInfo.orbitRad ),
         orbitRate( planInfo.orbitRate ),
         locLocal( planInfo.locLocal )
+
 
     {
         //nothing to do
