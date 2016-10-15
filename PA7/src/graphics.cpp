@@ -106,6 +106,8 @@ bool Graphics::Initialize
 
     // hardcoded example use of the object transform API, see updateList
     // for commit calls
+    objectRegistry[ 0 ].setScale( glm::vec3( 109.0f, 109.0f, 109.0f ) );
+
     objectRegistry[ 0 ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
     objectRegistry[ 0 ].updateRotationRate( 0.1f );
@@ -120,10 +122,11 @@ bool Graphics::Initialize
 
     objectRegistry[ 1 ].updateRotationRate( 2.0f );
 
-    objectRegistry[ 1 ].setOrbitalRadius( glm::vec2( 12.6f, 5.8f ) );
+    objectRegistry[ 1 ].setScale( glm::vec3( 12.0f, 13.0f, 29.0f ) );
+
+    objectRegistry[ 1 ].setOrbitalRadius( glm::vec2( 112.0f, 112.0f ) );
 
     objectRegistry[ 1 ].setTiltAngle( 0.87f );
-
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -308,6 +311,8 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     //This does the basic operations... I still don't know how to tilt orbits
     //Play around with changing the order of events / things
     // write transforms here //////////////////////////    
+    objectRegistry[ objectID ].commitScale( );
+
     objectRegistry[ objectID ].incrementAngle( dt );
 
     objectRegistry[ objectID ].commitRotation( );
@@ -317,6 +322,10 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     objectRegistry[ objectID ].incrementOrbitAngle( dt );    
 
     objectRegistry[ objectID ].commitOrbitalTranslation( );
+
+    objectRegistry[ objectID ].commitOriginTranslation( ); //origin set in update children
+
+    objectRegistry[ objectID ].commitOriginRotation( );
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////

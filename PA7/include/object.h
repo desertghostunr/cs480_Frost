@@ -44,7 +44,7 @@ class Object
 
         void setOrbitalRadius( glm::vec2 radius );
 
-        void setOrigin( const glm::mat4 & newOrigin );
+        bool setOrigin( const glm::mat4 & newOrigin );
 
         bool addChild( unsigned int childsWorldID );
 
@@ -80,7 +80,11 @@ class Object
 
         void commitScale( );
 
-        void commitOrigin( );
+        void commitOriginScale( );
+
+        void commitOriginTranslation( );
+
+        void commitOriginRotation( );
 
         void commitOrbitalTranslation( );
 
@@ -108,7 +112,9 @@ class Object
         std::vector<unsigned int> childrenVector;
 
         //transform information
-        glm::mat4 origin; //the offset for the model's location
+        glm::vec3 originScaleFactor; //scale factor
+        glm::vec3 originTranslationVector; //translation in cartesian space
+        glm::quat originRotation; //rotation vector in cartesian space
         glm::vec3 scaleFactor; //scale factor
         glm::vec3 translationVector; //translation in cartesian space
         glm::vec3 rotationVector; //rotation vector in cartesian space

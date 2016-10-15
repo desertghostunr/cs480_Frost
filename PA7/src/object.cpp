@@ -24,7 +24,7 @@ Object::Object()
     rotationControlMultiplier = 1.0f;
     orbitControlMultiplier = 1.0f;
 
-    origin = glm::mat4(1.0f);
+    originScaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
     scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
@@ -414,9 +414,17 @@ void Object::setOrbitalRadius( glm::vec2 radius )
 @notes None
 
 ***************************************/
-void Object::setOrigin( const glm::mat4 & newOrigin )
+bool Object::setOrigin( const glm::mat4 & newOrigin )
 {
-    origin = newOrigin;
+    glm::quat orientation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    bool success = glm::decompose( newOrigin, originScaleFactor, orientation, 
+                                   originTranslationVector, skew, perspective );
+
+     originRotation = glm::conjugate( orientation );
+
+    return success; 
 }
 
 // ADD CHILD //////////////////
@@ -768,22 +776,59 @@ void Object::commitScale( )
     transformVector.push_back( glm::scale( scaleFactor ) );
 }
 
-// COMMIT ORIGIN /////////////////////
+// COMMIT ORIGIN SCALE /////////////////////
 /***************************************
 
-@brief commitOrigin 
+@brief commitOriginScale
 
-@details commits the origin matrix on object
+@details commits the origin scale matrix on object
 
 @param None
 
 @notes none
 
 ***************************************/
-void Object::commitOrigin( )
+void Object::commitOriginScale( )
 {
-    transformVector.push_back( origin );
+    transformVector.push_back( glm::scale( originScaleFactor ) );
 }
+
+
+// COMMIT ORIGIN TRANSLATION /////////////////////
+/***************************************
+
+@brief commitOriginTranslation
+
+@details commits the origin translation matrix on object
+
+@param None
+
+@notes none
+
+***************************************/
+void Object::commitOriginTranslation( )
+{
+    transformVector.push_back( glm::translate( glm::mat4(1.0f), 
+                                               originTranslationVector ) );
+}
+
+// COMMIT ORIGIN ROTATION /////////////////////
+/***************************************
+
+@brief commitOriginRotation
+
+@details commits the origin rotation matrix on object
+
+@param None
+
+@notes none
+
+***************************************/
+void Object::commitOriginRotation( )
+{
+    transformVector.push_back( glm::mat4_cast( originRotation ) );
+}
+
 
 // COMMIT ORBITAL TRANSLATION /////////////////////
 /***************************************
