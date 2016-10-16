@@ -80,9 +80,9 @@ ObjectTable::~ObjectTable( )
 @notes parentId must be valid, returns the object's id
 
 ***************************************/
-unsigned int ObjectTable::addObject(    unsigned int parent )
+unsigned int ObjectTable::addObject( unsigned int parent )
 {
-    if( (    ( int ) parent < -1 ) &&    ( parent < data.size( ) ) )
+    if( ( ( int ) parent < -1 ) && ( parent < data.size( ) ) )
     {
         return -1;
     }
@@ -119,12 +119,12 @@ unsigned int ObjectTable::addObject(    unsigned int parent )
 ***************************************/
 bool ObjectTable::setChild( unsigned int objID, unsigned int parentToBeID )
 {
-    if( (    ( int ) parentToBeID >= 0 ) &&    ( parentToBeID < data.size( ) ) )
+    if( ( ( int ) parentToBeID >= 0 ) && ( parentToBeID < data.size( ) ) )
     {
         return false;
     }
 
-    if( (    ( int ) objID >= 0 ) &&    ( objID < data.size( ) ) )
+    if( ( ( int ) objID >= 0 ) && ( objID < data.size( ) ) )
     {
         return false;
     }

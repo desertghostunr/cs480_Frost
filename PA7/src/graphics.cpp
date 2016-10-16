@@ -52,25 +52,33 @@ bool Graphics::Initialize
         return false;
     }
 
-
+    // J.J. see here for an explanation of how the information is stored ///////
     // INTIALIZATION OF THE SOLAR SYSTEM MODELS AND TRANSFORMS /////////////////
     /***************************************************************************
-        The API for the Object class works off a series of "constants", 
+        The API for the Object class works off a series of constants, 
         set/update functions, and commit functions.
 
         Here in the code you need to parse the progInfo struct:
         *see the PlanetInfo struct in GraphicsInfo.h for the structure
         *each model needs to be loaded into the model registry
-        *a pointer needs to be attached to the proper index  of the model 
-        registryfor each object
-        *the various set/update functions need to be set for each of the
-        constants
+            **iterate through progInfo.modelVector and load each object
+        *iterate through the progInfo.planetData vector and add each object to the ObjectRegistry
+            **as each object is added access the index of the new object add
+              each child in the planetInfo childID vector by iterating through
+              the size of the vector and calling ObjectTable::setChild function
+            **a pointer needs to be attached to the proper index  of the model 
+              registry for each object.
+                ***this is the index of the model registry indicated in the PlanetInfo::modelID member
+         
+         **the various set/update functions need to be set for each of the
+            constants
+
         *commits must be applied in the updateList function
-        for these functions to take effect
+            for these functions to take effect
 
         here is the cmd line parameter that will run the solar system as is:
 
-        ./SolarSystem -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/earth.obj
+        ./SolarSystem -c config/SolarSystemConfig
 
         Run this to see what the example transforms do
 
@@ -79,7 +87,8 @@ bool Graphics::Initialize
 
     // Create the object
     objectRegistry.addObject( );
-    objectRegistry.addObject( 0 ); //object 0 is the parent
+    objectRegistry.addObject( );
+    objectRegistry.setChild( 1, 0 ); //child ID in the table, parent ID in the table
     
     modelRegistry.push_back( Instance( ) );
     modelRegistry[ 0 ].objModel.incrementReference( );
