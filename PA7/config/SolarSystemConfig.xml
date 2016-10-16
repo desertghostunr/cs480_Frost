@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SolarSystem>
   <NormalizationFactor name="Diameter">12756</NormalizationFactor>
-  <NormalizationFactor name="xScale">149.60</NormalizationFactor>
-  <NormalizationFactor name="yScale">152.10</NormalizationFactor>
+  <NormalizationFactor name="xScaleOrbit">149.60</NormalizationFactor>
+  <NormalizationFactor name="yScaleOrbit">152.10</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
-  <NormalizationFactor name="Sun">0.001</NormalizationFactor>
+  <NormalizationFactor name="Sun">0.01</NormalizationFactor>
   <Object name="Sun" path ="models/sun.obj">
     <xScale>1391400</xScale>
     <yScale>1391400</yScale>

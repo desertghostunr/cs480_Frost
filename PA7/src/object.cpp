@@ -31,6 +31,8 @@ Object::Object()
     objectID = -1;
     parentID = -1;
 
+    orbitDistanceMultiplier = 10.0f;
+
     objModelPtr = NULL;
 }
 
@@ -835,7 +837,7 @@ void Object::commitOriginRotation( )
 
 @brief commitOrbitalTranslation
 
-@details commits the \orbital translation based off of the orbital radius
+@details commits the orbital translation based off of the orbital radius
          and the orbitalAngle
 
 @param None
@@ -847,10 +849,12 @@ void Object::commitOrbitalTranslation( )
 {
     transformVector.push_back( glm::translate( glm::mat4( 1.0f ), 
                                                glm::vec3( orbitalRadius.x 
-                                                            * cos( orbitalAngle ),
+                                                          * orbitDistanceMultiplier
+                                                          * cos( orbitalAngle ),
                                                           0.0f,
                                                           orbitalRadius.y 
-                                                            * sin( orbitalAngle ) ) ) );
+                                                          * orbitDistanceMultiplier
+                                                          * sin( orbitalAngle ) ) ) );
 }
 
 // INCREMENT ANGLE /////////////////////
@@ -972,5 +976,22 @@ bool Object::isPaused( )
 {
     return ( ( rotationControlMultiplier == 0.0 )
              && ( orbitControlMultiplier == 0.0 ) );
+}
+
+// SET ORBIT DISTANCE MULTIPLIER /////////////////////
+/***************************************
+
+@brief setOrbitDistanceMultiplier
+
+@details sets the orbitDistanceMultiplier
+
+@param in odm: the value to set the orbitDistanceMultiplier to
+
+@notes none
+
+***************************************/
+void Object::setOrbitDistanceMultiplier( float odm )
+{
+    orbitDistanceMultiplier = odm;
 }
 

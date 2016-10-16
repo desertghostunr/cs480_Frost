@@ -11,7 +11,7 @@
 struct NormalizationData
 {
     float diameter;
-    glm::vec2 scale;
+    glm::vec2 scaleOrbit;
     float rotDivider;
     float orbitDivider;
     float sunMultiplier;
@@ -19,13 +19,13 @@ struct NormalizationData
     NormalizationData
     ( 
         float diam, //diameter
-        glm::vec2 scaleFact, //scale
+        glm::vec2 scaleOrbitFact, //scale
         float rot, //rotation divider
         float orbit, //orbit divider
         float sunMult //sun multiplier
     ):
         diameter( diam ),
-        scale( scaleFact ),
+        scaleOrbit( scaleOrbitFact ),
         rotDivider( rot ),
         orbitDivider( orbit ),
         sunMultiplier( sunMult )
@@ -38,7 +38,7 @@ struct NormalizationData
         const NormalizationData& normData
     ) :
         diameter( normData.diameter ),
-        scale( normData.scale ),
+        scaleOrbit( normData.scaleOrbit ),
         rotDivider( normData.rotDivider ),
         orbitDivider( normData.orbitDivider ),
         sunMultiplier( normData.sunMultiplier )
@@ -72,6 +72,8 @@ const string DIAMETER = "Diameter";
 const string X_SCALE = "xScale";
 const string Y_SCALE = "yScale";
 const string Z_SCALE = "zScale";
+const string X_SCALE_ORBIT = "xScaleOrbit";
+const string Y_SCALE_ORBIT = "yScaleOrbit";
 const string ROTATION_DIVIDER = "RotationDiv";
 const string ORBIT_DIVIDER = "OrbitDiv";
 const string SUN = "Sun";
@@ -350,13 +352,9 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 
 @details Processes the configuration file using rapidxml
 
-@param in: buffer: the buffer to process
+@param in: rootNode: the rootNode in the xml doc
 
 @param out: progInfo: a struct containing program information
-
-@param in: normData: a struct of normalization data
-
-@param out: normData: a struct of normalization data
 
 @notes none
 
@@ -386,13 +384,13 @@ bool ProcessConfigurationFile
             {
                 strStream >> normData.diameter;
             }
-            else if( parentNode->first_attribute( "name" )->value( ) == X_SCALE )
+            else if( parentNode->first_attribute( "name" )->value( ) == X_SCALE_ORBIT )
             {
-                strStream >> normData.scale.x;
+                strStream >> normData.scaleOrbit.x;
             }
-            else if( parentNode->first_attribute( "name" )->value( ) == Y_SCALE )
+            else if( parentNode->first_attribute( "name" )->value( ) == Y_SCALE_ORBIT )
             {
-                strStream >> normData.scale.y;
+                strStream >> normData.scaleOrbit.y;
             }
             else if( parentNode->first_attribute( "name" )->value( ) == ROTATION_DIVIDER )
             {
@@ -443,6 +441,25 @@ bool ProcessConfigurationFile
     return ( noError && vertShader && fragShader && !progInfo.modelVector.empty( ) );
 }
 
+
+// PROCESS CONFIGURATION FILE //////////
+/***************************************
+
+@brief ProcessConfigurationFile
+
+@details Processes the configuration file using rapidxml
+
+@param in: parentNode: the parentNode in the xml doc
+
+@param out: progInfo: a struct containing program information
+
+@param in: normData: a struct of normalization data
+
+@param out: normData: a struct of normalization data
+
+@notes none
+
+***************************************/
 bool ProcessConfigurationFileHelper
 ( 
     rapidxml::xml_node<>* parentNode, 
@@ -504,26 +521,53 @@ bool ProcessConfigurationFileHelper
         if( childNode->name( ) == X_SCALE )
         {
             strStream >> progInfo.planetData[ pIndex ].scale.x;
+
+            progInfo.planetData[ pIndex ].scale.x /= normData.diameter;
+
+            if( parentNode->first_attribute( "name" )->value( ) == SUN )
+            {
+                progInfo.planetData[ pIndex ].scale.x *= normData.sunMultiplier;
+            }
         }
         else if( childNode->name( ) == Y_SCALE )
         {
             strStream >> progInfo.planetData[ pIndex ].scale.y;
+
+            progInfo.planetData[ pIndex ].scale.y /= normData.diameter;
+
+            if( parentNode->first_attribute( "name" )->value( ) == SUN )
+            {
+                progInfo.planetData[ pIndex ].scale.y *= normData.sunMultiplier;
+            }
         }
         else if( childNode->name( ) == Z_SCALE )
         {
             strStream >> progInfo.planetData[ pIndex ].scale.z;
+
+            progInfo.planetData[ pIndex ].scale.z /= normData.diameter;
+
+            if( parentNode->first_attribute( "name" )->value( ) == SUN )
+            {
+                progInfo.planetData[ pIndex ].scale.z *= normData.sunMultiplier;
+            }
         }
         else if( childNode->name( ) == X_ORBIT_RADIUS )
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRad.x;
+
+            progInfo.planetData[ pIndex ].orbitRad.x /= normData.scaleOrbit.x;
         }
         else if( childNode->name( ) == Y_ORBIT_RADIUS )
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRad.y;
+
+            progInfo.planetData[ pIndex ].orbitRad.y /= normData.scaleOrbit.y;
         }
         else if( childNode->name( ) == ORBIT_RATE )
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRate;
+
+            progInfo.planetData[ pIndex ].orbitRate /= normData.orbitDivider;
         }
         else if( childNode->name( ) == ORBIT_TILT )
         {
@@ -532,6 +576,8 @@ bool ProcessConfigurationFileHelper
         else if( childNode->name( ) == ROTATION_RATE )
         {
             strStream >> progInfo.planetData[ pIndex ].rotRate;
+
+            progInfo.planetData[ pIndex ].rotRate /= normData.rotDivider;
         }
         else if( childNode->name( ) == TILT )
         {

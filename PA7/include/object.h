@@ -102,6 +102,8 @@ class Object
 
         bool isPaused( );
 
+        void setOrbitDistanceMultiplier( float odm );
+
     private:
         
         // model information
@@ -128,6 +130,8 @@ class Object
         float orbitalAngle;
 
         glm::vec2 orbitalRadius;
+
+        float orbitDistanceMultiplier;
 
         float rotationRate;
         float orbitRate;
