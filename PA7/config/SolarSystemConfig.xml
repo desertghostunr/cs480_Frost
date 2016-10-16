@@ -2,8 +2,8 @@
 <!-- See Mar's first moon for the layout of the planet / moon information. -->
 <SolarSystem>
   <NormalizationFactor name="Diameter">12756</NormalizationFactor>
-  <NormalizationFactor name="xScaleOrbit">149.60</NormalizationFactor>
-  <NormalizationFactor name="yScaleOrbit">152.10</NormalizationFactor>
+  <NormalizationFactor name="xScaleOrbit">10.60</NormalizationFactor>
+  <NormalizationFactor name="yScaleOrbit">10.10</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
   <NormalizationFactor name="Sun">0.1</NormalizationFactor>

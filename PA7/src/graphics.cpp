@@ -109,7 +109,7 @@ bool Graphics::Initialize
                       ].setOrbitalRadius( progInfo.planetData[ pIndex ].orbitRad );
 
         objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setOrbitDistanceMultiplier( 20.0f );
+                      ].setOrbitDistanceMultiplier( 1.0f );
 
         objectRegistry[ objectRegistry.getSize( ) - 1 
                       ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );

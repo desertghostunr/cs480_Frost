@@ -24,7 +24,7 @@ struct PlanetInfo
     float tilt; //tilt of the planet
     float orbitTilt; //tilt of the orbit
     float rotRate; //the rate of rotations
-    glm::vec3 orbitRad; //radius of orbit
+    glm::vec2 orbitRad; //radius of orbit
     float orbitRate; //rate of orbit
     glm::vec3 locLocal; //the location of the object in local space
 
