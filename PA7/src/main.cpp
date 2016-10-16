@@ -3,46 +3,60 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "rapidxml/rapidxml.hpp"
 #include "engine.h"
 
+//Helper Data Structures /////////////////////
+struct NormalizationData
+{
+    float diameter;
+    glm::vec2 scale;
+    float rotDivider;
+    float orbitDivider;
+    float sunMultiplier;
+
+    NormalizationData
+    ( 
+        float diam, //diameter
+        glm::vec2 scaleFact, //scale
+        float rot, //rotation divider
+        float orbit, //orbit divider
+        float sunMult //sun multiplier
+    ):
+        diameter( diam ),
+        scale( scaleFact ),
+        rotDivider( rot ),
+        orbitDivider( orbit ),
+        sunMultiplier( sunMult )
+    {
+        //done in intializers
+    }
+
+    NormalizationData
+    (
+        const NormalizationData& normData
+    ) :
+        diameter( normData.diameter ),
+        scale( normData.scale ),
+        rotDivider( normData.rotDivider ),
+        orbitDivider( normData.orbitDivider ),
+        sunMultiplier( normData.sunMultiplier )
+    {
+        //done in intializers
+    }
+};
 
 //Global Constants //////////////////////////
 //frag options
 const string FRAGMENT_SHADER_OPT = "-f";
 const string VERTEX_SHADER_OPT = "-v";
 
-//object options
-const string PLANET_OPT = "-p";
-
-const string CHILD_OPT = "-c";
-
+//model options
 const string MODEL_PATH_OPT = "-m";
 
-const string SCALE_OPT = "-s";
-
-const string ROT_RATE_OPT = "-r";
-
-const string ORBIT_RATE_OPT = "-o";
-
-const string LOC_LOCAL_OPT = "-l";
-
-const string TILT_OPT = "-t";
-
-const size_t CONFIG_OPT_SIZE = 3;
-
-
-const string PRIMARY_OPTIONS[ ] = { PLANET_OPT,
-                                    VERTEX_SHADER_OPT,
-                                    FRAGMENT_SHADER_OPT };
-const unsigned int P_OPT_SIZE = 3;
-
-const unsigned int PLANET_INDEX = 0;
-
-const unsigned int VERTEX_SHADER_INDEX = 1;
-
-const unsigned int FRAGMENT_SHADER_INDEX = 2;
-
+//config options
+const string CONFIG_OPT = "-c";
 
 //help options
 const string HELP_OPT = "--h";
@@ -50,17 +64,40 @@ const string HELP_OPT = "--h";
 //general characters
 const char TAB_CHAR = '\t';
 
+//xml types
+const string NORM_FACT = "NormalizationFactor";
+const string OBJECT = "Object";
+const string SHADER = "Shader";
+const string DIAMETER = "Diameter";
+const string X_SCALE = "xScale";
+const string Y_SCALE = "yScale";
+const string Z_SCALE = "zScale";
+const string ROTATION_DIVIDER = "RotationDiv";
+const string ORBIT_DIVIDER = "OrbitDiv";
+const string SUN = "Sun";
+const string PLANET = "Planet";
+const string MOON = "Moon";
+const string X_ORBIT_RADIUS = "xOrbitRadius";
+const string Y_ORBIT_RADIUS = "yOrbitRadius";
+const string ORBIT_RATE = "OrbitRate";
+const string ORBIT_TILT = "OrbitTilt";
+const string ROTATION_RATE = "RotationRate";
+const string TILT = "Tilt";
+const string VERTEX = "Vertex";
+const string FRAGMENT = "Fragment";
+
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
                                    GraphicsInfo& progInfo );
 
-bool ProcessLine( const std::string& line, GraphicsInfo& progInfo );
-
-bool ProcessConfigurationFile( const std::string& fileName, 
-                               GraphicsInfo& progInfo );
-
 bool ReadConfigurationFile( const std::string& fileName, GraphicsInfo& progInfo );
 
+bool ProcessConfigurationFile( rapidxml::xml_node<> *rootNode, 
+                               GraphicsInfo& progInfo );
+
+bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
+                                     GraphicsInfo& progInfo,
+                                     const NormalizationData& normData );
 // main ///////////////////////////////////
 
 #if defined( _WIN64 ) || ( _WIN32 )
@@ -140,8 +177,33 @@ bool ProcessCommandLineParameters
     for( index = 1; index < argCount; index++ )
     {
         tmpStr = argVector[ index ];
+        if( tmpStr == CONFIG_OPT )
+        {
+            index++;
+            tmpStr = argVector[ index ];
 
-        if( ( tmpStr == VERTEX_SHADER_OPT ) || ( tmpStr == FRAGMENT_SHADER_OPT ) )
+            if( !ReadConfigurationFile( tmpStr, progInfo ) )
+            {
+                cout << "Failure processing the configuration file!" << std::endl;
+                return false;
+            }
+            
+            // debug only //////////////////////////////////////////////////////
+            unsigned int tIndex, t2Index;
+            for( tIndex = 0; tIndex < progInfo.modelVector.size( ); tIndex++ )
+            {
+                cout << "Model "<< tIndex << ": " <<progInfo.modelVector[ tIndex ] << endl;
+            }
+            for( tIndex = 0; tIndex < progInfo.planetData.size( ); tIndex++ )
+            {                
+                for( t2Index = 0; t2Index < progInfo.planetData[ tIndex ].childID.size( ); t2Index++ )
+                {
+                    cout << "Parent: " << tIndex << ", Child: " << progInfo.planetData[ tIndex ].childID[ t2Index ] << " model:" << progInfo.modelVector[ progInfo.planetData[ progInfo.planetData[ tIndex ].childID[ t2Index ] ].modelID ] << endl;
+                }
+            }
+            ///////////////////////////////////////////////////////////////////
+        }
+        else if( ( tmpStr == VERTEX_SHADER_OPT ) || ( tmpStr == FRAGMENT_SHADER_OPT ) )
         {
             if( tmpStr == VERTEX_SHADER_OPT )
             {
@@ -236,81 +298,6 @@ bool ProcessCommandLineParameters
 
 }
 
-// PROCESS LINE //////////
-/***************************************
-
-@brief ProcessLine
-
-@details processes a single string of configuration information
-
-@param in: line: the line to process
-
-@param out: progInfo: a struct containing program information
-
-@notes none
-
-***************************************/
-bool ProcessLine( const std::string & line, GraphicsInfo & progInfo )
-{
-   
-    bool successFlag = true;
-    GLenum shaderType;
-
-    unsigned int optIndex;
-
-    size_t strIndex;
-
-    for( optIndex = 0; optIndex < P_OPT_SIZE; optIndex++ )
-    {
-        strIndex = line.find( PRIMARY_OPTIONS[ optIndex ] );
-
-        if( strIndex != string::npos )
-        {
-            if( optIndex == PLANET_INDEX )
-            {
-
-            }
-            else if( optIndex == VERTEX_SHADER_INDEX )
-            {
-
-            }
-            else if( optIndex == FRAGMENT_SHADER_INDEX )
-            {
-                
-            }
-        }
-    }
-
-    return successFlag;
-}
-
-// PROCESS CONFIGURATION FILE //////////
-/***************************************
-
-@brief ProcessConfigurationFile
-
-@details processes the configuration file specified in the command prompt parameters
-
-@param in: fileName: the name of the file to load
-
-@param out: progInfo: a struct containing program information
-
-@notes none
-
-***************************************/
-bool ProcessConfigurationFile
-( 
-    const std::string & fileName, //the configuration file
-    GraphicsInfo & progInfo //the program information to pass to the engine
-)
-{
-    bool successFlag = true;
-
-    //to do: implement
-
-    return successFlag;
-}
-
 // READ CONFIGURATION FILE //////////
 /***************************************
 
@@ -329,9 +316,10 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 {
     ifstream fileOpen( fileName.c_str( ) );
     vector<char> buffer;
-    rapidxml::xml_document<> doc;
-    rapidxml::xml_node<> *rootNode, *solarNode;
 
+    rapidxml::xml_document<> doc;
+    rapidxml::xml_node<> *rootNode;  
+    
     if( fileOpen.fail( ) )
     {
         std::cout << "Failure reading in the file: " << fileName << "!!!" << std::endl;
@@ -352,14 +340,215 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 
     rootNode = doc.first_node( "SolarSystem" );
 
-    for( solarNode = rootNode->first_node( "Sun" ); 
-         solarNode; 
-         solarNode = solarNode->next_sibling( ) )
-    {
+    return ProcessConfigurationFile( rootNode, progInfo );
+}
 
+// PROCESS CONFIGURATION FILE //////////
+/***************************************
+
+@brief ProcessConfigurationFile
+
+@details Processes the configuration file using rapidxml
+
+@param in: buffer: the buffer to process
+
+@param out: progInfo: a struct containing program information
+
+@param in: normData: a struct of normalization data
+
+@param out: normData: a struct of normalization data
+
+@notes none
+
+***************************************/
+bool ProcessConfigurationFile
+( 
+    rapidxml::xml_node<> *rootNode, 
+    GraphicsInfo & progInfo
+)
+{
+    rapidxml::xml_node<> *parentNode;
+    bool noError = true, vertShader = false, fragShader = false;
+    string tempStr;
+    stringstream strStream;
+
+    NormalizationData normData( 1.0f, glm::vec2( 1.0f, 1.0f ), 1.0f, 1.0f, 1.0f );
+
+    for( parentNode = rootNode->first_node( 0 ); 
+         parentNode; parentNode = parentNode->next_sibling( ) )
+    {
+        if( parentNode->name( ) == NORM_FACT )
+        {
+            tempStr = parentNode->value( );
+            strStream = stringstream( tempStr );
+
+            if( parentNode->first_attribute( "name" )->value( ) == DIAMETER )
+            {
+                strStream >> normData.diameter;
+            }
+            else if( parentNode->first_attribute( "name" )->value( ) == X_SCALE )
+            {
+                strStream >> normData.scale.x;
+            }
+            else if( parentNode->first_attribute( "name" )->value( ) == Y_SCALE )
+            {
+                strStream >> normData.scale.y;
+            }
+            else if( parentNode->first_attribute( "name" )->value( ) == ROTATION_DIVIDER )
+            {
+                strStream >> normData.rotDivider;
+            }
+            else if( parentNode->first_attribute( "name" )->value( ) == ORBIT_DIVIDER )
+            {
+                strStream >> normData.orbitDivider;
+            }
+            else if( parentNode->first_attribute( "name" )->value( ) == SUN )
+            {
+                strStream >> normData.sunMultiplier;
+            }
+        }
+        else if( parentNode->name( ) == OBJECT ) 
+        {
+            noError = ( noError && ProcessConfigurationFileHelper( parentNode, 
+                                                                   progInfo, 
+                                                                   normData ) );
+        }
+        else if( parentNode->name( ) == SHADER )
+        {
+            if( parentNode->first_attribute( "name" )->value( ) == VERTEX )
+            {
+                vertShader = true;
+
+                tempStr = parentNode->value( );
+                progInfo.shaderVector.push_back( 
+                      std::pair<GLenum, string>( GL_VERTEX_SHADER, tempStr ) );
+            }
+            else if( parentNode->first_attribute( "name" )->value( ) == FRAGMENT )
+            {
+                fragShader = true;
+
+                tempStr = parentNode->value( );
+                progInfo.shaderVector.push_back( 
+                      std::pair<GLenum, string>( GL_FRAGMENT_SHADER, tempStr ) );
+            }
+        }
+        else
+        {
+            //do nothing
+        }
     }
 
-    return true;
+
+
+    return ( noError && vertShader && fragShader && !progInfo.modelVector.empty( ) );
 }
+
+bool ProcessConfigurationFileHelper
+( 
+    rapidxml::xml_node<>* parentNode, 
+    GraphicsInfo & progInfo, 
+    const NormalizationData & normData 
+)
+{
+    rapidxml::xml_node<> *childNode;
+    bool noError = true;
+    string tempStr;
+    stringstream strStream;
+
+    unsigned int pIndex = 0, mIndex = 0;
+
+    if( parentNode == NULL )
+    {
+        return true;
+    }
+
+    if( !( parentNode->first_attribute( "name" )->value( ) == PLANET )
+        && !( parentNode->first_attribute( "name" )->value( ) == SUN ) 
+        && !( parentNode->first_attribute( "name" )->value( ) == MOON ) )
+    {
+        return true;
+    }
+
+    tempStr = parentNode->first_attribute( "path" )->value( );
+
+    if( tempStr.empty( ) )
+    {
+        return false;
+    }
+
+    progInfo.planetData.push_back( PlanetInfo( ) );
+    pIndex = progInfo.planetData.size( ) - 1;
+
+    for( mIndex = 0; mIndex < progInfo.modelVector.size( ); mIndex++ )
+    {
+        if( tempStr == progInfo.modelVector[ mIndex ] )
+        {
+            progInfo.planetData[ pIndex ].modelID = mIndex;
+        }
+    }
+    if( ( int )progInfo.planetData[ pIndex ].modelID == -1 )
+    {
+        progInfo.modelVector.push_back( tempStr );
+
+        progInfo.planetData[ pIndex ].modelID = progInfo.modelVector.size( ) - 1;
+    }
+    
+
+    for( childNode = parentNode->first_node( 0 ); childNode;
+         childNode = childNode->next_sibling( ) )
+    {
+        tempStr = childNode->value( );
+
+        strStream = stringstream( tempStr );
+
+        if( childNode->name( ) == X_SCALE )
+        {
+            strStream >> progInfo.planetData[ pIndex ].scale.x;
+        }
+        else if( childNode->name( ) == Y_SCALE )
+        {
+            strStream >> progInfo.planetData[ pIndex ].scale.y;
+        }
+        else if( childNode->name( ) == Z_SCALE )
+        {
+            strStream >> progInfo.planetData[ pIndex ].scale.z;
+        }
+        else if( childNode->name( ) == X_ORBIT_RADIUS )
+        {
+            strStream >> progInfo.planetData[ pIndex ].orbitRad.x;
+        }
+        else if( childNode->name( ) == Y_ORBIT_RADIUS )
+        {
+            strStream >> progInfo.planetData[ pIndex ].orbitRad.y;
+        }
+        else if( childNode->name( ) == ORBIT_RATE )
+        {
+            strStream >> progInfo.planetData[ pIndex ].orbitRate;
+        }
+        else if( childNode->name( ) == ORBIT_TILT )
+        {
+            strStream >> progInfo.planetData[ pIndex ].orbitTilt;
+        }
+        else if( childNode->name( ) == ROTATION_RATE )
+        {
+            strStream >> progInfo.planetData[ pIndex ].rotRate;
+        }
+        else if( childNode->name( ) == TILT )
+        {
+            strStream >> progInfo.planetData[ pIndex ].tilt;
+        }
+        else if( childNode->name( ) == OBJECT )
+        {
+            progInfo.planetData[ pIndex ].childID.push_back( progInfo.planetData.size( ) );
+
+            noError = ( noError && ProcessConfigurationFileHelper( childNode,
+                                                                   progInfo,
+                                                                   normData ) );
+        }
+    }
+
+    return noError;
+}
+
 
 

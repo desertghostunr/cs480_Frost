@@ -79,7 +79,7 @@ bool Graphics::Initialize
 
     // Create the object
     objectRegistry.addObject( );
-    objectRegistry.addObject( 0 );
+    objectRegistry.addObject( 0 ); //object 0 is the parent
     
     modelRegistry.push_back( Instance( ) );
     modelRegistry[ 0 ].objModel.incrementReference( );
@@ -112,9 +112,9 @@ bool Graphics::Initialize
 
     objectRegistry[ 0 ].updateRotationRate( 0.1f );
 
-    objectRegistry[ 0 ].setOrbitalRadius( glm::vec2( 0, 0 ) );
+    objectRegistry[ 0 ].setOrbitalRadius( glm::vec2( 0.0f, 0.0f ) );
 
-    objectRegistry[ 0 ].updateOrbitRate( 0 );
+    objectRegistry[ 0 ].updateOrbitRate( 0.0f );
 
     objectRegistry[ 0 ].setTiltAngle( 0.408f );
 

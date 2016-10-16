@@ -16,8 +16,7 @@
 
 struct PlanetInfo
 {
-    unsigned int objectID; //the ID of the Object
-    std::string modelPath; //model path
+    unsigned int modelID; //the ID of the model in the model vector
 
     std::vector<unsigned int> childID; //children IDs that correspond to others in the table
 
@@ -29,10 +28,19 @@ struct PlanetInfo
     float orbitRate; //rate of orbit
     glm::vec3 locLocal; //the location of the object in local space
 
-    PlanetInfo( ){ }
+    PlanetInfo( ) :
+        modelID( -1 ),
+        childID(  ),
+        scale( glm::vec3( 1.0f, 1.0f, 1.0f ) ),
+        tilt( 0.0f ),
+        orbitTilt( 0.0f ),
+        rotRate( 1.0f ),
+        orbitRad( 1.0f ),
+        orbitRate( 1.0f ),
+        locLocal( glm::vec3( 0.0f, 0.0f, 0.0f ) )
+    { }
     PlanetInfo( const PlanetInfo& planInfo ) :
-        objectID( planInfo.objectID ),
-        modelPath( planInfo.modelPath ),
+        modelID( planInfo.modelID ),
         childID( planInfo.childID ),
         scale( planInfo.scale ),
         tilt( planInfo.tilt ),
@@ -56,7 +64,6 @@ struct GraphicsInfo
     std::vector<std::pair<GLenum, std::string>> shaderVector;
     std::vector<std::string> modelVector;
     std::vector<PlanetInfo> planetData;
-    
 
     //constructors
     GraphicsInfo( ) { }

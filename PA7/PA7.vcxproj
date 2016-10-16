@@ -144,7 +144,8 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
 xcopy /y /d  "$(ASSIMP_LIBRARY_AND_BIN_x64)Release\assimp-vc140-mt.dll" "$(ProjectDir)build"
 xcopy /y /d  "$(OPENCV_BIN)Release\*.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
-xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
+xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y
+xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,7 +161,8 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
 xcopy /y /d  "$(ASSIMP_LIBRARY_AND_BIN_x64)Release\assimp-vc140-mt.dll" "$(ProjectDir)build"
 xcopy /y /d  "$(OPENCV_BIN)Release\*.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
-xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
+xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y
+xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
