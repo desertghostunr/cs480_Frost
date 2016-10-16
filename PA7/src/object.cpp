@@ -22,7 +22,7 @@ Object::Object()
     orbitRate = 1.0f;
 
     rotationControlMultiplier = 1.0f;
-    orbitControlMultiplier = 1.0f;
+    orbitControlMultiplier = -1.0f;
 
     originScaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
@@ -314,7 +314,7 @@ void Object::toggleOrbitDirection( )
 {
     if( orbitControlMultiplier == 0.0 )
     {
-        orbitControlMultiplier = 1.0;
+        orbitControlMultiplier = -1.0;
     }
 
     orbitRate *= -1.0;
@@ -351,13 +351,13 @@ float Object::getRateOfOrbit( )
 ***************************************/
 void Object::toggleOrbitPaused( )
 {
-    if( orbitControlMultiplier == 0.0 )
+    if( orbitControlMultiplier == 0.0f )
     {
-        orbitControlMultiplier = 1.0f;
+        orbitControlMultiplier = -1.0f;
     }
     else
     {
-        orbitControlMultiplier = 0.0;
+        orbitControlMultiplier = 0.0f;
     }
 }
 
@@ -375,15 +375,15 @@ void Object::toggleOrbitPaused( )
 ***************************************/
 void Object::toggleAllPaused( )
 {
-    if( ( rotationControlMultiplier == 0.0 ) && ( orbitControlMultiplier == 0.0 ) )
+    if( ( rotationControlMultiplier == 0.0f ) && ( orbitControlMultiplier == 0.0f ) )
     {
-        rotationControlMultiplier = 1.0;
-        orbitControlMultiplier = 1.0;
+        rotationControlMultiplier = 1.0f;
+        orbitControlMultiplier = -1.0f;
     }
     else
     {
-        rotationControlMultiplier = 0.0;
-        orbitControlMultiplier = 0.0;
+        rotationControlMultiplier = 0.0f;
+        orbitControlMultiplier = 0.0f;
     }
 }
 
@@ -557,8 +557,7 @@ bool Object::setObjectsID( unsigned int id )
         }
     }
 
-    if( ( id != parentID ) 
-            && ( ( int ) id != -1 ) )
+    if( ( id != parentID ) && ( ( int ) id != -1 ) )
     {
         objectID = id;
 
@@ -758,7 +757,7 @@ void Object::commitRotation( )
 void Object::commitTilt( )
 {
     transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
-                              ( tiltAngle ), glm::vec3( 1.0f, 0.0f, 0.0f ) ) );
+                              ( tiltAngle ), glm::vec3( 0.0f, 0.0f, 1.0f ) ) );
 }
 
 // COMMIT SCALE /////////////////////
