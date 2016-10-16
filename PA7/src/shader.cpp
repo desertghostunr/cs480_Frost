@@ -168,7 +168,7 @@ bool Shader::loadShaderSource
 
     //read the entire shader in
     shaderSrcStr = std::string( std::istreambuf_iterator<char>( fileIn ), 
-                                                                                     std::istreambuf_iterator<char>( ) );
+                                std::istreambuf_iterator<char>( ) );
 
     fileIn.close( );
 

@@ -149,6 +149,6 @@
       <Tilt>2.138028334</Tilt>
     </Object>
   </Object>
-  <Shader name="Vertex">"shaders/textureVertexShader.glsl"</Shader>
-  <Shader name="Fragment">"shaders/textureFragmentShader.glsl"</Shader>
+  <Shader name="Vertex">shaders/textureVertexShader.glsl</Shader>
+  <Shader name="Fragment">shaders/textureFragmentShader.glsl</Shader>
 </SolarSystem>
