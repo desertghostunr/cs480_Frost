@@ -74,7 +74,7 @@
     <ClInclude Include="include\ObjectModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Instance.h">
+    <ClInclude Include="include\Instance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
