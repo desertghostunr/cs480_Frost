@@ -53,8 +53,8 @@
         <xScale>3475</xScale>
         <yScale>3475</yScale>
         <zScale>3475</zScale>
-        <xOrbitRadius>0.363</xOrbitRadius>
-        <yOrbitRadius>0.406</yOrbitRadius>
+        <xOrbitRadius>5.0</xOrbitRadius>
+        <yOrbitRadius>1.32</yOrbitRadius>
         <OrbitRate>1.0</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>655.7</RotationRate>
@@ -76,8 +76,8 @@
         <xScale>22.2</xScale> <!-- Diameter in km -->
         <yScale>22.2</yScale> <!-- Diameter in km -->
         <zScale>22.2</zScale> <!-- Diameter in km -->
-        <xOrbitRadius>0.009377</xOrbitRadius> <!-- Radius in km -->
-        <yOrbitRadius>0.009377</yOrbitRadius> <!-- Radius in km -->
+        <xOrbitRadius>1.0</xOrbitRadius> <!-- Radius in 10^6 km -->
+        <yOrbitRadius>1.07</yOrbitRadius> <!-- Radius in 10^6 km -->
         <OrbitRate>7.66</OrbitRate> <!-- Orbit Velocity in km / s -->
         <OrbitTilt>0.089011792</OrbitTilt> <!--Orbit Tilt in radians -->
         <RotationRate>200</RotationRate> <!-- Rotation Period in hours-->
@@ -87,8 +87,8 @@
         <xScale>12.6</xScale>
         <yScale>12.6</yScale>
         <zScale>12.6</zScale>
-        <xOrbitRadius>0.023460</xOrbitRadius>
-        <yOrbitRadius>0.023460</yOrbitRadius>
+        <xOrbitRadius>1.07</xOrbitRadius>
+        <yOrbitRadius>1.07</yOrbitRadius>
         <OrbitRate>30.35</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>500</RotationRate>
