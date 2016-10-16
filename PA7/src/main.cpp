@@ -577,7 +577,8 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.planetData[ pIndex ].rotRate;
 
-            progInfo.planetData[ pIndex ].rotRate /= normData.rotDivider;
+            progInfo.planetData[ pIndex ].rotRate 
+                = normData.rotDivider / progInfo.planetData[ pIndex ].rotRate;
         }
         else if( childNode->name( ) == TILT )
         {
