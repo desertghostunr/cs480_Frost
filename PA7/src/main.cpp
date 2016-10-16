@@ -368,7 +368,6 @@ bool ProcessConfigurationFile
     rapidxml::xml_node<> *parentNode;
     bool noError = true, vertShader = false, fragShader = false;
     string tempStr;
-    stringstream strStream;
 
     NormalizationData normData( 1.0f, glm::vec2( 1.0f, 1.0f ), 1.0f, 1.0f, 1.0f );
 
@@ -378,7 +377,7 @@ bool ProcessConfigurationFile
         if( parentNode->name( ) == NORM_FACT )
         {
             tempStr = parentNode->value( );
-            strStream = stringstream( tempStr );
+            std::stringstream strStream( tempStr );
 
             if( parentNode->first_attribute( "name" )->value( ) == DIAMETER )
             {
@@ -470,7 +469,6 @@ bool ProcessConfigurationFileHelper
     rapidxml::xml_node<> *childNode;
     bool noError = true;
     string tempStr;
-    stringstream strStream;
 
     unsigned int pIndex = 0, mIndex = 0;
 
@@ -516,7 +514,7 @@ bool ProcessConfigurationFileHelper
     {
         tempStr = childNode->value( );
 
-        strStream = stringstream( tempStr );
+        std::stringstream strStream( tempStr );
 
         if( childNode->name( ) == X_SCALE )
         {

@@ -366,7 +366,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
          if( childsID  < objectRegistry.getSize( ) )
          {
              objectRegistry[ childsID ].setOrigin( 
-                                       objectRegistry[ objectID ].GetModel( ) );
+                                       objectRegistry[ objectID ].getOrigin( ) );
             
             noErrors = ( noErrors  && updateChildren( childsID, dt ) );
          }

@@ -2,6 +2,10 @@
 
 # J.J.:
 
+RUN LIKE THIS:
+
+./SolarSystem -c config/SolarSystemConfig.xml
+
 I have added some comments and example usage of the object transform functions
 in the Graphics class.
 

@@ -24,8 +24,6 @@ Object::Object()
     rotationControlMultiplier = 1.0f;
     orbitControlMultiplier = -1.0f;
 
-    originScaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
-
     scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
     objectID = -1;
@@ -83,6 +81,24 @@ void Object::Update( unsigned int dt )
 glm::mat4 Object::GetModel()
 {
     return model;
+}
+
+
+// GET ORIGIN //////////////////
+/***************************************
+
+@brief getOrigin
+
+@details returns a reference to the object's Origin
+
+@param None
+
+@notes None
+
+***************************************/
+const Origin & Object::getOrigin( )
+{
+    return origin;
 }
 
 // GET OBJECT MODEL //////////////////
@@ -416,17 +432,11 @@ void Object::setOrbitalRadius( glm::vec2 radius )
 @notes None
 
 ***************************************/
-bool Object::setOrigin( const glm::mat4 & newOrigin )
+bool Object::setOrigin( const Origin & newOrigin )
 {
-    glm::quat orientation;
-    glm::vec3 skew;
-    glm::vec4 perspective;
-    bool success = glm::decompose( newOrigin, originScaleFactor, orientation, 
-                                   originTranslationVector, skew, perspective );
+    origin = newOrigin;
 
-     originRotation = glm::conjugate( orientation );
-
-    return success; 
+    return true;
 }
 
 // ADD CHILD //////////////////
@@ -791,7 +801,7 @@ void Object::commitScale( )
 ***************************************/
 void Object::commitOriginScale( )
 {
-    transformVector.push_back( glm::scale( originScaleFactor ) );
+    transformVector.push_back( origin.scale );
 }
 
 
@@ -809,8 +819,7 @@ void Object::commitOriginScale( )
 ***************************************/
 void Object::commitOriginTranslation( )
 {
-    transformVector.push_back( glm::translate( glm::mat4(1.0f), 
-                                               originTranslationVector ) );
+    transformVector.push_back( origin.translation );
 }
 
 // COMMIT ORIGIN ROTATION /////////////////////
@@ -827,7 +836,7 @@ void Object::commitOriginTranslation( )
 ***************************************/
 void Object::commitOriginRotation( )
 {
-    transformVector.push_back( glm::mat4_cast( originRotation ) );
+    transformVector.push_back( origin.rotation );
 }
 
 

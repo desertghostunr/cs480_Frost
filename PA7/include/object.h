@@ -6,6 +6,34 @@
 #include "graphics_headers.h"
 #include "ObjectModel.h"
 
+struct Origin
+{
+    glm::mat4 translation;
+    glm::mat4 rotation;
+    glm::mat4 scale;
+
+    Origin( ):
+        translation( glm::mat4( 1.0f ) ),
+        rotation( glm::mat4( 1.0f ) ),
+        scale( glm::mat4( 1.0f ) ){ }
+
+    Origin( const Origin& src ):
+        translation( src.translation ),
+        rotation( src.rotation ),
+        scale( src.scale ){ }
+
+    const Origin& operator =( const Origin& src )
+    {
+        if(  this != &src )
+        {
+            translation = src.translation;
+            rotation = src.rotation;
+            scale = src.scale;
+        }
+        return *this;
+    }
+};
+
 class Object
 {
     public:
@@ -17,6 +45,8 @@ class Object
         void Render();
 
         glm::mat4 GetModel();
+
+        const Origin& getOrigin( );
 
         ObjectModel& getObjectModel( );
 
@@ -44,7 +74,7 @@ class Object
 
         void setOrbitalRadius( glm::vec2 radius );
 
-        bool setOrigin( const glm::mat4 & newOrigin );
+        bool setOrigin( const Origin& newOrigin );
 
         bool addChild( unsigned int childsWorldID );
 
@@ -114,9 +144,7 @@ class Object
         std::vector<unsigned int> childrenVector;
 
         //transform information
-        glm::vec3 originScaleFactor; //scale factor
-        glm::vec3 originTranslationVector; //translation in cartesian space
-        glm::quat originRotation; //rotation vector in cartesian space
+        Origin origin;
         glm::vec3 scaleFactor; //scale factor
         glm::vec3 translationVector; //translation in cartesian space
         glm::vec3 rotationVector; //rotation vector in cartesian space
