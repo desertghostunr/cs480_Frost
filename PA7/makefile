@@ -29,6 +29,7 @@ all: $(O_FILES)
 	$(CC) $(CXXFLAGS) -o SolarSystem $(O_FILES) $(LIBS) #$(PATHI) $(PATHL)
 	cp -r ../shaders .
 	cp -r ../models .
+	cp -r ../config .
 
 main.o: ../src/main.cpp
 	$(CC) $(CXXFLAGS) -c ../src/main.cpp -o main.o $(INCLUDES)
@@ -59,6 +60,7 @@ ObjectModel.o: ../src/ObjectModel.cpp
 
 
 clean:
-	-@if rm *.o Tutorial 2>/dev/null || true; then echo "Main Removed"; else echo "No Main"; fi
+	-@if rm *.o SolarSystem 2>/dev/null || true; then echo "Main Removed"; else echo "No Main"; fi
 	rm shaders -rf
 	rm models -rf
+	rm config -rf

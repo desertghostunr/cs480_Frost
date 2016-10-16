@@ -115,8 +115,8 @@ bool Graphics::Initialize
 
     // hardcoded example use of the object transform API, see updateList
     // for commit calls
-    objectRegistry[ 0 ].setOrbitDistanceMultiplier( 100 );
-    objectRegistry[ 1 ].setOrbitDistanceMultiplier( 100 );
+    objectRegistry[ 0 ].setOrbitDistanceMultiplier( 5 );
+    objectRegistry[ 1 ].setOrbitDistanceMultiplier( 5 );
 
     objectRegistry[ 0 ].setScale( glm::vec3( 10.0f, 10.0f, 10.0f ) );
 
@@ -136,7 +136,7 @@ bool Graphics::Initialize
 
     objectRegistry[ 1 ].setScale( glm::vec3( 1.0f, 1.0f, 1.0f ) );
 
-    objectRegistry[ 1 ].setOrbitalRadius( glm::vec2( 36.0f, 36.0f ) );
+    objectRegistry[ 1 ].setOrbitalRadius( glm::vec2( 6.0f, 6.0f ) );
 
     objectRegistry[ 1 ].setTiltAngle( 0.87f );
 
