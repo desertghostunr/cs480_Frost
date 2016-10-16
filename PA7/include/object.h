@@ -144,7 +144,8 @@ class Object
         std::vector<unsigned int> childrenVector;
 
         //transform information
-        Origin origin;
+        Origin parentOrigin;
+        Origin localOrigin;
         glm::vec3 scaleFactor; //scale factor
         glm::vec3 translationVector; //translation in cartesian space
         glm::vec3 rotationVector; //rotation vector in cartesian space

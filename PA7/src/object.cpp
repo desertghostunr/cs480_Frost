@@ -98,7 +98,7 @@ glm::mat4 Object::GetModel()
 ***************************************/
 const Origin & Object::getOrigin( )
 {
-    return origin;
+    return localOrigin;
 }
 
 // GET OBJECT MODEL //////////////////
@@ -434,7 +434,7 @@ void Object::setOrbitalRadius( glm::vec2 radius )
 ***************************************/
 bool Object::setOrigin( const Origin & newOrigin )
 {
-    origin = newOrigin;
+    parentOrigin = newOrigin;
 
     return true;
 }
@@ -730,8 +730,10 @@ void Object::setTiltAngle( float tilt )
 ***************************************/
 void Object::commitTranslation( )
 {
-    transformVector.push_back( glm::translate( glm::mat4(1.0f),
-                                               translationVector ) );
+    localOrigin.translation = glm::translate( glm::mat4(1.0f),
+                                               translationVector );
+
+    transformVector.push_back( localOrigin.translation );
 }
 
 // COMMIT ROTATION/////////////////////
@@ -748,8 +750,11 @@ void Object::commitTranslation( )
 ***************************************/
 void Object::commitRotation( )
 {
-    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ), 
-                               ( angle ), rotationVector ) );
+
+    localOrigin.rotation = glm::rotate( glm::mat4( 1.0f ), 
+                               ( angle ), rotationVector );
+
+    transformVector.push_back( localOrigin.rotation );
 }
 
 // COMMIT TILT/////////////////////
@@ -766,6 +771,7 @@ void Object::commitRotation( )
 ***************************************/
 void Object::commitTilt( )
 {
+
     transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
                               ( tiltAngle ), glm::vec3( 0.0f, 0.0f, 1.0f ) ) );
 }
@@ -784,7 +790,9 @@ void Object::commitTilt( )
 ***************************************/
 void Object::commitScale( )
 {
-    transformVector.push_back( glm::scale( scaleFactor ) );
+    localOrigin.scale = glm::scale( scaleFactor );
+
+    transformVector.push_back( localOrigin.scale );
 }
 
 // COMMIT ORIGIN SCALE /////////////////////
@@ -801,7 +809,7 @@ void Object::commitScale( )
 ***************************************/
 void Object::commitOriginScale( )
 {
-    transformVector.push_back( origin.scale );
+    transformVector.push_back( parentOrigin.scale );
 }
 
 
@@ -819,7 +827,7 @@ void Object::commitOriginScale( )
 ***************************************/
 void Object::commitOriginTranslation( )
 {
-    transformVector.push_back( origin.translation );
+    transformVector.push_back( parentOrigin.translation );
 }
 
 // COMMIT ORIGIN ROTATION /////////////////////
@@ -836,7 +844,7 @@ void Object::commitOriginTranslation( )
 ***************************************/
 void Object::commitOriginRotation( )
 {
-    transformVector.push_back( origin.rotation );
+    transformVector.push_back( parentOrigin.rotation );
 }
 
 
@@ -855,14 +863,16 @@ void Object::commitOriginRotation( )
 ***************************************/
 void Object::commitOrbitalTranslation( )
 {
-    transformVector.push_back( glm::translate( glm::mat4( 1.0f ), 
+    localOrigin.translation = glm::translate( glm::mat4( 1.0f ), 
                                                glm::vec3( orbitalRadius.x 
                                                           * orbitDistanceMultiplier
                                                           * cos( orbitalAngle ),
                                                           0.0f,
                                                           orbitalRadius.y 
                                                           * orbitDistanceMultiplier
-                                                          * sin( orbitalAngle ) ) ) );
+                                                          * sin( orbitalAngle ) ) );
+
+    transformVector.push_back( localOrigin.translation );
 }
 
 // INCREMENT ANGLE /////////////////////
