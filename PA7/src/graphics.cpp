@@ -64,6 +64,7 @@ bool Graphics::Initialize
         successFlag = modelRegistry[ modelRegistry.size( ) - 1 ]
                         .objModel.loadModelFromFile( 
                           modelRegistry[ modelRegistry.size( ) - 1 ].modelPath );
+        
 
         if( !successFlag )
         {
@@ -77,67 +78,54 @@ bool Graphics::Initialize
 
     for( pIndex = 0; pIndex < progInfo.planetData.size( ); pIndex++ )
     {
+        objectRegistry.addObject( );
+
+        if( progInfo.planetData[ pIndex ].modelID < modelRegistry.size( ) )
+        {
+            objectRegistry[ objectRegistry.getSize( ) - 1 ]
+                .Initialize( &modelRegistry[ 
+                              progInfo.planetData[ pIndex ].modelID ].objModel );
+
+            modelRegistry[ modelRegistry.size( ) - 1 ].objModel.incrementReference( );
+        }
+        else
+        {
+            std::cout << "Invalid model ID provided!" << std::endl;
+            return false;
+        }
+
+        objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].setScale( progInfo.planetData[ pIndex ].scale );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].setTiltAngle( progInfo.planetData[ pIndex ].tilt );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].updateOrbitRate( progInfo.planetData[ pIndex ].orbitRate );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1 
+                      ].updateRotationRate( progInfo.planetData[ pIndex ].rotRate );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].setOrbitalRadius( progInfo.planetData[ pIndex ].orbitRad );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].setOrbitDistanceMultiplier( 10.0f );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1 
+                      ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
     }
 
-    
-    
-    // Create the object
-    objectRegistry.addObject( );
-    objectRegistry.addObject( );
-    objectRegistry.setChild( 1, 0 ); //child ID in the table, parent ID in the table
-    
-    modelRegistry.push_back( Instance( ) );
-    modelRegistry[ 0 ].objModel.incrementReference( );
-
-    modelRegistry[ 0 ].modelPath = progInfo.modelVector[ 0 ];
-
-    if( !modelRegistry[0].objModel.loadModelFromFile( progInfo.modelVector[ 0 ] ) )
+    for( pIndex = 0; pIndex < progInfo.planetData.size( ); pIndex++ )
     {
-        std::cout << "Failed to load " << progInfo.modelVector[ 0 ] << "." << std::endl;
-        return false;
+        for( index = 0; 
+             index < progInfo.planetData[ pIndex ].childID.size( ); index++ )
+        {
+            objectRegistry.setChild( 
+                       progInfo.planetData[ pIndex ].childID[ index ], pIndex );
+        }
     }
-    
-    if( !objectRegistry[ 0 ].Initialize( &modelRegistry[ 0 ].objModel ) )
-    {
-        std::cout << "Failed to load instance." << std::endl;
-        return false;
-    }
-
-    if( !objectRegistry[ 1 ].Initialize( &objectRegistry[ 0 ].getObjectModel( ) ) )
-    {
-        std::cout<<"Failed to load instance."<<std::endl;
-        return false;
-    }
-
-    // hardcoded example use of the object transform API, see updateList
-    // for commit calls
-    objectRegistry[ 0 ].setOrbitDistanceMultiplier( 5 );
-    objectRegistry[ 1 ].setOrbitDistanceMultiplier( 5 );
-
-    objectRegistry[ 0 ].setScale( glm::vec3( 10.0f, 10.0f, 10.0f ) );
-
-    objectRegistry[ 0 ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
-
-    objectRegistry[ 0 ].updateRotationRate( 0.1f );
-
-    objectRegistry[ 0 ].setOrbitalRadius( glm::vec2( 0.0f, 0.0f ) );
-
-    objectRegistry[ 0 ].updateOrbitRate( 0.0f );
-
-    objectRegistry[ 0 ].setTiltAngle( 0.408f );
-
-    objectRegistry[ 1 ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
-
-    objectRegistry[ 1 ].updateRotationRate( 2.0f );
-
-    objectRegistry[ 1 ].setScale( glm::vec3( 1.0f, 1.0f, 1.0f ) );
-
-    objectRegistry[ 1 ].setOrbitalRadius( glm::vec2( 6.0f, 6.0f ) );
-
-    objectRegistry[ 1 ].setTiltAngle( 0.87f );
-
-    ////////////////////////////////////////////////////////////////////////////
 
     // Set up the shaders
     m_shader = new Shader();
