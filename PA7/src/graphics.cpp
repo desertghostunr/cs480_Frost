@@ -41,7 +41,8 @@ bool Graphics::Initialize
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    unsigned int index;
+    bool successFlag;
+    unsigned int index, pIndex;
     GLint tmpTextLoc;
 
     // Init Camera
@@ -52,44 +53,35 @@ bool Graphics::Initialize
         return false;
     }
 
-    // J.J. see here for an explanation of how the information is stored ///////
-    // INTIALIZATION OF THE SOLAR SYSTEM MODELS AND TRANSFORMS /////////////////
-    /***************************************************************************
-        The API for the Object class works off a series of constants, 
-        set/update functions, and commit functions.
+    modelRegistry.clear( );
 
-        Here in the code you need to parse the progInfo struct:
-        *see the PlanetInfo struct in GraphicsInfo.h for the structure
-        *each model needs to be loaded into the model registry
-            **iterate through progInfo.modelVector and load each object
-        *iterate through the progInfo.planetData vector and add each object to the ObjectRegistry
-            **set attributes for each object
-                ***the various set/update functions need to be set for each of the
-                   constants
-            **a pointer needs to be attached to the proper index  of the model 
-              registry for each object.
-                ***this is the index of the model registry indicated in the PlanetInfo::modelID member
+    for( index = 0; index < progInfo.modelVector.size( ); index++ )
+    {
+        modelRegistry.push_back( Instance( ) );
+        modelRegistry[ modelRegistry.size( ) - 1 ].modelPath
+                                                = progInfo.modelVector[ index ];
 
+        successFlag = modelRegistry[ modelRegistry.size( ) - 1 ]
+                        .objModel.loadModelFromFile( 
+                          modelRegistry[ modelRegistry.size( ) - 1 ].modelPath );
 
-        *iterate through the progInfo.planetData vector and each object to the ObjectRegistry
-                **access the index of the new object registry and add 
-                each child in the planetInfo childID vector by iterating through
-                the size of the vector and calling ObjectTable::setChild function
-         
-         
+        if( !successFlag )
+        {
+            std::cout << "Error Loading " << modelRegistry[ 
+                             modelRegistry.size( ) - 1 ].modelPath << std::endl;
 
-        *commits must be applied in the updateList function
-            for these functions to take effect
+            return false;
+        }
 
-        here is the cmd line parameter that will run the solar system as is:
+    }
 
-        ./SolarSystem -c config/SolarSystemConfig
+    for( pIndex = 0; pIndex < progInfo.planetData.size( ); pIndex++ )
+    {
 
-        Run this to see what the example transforms do
+    }
 
-    ***************************************************************************/
-
-
+    
+    
     // Create the object
     objectRegistry.addObject( );
     objectRegistry.addObject( );
