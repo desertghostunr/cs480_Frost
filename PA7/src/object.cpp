@@ -147,8 +147,6 @@ bool Object::Initialize( ObjectModel * const srcPtr )
 
     objModelPtr = srcPtr;
 
-    std::cout << "Textures" << objModelPtr->getNumberOfTextures( ) << std::endl;
-
     objModelPtr->incrementReference( );
 
     return true;
@@ -508,7 +506,7 @@ bool Object::addParent( unsigned int parentsWorldID )
 
 unsigned int Object::getChildsWorldID( unsigned int childsLocalID )
 {
-    if( ( childsLocalID >= 0 ) && ( childsLocalID < childrenVector.size() ) )
+    if( childsLocalID < childrenVector.size() )
     {
         return childrenVector[ childsLocalID ];
     }

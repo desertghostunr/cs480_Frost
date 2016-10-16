@@ -81,18 +81,11 @@ bool Graphics::Initialize
 
         if( progInfo.planetData[ pIndex ].modelID < modelRegistry.size( ) )
         {
-            std::cout << "Model ID " << progInfo.planetData[ pIndex ].modelID << std::endl;
-            std::cout << modelRegistry[ progInfo.planetData[ pIndex ].modelID ].objModel.getNumberOfTextures( ) << std::endl;
 
             objectRegistry[ objectRegistry.getSize( ) - 1 ]
                 .Initialize( &modelRegistry[ progInfo.planetData[ pIndex ].modelID ].objModel );
 
             modelRegistry[ modelRegistry.size( ) - 1 ].objModel.incrementReference( );
-
-            std::cout<< modelRegistry[
-                progInfo.planetData[ pIndex ].modelID ].modelPath << std::endl;
-
-            std::cout << objectRegistry.getSize( ) - 1 << std::endl;
         }
         else
         {
@@ -116,20 +109,19 @@ bool Graphics::Initialize
                       ].setOrbitalRadius( progInfo.planetData[ pIndex ].orbitRad );
 
         objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setOrbitDistanceMultiplier( 50.0f );
+                      ].setOrbitDistanceMultiplier( 20.0f );
 
         objectRegistry[ objectRegistry.getSize( ) - 1 
                       ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
     }
 
-    for( pIndex = 0; pIndex < progInfo.planetData.size( ); pIndex++ )
+    for( pIndex = 0; pIndex < objectRegistry.getSize( ); pIndex++ )
     {
-        for( index = 0; 
-             index < progInfo.planetData[ pIndex ].childID.size( ); index++ )
+
+        for( index = 0; index < progInfo.planetData[ pIndex ].childID.size( ); index++ )
         {
-            objectRegistry.setChild(
-                progInfo.planetData[ pIndex ].childID[ index ], pIndex );
+            objectRegistry.setChild( progInfo.planetData[ pIndex ].childID[ index ], pIndex );
         }
 
 

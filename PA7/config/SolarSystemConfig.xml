@@ -117,7 +117,7 @@
       <RotationRate>10.7</RotationRate>
       <Tilt>0.4660029103</Tilt>
     </Object>
-    <!--<Object name="Planet" path ="models/uranus.obj">
+    <Object name="Planet" path ="models/uranus.obj">
       <xScale>51118</xScale>
       <yScale>51118</yScale>
       <zScale>51118</zScale>
@@ -149,7 +149,7 @@
       <OrbitTilt>0.300196631</OrbitTilt>
       <RotationRate>-153.3</RotationRate>
       <Tilt>2.138028334</Tilt>
-    </Object>-->
+    </Object>
   </Object>
   <Shader name="Vertex">shaders/textureVertexShader.glsl</Shader>
   <Shader name="Fragment">shaders/textureFragmentShader.glsl</Shader>

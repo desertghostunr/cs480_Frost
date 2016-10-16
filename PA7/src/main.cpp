@@ -556,12 +556,14 @@ bool ProcessConfigurationFileHelper
             strStream >> progInfo.planetData[ pIndex ].orbitRad.x;
 
             progInfo.planetData[ pIndex ].orbitRad.x /= normData.scaleOrbit.x;
+                        
         }
         else if( childNode->name( ) == Y_ORBIT_RADIUS )
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRad.y;
 
             progInfo.planetData[ pIndex ].orbitRad.y /= normData.scaleOrbit.y;
+                        
         }
         else if( childNode->name( ) == ORBIT_RATE )
         {

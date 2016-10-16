@@ -121,12 +121,12 @@ unsigned int ObjectTable::addObject( unsigned int parent )
 ***************************************/
 bool ObjectTable::setChild( unsigned int objID, unsigned int parentToBeID )
 {
-    if( ( ( int ) parentToBeID == -1 ) && ( parentToBeID < data.size( ) ) )
+    if( parentToBeID >= data.size( ) )
     {
         return false;
     }
 
-    if( ( ( int ) objID == -1 ) && ( objID < data.size( ) ) )
+    if( objID >= data.size( ) )
     {
         return false;
     }
