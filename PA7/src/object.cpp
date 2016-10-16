@@ -147,6 +147,8 @@ bool Object::Initialize( ObjectModel * const srcPtr )
 
     objModelPtr = srcPtr;
 
+    std::cout << "Textures" << objModelPtr->getNumberOfTextures( ) << std::endl;
+
     objModelPtr->incrementReference( );
 
     return true;

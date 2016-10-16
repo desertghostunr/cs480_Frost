@@ -89,6 +89,8 @@ unsigned int ObjectTable::addObject( unsigned int parent )
 
     data.push_back( Object( ) );
 
+    data[ data.size( ) - 1 ].setObjectsID( data.size( ) - 1 );
+
     if( ( int ) parent == -1 )
     {
         //do nothing, not a child
@@ -119,12 +121,12 @@ unsigned int ObjectTable::addObject( unsigned int parent )
 ***************************************/
 bool ObjectTable::setChild( unsigned int objID, unsigned int parentToBeID )
 {
-    if( ( ( int ) parentToBeID >= 0 ) && ( parentToBeID < data.size( ) ) )
+    if( ( ( int ) parentToBeID == -1 ) && ( parentToBeID < data.size( ) ) )
     {
         return false;
     }
 
-    if( ( ( int ) objID >= 0 ) && ( objID < data.size( ) ) )
+    if( ( ( int ) objID == -1 ) && ( objID < data.size( ) ) )
     {
         return false;
     }

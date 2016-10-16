@@ -75,7 +75,7 @@ ObjectModel::ObjectModel
 ( 
     const ObjectModel & src //the ObjectModel to copy
 ):  reference( 0 ), Vertices( src.Vertices ), Indices( src.Indices ), 
-    VB( src.VB ), IB( src.IB )
+    VB( src.VB ), IB( src.IB ),  texture( src.texture ), textUniLoc( src.textUniLoc )
 {
     //nothing to do
 }
@@ -528,7 +528,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
         glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 
                       textureImg[ tIndex ].size( ).width, 
                       textureImg[ tIndex ].size( ).height, 0, 
-                      GL_BGR, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );
+                      GL_BGR, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );        
 
         glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
