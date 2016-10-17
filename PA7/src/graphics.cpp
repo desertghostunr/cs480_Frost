@@ -317,13 +317,8 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
     objectRegistry[ objectID ].commitTilt( );
 
-<<<<<<< HEAD
-    objectRegistry[ objectID ].incrementOrbitAngle( dt ); 
-
-    //objectRegistry[ objectID ].commitOriginScale( );   
-=======
     objectRegistry[ objectID ].incrementOrbitAngle( dt );
->>>>>>> origin/master
+
 
     objectRegistry[ objectID ].commitOrbitalTranslation( );
 

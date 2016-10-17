@@ -2,11 +2,11 @@
 <!-- See Mar's first moon for the layout of the planet / moon information. -->
 <SolarSystem>
   <NormalizationFactor name="Diameter">12756</NormalizationFactor>
-  <NormalizationFactor name="xScaleOrbit">10.60</NormalizationFactor>
-  <NormalizationFactor name="yScaleOrbit">10.10</NormalizationFactor>
+  <NormalizationFactor name="xScaleOrbit">5.60</NormalizationFactor>
+  <NormalizationFactor name="yScaleOrbit">5.10</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
-  <NormalizationFactor name="Sun">0.01</NormalizationFactor>
+  <NormalizationFactor name="Sun">0.1</NormalizationFactor>
   <Object name="Sun" path ="models/sun.obj">
     <xScale>1391400</xScale>
     <yScale>1391400</yScale>
@@ -53,8 +53,8 @@
         <xScale>3475</xScale>
         <yScale>3475</yScale>
         <zScale>3475</zScale>
-        <xOrbitRadius>100.3</xOrbitRadius>
-        <yOrbitRadius>100.326</yOrbitRadius>
+        <xOrbitRadius>25.3</xOrbitRadius>
+        <yOrbitRadius>25.326</yOrbitRadius>
         <OrbitRate>1.0</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>655.7</RotationRate>
@@ -76,8 +76,8 @@
         <xScale>22.2</xScale> <!-- Diameter in km -->
         <yScale>22.2</yScale> <!-- Diameter in km -->
         <zScale>22.2</zScale> <!-- Diameter in km -->
-        <xOrbitRadius>1.0</xOrbitRadius> <!-- Radius in 10^6 km -->
-        <yOrbitRadius>1.07</yOrbitRadius> <!-- Radius in 10^6 km -->
+        <xOrbitRadius>20.0</xOrbitRadius> <!-- Radius in 10^6 km -->
+        <yOrbitRadius>10.07</yOrbitRadius> <!-- Radius in 10^6 km -->
         <OrbitRate>7.66</OrbitRate> <!-- Orbit Velocity in km / s -->
         <OrbitTilt>0.089011792</OrbitTilt> <!--Orbit Tilt in radians -->
         <RotationRate>200</RotationRate> <!-- Rotation Period in hours-->
@@ -87,8 +87,8 @@
         <xScale>12.6</xScale>
         <yScale>12.6</yScale>
         <zScale>12.6</zScale>
-        <xOrbitRadius>10.07</xOrbitRadius>
-        <yOrbitRadius>10.07</yOrbitRadius>
+        <xOrbitRadius>20.07</xOrbitRadius>
+        <yOrbitRadius>20.07</yOrbitRadius>
         <OrbitRate>30.35</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>500</RotationRate>
