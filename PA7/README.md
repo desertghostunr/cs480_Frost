@@ -1,5 +1,18 @@
 # PA7 Solar System
 
+# Camera Controls:
+Press 1: set the camera to a top down view
+Press 2: Set the camera to a Side by side view
+
+Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
+Press s: To zoom out *unless zoomed past sun then becomes a zoom in
+*Following controls become inverted if zoomed past the sun
+Press Left arrow key: Moves camera to the left
+Press Right arrow key: Moves camera to the right
+Press Up arrow key: Moves Up
+Press Down arrow key: Moves down
+
+
 # J.J.:
 
 RUN LIKE THIS:

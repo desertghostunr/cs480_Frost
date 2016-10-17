@@ -43,6 +43,10 @@ class Graphics
 
 	void ChangePerspectiveStatic( int position );
 
+	void cameraLeftOrRight( bool left );
+	void cameraUpOrDown( bool up);
+	void cameraZoomInOrOut(bool in);
+
     private:
         std::string ErrorString(GLenum error);
 

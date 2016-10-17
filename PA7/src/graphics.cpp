@@ -590,14 +590,14 @@ void Graphics::toggleAllObjectsPaused( )
 
 }
 
-// TOGGLE ALL PAUSED //////////////////
+// Change Perspective  //////////////////
 /***************************************
 
 @brief toggleAllPaused
 
-@details toggles whether or not the orbit and rotation is paused
+@details toggles which perspective to look at the solar system
 
-@param in: objectID: the id or index of the Object
+@param in: which perspective to set view towards
 
 @notes None
 
@@ -612,5 +612,42 @@ void Graphics::ChangePerspectiveStatic( int position )
     {
 	m_camera->LookSideToSide();
     }
+    m_camera->updateLookAt();
         
+}
+void Graphics::cameraLeftOrRight( bool left )
+{
+   if( left )
+   {
+      m_camera->moveLeft();  
+   }
+   else
+   {
+      m_camera->moveRight();
+   }
+   m_camera->updateLookAt();
+}
+void Graphics::cameraUpOrDown( bool up)
+{
+   if( up )
+   {
+      m_camera->moveUp();  
+   }
+   else
+   {
+      m_camera->moveDown();
+   }
+   m_camera->updateLookAt();
+}
+void Graphics::cameraZoomInOrOut(bool in)
+{
+   if( in )
+   {
+      m_camera->zoomIn();  
+   }
+   else
+   {
+      m_camera->zoomOut();
+   }
+   m_camera->updateLookAt();
 }

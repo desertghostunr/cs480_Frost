@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- See Mar's first moon for the layout of the planet / moon information. -->
 <SolarSystem>
-  <NormalizationFactor name="Diameter">12756</NormalizationFactor>
-  <NormalizationFactor name="xScaleOrbit">5.60</NormalizationFactor>
-  <NormalizationFactor name="yScaleOrbit">5.10</NormalizationFactor>
+  <NormalizationFactor name="Diameter"> .012756 </NormalizationFactor>
+  <NormalizationFactor name="xScaleOrbit"> 5.0</NormalizationFactor>
+  <NormalizationFactor name="yScaleOrbit"> 5.0</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
   <NormalizationFactor name="Sun">0.05</NormalizationFactor>
   <Object name="Sun" path ="models/sun.obj">
-    <xScale>1391400</xScale>
-    <yScale>1391400</yScale>
-    <zScale>1391400</zScale>
+    <xScale>1.391400</xScale>
+    <yScale>1.391400</yScale>
+    <zScale>1.391400</zScale>
     <xOrbitRadius>0</xOrbitRadius>
     <yOrbitRadius>0</yOrbitRadius>
     <OrbitRate>0</OrbitRate>
@@ -18,9 +18,9 @@
     <RotationRate>587.28</RotationRate>
     <Tilt>0</Tilt>
     <Object name ="Planet" path ="models/mercury.obj">
-      <xScale>4879</xScale>
-      <yScale>4879</yScale>
-      <zScale>4879</zScale>
+      <xScale>.004879</xScale>
+      <yScale>.004879</yScale>
+      <zScale>.004879</zScale>
       <xOrbitRadius>46.00</xOrbitRadius>
       <yOrbitRadius>69.82</yOrbitRadius>
       <OrbitRate>47.36</OrbitRate>
@@ -29,9 +29,9 @@
       <Tilt>0.0001745329</Tilt>
     </Object>
     <Object name ="Planet" path ="models/venus.obj">
-      <xScale>12104</xScale>
-      <yScale>12104</yScale>
-      <zScale>12104</zScale>
+      <xScale>.012104</xScale>
+      <yScale>.012104</yScale>
+      <zScale>.012104</zScale>
       <xOrbitRadius>107.5</xOrbitRadius>
       <yOrbitRadius>108.9</yOrbitRadius>
       <OrbitRate>35.0</OrbitRate>
@@ -40,9 +40,9 @@
       <Tilt>3.4</Tilt>
     </Object>
     <Object name="Planet" path ="models/earth.obj">
-      <xScale>12756</xScale>
-      <yScale>12756</yScale>
-      <zScale>12756</zScale>
+      <xScale>.012756</xScale>
+      <yScale>.012756</yScale>
+      <zScale>.012756</zScale>
       <xOrbitRadius>147.1</xOrbitRadius>
       <yOrbitRadius>152.1</yOrbitRadius>
       <OrbitRate>29.8</OrbitRate>
@@ -50,9 +50,9 @@
       <RotationRate>23.9</RotationRate>
       <Tilt>0.408407045</Tilt>
       <Object name ="Moon" path ="models/moon.obj">
-        <xScale>3475</xScale>
-        <yScale>3475</yScale>
-        <zScale>3475</zScale>
+        <xScale>.003475</xScale>
+        <yScale>.003475</yScale>
+        <zScale>.003475</zScale>
         <xOrbitRadius>10.3</xOrbitRadius>
         <yOrbitRadius>10.326</yOrbitRadius>
         <OrbitRate>1.80</OrbitRate>
@@ -62,9 +62,9 @@
       </Object>
     </Object>
     <Object name="Planet" path ="models/mars.obj">
-      <xScale>6792</xScale>
-      <yScale>6792</yScale>
-      <zScale>6792</zScale>
+      <xScale>.006792</xScale>
+      <yScale>.006792</yScale>
+      <zScale>.006792</zScale>
       <xOrbitRadius>206.6</xOrbitRadius>
       <yOrbitRadius>249.2</yOrbitRadius>
       <OrbitRate>24.1</OrbitRate>
@@ -73,9 +73,9 @@
       <Tilt>0.439822972</Tilt>
       <!-- Structure of a planet or moon -->
       <Object name ="Moon" path ="models/moon.obj">
-        <xScale>22.2</xScale> <!-- Diameter in km -->
-        <yScale>22.2</yScale> <!-- Diameter in km -->
-        <zScale>22.2</zScale> <!-- Diameter in km -->
+        <xScale>.0000222</xScale> <!-- Diameter in km -->
+        <yScale>.0000222</yScale> <!-- Diameter in km -->
+        <zScale>.0000222</zScale> <!-- Diameter in km -->
         <xOrbitRadius>20.0</xOrbitRadius> <!-- Radius in 10^6 km -->
         <yOrbitRadius>10.07</yOrbitRadius> <!-- Radius in 10^6 km -->
         <OrbitRate>7.66</OrbitRate> <!-- Orbit Velocity in km / s -->
@@ -84,9 +84,9 @@
         <Tilt>0.11693706</Tilt> <!-- Tilt of axis in Radians -->
       </Object>
       <Object name ="Moon" path ="models/moon.obj">
-        <xScale>12.6</xScale>
-        <yScale>12.6</yScale>
-        <zScale>12.6</zScale>
+        <xScale>.0000126</xScale>
+        <yScale>.0000126</yScale>
+        <zScale>.0000126</zScale>
         <xOrbitRadius>20.07</xOrbitRadius>
         <yOrbitRadius>20.07</yOrbitRadius>
         <OrbitRate>30.35</OrbitRate>
@@ -96,9 +96,9 @@
       </Object>
     </Object>
     <Object name="Planet" path ="models/jupiter.obj">
-      <xScale>142984</xScale>
-      <yScale>142984</yScale>
-      <zScale>142984</zScale>
+      <xScale>.142984</xScale>
+      <yScale>.142984</yScale>
+      <zScale>.142984</zScale>
       <xOrbitRadius>740.5</xOrbitRadius>
       <yOrbitRadius>816.6</yOrbitRadius>
       <OrbitRate>13.1</OrbitRate>
@@ -107,9 +107,9 @@
       <Tilt>0.054105207</Tilt>
     </Object>
     <Object name="Planet" path ="models/saturn.obj">
-      <xScale>120536</xScale>
-      <yScale>120536</yScale>
-      <zScale>120536</zScale>
+      <xScale>.120536</xScale>
+      <yScale>.120536</yScale>
+      <zScale>.120536</zScale>
       <xOrbitRadius>1352.6</xOrbitRadius>
       <yOrbitRadius>1514.5</yOrbitRadius>
       <OrbitRate>9.7</OrbitRate>
@@ -118,9 +118,9 @@
       <Tilt>0.4660029103</Tilt>
     </Object>
     <Object name="Planet" path ="models/uranus.obj">
-      <xScale>51118</xScale>
-      <yScale>51118</yScale>
-      <zScale>51118</zScale>
+      <xScale>.051118</xScale>
+      <yScale>.051118</yScale>
+      <zScale>.051118</zScale>
       <xOrbitRadius>2741.3</xOrbitRadius>
       <yOrbitRadius>3003.6</yOrbitRadius>
       <OrbitRate>6.8</OrbitRate>
@@ -129,9 +129,9 @@
       <Tilt>1.706932008</Tilt>
       </Object>
     <Object name="Planet" path ="models/neptune.obj">
-      <xScale>49528</xScale>
-      <yScale>49528</yScale>
-      <zScale>49528</zScale>
+      <xScale>.049528</xScale>
+      <yScale>.049528</yScale>
+      <zScale>.049528</zScale>
       <xOrbitRadius>4444.5</xOrbitRadius>
       <yOrbitRadius>4545.7</yOrbitRadius>
       <OrbitRate>5.4</OrbitRate>
@@ -140,9 +140,9 @@
       <Tilt>0.4939281783</Tilt>
       </Object>
     <Object name="Planet" path ="models/pluto.obj">
-      <xScale>2370</xScale>
-      <yScale>2370</yScale>
-      <zScale>2370</zScale>
+      <xScale>.002370</xScale>
+      <yScale>.002370</yScale>
+      <zScale>.002370</zScale>
       <xOrbitRadius>4436.8</xOrbitRadius>
       <yOrbitRadius>7375.9</yOrbitRadius>
       <OrbitRate>4.7</OrbitRate>

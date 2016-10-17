@@ -108,35 +108,35 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {                
-                m_graphics->toggleOrbitDirection( 0 );
+                m_graphics->cameraUpOrDown( true );
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_w )
         {
             if( m_graphics != NULL )
             {                
-                m_graphics->toggleOrbitDirection( 1 );
+                m_graphics->cameraZoomInOrOut( true );
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_DOWN )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleRotationDirection( 0 );
+                m_graphics->cameraUpOrDown( false );
             }        
         }
         else if( m_event.key.keysym.sym == SDLK_s )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleRotationDirection( 1 );
+                m_graphics->cameraZoomInOrOut( false );
             }        
         }
         else if( m_event.key.keysym.sym == SDLK_RIGHT )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleOrbitPaused( 0 );
+                m_graphics->cameraLeftOrRight( false );
             }            
         }
         else if( ( m_event.key.keysym.sym == SDLK_d )
@@ -151,7 +151,7 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleRotationPaused( 0 );
+                m_graphics->cameraLeftOrRight( true );
             }            
         }
         else if( ( m_event.key.keysym.sym == SDLK_a ) 

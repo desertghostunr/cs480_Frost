@@ -2,7 +2,11 @@
 
 Camera::Camera()
 {
-
+	topDown = true;
+	leftRight = 0.0;
+	zoom = 150.0;
+	upDown = 0.0;
+	
 }
 
 Camera::~Camera()
@@ -17,7 +21,7 @@ bool Camera::Initialize(int w, int h)
     //    ...Like you should update it before you render more dynamic 
     //    for this project having them static will be fine
 
-    LookSideToSide();
+    LookTopDown();
 
     projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                    float(w)/float(h), //Aspect Ratio, so Circles stay Circular
@@ -26,21 +30,89 @@ bool Camera::Initialize(int w, int h)
     return true;
 }
 
+
 void Camera::LookTopDown()
 {
-
-    view = glm::lookAt( glm::vec3( 0.0, 40.0, 0.0), //Eye Position
-                                   glm::vec3(0.0, 0.0, 0.0), //Focus point
+    leftRight = 0.0;
+    upDown = 0.0;
+    zoom = 150.0;
+    topDown = true;
+    view = glm::lookAt( glm::vec3( 0.0, zoom, 0.0), //Eye Position
+                                   glm::vec3( leftRight, 0.0, upDown), //Focus point
                                    glm::vec3(0.0, 0.0, 1.0)); //Positive Y is up
 
 }
 
 void Camera::LookSideToSide()
 {
-
-    view = glm::lookAt( glm::vec3( 0.0, 8.0, -150.0), //Eye Position
-                                   glm::vec3(0.0, 0.0, 0.0), //Focus point
+    leftRight = 0.0;
+    upDown = 0.0;
+    zoom = 150.0;
+    topDown = false;
+    view = glm::lookAt( glm::vec3( 0.0, 8.0, zoom), //Eye Position
+                                   glm::vec3( leftRight, upDown, 0.0), //Focus point
                                    glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+
+}
+
+void Camera::moveLeft()
+{
+   if( topDown )
+   {
+      leftRight = leftRight + 1.0;
+   }
+   else
+   {
+      leftRight = leftRight - 1.0;
+   }
+}
+void Camera::moveRight()
+{
+   if( topDown )
+   {
+      leftRight = leftRight - 1.0;
+   }
+   else
+   {
+      leftRight = leftRight + 1.0;
+   }
+}
+void Camera::moveUp()
+{
+   upDown = upDown + 1.0;
+}
+void Camera::moveDown()
+{
+   upDown = upDown - 1.0;
+}
+
+void Camera::zoomIn()
+{
+
+      zoom = zoom - 5;
+
+}
+void Camera::zoomOut()
+{
+  
+      zoom = zoom + 5;
+   
+}
+
+void Camera::updateLookAt()
+{
+   if( topDown )
+   {
+      view = glm::lookAt( glm::vec3( leftRight, zoom, upDown), //Eye Position
+                                   glm::vec3( leftRight, 0.0, upDown), //Focus point
+                                   glm::vec3(0.0, 0.0, 1.0)); //Positive Y is up
+   }
+   else
+   {
+      view = glm::lookAt( glm::vec3( leftRight, 8.0 + upDown, zoom), //Eye Position
+                                   glm::vec3( leftRight, upDown, 0.0), //Focus point
+                                   glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+   }
 
 }
 
