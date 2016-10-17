@@ -12,15 +12,22 @@ struct Origin
     float rotation;
     glm::vec3 scale;
 
+    float tilt;
+    float orbitTilt;
+
     Origin( ):
-        translation( glm::vec3( 1.0f ) ),
-        rotation( ( 1.0f ) ),
-        scale( glm::vec3( 1.0f ) ){ }
+        translation( glm::vec3( 0.0f ) ),
+        rotation( ( 0.0f ) ),
+        scale( glm::vec3( 1.0f ) ),
+        tilt( 0.0f ),
+        orbitTilt( 0.0f ){ }
 
     Origin( const Origin& src ):
         translation( src.translation ),
         rotation( src.rotation ),
-        scale( src.scale ){ }
+        scale( src.scale ),
+        tilt( src.tilt ),
+        orbitTilt( src.orbitTilt ){ }
 
     const Origin& operator =( const Origin& src )
     {
@@ -29,6 +36,8 @@ struct Origin
             translation = src.translation;
             rotation = src.rotation;
             scale = src.scale;
+            tilt = src.tilt;
+            orbitTilt = src.orbitTilt;
         }
         return *this;
     }
