@@ -6,7 +6,7 @@
   <NormalizationFactor name="yScaleOrbit">10.10</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
-  <NormalizationFactor name="Sun">0.1</NormalizationFactor>
+  <NormalizationFactor name="Sun">0.01</NormalizationFactor>
   <Object name="Sun" path ="models/sun.obj">
     <xScale>1391400</xScale>
     <yScale>1391400</yScale>
@@ -53,8 +53,8 @@
         <xScale>3475</xScale>
         <yScale>3475</yScale>
         <zScale>3475</zScale>
-        <xOrbitRadius>5.0</xOrbitRadius>
-        <yOrbitRadius>1.32</yOrbitRadius>
+        <xOrbitRadius>100.3</xOrbitRadius>
+        <yOrbitRadius>100.326</yOrbitRadius>
         <OrbitRate>1.0</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>655.7</RotationRate>
@@ -87,8 +87,8 @@
         <xScale>12.6</xScale>
         <yScale>12.6</yScale>
         <zScale>12.6</zScale>
-        <xOrbitRadius>1.07</xOrbitRadius>
-        <yOrbitRadius>1.07</yOrbitRadius>
+        <xOrbitRadius>10.07</xOrbitRadius>
+        <yOrbitRadius>10.07</yOrbitRadius>
         <OrbitRate>30.35</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>500</RotationRate>

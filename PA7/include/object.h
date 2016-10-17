@@ -8,14 +8,14 @@
 
 struct Origin
 {
-    glm::mat4 translation;
-    glm::mat4 rotation;
-    glm::mat4 scale;
+    glm::vec3 translation;
+    float rotation;
+    glm::vec3 scale;
 
     Origin( ):
-        translation( glm::mat4( 1.0f ) ),
-        rotation( glm::mat4( 1.0f ) ),
-        scale( glm::mat4( 1.0f ) ){ }
+        translation( glm::vec3( 1.0f ) ),
+        rotation( ( 1.0f ) ),
+        scale( glm::vec3( 1.0f ) ){ }
 
     Origin( const Origin& src ):
         translation( src.translation ),
@@ -45,6 +45,8 @@ class Object
         void Render();
 
         glm::mat4 GetModel();
+
+        glm::mat4& ParentModel( );
 
         const Origin& getOrigin( );
 
@@ -137,6 +139,8 @@ class Object
     private:
         
         // model information
+        glm::mat4 parentModel;
+
         glm::mat4 model;
         ObjectModel* objModelPtr;
 

@@ -307,24 +307,25 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     //here is an example for the general call of transforms for a planet
     //This does the basic operations... I still don't know how to tilt orbits
     //Play around with changing the order of events / things
-    // write transforms here //////////////////////////    
+    // write transforms here //////////////////////////
+
     objectRegistry[ objectID ].commitScale( );
 
-    objectRegistry[ objectID ].incrementAngle( dt );
+    objectRegistry[ objectID ].incrementAngle( dt );    
 
     objectRegistry[ objectID ].commitRotation( );
 
     objectRegistry[ objectID ].commitTilt( );
 
+<<<<<<< HEAD
     objectRegistry[ objectID ].incrementOrbitAngle( dt ); 
 
     //objectRegistry[ objectID ].commitOriginScale( );   
+=======
+    objectRegistry[ objectID ].incrementOrbitAngle( dt );
+>>>>>>> origin/master
 
     objectRegistry[ objectID ].commitOrbitalTranslation( );
-
-    objectRegistry[ objectID ].commitOriginTranslation( ); //origin set in update children
-
-    objectRegistry[ objectID ].commitOriginRotation( );
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////
@@ -365,7 +366,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
      {
          childsID = objectRegistry[ objectID ].getChildsWorldID( index );
 
-         if( childsID  < objectRegistry.getSize( ) )
+         if( childsID < objectRegistry.getSize( ) )
          {
              objectRegistry[ childsID ].setOrigin( 
                                        objectRegistry[ objectID ].getOrigin( ) );
