@@ -38,7 +38,7 @@ void Camera::LookTopDown()
 void Camera::LookSideToSide()
 {
 
-    view = glm::lookAt( glm::vec3( 0.0, 8.0, -50.0), //Eye Position
+    view = glm::lookAt( glm::vec3( 0.0, 8.0, -150.0), //Eye Position
                                    glm::vec3(0.0, 0.0, 0.0), //Focus point
                                    glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 

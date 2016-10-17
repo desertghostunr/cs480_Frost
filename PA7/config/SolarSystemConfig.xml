@@ -6,7 +6,7 @@
   <NormalizationFactor name="yScaleOrbit">5.10</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
-  <NormalizationFactor name="Sun">0.1</NormalizationFactor>
+  <NormalizationFactor name="Sun">0.05</NormalizationFactor>
   <Object name="Sun" path ="models/sun.obj">
     <xScale>1391400</xScale>
     <yScale>1391400</yScale>
