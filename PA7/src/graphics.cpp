@@ -114,6 +114,9 @@ bool Graphics::Initialize
         objectRegistry[ objectRegistry.getSize( ) - 1 
                       ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
+        objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].getOrigin( ).orbitTilt = progInfo.planetData[ pIndex ].orbitTilt;
+
     }
 
     for( pIndex = 0; pIndex < objectRegistry.getSize( ); pIndex++ )
@@ -313,14 +316,19 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
     objectRegistry[ objectID ].incrementAngle( dt );    
 
-    objectRegistry[ objectID ].commitRotation( );
+    objectRegistry[ objectID ].commitRotation( );    
 
     objectRegistry[ objectID ].commitTilt( );
 
     objectRegistry[ objectID ].incrementOrbitAngle( dt );
 
-
     objectRegistry[ objectID ].commitOrbitalTranslation( );
+
+    objectRegistry[ objectID ].commitOrbitalTilt( );
+
+    objectRegistry[ objectID ].commitParentTilt( );
+
+    objectRegistry[ objectID ].commitParentLocation( );    
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////

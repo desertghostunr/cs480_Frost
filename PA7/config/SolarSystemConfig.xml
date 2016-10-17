@@ -53,9 +53,9 @@
         <xScale>3475</xScale>
         <yScale>3475</yScale>
         <zScale>3475</zScale>
-        <xOrbitRadius>25.3</xOrbitRadius>
-        <yOrbitRadius>25.326</yOrbitRadius>
-        <OrbitRate>1.0</OrbitRate>
+        <xOrbitRadius>10.3</xOrbitRadius>
+        <yOrbitRadius>10.326</yOrbitRadius>
+        <OrbitRate>1.80</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>655.7</RotationRate>
         <Tilt>0.11693706</Tilt>

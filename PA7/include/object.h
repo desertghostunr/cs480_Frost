@@ -57,7 +57,7 @@ class Object
 
         glm::mat4& ParentModel( );
 
-        const Origin& getOrigin( );
+        Origin& getOrigin( );
 
         ObjectModel& getObjectModel( );
 
@@ -118,16 +118,16 @@ class Object
         void commitRotation( );
 
         void commitTilt( );
+        
+        void commitParentTilt( );
+
+        void commitOrbitalTilt( );
 
         void commitScale( );
 
-        void commitOriginScale( );
-
-        void commitOriginTranslation( );
-
-        void commitOriginRotation( );
-
         void commitOrbitalTranslation( );
+
+        void commitParentLocation( );
 
         void incrementAngle( unsigned int dt );
 
