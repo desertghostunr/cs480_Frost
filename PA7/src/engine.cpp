@@ -183,6 +183,20 @@ void Engine::Keyboard()
                 m_graphics->toggleAllObjectsPaused( );
             }            
         }
+	else if( m_event.key.keysym.sym == SDLK_1 )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->ChangePerspectiveStatic( 1 );
+            }            
+        }
+	else if( m_event.key.keysym.sym == SDLK_2 )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->ChangePerspectiveStatic( 2 );
+            }            
+        }
     }
 }
 

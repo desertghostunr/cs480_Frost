@@ -316,7 +316,9 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
     objectRegistry[ objectID ].commitTilt( );
 
-    objectRegistry[ objectID ].incrementOrbitAngle( dt );    
+    objectRegistry[ objectID ].incrementOrbitAngle( dt ); 
+
+    //objectRegistry[ objectID ].commitOriginScale( );   
 
     objectRegistry[ objectID ].commitOrbitalTranslation( );
 
@@ -582,4 +584,29 @@ void Graphics::toggleAllObjectsPaused( )
         }
     }
 
+}
+
+// TOGGLE ALL PAUSED //////////////////
+/***************************************
+
+@brief toggleAllPaused
+
+@details toggles whether or not the orbit and rotation is paused
+
+@param in: objectID: the id or index of the Object
+
+@notes None
+
+***************************************/
+void Graphics::ChangePerspectiveStatic( int position )
+{
+    if( position == 1 )
+    {
+	m_camera->LookTopDown();
+    }
+    else if( position == 2 )
+    {
+	m_camera->LookSideToSide();
+    }
+        
 }

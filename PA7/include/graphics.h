@@ -41,6 +41,8 @@ class Graphics
         bool toggleAllPaused( unsigned int objectID );
         void toggleAllObjectsPaused( );
 
+	void ChangePerspectiveStatic( int position );
+
     private:
         std::string ErrorString(GLenum error);
 
