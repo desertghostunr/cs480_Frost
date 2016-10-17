@@ -83,6 +83,11 @@ glm::mat4 Object::GetModel()
     return model;
 }
 
+glm::mat4 & Object::ParentModel( )
+{
+    return parentModel;
+}
+
 
 // GET ORIGIN //////////////////
 /***************************************
@@ -730,10 +735,10 @@ void Object::setTiltAngle( float tilt )
 ***************************************/
 void Object::commitTranslation( )
 {
-    localOrigin.translation = glm::translate( glm::mat4(1.0f),
-                                               translationVector );
+    localOrigin.translation = translationVector;
 
-    transformVector.push_back( localOrigin.translation );
+    transformVector.push_back( glm::translate( glm::mat4( 1.0f ),
+                                               translationVector ) );
 }
 
 // COMMIT ROTATION/////////////////////
@@ -751,10 +756,10 @@ void Object::commitTranslation( )
 void Object::commitRotation( )
 {
 
-    localOrigin.rotation = glm::rotate( glm::mat4( 1.0f ), 
-                               ( angle ), rotationVector );
+    localOrigin.rotation = angle;
 
-    transformVector.push_back( localOrigin.rotation );
+    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
+                               ( angle + parentOrigin.rotation ), rotationVector ) );
 }
 
 // COMMIT TILT/////////////////////
@@ -790,9 +795,9 @@ void Object::commitTilt( )
 ***************************************/
 void Object::commitScale( )
 {
-    localOrigin.scale = glm::scale( scaleFactor );
+    localOrigin.scale = scaleFactor;
 
-    transformVector.push_back( localOrigin.scale );
+    transformVector.push_back( glm::scale( scaleFactor ) );
 }
 
 // COMMIT ORIGIN SCALE /////////////////////
@@ -809,7 +814,7 @@ void Object::commitScale( )
 ***************************************/
 void Object::commitOriginScale( )
 {
-    transformVector.push_back( parentOrigin.scale );
+    //transformVector.push_back( parentOrigin.scale );
 }
 
 
@@ -827,7 +832,7 @@ void Object::commitOriginScale( )
 ***************************************/
 void Object::commitOriginTranslation( )
 {
-    transformVector.push_back( parentOrigin.translation );
+    //transformVector.push_back( parentOrigin.translation );
 }
 
 // COMMIT ORIGIN ROTATION /////////////////////
@@ -844,7 +849,7 @@ void Object::commitOriginTranslation( )
 ***************************************/
 void Object::commitOriginRotation( )
 {
-    transformVector.push_back( parentOrigin.rotation );
+    //transformVector.push_back( parentOrigin.rotation );
 }
 
 
@@ -863,16 +868,16 @@ void Object::commitOriginRotation( )
 ***************************************/
 void Object::commitOrbitalTranslation( )
 {
-    localOrigin.translation = glm::translate( glm::mat4( 1.0f ), 
-                                               glm::vec3( orbitalRadius.x 
-                                                          * orbitDistanceMultiplier
-                                                          * cos( orbitalAngle ),
-                                                          0.0f,
-                                                          orbitalRadius.y 
-                                                          * orbitDistanceMultiplier
-                                                          * sin( orbitalAngle ) ) );
+    localOrigin.translation = glm::vec3( orbitalRadius.x
+                                         * orbitDistanceMultiplier
+                                         * cos( orbitalAngle ) + parentOrigin.translation.x,
+                                         0.0f + parentOrigin.translation.y,
+                                         orbitalRadius.y
+                                         * orbitDistanceMultiplier
+                                         * sin( orbitalAngle ) + parentOrigin.translation.z );
 
-    transformVector.push_back( localOrigin.translation );
+    transformVector.push_back( glm::translate( glm::mat4( 1.0f ),
+                                               localOrigin.translation ) );
 }
 
 // INCREMENT ANGLE /////////////////////
