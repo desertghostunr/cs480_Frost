@@ -88,6 +88,12 @@ const string TILT = "Tilt";
 const string VERTEX = "Vertex";
 const string FRAGMENT = "Fragment";
 
+//planet names
+const string PLANET_NAMES[ ] = { "mercury", "venus", "earth", "mars",
+                               "jupiter", "saturn", "uranus", "neptune", "pluto" };
+
+const unsigned int NUM_PLANETS = 9;
+
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
                                    GraphicsInfo& progInfo );
@@ -342,6 +348,8 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 
     rootNode = doc.first_node( "SolarSystem" );
 
+    progInfo.planetIndex.resize( NUM_PLANETS );
+
     return ProcessConfigurationFile( rootNode, progInfo );
 }
 
@@ -470,7 +478,9 @@ bool ProcessConfigurationFileHelper
     bool noError = true;
     string tempStr;
 
-    unsigned int pIndex = 0, mIndex = 0;
+    size_t strIndex;
+
+    unsigned int pIndex = 0, mIndex = 0, planetIndex;
 
     if( parentNode == NULL )
     {
@@ -494,6 +504,20 @@ bool ProcessConfigurationFileHelper
     progInfo.planetData.push_back( PlanetInfo( ) );
     pIndex = progInfo.planetData.size( ) - 1;
 
+
+    for( planetIndex = 0; planetIndex < NUM_PLANETS; planetIndex++ )
+    {
+        strIndex = tempStr.find( PLANET_NAMES[ planetIndex ], tempStr.find_last_of( "\\/" ) );
+
+        if( strIndex != string::npos )
+        {
+            progInfo.planetIndex[ planetIndex ] = pIndex;
+
+            std::cout << "Found: " << tempStr.substr( strIndex );
+            std::cout << " at index: " << progInfo.planetIndex[ planetIndex ] << std::endl;
+        }
+    }
+
     for( mIndex = 0; mIndex < progInfo.modelVector.size( ); mIndex++ )
     {
         if( tempStr == progInfo.modelVector[ mIndex ] )
@@ -506,8 +530,7 @@ bool ProcessConfigurationFileHelper
         progInfo.modelVector.push_back( tempStr );
 
         progInfo.planetData[ pIndex ].modelID = progInfo.modelVector.size( ) - 1;
-    }
-    
+    }    
 
     for( childNode = parentNode->first_node( 0 ); childNode;
          childNode = childNode->next_sibling( ) )

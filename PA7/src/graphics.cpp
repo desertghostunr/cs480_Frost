@@ -55,6 +55,11 @@ bool Graphics::Initialize
 
     modelRegistry.clear( );
 
+    //each planet is at the index of its number - 1
+    //mercury is 0, venus is 1, earth is 2, mars is 3, etc.
+    planetRegistry = progInfo.planetIndex;
+
+
     for( index = 0; index < progInfo.modelVector.size( ); index++ )
     {
         modelRegistry.push_back( Instance( ) );

@@ -60,6 +60,8 @@ class Graphics
         ObjectTable objectRegistry; //holds the scene's objects
 
         std::vector<Instance> modelRegistry;
+
+        std::vector<unsigned int> planetRegistry;
 };
 
 #endif /* GRAPHICS_H */

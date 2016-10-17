@@ -64,6 +64,7 @@ struct GraphicsInfo
     std::vector<std::pair<GLenum, std::string>> shaderVector;
     std::vector<std::string> modelVector;
     std::vector<PlanetInfo> planetData;
+    std::vector<unsigned int> planetIndex;
 
     //constructors
     GraphicsInfo( ) { }
@@ -71,7 +72,8 @@ struct GraphicsInfo
     GraphicsInfo( const GraphicsInfo& src ): 
         shaderVector( src.shaderVector ),
         modelVector( src.modelVector ), 
-        planetData( src.planetData ) 
+        planetData( src.planetData ),
+        planetIndex( src.planetIndex )
     {
 
     }
