@@ -854,7 +854,7 @@ void Object::commitOrbitalTranslation( )
                                          * cos( orbitalAngle ),
                                          ( (orbitalRadius.x 
                                              + orbitalRadius.y ) / 2.0f ) 
-                                         * sin( localOrigin.orbitTilt ),
+                                         * sin( localOrigin.orbitTilt * cos( orbitalAngle ) ),
                                          orbitalRadius.y
                                          * orbitDistanceMultiplier
                                          * sin( orbitalAngle ) );
