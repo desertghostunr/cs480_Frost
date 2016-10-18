@@ -18,6 +18,10 @@ using namespace std;
 class Graphics
 {
     public:
+        static const int INCREASE_SPEED = 0;
+        static const int DECREASE_SPEED = 1;
+        static const int RESET_SPEED = 2;
+
         Graphics();
         ~Graphics();
         bool Initialize(int width, int height, 
@@ -40,6 +44,11 @@ class Graphics
 
         bool toggleAllPaused( unsigned int objectID );
         void toggleAllObjectsPaused( );
+
+        void changeOrbitSpeed( unsigned int opCode );
+
+        void changeRotSpeed( unsigned int opCode );
+
 
 	void ChangePerspectiveStatic( int position );
 

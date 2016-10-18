@@ -12,6 +12,13 @@ Press Right arrow key: Moves camera to the right
 Press Up arrow key: Moves Up
 Press Down arrow key: Moves down
 
+Press ,: to slow the speed of orbit.
+Press .: to increase the speed of orbit.
+Press o: to reset the speed of rotation.
+Press k: to decrease the speed of rotation.
+Press l: to increase the speed of rotation.
+Press r: to reset the speed of rotation.
+
 
 # J.J.:
 

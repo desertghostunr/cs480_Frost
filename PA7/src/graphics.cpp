@@ -595,6 +595,50 @@ void Graphics::toggleAllObjectsPaused( )
 
 }
 
+void Graphics::changeOrbitSpeed( unsigned int opCode )
+{
+    unsigned int index;
+
+    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    {
+        if( opCode == INCREASE_SPEED )
+        {
+            objectRegistry[ index ].incrementOrbitSpeed( );
+        }
+        else if( opCode == DECREASE_SPEED  )
+        {
+            objectRegistry[ index ].decrementOrbitSpeed( );
+        }
+        else
+        {
+            objectRegistry[ index ].resetOrbitSpeed( );
+        }
+        
+    }
+}
+
+void Graphics::changeRotSpeed( unsigned int opCode )
+{
+    unsigned int index;
+
+    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    {
+        if( opCode == INCREASE_SPEED )
+        {
+            objectRegistry[ index ].incrementRotationSpeed( );
+        }
+        else if( opCode == DECREASE_SPEED )
+        {
+            objectRegistry[ index ].decrementRotationSpeed( );
+        }
+        else
+        {
+            objectRegistry[ index ].resetRotationSpeed( );
+        }
+
+    }
+}
+
 // Change Perspective  //////////////////
 /***************************************
 

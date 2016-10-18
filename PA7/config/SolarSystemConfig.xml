@@ -53,9 +53,9 @@
         <xScale>.003475</xScale>
         <yScale>.003475</yScale>
         <zScale>.003475</zScale>
-        <xOrbitRadius>10.3</xOrbitRadius>
-        <yOrbitRadius>10.326</yOrbitRadius>
-        <OrbitRate>1.80</OrbitRate>
+        <xOrbitRadius>12.3</xOrbitRadius>
+        <yOrbitRadius>13.6</yOrbitRadius>
+        <OrbitRate>1.0</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>655.7</RotationRate>
         <Tilt>0.11693706</Tilt>
@@ -105,6 +105,50 @@
       <OrbitTilt>0.02268928</OrbitTilt>
       <RotationRate>9.9</RotationRate>
       <Tilt>0.054105207</Tilt>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>.00366</xScale>
+        <yScale>.00366</yScale>
+        <zScale>.00366</zScale>
+        <xOrbitRadius>40</xOrbitRadius>
+        <yOrbitRadius>40</yOrbitRadius>
+        <OrbitRate>0.016</OrbitRate>
+        <OrbitTilt>0</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.0</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>.00312</xScale>
+        <yScale>.00312</yScale>
+        <zScale>.00312</zScale>
+        <xOrbitRadius>60</xOrbitRadius>
+        <yOrbitRadius>60</yOrbitRadius>
+        <OrbitRate>0.016</OrbitRate>
+        <OrbitTilt>0</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.0</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>.0052</xScale>
+        <yScale>.0052</yScale>
+        <zScale>.0052</zScale>
+        <xOrbitRadius>100</xOrbitRadius>
+        <yOrbitRadius>100</yOrbitRadius>
+        <OrbitRate>0.016</OrbitRate>
+        <OrbitTilt>0</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>.0048</xScale>
+        <yScale>.0048</yScale>
+        <zScale>.0048</zScale>
+        <xOrbitRadius>180</xOrbitRadius>
+        <yOrbitRadius>180</yOrbitRadius>
+        <OrbitRate>0.016</OrbitRate>
+        <OrbitTilt>0</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
     </Object>
     <Object name="Planet" path ="models/saturn.obj">
       <xScale>.120536</xScale>
@@ -116,6 +160,61 @@
       <OrbitTilt>0.0436332313</OrbitTilt>
       <RotationRate>10.7</RotationRate>
       <Tilt>0.4660029103</Tilt>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.0052</xScale>
+        <yScale>0.0052</yScale>
+        <zScale>0.0052</zScale>
+        <xOrbitRadius>28</xOrbitRadius>
+        <yOrbitRadius>29</yOrbitRadius>
+        <OrbitRate>12.02</OrbitRate>
+        <OrbitTilt>4.03</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>50.2</xOrbitRadius>
+        <yOrbitRadius>50.2</yOrbitRadius>
+        <OrbitRate>38.02</OrbitRate>
+        <OrbitTilt>0.2</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>40.2</xOrbitRadius>
+        <yOrbitRadius>40.2</yOrbitRadius>
+        <OrbitRate>10.02</OrbitRate>
+        <OrbitTilt>0.07</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>20.2</xOrbitRadius>
+        <yOrbitRadius>30.2</yOrbitRadius>
+        <OrbitRate>10.02</OrbitRate>
+        <OrbitTilt>0.06</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>40.2</xOrbitRadius>
+        <yOrbitRadius>30.3</yOrbitRadius>
+        <OrbitRate>23.02</OrbitRate>
+        <OrbitTilt>0.4</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
     </Object>
     <Object name="Planet" path ="models/uranus.obj">
       <xScale>.051118</xScale>
@@ -127,7 +226,51 @@
       <OrbitTilt>0.013962634</OrbitTilt>
       <RotationRate>-17.2</RotationRate>
       <Tilt>1.706932008</Tilt>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>23</xOrbitRadius>
+        <yOrbitRadius>23</yOrbitRadius>
+        <OrbitRate>10.02</OrbitRate>
+        <OrbitTilt>0.5</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
       </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>30.2</xOrbitRadius>
+        <yOrbitRadius>30.2</yOrbitRadius>
+        <OrbitRate>13.02</OrbitRate>
+        <OrbitTilt>0.9</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>40.2</xOrbitRadius>
+        <yOrbitRadius>30.2</yOrbitRadius>
+        <OrbitRate>267.02</OrbitRate>
+        <OrbitTilt>0.2123</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.001</xScale>
+        <yScale>0.001</yScale>
+        <zScale>0.001</zScale>
+        <xOrbitRadius>20.2</xOrbitRadius>
+        <yOrbitRadius>30.2</yOrbitRadius>
+        <OrbitRate>20.2</OrbitRate>
+        <OrbitTilt>0.6</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+    </Object>
     <Object name="Planet" path ="models/neptune.obj">
       <xScale>.049528</xScale>
       <yScale>.049528</yScale>
@@ -138,6 +281,17 @@
       <OrbitTilt>0.0314159265</OrbitTilt>
       <RotationRate>16.1</RotationRate>
       <Tilt>0.4939281783</Tilt>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.0027</xScale>
+        <yScale>0.0027</yScale>
+        <zScale>0.0027</zScale>
+        <xOrbitRadius>20.2</xOrbitRadius>
+        <yOrbitRadius>30.2</yOrbitRadius>
+        <OrbitRate>0.2</OrbitRate>
+        <OrbitTilt>0.6</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
       </Object>
     <Object name="Planet" path ="models/pluto.obj">
       <xScale>.002370</xScale>
@@ -149,6 +303,28 @@
       <OrbitTilt>0.300196631</OrbitTilt>
       <RotationRate>-153.3</RotationRate>
       <Tilt>2.138028334</Tilt>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.002372</xScale>
+        <yScale>0.002372</yScale>
+        <zScale>0.002372</zScale>
+        <xOrbitRadius>5.2</xOrbitRadius>
+        <yOrbitRadius>3.2</yOrbitRadius>
+        <OrbitRate>2.2</OrbitRate>
+        <OrbitTilt>2.6</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>
+      <Object name ="Moon" path ="models/moon.obj">
+        <xScale>0.00128</xScale>
+        <yScale>0.00127</yScale>
+        <zScale>0.00123</zScale>
+        <xOrbitRadius>6.2</xOrbitRadius>
+        <yOrbitRadius>6.2</yOrbitRadius>
+        <OrbitRate>2.2</OrbitRate>
+        <OrbitTilt>2.6</OrbitTilt>
+        <RotationRate>500</RotationRate>
+        <Tilt>0.11693706</Tilt>
+      </Object>      
     </Object>
   </Object>
   <Shader name="Vertex">shaders/textureVertexShader.glsl</Shader>

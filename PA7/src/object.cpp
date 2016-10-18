@@ -32,6 +32,10 @@ Object::Object()
     orbitDistanceMultiplier = 10.0f;
 
     objModelPtr = NULL;
+
+    orbitSpeedControl = 1.0f;
+
+    rotSpeedControl = 1.0f;
 }
 
 Object::~Object()
@@ -877,7 +881,7 @@ void Object::commitParentLocation( )
 ***************************************/
 void Object::incrementAngle( unsigned int dt )
 {
-    angle += rotationControlMultiplier * rotationRate * dt * M_PI/1000;
+    angle += rotationControlMultiplier * rotationRate * rotSpeedControl * dt * M_PI/1000;
 }
 
 // GET ANGLE /////////////////////
@@ -928,7 +932,7 @@ void Object::setAngle( float newAngle )
 ***************************************/
 void Object::incrementOrbitAngle( unsigned int dt )
 {
-    orbitalAngle += orbitControlMultiplier * orbitRate * dt * M_PI/1000;
+    orbitalAngle += orbitControlMultiplier * orbitRate * orbitSpeedControl * dt * M_PI/1000;
 }
 
 // GET ORBITAL ANGLE /////////////////////
@@ -982,6 +986,46 @@ bool Object::isPaused( )
 {
     return ( ( rotationControlMultiplier == 0.0 )
              && ( orbitControlMultiplier == 0.0 ) );
+}
+
+void Object::incrementOrbitSpeed( )
+{
+    orbitSpeedControl += 0.10f;
+}
+
+void Object::decrementOrbitSpeed( )
+{    
+    orbitSpeedControl -= 0.10f;
+
+    if( orbitSpeedControl < 0.1f )
+    {
+        orbitSpeedControl = 0.1f;
+    }
+}
+
+void Object::resetOrbitSpeed( )
+{
+    orbitSpeedControl = 1.0f;
+}
+
+void Object::incrementRotationSpeed( )
+{
+    rotSpeedControl += 0.10f;
+}
+
+void Object::decrementRotationSpeed( )
+{
+    rotSpeedControl -= 0.10f;
+
+    if( rotSpeedControl < 0.1f )
+    {
+        rotSpeedControl = 0.1f;
+    }
+}
+
+void Object::resetRotationSpeed( )
+{
+    rotSpeedControl = 1.0f;
 }
 
 // SET ORBIT DISTANCE MULTIPLIER /////////////////////

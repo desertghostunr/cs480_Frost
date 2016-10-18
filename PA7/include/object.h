@@ -143,6 +143,18 @@ class Object
 
         bool isPaused( );
 
+        void incrementOrbitSpeed( );
+
+        void decrementOrbitSpeed( );
+
+        void resetOrbitSpeed( );
+
+        void incrementRotationSpeed( );
+
+        void decrementRotationSpeed( );
+
+        void resetRotationSpeed( );
+
         void setOrbitDistanceMultiplier( float odm );
 
     private:
@@ -183,6 +195,10 @@ class Object
 
         unsigned int objectID;
         unsigned int parentID;
+
+        float orbitSpeedControl;
+
+        float rotSpeedControl;
 };
 
 #endif /* OBJECT_H */

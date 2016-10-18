@@ -139,41 +139,53 @@ void Engine::Keyboard()
                 m_graphics->cameraLeftOrRight( false );
             }            
         }
-        else if( ( m_event.key.keysym.sym == SDLK_d )
-                            || ( m_event.key.keysym.sym == SDLK_o ) )
+        else if( ( m_event.key.keysym.sym == SDLK_PERIOD ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleOrbitPaused( 1 );
-            }            
+                m_graphics->changeOrbitSpeed( Graphics::INCREASE_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_COMMA ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeOrbitSpeed( Graphics::DECREASE_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_o ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeOrbitSpeed( Graphics::RESET_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_l ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeRotSpeed( Graphics::INCREASE_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_k ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeRotSpeed( Graphics::DECREASE_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_r ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeRotSpeed( Graphics::RESET_SPEED );
+            }
         }
         else if( m_event.key.keysym.sym == SDLK_LEFT )
         {
             if( m_graphics != NULL )
             {
                 m_graphics->cameraLeftOrRight( true );
-            }            
-        }
-        else if( ( m_event.key.keysym.sym == SDLK_a ) 
-                         || ( m_event.key.keysym.sym == SDLK_r ) )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->toggleRotationPaused( 1 );
-            }            
-        }
-        else if( m_event.key.keysym.sym == SDLK_p )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->toggleAllPaused( 0 );
-            }            
-        }
-        else if( m_event.key.keysym.sym == SDLK_m )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->toggleAllPaused( 1 );
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_SPACE )
