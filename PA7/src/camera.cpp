@@ -88,14 +88,18 @@ void Camera::moveDown()
 
 void Camera::zoomIn()
 {
-
-      zoom = zoom - 5;
+    if( topDown && zoom <= 10.0f )
+    {
+        return;
+    }
+      
+    zoom = zoom - 5;
 
 }
 void Camera::zoomOut()
 {
   
-      zoom = zoom + 5;
+    zoom = zoom + 5;
    
 }
 
