@@ -49,7 +49,7 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
         printf("The window failed to initialize.\n");
         return false;
     }
-
+    trackingID = -1;
     // Start the graphics
     m_graphics = new Graphics();
     if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, progInfo ))
@@ -207,6 +207,37 @@ void Engine::Keyboard()
             if( m_graphics != NULL )
             {
                 m_graphics->ChangePerspectiveStatic( 2 );
+            }            
+        }
+	else if( m_event.key.keysym.sym == SDLK_q )
+        {
+            if( m_graphics != NULL )
+            {
+		if( trackingID <= 0 )
+  		{
+		   trackingID = 8;		  
+		}
+		else
+		{
+		   trackingID -= 1;
+		}
+
+                m_graphics->startTracking( trackingID );
+            }            
+        }
+	else if( m_event.key.keysym.sym == SDLK_e )
+        {
+            if( m_graphics != NULL )
+            {
+		if( trackingID >= 8 )
+  		{
+		   trackingID = 0;		  
+		}
+		else
+		{
+		   trackingID += 1;
+		}
+                m_graphics->startTracking( trackingID );
             }            
         }
     }

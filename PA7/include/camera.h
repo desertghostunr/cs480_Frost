@@ -18,6 +18,7 @@ class Camera
 	void zoomIn();
 	void zoomOut();
  	void updateLookAt();
+	void updateCamera( bool isOn, glm::vec3 planet );
         glm::mat4 GetProjection();
         glm::mat4 GetView();
 

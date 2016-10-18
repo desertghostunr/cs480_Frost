@@ -56,8 +56,15 @@ class Graphics
 	void cameraUpOrDown( bool up);
 	void cameraZoomInOrOut(bool in);
 
+	void startTracking( unsigned int planet );
+
+
+
     private:
         std::string ErrorString(GLenum error);
+	
+	bool cameraTracking;
+	unsigned int planetIndex;
 
         Camera *m_camera;
         Shader *m_shader;

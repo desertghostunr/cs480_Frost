@@ -40,6 +40,8 @@ class Engine
         unsigned int m_DT;
         long long m_currentTimeMillis;
         bool m_running;
+
+	unsigned int trackingID;
 };
 
 #endif // ENGINE_H

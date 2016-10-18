@@ -47,6 +47,7 @@ bool Graphics::Initialize
 
     // Init Camera
     m_camera = new Camera();
+    cameraTracking = false;
     if(!m_camera->Initialize(width, height))
     {
         printf("Camera Failed to Initialize\n");
@@ -225,6 +226,7 @@ void Graphics::Update(unsigned int dt)
         }
         
     }
+    m_camera->updateCamera( cameraTracking, objectRegistry[ planetRegistry[ planetIndex ]].getOrigin().translation  );
 }
 
 void Graphics::Render()
@@ -662,8 +664,10 @@ void Graphics::ChangePerspectiveStatic( int position )
 	m_camera->LookSideToSide();
     }
     m_camera->updateLookAt();
+    cameraTracking = false;
         
 }
+
 void Graphics::cameraLeftOrRight( bool left )
 {
    if( left )
@@ -675,7 +679,9 @@ void Graphics::cameraLeftOrRight( bool left )
       m_camera->moveRight();
    }
    m_camera->updateLookAt();
+   cameraTracking = false;
 }
+
 void Graphics::cameraUpOrDown( bool up)
 {
    if( up )
@@ -687,7 +693,9 @@ void Graphics::cameraUpOrDown( bool up)
       m_camera->moveDown();
    }
    m_camera->updateLookAt();
+   cameraTracking = false;
 }
+
 void Graphics::cameraZoomInOrOut(bool in)
 {
    if( in )
@@ -699,4 +707,12 @@ void Graphics::cameraZoomInOrOut(bool in)
       m_camera->zoomOut();
    }
    m_camera->updateLookAt();
+   
 }
+
+void Graphics::startTracking( unsigned int planet )
+{
+   cameraTracking = true;
+   planetIndex = planet;
+}
+

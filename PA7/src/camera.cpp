@@ -116,6 +116,34 @@ void Camera::updateLookAt()
 
 }
 
+void Camera::updateCamera( bool isOn, glm::vec3 planet )
+{
+   if( isOn )
+   {
+	float newZoom = 0.0;
+	if( topDown )
+      	{
+	    leftRight = planet.x;
+	    newZoom = planet.y + zoom;
+	    upDown = planet.z;
+	     view = glm::lookAt( glm::vec3( leftRight, newZoom, upDown), //Eye Position
+                                  planet, //Focus point
+                                   glm::vec3(0.0, 0.0, 1.0)); //Positive Y is up
+	}
+	else
+	{
+	    leftRight = planet.x;
+	    upDown = planet.y;
+	    newZoom = planet.z + zoom;
+   	    view = glm::lookAt( glm::vec3( leftRight, upDown, newZoom), //Eye Position
+                                   planet, //Focus point
+                                   glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
+	}
+
+   }
+
+}
+
 glm::mat4 Camera::GetProjection()
 {
     return projection;
