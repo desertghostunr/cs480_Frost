@@ -167,9 +167,9 @@
         <xOrbitRadius>70</xOrbitRadius>
         <yOrbitRadius>69</yOrbitRadius>
         <OrbitRate>12.02</OrbitRate>
-        <OrbitTilt>4.03</OrbitTilt>
+        <OrbitTilt>0.03</OrbitTilt>
         <RotationRate>500</RotationRate>
-        <Tilt>0.11693706</Tilt>
+        <Tilt>0.000706</Tilt>
       </Object>
       <Object name ="Moon" path ="models/moon.obj">
         <xScale>0.001</xScale>
