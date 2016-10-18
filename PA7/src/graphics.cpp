@@ -710,7 +710,7 @@ void Graphics::cameraZoomInOrOut(bool in)
    
 }
 
-void Graphics::startTracking( unsigned int planet )
+void Graphics::startTracking( int planet )
 {
    cameraTracking = true;
    planetIndex = planet;
