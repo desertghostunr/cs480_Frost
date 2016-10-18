@@ -331,10 +331,6 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
     objectRegistry[ objectID ].commitOrbitalTranslation( );
 
-    objectRegistry[ objectID ].commitOrbitalTilt( );
-
-    objectRegistry[ objectID ].commitParentTilt( );
-
     objectRegistry[ objectID ].commitParentLocation( );    
 
     objectRegistry[ objectID ].Update( dt );
@@ -712,6 +708,11 @@ void Graphics::cameraZoomInOrOut(bool in)
 
 void Graphics::startTracking( int planet )
 {
+    if( planet < 0 )
+    {
+        planet = 0;
+    }
+
    cameraTracking = true;
    planetIndex = planet;
 }

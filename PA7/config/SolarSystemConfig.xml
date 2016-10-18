@@ -109,8 +109,8 @@
         <xScale>.00366</xScale>
         <yScale>.00366</yScale>
         <zScale>.00366</zScale>
-        <xOrbitRadius>40</xOrbitRadius>
-        <yOrbitRadius>40</yOrbitRadius>
+        <xOrbitRadius>400</xOrbitRadius>
+        <yOrbitRadius>400</yOrbitRadius>
         <OrbitRate>0.016</OrbitRate>
         <OrbitTilt>0</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -120,7 +120,7 @@
         <xScale>.00312</xScale>
         <yScale>.00312</yScale>
         <zScale>.00312</zScale>
-        <xOrbitRadius>60</xOrbitRadius>
+        <xOrbitRadius>79</xOrbitRadius>
         <yOrbitRadius>60</yOrbitRadius>
         <OrbitRate>0.016</OrbitRate>
         <OrbitTilt>0</OrbitTilt>
@@ -164,8 +164,8 @@
         <xScale>0.0052</xScale>
         <yScale>0.0052</yScale>
         <zScale>0.0052</zScale>
-        <xOrbitRadius>28</xOrbitRadius>
-        <yOrbitRadius>29</yOrbitRadius>
+        <xOrbitRadius>70</xOrbitRadius>
+        <yOrbitRadius>69</yOrbitRadius>
         <OrbitRate>12.02</OrbitRate>
         <OrbitTilt>4.03</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -175,8 +175,8 @@
         <xScale>0.001</xScale>
         <yScale>0.001</yScale>
         <zScale>0.001</zScale>
-        <xOrbitRadius>50.2</xOrbitRadius>
-        <yOrbitRadius>50.2</yOrbitRadius>
+        <xOrbitRadius>100.2</xOrbitRadius>
+        <yOrbitRadius>100.2</yOrbitRadius>
         <OrbitRate>38.02</OrbitRate>
         <OrbitTilt>0.2</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -186,8 +186,8 @@
         <xScale>0.001</xScale>
         <yScale>0.001</yScale>
         <zScale>0.001</zScale>
-        <xOrbitRadius>40.2</xOrbitRadius>
-        <yOrbitRadius>40.2</yOrbitRadius>
+        <xOrbitRadius>90.2</xOrbitRadius>
+        <yOrbitRadius>90.2</yOrbitRadius>
         <OrbitRate>10.02</OrbitRate>
         <OrbitTilt>0.07</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -197,8 +197,8 @@
         <xScale>0.001</xScale>
         <yScale>0.001</yScale>
         <zScale>0.001</zScale>
-        <xOrbitRadius>20.2</xOrbitRadius>
-        <yOrbitRadius>30.2</yOrbitRadius>
+        <xOrbitRadius>45.2</xOrbitRadius>
+        <yOrbitRadius>65.2</yOrbitRadius>
         <OrbitRate>10.02</OrbitRate>
         <OrbitTilt>0.06</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -230,8 +230,8 @@
         <xScale>0.001</xScale>
         <yScale>0.001</yScale>
         <zScale>0.001</zScale>
-        <xOrbitRadius>23</xOrbitRadius>
-        <yOrbitRadius>23</yOrbitRadius>
+        <xOrbitRadius>36</xOrbitRadius>
+        <yOrbitRadius>38</yOrbitRadius>
         <OrbitRate>10.02</OrbitRate>
         <OrbitTilt>0.5</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -241,8 +241,8 @@
         <xScale>0.001</xScale>
         <yScale>0.001</yScale>
         <zScale>0.001</zScale>
-        <xOrbitRadius>30.2</xOrbitRadius>
-        <yOrbitRadius>30.2</yOrbitRadius>
+        <xOrbitRadius>43.2</xOrbitRadius>
+        <yOrbitRadius>38.2</yOrbitRadius>
         <OrbitRate>13.02</OrbitRate>
         <OrbitTilt>0.9</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -254,7 +254,7 @@
         <zScale>0.001</zScale>
         <xOrbitRadius>40.2</xOrbitRadius>
         <yOrbitRadius>30.2</yOrbitRadius>
-        <OrbitRate>267.02</OrbitRate>
+        <OrbitRate>24.02</OrbitRate>
         <OrbitTilt>0.2123</OrbitTilt>
         <RotationRate>500</RotationRate>
         <Tilt>0.11693706</Tilt>
@@ -263,7 +263,7 @@
         <xScale>0.001</xScale>
         <yScale>0.001</yScale>
         <zScale>0.001</zScale>
-        <xOrbitRadius>20.2</xOrbitRadius>
+        <xOrbitRadius>29.2</xOrbitRadius>
         <yOrbitRadius>30.2</yOrbitRadius>
         <OrbitRate>20.2</OrbitRate>
         <OrbitTilt>0.6</OrbitTilt>
@@ -285,8 +285,8 @@
         <xScale>0.0027</xScale>
         <yScale>0.0027</yScale>
         <zScale>0.0027</zScale>
-        <xOrbitRadius>20.2</xOrbitRadius>
-        <yOrbitRadius>30.2</yOrbitRadius>
+        <xOrbitRadius>30.2</xOrbitRadius>
+        <yOrbitRadius>31.2</yOrbitRadius>
         <OrbitRate>0.2</OrbitRate>
         <OrbitTilt>0.6</OrbitTilt>
         <RotationRate>500</RotationRate>
@@ -307,23 +307,23 @@
         <xScale>0.002372</xScale>
         <yScale>0.002372</yScale>
         <zScale>0.002372</zScale>
-        <xOrbitRadius>5.2</xOrbitRadius>
-        <yOrbitRadius>3.2</yOrbitRadius>
+        <xOrbitRadius>3.7</xOrbitRadius>
+        <yOrbitRadius>4.2</yOrbitRadius>
         <OrbitRate>2.2</OrbitRate>
-        <OrbitTilt>2.6</OrbitTilt>
+        <OrbitTilt>0.6</OrbitTilt>
         <RotationRate>500</RotationRate>
-        <Tilt>0.11693706</Tilt>
+        <Tilt>0.011693706</Tilt>
       </Object>
       <Object name ="Moon" path ="models/moon.obj">
         <xScale>0.00128</xScale>
         <yScale>0.00127</yScale>
         <zScale>0.00123</zScale>
-        <xOrbitRadius>6.2</xOrbitRadius>
-        <yOrbitRadius>6.2</yOrbitRadius>
-        <OrbitRate>2.2</OrbitRate>
-        <OrbitTilt>2.6</OrbitTilt>
+        <xOrbitRadius>2.2</xOrbitRadius>
+        <yOrbitRadius>3.2</yOrbitRadius>
+        <OrbitRate>8.2</OrbitRate>
+        <OrbitTilt>0.6</OrbitTilt>
         <RotationRate>500</RotationRate>
-        <Tilt>0.11693706</Tilt>
+        <Tilt>0.0693706</Tilt>
       </Object>      
     </Object>
   </Object>

@@ -852,7 +852,9 @@ void Object::commitOrbitalTranslation( )
     localOrigin.translation = glm::vec3( orbitalRadius.x
                                          * orbitDistanceMultiplier
                                          * cos( orbitalAngle ),
-                                         0.0f,
+                                         ( (orbitalRadius.x 
+                                             + orbitalRadius.y ) / 2.0f ) 
+                                         * sin( localOrigin.orbitTilt ),
                                          orbitalRadius.y
                                          * orbitDistanceMultiplier
                                          * sin( orbitalAngle ) );
