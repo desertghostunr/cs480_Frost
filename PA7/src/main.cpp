@@ -163,11 +163,8 @@ bool ProcessCommandLineParameters
     GraphicsInfo& progInfo // a struct containing the info
 )
 {
-    GLenum shaderType;
     string tmpStr;
     int index;
-
-    unsigned int tIndex, t2Index;
 
     if( argCount == 1 )
     {
