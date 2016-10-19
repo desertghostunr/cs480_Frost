@@ -80,28 +80,29 @@ An example of running this program:
 ## Controls
 
 ### Camera Controls:
-Press 1: set the camera to a top down view
-Press 2: Set the camera to a Side by side view
+* Press 1: set the camera to a top down view
+* Press 2: Set the camera to a Side by side view
 
-Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
-Press s: To zoom out *unless zoomed past sun then becomes a zoom in
-*Following controls become inverted if zoomed past the sun
-Press Left arrow key: Moves camera to the left
-Press Right arrow key: Moves camera to the right
-Press Up arrow key: Moves Up
-Press Down arrow key: Moves down
+* Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
+* Press s: To zoom out *unless zoomed past sun then becomes a zoom in
+
+* *Following controls become inverted if zoomed past the sun:
+* Press Left arrow key: Moves camera to the left
+* Press Right arrow key: Moves camera to the right
+* Press Up arrow key: Moves Up
+* Press Down arrow key: Moves down
 
 ### Speed Controls
-Press a: to slow the entire simulation.
-Press d: to speed up the entire simulation.
-Press x: to reset the speed.
-Press ,: to slow the speed of orbit.
-Press .: to increase the speed of orbit.
-Press o: to reset the speed of rotation.
-Press k: to decrease the speed of rotation.
-Press l: to increase the speed of rotation.
-Press r: to reset the speed of rotation.
-Press space: to pause the entire simulation
+* Press a: to slow the entire simulation.
+* Press d: to speed up the entire simulation.
+* Press x: to reset the speed.
+* Press ,: to slow the speed of orbit.
+* Press .: to increase the speed of orbit.
+* Press o: to reset the speed of rotation.
+* Press k: to decrease the speed of rotation.
+* Press l: to increase the speed of rotation.
+* Press r: to reset the speed of rotation.
+* Press space: to pause the entire simulation
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
