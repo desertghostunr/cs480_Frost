@@ -181,6 +181,30 @@ void Engine::Keyboard()
                 m_graphics->changeRotSpeed( Graphics::RESET_SPEED );
             }
         }
+        else if( ( m_event.key.keysym.sym == SDLK_a ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeRotSpeed( Graphics::DECREASE_SPEED );
+                m_graphics->changeOrbitSpeed( Graphics::DECREASE_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_d ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeRotSpeed( Graphics::INCREASE_SPEED );
+                m_graphics->changeOrbitSpeed( Graphics::INCREASE_SPEED );
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_x ) )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->changeRotSpeed( Graphics::RESET_SPEED );
+                m_graphics->changeOrbitSpeed( Graphics::RESET_SPEED );
+            }
+        }
         else if( m_event.key.keysym.sym == SDLK_LEFT )
         {
             if( m_graphics != NULL )

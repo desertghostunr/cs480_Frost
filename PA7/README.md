@@ -1,83 +1,5 @@
 # PA7 Solar System
 
-# Camera Controls:
-Press 1: set the camera to a top down view
-Press 2: Set the camera to a Side by side view
-
-Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
-Press s: To zoom out *unless zoomed past sun then becomes a zoom in
-*Following controls become inverted if zoomed past the sun
-Press Left arrow key: Moves camera to the left
-Press Right arrow key: Moves camera to the right
-Press Up arrow key: Moves Up
-Press Down arrow key: Moves down
-
-Press ,: to slow the speed of orbit.
-Press .: to increase the speed of orbit.
-Press o: to reset the speed of rotation.
-Press k: to decrease the speed of rotation.
-Press l: to increase the speed of rotation.
-Press r: to reset the speed of rotation.
-
-
-# J.J.:
-
-RUN LIKE THIS:
-
-./SolarSystem -c config/SolarSystemConfig.xml
-
-I have added some comments and example usage of the object transform functions
-in the Graphics class.
-
-See Graphics::Initialize( ) for my notes on this.
-
-# Things to do:
-
-## Create Configuration File Loading Function
-* Add a function to main for loading a configuration file.
-* The order of components in the configuration file should not matter.
-* The object number, parent number, and model path are mandatory for an object.
-* The other parameters are optional and will be filled with defaults if not provided.
-* Add settings to adjust the location of the view point.
-
-### The configuration file is structured as follows:
-
--v [vertex shader complete path]
-
--f [fragment shader complete path]
-
--p -c -m -s -r -o -l -t [planet information]
-
-#### Parts of a planet
--p [planet/object number (sun is zero)]
-
--c [child object's number (can be more than one)]
-
--m [model for object path]
-
--s [three floating point values of the objects size relative to earth]
-
--r [the rotation rate]
-
--o [three values expressing the planets orbital radius in the x, y, z]
-
--l [location in local space]
-
--t [three floating point values of the tilt of the planet]
-
-
-## Load object update information in the graphics initialization function
-
-* This requires the set and update functions to set the parameters passed in
-
-## Models and Textures
-
-* Pretty self explanatory
-
-## View point
-
-* Something new to learn
-
 # Contributors
 * Andy Frost
 * J.J. Sibley
@@ -118,7 +40,7 @@ mkdir build
 cd build
 cmake ..
 make
-./SolarSystem -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
+./SolarSystem -c config/SolarSystemConfig.xml
 ```
 
 ### makefile Instructions
@@ -129,19 +51,15 @@ mkdir build
 cd build
 cp ../makefile .
 make
-./SolarSystem -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
+./SolarSystem -c config/SolarSystemConfig.xml
 ```
 
 ### Specific Instructions on Running
 Running the program requires specifying a vertex shader and a fragment shader. Shaders will be found under a directory named shaders in the directory where the program was built. This must be included in the path name when specifying the shaders to be used.
 
-The program has four options that can be used: -v, -f, -m, --h.
+The program has two options that can be used: -c, --h.
 
--v specifies the file path of the vertex shader.
-
--f specifies the file path of the fragment shader.
-
--m specifies the file path of the obj file of the model.
+-c specifies the configuration file
 
 --h brings up a series of instructions for help using the program.
 
@@ -151,17 +69,42 @@ The file path for the specified shader must come directly after the option ident
 
 This program is run in the following format:
 
-./SolarSystem -[SHADER_OPTION] [SHADER_FILE_PATH] -[SHADER_OPTION] [SHADER_FILE_PATH] -[MODEL_OPTION] [MODEL_FILE_PATH]
-
+./SolarSystem -[CONFIG_OPTION] [CONFIG_FILE_PATH]
 
 An example of running this program:
 
 ```bash
-./SolarSystem -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
+./SolarSystem -c config/SolarSystemConfig.xml
 ```
+
+## Controls
+
+### Camera Controls:
+Press 1: set the camera to a top down view
+Press 2: Set the camera to a Side by side view
+
+Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
+Press s: To zoom out *unless zoomed past sun then becomes a zoom in
+*Following controls become inverted if zoomed past the sun
+Press Left arrow key: Moves camera to the left
+Press Right arrow key: Moves camera to the right
+Press Up arrow key: Moves Up
+Press Down arrow key: Moves down
+
+### Speed Controls
+Press a: to slow the entire simulation.
+Press d: to speed up the entire simulation.
+Press x: to reset the speed.
+Press ,: to slow the speed of orbit.
+Press .: to increase the speed of orbit.
+Press o: to reset the speed of rotation.
+Press k: to decrease the speed of rotation.
+Press l: to increase the speed of rotation.
+Press r: to reset the speed of rotation.
+Press space: to pause the entire simulation
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./SolarSystem -v shaders/textureVertexShader.glsl -f shaders/textureFragmentShader.glsl -m models/BoxT.obj
+/usr/NX/scripts/vgl/vglrun ./SolarSystem -c config/SolarSystemConfig.xml
 ```

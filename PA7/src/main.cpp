@@ -48,13 +48,6 @@ struct NormalizationData
 };
 
 //Global Constants //////////////////////////
-//frag options
-const string FRAGMENT_SHADER_OPT = "-f";
-const string VERTEX_SHADER_OPT = "-v";
-
-//model options
-const string MODEL_PATH_OPT = "-m";
-
 //config options
 const string CONFIG_OPT = "-c";
 
@@ -124,14 +117,8 @@ int main(int argc, char **argv)
         cout << endl;
         cout <<"Insufficient or incorrect command line parameters to run."<< endl;
         cout <<"Terminating the program."<<endl<<endl;
-        cout <<"Please ensure that both the vertex shader and the fragment shader";
-        cout <<" are specified."<< endl;
-        cout <<"Example usage: " << endl;
-        cout <<" ./Tutorial -v shaders/textureVertexShader.glsl ";
-        cout <<"-f shaders/textureFragmentShader.glsl ";
-        cout <<"-m models/BoxT.obj" << endl << endl;
 
-        cout <<"Run ./Tutorial --h for help with using the program."<<endl<<endl;
+        cout <<"Run ./SolarSystem --h for help with using the program."<<endl<<endl;
 
         delete engine;
         engine = NULL;
@@ -180,7 +167,12 @@ bool ProcessCommandLineParameters
     string tmpStr;
     int index;
 
-    bool successFlag = true;
+    unsigned int tIndex, t2Index;
+
+    if( argCount == 1 )
+    {
+        return false;
+    }
 
     for( index = 1; index < argCount; index++ )
     {
@@ -195,104 +187,27 @@ bool ProcessCommandLineParameters
                 cout << "Failure processing the configuration file!" << std::endl;
                 return false;
             }
-            
-            // debug only //////////////////////////////////////////////////////
-            unsigned int tIndex, t2Index;
-            for( tIndex = 0; tIndex < progInfo.modelVector.size( ); tIndex++ )
-            {
-                cout << "Model "<< tIndex << ": " <<progInfo.modelVector[ tIndex ] << endl;
-            }
-            for( tIndex = 0; tIndex < progInfo.planetData.size( ); tIndex++ )
-            {                
-                for( t2Index = 0; t2Index < progInfo.planetData[ tIndex ].childID.size( ); t2Index++ )
-                {
-                    cout << "Parent: " << tIndex << ", Child: " << progInfo.planetData[ tIndex ].childID[ t2Index ] << " model:" << progInfo.modelVector[ progInfo.planetData[ progInfo.planetData[ tIndex ].childID[ t2Index ] ].modelID ] << endl;
-                }
-            }
-            ///////////////////////////////////////////////////////////////////
-        }
-        else if( ( tmpStr == VERTEX_SHADER_OPT ) || ( tmpStr == FRAGMENT_SHADER_OPT ) )
-        {
-            if( tmpStr == VERTEX_SHADER_OPT )
-            {
-                shaderType = GL_VERTEX_SHADER;
-            }
-            else
-            {
-                shaderType = GL_FRAGMENT_SHADER;
-            }
-
-            index++;
-            tmpStr = argVector[ index ];
-
-            if( ( tmpStr == VERTEX_SHADER_OPT ) 
-                    || ( tmpStr == FRAGMENT_SHADER_OPT ) 
-                    || ( tmpStr == HELP_OPT ) )
-            {
-                cout << "No shader file found after: " << argVector[ index - 1 ] << endl;
-                cout << "Terminating the program." <<endl;
-                return false;
-            }
-
-            progInfo.shaderVector.push_back( pair<GLenum, string>(shaderType, tmpStr ) );
-        }
-        else if( tmpStr == MODEL_PATH_OPT )
-        {
-            index++;
-            tmpStr = argVector[ index ];
-
-            if( ( tmpStr == VERTEX_SHADER_OPT ) 
-                    || ( tmpStr == FRAGMENT_SHADER_OPT ) 
-                    || ( tmpStr == HELP_OPT )
-                    || ( tmpStr == MODEL_PATH_OPT ) )
-            {
-                cout << "No model file found after: " << argVector[ index - 1 ] << endl;
-                cout << "Terminating the program." <<endl;
-                return false;
-            }
-
-            progInfo.modelVector.push_back( tmpStr );
-            
         }
         else if( tmpStr == HELP_OPT )
         {
             cout << endl << "Help selected." << endl << endl;
 
             cout << "This program is ran as follows: " << endl;
-            cout << " ./Tutorial -[SHADER_OPTION] [SHADER_FILE_PATH]";
-            cout << " -[SHADER_OPTION] [SHADER_FILE_PATH]";
-            cout << " -[MODEL_OPTION] [MODEL_FILE_PATH]" << endl << endl;
+            cout << "./SolarSystem -c config/SolarSystemConfig.xml" << endl << endl;
 
             cout<< "If only one type of shader is specified or the model isn't";
             cout << " specified the program will terminate." << endl << endl;
             
             cout << "Options include: " <<endl;
-            cout << TAB_CHAR << VERTEX_SHADER_OPT << " [SHADER_FILE_PATH] : ";
-            cout << "specifing the vertex shader file path." << endl;
-            cout << TAB_CHAR << FRAGMENT_SHADER_OPT << " [SHADER_FILE_PATH] : ";
-            cout << "specifing the fragment shader file path." << endl << endl;
-            cout << TAB_CHAR << MODEL_PATH_OPT << " [MODEL_FILE_PATH] : ";
-            cout << "specifing the model file path." << endl << endl;
-            
-            cout << "Shader Information: " << endl;
-            cout << "Typically shader files will be found in" << endl;
-            cout << "[CURRENT_DIR]/shaders" <<    endl;
-            cout << "When ran this must be included in the shader file path." << endl;
-            cout << "The path should look like: shaders/[SHADER_FILE]" << endl << endl;
-
-            cout << "Model Information: " << endl;
-            cout << "Typically model files will be found in" << endl;
-            cout << "[CURRENT_DIR]/models" <<    endl;
-            cout << "When ran this must be included in the model file path." << endl;
-            cout << "The path should look like: models/[MODEL_FILE]" << endl << endl;
+            cout << CONFIG_OPT << " [CONFIG_FILE_PATH]" << endl <<endl;
 
             cout <<"Example usage: " << endl;
-            cout <<" ./Tutorial -v shaders/textureVertexShader.glsl ";
-            cout <<"-f shaders/textureFragmentShader.glsl ";
-            cout <<"-m models/BoxT.obj" << endl << endl;
+            cout <<"./SolarSystem -c config/SolarSystemConfig.xml" << endl << endl;
 
             cout<<"Please see README.md in the project directory for any additional";
             cout<<" information."<<endl<<endl;
+
+            return false;
         }
         else 
         {
@@ -301,8 +216,7 @@ bool ProcessCommandLineParameters
         }
     }
 
-    return ( ( progInfo.shaderVector.size( ) > 1 ) 
-             && ( progInfo.modelVector.size( ) > 0 ) && successFlag );
+    return true;
 
 }
 
@@ -512,9 +426,6 @@ bool ProcessConfigurationFileHelper
         if( strIndex != string::npos )
         {
             progInfo.planetIndex[ planetIndex ] = pIndex;
-
-            std::cout << "Found: " << tempStr.substr( strIndex );
-            std::cout << " at index: " << progInfo.planetIndex[ planetIndex ] << std::endl;
         }
     }
 
