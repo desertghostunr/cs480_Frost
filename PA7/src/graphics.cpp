@@ -206,6 +206,8 @@ bool Graphics::Initialize
             .getObjectModel( ).TextureUniformLocation( ) = tmpTextLoc;
     }
 
+    planetIndex = 0;
+
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
