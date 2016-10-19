@@ -96,11 +96,11 @@ An example of running this program:
 * Press a: to slow the entire simulation.
 * Press d: to speed up the entire simulation.
 * Press x: to reset the speed.
-* Press ,: to slow the speed of orbit.
-* Press .: to increase the speed of orbit.
+* Press , (COMMA KEY): to slow the speed of orbit.
+* Press . (PERIOD KEY): to increase the speed of orbit.
 * Press o: to reset the speed of rotation.
 * Press k: to decrease the speed of rotation.
-* Press l: to increase the speed of rotation.
+* Press l ('L' KEY): to increase the speed of rotation.
 * Press r: to reset the speed of rotation.
 * Press space: to pause the entire simulation
 
