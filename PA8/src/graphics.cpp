@@ -56,10 +56,6 @@ bool Graphics::Initialize
 
     modelRegistry.clear( );
 
-    //each planet is at the index of its number - 1
-    //mercury is 0, venus is 1, earth is 2, mars is 3, etc.
-    planetRegistry = progInfo.planetIndex;
-
 
     for( index = 0; index < progInfo.modelVector.size( ); index++ )
     {
@@ -81,15 +77,15 @@ bool Graphics::Initialize
 
     }
 
-    for( pIndex = 0; pIndex < progInfo.planetData.size( ); pIndex++ )
+    for( pIndex = 0; pIndex < progInfo.objectData.size( ); pIndex++ )
     {
         objectRegistry.addObject( );
 
-        if( progInfo.planetData[ pIndex ].modelID < modelRegistry.size( ) )
+        if( progInfo.objectData[ pIndex ].modelID < modelRegistry.size( ) )
         {
 
             objectRegistry[ objectRegistry.getSize( ) - 1 ]
-                .Initialize( &modelRegistry[ progInfo.planetData[ pIndex ].modelID ].objModel );
+                .Initialize( &modelRegistry[ progInfo.objectData[ pIndex ].modelID ].objModel );
 
             modelRegistry[ modelRegistry.size( ) - 1 ].objModel.incrementReference( );
         }
@@ -100,19 +96,19 @@ bool Graphics::Initialize
         }
 
         objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setScale( progInfo.planetData[ pIndex ].scale );
+                      ].setScale( progInfo.objectData[ pIndex ].scale );
+
+        /*objectRegistry[ objectRegistry.getSize( ) - 1
+                      ].setTiltAngle( progInfo.objectData[ pIndex ].tilt );
 
         objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setTiltAngle( progInfo.planetData[ pIndex ].tilt );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].updateOrbitRate( progInfo.planetData[ pIndex ].orbitRate );
+                      ].updateOrbitRate( progInfo.objectData[ pIndex ].orbitRate );
 
         objectRegistry[ objectRegistry.getSize( ) - 1 
-                      ].updateRotationRate( progInfo.planetData[ pIndex ].rotRate );
+                      ].updateRotationRate( progInfo.objectData[ pIndex ].rotRate );
 
         objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setOrbitalRadius( progInfo.planetData[ pIndex ].orbitRad );
+                      ].setOrbitalRadius( progInfo.objectData[ pIndex ].orbitRad );
 
         objectRegistry[ objectRegistry.getSize( ) - 1
                       ].setOrbitDistanceMultiplier( 1.0f );
@@ -121,16 +117,16 @@ bool Graphics::Initialize
                       ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
         objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].getOrigin( ).orbitTilt = progInfo.planetData[ pIndex ].orbitTilt;
+                      ].getOrigin( ).orbitTilt = progInfo.objectData[ pIndex ].orbitTilt;*/
 
     }
 
     for( pIndex = 0; pIndex < objectRegistry.getSize( ); pIndex++ )
     {
 
-        for( index = 0; index < progInfo.planetData[ pIndex ].childID.size( ); index++ )
+        for( index = 0; index < progInfo.objectData[ pIndex ].childID.size( ); index++ )
         {
-            objectRegistry.setChild( progInfo.planetData[ pIndex ].childID[ index ], pIndex );
+            objectRegistry.setChild( progInfo.objectData[ pIndex ].childID[ index ], pIndex );
         }
 
 
@@ -228,7 +224,7 @@ void Graphics::Update(unsigned int dt)
         }
         
     }
-    m_camera->updateCamera( cameraTracking, objectRegistry[ planetRegistry[ planetIndex ]].getOrigin().translation  );
+    //m_camera->updateCamera( cameraTracking, objectRegistry[ planetRegistry[ planetIndex ]].getOrigin().translation  );
 }
 
 void Graphics::Render()

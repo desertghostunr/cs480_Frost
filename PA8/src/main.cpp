@@ -7,46 +7,6 @@
 #include "rapidxml/rapidxml.hpp"
 #include "engine.h"
 
-//Helper Data Structures /////////////////////
-struct NormalizationData
-{
-    float diameter;
-    glm::vec2 scaleOrbit;
-    float rotDivider;
-    float orbitDivider;
-    float sunMultiplier;
-
-    NormalizationData
-    ( 
-        float diam, //diameter
-        glm::vec2 scaleOrbitFact, //scale
-        float rot, //rotation divider
-        float orbit, //orbit divider
-        float sunMult //sun multiplier
-    ):
-        diameter( diam ),
-        scaleOrbit( scaleOrbitFact ),
-        rotDivider( rot ),
-        orbitDivider( orbit ),
-        sunMultiplier( sunMult )
-    {
-        //done in intializers
-    }
-
-    NormalizationData
-    (
-        const NormalizationData& normData
-    ) :
-        diameter( normData.diameter ),
-        scaleOrbit( normData.scaleOrbit ),
-        rotDivider( normData.rotDivider ),
-        orbitDivider( normData.orbitDivider ),
-        sunMultiplier( normData.sunMultiplier )
-    {
-        //done in intializers
-    }
-};
-
 //Global Constants //////////////////////////
 //config options
 const string CONFIG_OPT = "-c";
@@ -58,34 +18,22 @@ const string HELP_OPT = "--h";
 const char TAB_CHAR = '\t';
 
 //xml types
-const string NORM_FACT = "NormalizationFactor";
 const string OBJECT = "Object";
 const string SHADER = "Shader";
-const string DIAMETER = "Diameter";
 const string X_SCALE = "xScale";
 const string Y_SCALE = "yScale";
 const string Z_SCALE = "zScale";
-const string X_SCALE_ORBIT = "xScaleOrbit";
-const string Y_SCALE_ORBIT = "yScaleOrbit";
-const string ROTATION_DIVIDER = "RotationDiv";
-const string ORBIT_DIVIDER = "OrbitDiv";
-const string SUN = "Sun";
-const string PLANET = "Planet";
-const string MOON = "Moon";
-const string X_ORBIT_RADIUS = "xOrbitRadius";
-const string Y_ORBIT_RADIUS = "yOrbitRadius";
-const string ORBIT_RATE = "OrbitRate";
-const string ORBIT_TILT = "OrbitTilt";
-const string ROTATION_RATE = "RotationRate";
-const string TILT = "Tilt";
+const string X_POS = "xPosition";
+const string Y_POS = "yPosition";
+const string Z_POS = "zPosition";
+const string X_ROT_AXIS = "xRotationAxis";
+const string Y_ROT_AXIS = "yRotationAxis";
+const string Z_ROT_AXIS = "zRotationAxis";
+const string X_ROT_ANGLE = "xRotationAngle";
+const string Y_ROT_ANGLE = "yRotationAngle";
+const string Z_ROT_ANGLE = "zRotationAngle";
 const string VERTEX = "Vertex";
 const string FRAGMENT = "Fragment";
-
-//planet names
-const string PLANET_NAMES[ ] = { "mercury", "venus", "earth", "mars",
-                               "jupiter", "saturn", "uranus", "neptune", "pluto" };
-
-const unsigned int NUM_PLANETS = 9;
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -97,8 +45,7 @@ bool ProcessConfigurationFile( rapidxml::xml_node<> *rootNode,
                                GraphicsInfo& progInfo );
 
 bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
-                                     GraphicsInfo& progInfo,
-                                     const NormalizationData& normData );
+                                     GraphicsInfo& progInfo );
 // main ///////////////////////////////////
 
 #if defined( _WIN64 ) || ( _WIN32 )
@@ -257,9 +204,7 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 
     doc.parse<0>( &buffer[ 0 ] );
 
-    rootNode = doc.first_node( "SolarSystem" );
-
-    progInfo.planetIndex.resize( NUM_PLANETS );
+    rootNode = doc.first_node( "Configuration" );
 
     return ProcessConfigurationFile( rootNode, progInfo );
 }
@@ -288,46 +233,14 @@ bool ProcessConfigurationFile
     bool noError = true, vertShader = false, fragShader = false;
     string tempStr;
 
-    NormalizationData normData( 1.0f, glm::vec2( 1.0f, 1.0f ), 1.0f, 1.0f, 1.0f );
-
     for( parentNode = rootNode->first_node( 0 ); 
          parentNode; parentNode = parentNode->next_sibling( ) )
     {
-        if( parentNode->name( ) == NORM_FACT )
-        {
-            tempStr = parentNode->value( );
-            std::stringstream strStream( tempStr );
-
-            if( parentNode->first_attribute( "name" )->value( ) == DIAMETER )
-            {
-                strStream >> normData.diameter;
-            }
-            else if( parentNode->first_attribute( "name" )->value( ) == X_SCALE_ORBIT )
-            {
-                strStream >> normData.scaleOrbit.x;
-            }
-            else if( parentNode->first_attribute( "name" )->value( ) == Y_SCALE_ORBIT )
-            {
-                strStream >> normData.scaleOrbit.y;
-            }
-            else if( parentNode->first_attribute( "name" )->value( ) == ROTATION_DIVIDER )
-            {
-                strStream >> normData.rotDivider;
-            }
-            else if( parentNode->first_attribute( "name" )->value( ) == ORBIT_DIVIDER )
-            {
-                strStream >> normData.orbitDivider;
-            }
-            else if( parentNode->first_attribute( "name" )->value( ) == SUN )
-            {
-                strStream >> normData.sunMultiplier;
-            }
-        }
-        else if( parentNode->name( ) == OBJECT ) 
+        
+        if( parentNode->name( ) == OBJECT ) 
         {
             noError = ( noError && ProcessConfigurationFileHelper( parentNode, 
-                                                                   progInfo, 
-                                                                   normData ) );
+                                                                   progInfo ) );
         }
         else if( parentNode->name( ) == SHADER )
         {
@@ -360,7 +273,7 @@ bool ProcessConfigurationFile
 }
 
 
-// PROCESS CONFIGURATION FILE //////////
+// PROCESS CONFIGURATION FILE HELPER //////////
 /***************************************
 
 @brief ProcessConfigurationFile
@@ -371,18 +284,13 @@ bool ProcessConfigurationFile
 
 @param out: progInfo: a struct containing program information
 
-@param in: normData: a struct of normalization data
-
-@param out: normData: a struct of normalization data
-
 @notes none
 
 ***************************************/
 bool ProcessConfigurationFileHelper
 ( 
     rapidxml::xml_node<>* parentNode, 
-    GraphicsInfo & progInfo, 
-    const NormalizationData & normData 
+    GraphicsInfo & progInfo
 )
 {
     rapidxml::xml_node<> *childNode;
@@ -398,13 +306,6 @@ bool ProcessConfigurationFileHelper
         return true;
     }
 
-    if( !( parentNode->first_attribute( "name" )->value( ) == PLANET )
-        && !( parentNode->first_attribute( "name" )->value( ) == SUN ) 
-        && !( parentNode->first_attribute( "name" )->value( ) == MOON ) )
-    {
-        return true;
-    }
-
     tempStr = parentNode->first_attribute( "path" )->value( );
 
     if( tempStr.empty( ) )
@@ -412,32 +313,21 @@ bool ProcessConfigurationFileHelper
         return false;
     }
 
-    progInfo.planetData.push_back( PlanetInfo( ) );
-    pIndex = progInfo.planetData.size( ) - 1;
-
-
-    for( planetIndex = 0; planetIndex < NUM_PLANETS; planetIndex++ )
-    {
-        strIndex = tempStr.find( PLANET_NAMES[ planetIndex ], tempStr.find_last_of( "\\/" ) );
-
-        if( strIndex != string::npos )
-        {
-            progInfo.planetIndex[ planetIndex ] = pIndex;
-        }
-    }
+    progInfo.objectData.push_back( ObjectInfo( ) );
+    pIndex = progInfo.objectData.size( ) - 1;
 
     for( mIndex = 0; mIndex < progInfo.modelVector.size( ); mIndex++ )
     {
         if( tempStr == progInfo.modelVector[ mIndex ] )
         {
-            progInfo.planetData[ pIndex ].modelID = mIndex;
+            progInfo.objectData[ pIndex ].modelID = mIndex;
         }
     }
-    if( ( int )progInfo.planetData[ pIndex ].modelID == -1 )
+    if( ( int )progInfo.objectData[ pIndex ].modelID == -1 )
     {
         progInfo.modelVector.push_back( tempStr );
 
-        progInfo.planetData[ pIndex ].modelID = progInfo.modelVector.size( ) - 1;
+        progInfo.objectData[ pIndex ].modelID = progInfo.modelVector.size( ) - 1;
     }    
 
     for( childNode = parentNode->first_node( 0 ); childNode;
@@ -449,79 +339,57 @@ bool ProcessConfigurationFileHelper
 
         if( childNode->name( ) == X_SCALE )
         {
-            strStream >> progInfo.planetData[ pIndex ].scale.x;
-
-            progInfo.planetData[ pIndex ].scale.x /= normData.diameter;
-
-            if( parentNode->first_attribute( "name" )->value( ) == SUN )
-            {
-                progInfo.planetData[ pIndex ].scale.x *= normData.sunMultiplier;
-            }
+            strStream >> progInfo.objectData[ pIndex ].scale.x;
         }
         else if( childNode->name( ) == Y_SCALE )
         {
-            strStream >> progInfo.planetData[ pIndex ].scale.y;
-
-            progInfo.planetData[ pIndex ].scale.y /= normData.diameter;
-
-            if( parentNode->first_attribute( "name" )->value( ) == SUN )
-            {
-                progInfo.planetData[ pIndex ].scale.y *= normData.sunMultiplier;
-            }
+            strStream >> progInfo.objectData[ pIndex ].scale.y;
         }
         else if( childNode->name( ) == Z_SCALE )
         {
-            strStream >> progInfo.planetData[ pIndex ].scale.z;
-
-            progInfo.planetData[ pIndex ].scale.z /= normData.diameter;
-
-            if( parentNode->first_attribute( "name" )->value( ) == SUN )
-            {
-                progInfo.planetData[ pIndex ].scale.z *= normData.sunMultiplier;
-            }
+            strStream >> progInfo.objectData[ pIndex ].scale.z;
         }
-        else if( childNode->name( ) == X_ORBIT_RADIUS )
+        else if( childNode->name( ) == X_POS )
         {
-            strStream >> progInfo.planetData[ pIndex ].orbitRad.x;
-
-            progInfo.planetData[ pIndex ].orbitRad.x /= normData.scaleOrbit.x;
-                        
+            strStream >> progInfo.objectData[ pIndex ].position.x;
         }
-        else if( childNode->name( ) == Y_ORBIT_RADIUS )
+        else if( childNode->name( ) == Y_POS )
         {
-            strStream >> progInfo.planetData[ pIndex ].orbitRad.y;
-
-            progInfo.planetData[ pIndex ].orbitRad.y /= normData.scaleOrbit.y;
-                        
+            strStream >> progInfo.objectData[ pIndex ].position.y;
         }
-        else if( childNode->name( ) == ORBIT_RATE )
+        else if( childNode->name( ) == Z_POS )
         {
-            strStream >> progInfo.planetData[ pIndex ].orbitRate;
-
-            progInfo.planetData[ pIndex ].orbitRate /= normData.orbitDivider;
+            strStream >> progInfo.objectData[ pIndex ].position.z;
         }
-        else if( childNode->name( ) == ORBIT_TILT )
+        else if( childNode->name( ) == X_ROT_AXIS )
         {
-            strStream >> progInfo.planetData[ pIndex ].orbitTilt;
+            strStream >> progInfo.objectData[ pIndex ].rotationAxes.x;
         }
-        else if( childNode->name( ) == ROTATION_RATE )
+        else if( childNode->name( ) == Y_ROT_AXIS )
         {
-            strStream >> progInfo.planetData[ pIndex ].rotRate;
-
-            progInfo.planetData[ pIndex ].rotRate 
-                = normData.rotDivider / progInfo.planetData[ pIndex ].rotRate;
+            strStream >> progInfo.objectData[ pIndex ].rotationAxes.y;
         }
-        else if( childNode->name( ) == TILT )
+        else if( childNode->name( ) == Z_ROT_AXIS )
         {
-            strStream >> progInfo.planetData[ pIndex ].tilt;
+            strStream >> progInfo.objectData[ pIndex ].rotationAxes.z;
+        }
+        else if( childNode->name( ) == X_ROT_ANGLE )
+        {
+            strStream >> progInfo.objectData[ pIndex ].rotationAngles.x;
+        }
+        else if( childNode->name( ) == Y_ROT_ANGLE )
+        {
+            strStream >> progInfo.objectData[ pIndex ].rotationAngles.y;
+        }
+        else if( childNode->name( ) == Z_ROT_ANGLE )
+        {
+            strStream >> progInfo.objectData[ pIndex ].rotationAngles.z;
         }
         else if( childNode->name( ) == OBJECT )
         {
-            progInfo.planetData[ pIndex ].childID.push_back( progInfo.planetData.size( ) );
+            progInfo.objectData[ pIndex ].childID.push_back( progInfo.objectData.size( ) );
 
-            noError = ( noError && ProcessConfigurationFileHelper( childNode,
-                                                                   progInfo,
-                                                                   normData ) );
+            noError = ( noError && ProcessConfigurationFileHelper( childNode, progInfo ) );
         }
     }
 

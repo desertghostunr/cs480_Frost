@@ -49,3 +49,6 @@ build/
 /PA7/.vs/PA7/v14
 /PA7/models/basic_planet.blend
 *.blend1
+/PA8/.vs/PA8/v14
+/PA8/packages
+/PA8/x64
