@@ -20,6 +20,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
+#include <btBulletCollisionCommon.h>
+
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
 struct Vertex

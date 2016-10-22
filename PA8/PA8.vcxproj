@@ -75,12 +75,12 @@
     <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(OPENCV_INCLUDE);$(IncludePath)</IncludePath>
+    <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(BULLET_INCLUDE);$(OPENCV_INCLUDE);$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)build\</OutDir>
     <TargetName>Pinball</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(OPENCV_INCLUDE);$(IncludePath)</IncludePath>
+    <IncludePath>$(SDL2_INCLUDE);$(GLM_INCLUDE);$(GLEW_INCLUDE);$(ASSIMP_INCLUDE);$(ProjectDir)include;$(BULLET_INCLUDE);$(OPENCV_INCLUDE);$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)build\</OutDir>
     <TargetName>Pinball</TargetName>
   </PropertyGroup>
@@ -133,11 +133,12 @@ xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalLibraryDirectories>$(ASSIMP_LIBRARY_AND_BIN_x64)Release\;$(SDL2_LIBRARY)x64\;$(GLEW_LIBRARY)Release\x64\;$(OPENCV_LIBRARY)Release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;SDL2.lib;assimp-vc140-mt.lib;$(OPENCV_LIBRARY)Release\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ASSIMP_LIBRARY_AND_BIN_x64)Release\;$(SDL2_LIBRARY)x64\;$(GLEW_LIBRARY)Release\x64\;$(OPENCV_LIBRARY)Release\;$(BULLET_LIBRARY)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;SDL2.lib;assimp-vc140-mt.lib;$(OPENCV_LIBRARY)Release\*.lib;$(BULLET_LIBRARY)*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include;$(GLM_INCLUDE);$(OPENCV_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include;$(GLM_INCLUDE);$(OPENCV_INCLUDE);$(BULLET_INCLUDE)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SDL2_LIBRARY)x64\SDL2.dll" "$(ProjectDir)build"
@@ -150,11 +151,12 @@ xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Link>
-      <AdditionalLibraryDirectories>$(ASSIMP_LIBRARY_AND_BIN_x64)Release\;$(SDL2_LIBRARY)x64\;$(GLEW_LIBRARY)Release\x64\;$(OPENCV_LIBRARY)Release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;SDL2.lib;assimp-vc140-mt.lib;$(OPENCV_LIBRARY)Release\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ASSIMP_LIBRARY_AND_BIN_x64)Release\;$(SDL2_LIBRARY)x64\;$(GLEW_LIBRARY)Release\x64\;$(OPENCV_LIBRARY)Release\;$(BULLET_LIBRARY)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32s.lib;SDL2.lib;assimp-vc140-mt.lib;$(OPENCV_LIBRARY)Release\*.lib;$(BULLET_LIBRARY)*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)/include;$(GLM_INCLUDE);$(OPENCV_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/include;$(GLM_INCLUDE);$(OPENCV_INCLUDE);$(BULLET_INCLUDE)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(SDL2_LIBRARY)x64\SDL2.dll" "$(ProjectDir)build"
