@@ -7,6 +7,17 @@
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
   <NormalizationFactor name="Sun">0.05</NormalizationFactor>
+  <Object name="Skybox" path ="models/skybox.obj">
+    <xScale>100</xScale>
+    <yScale>100</yScale>
+    <zScale>100</zScale>
+    <xOrbitRadius>0</xOrbitRadius>
+    <yOrbitRadius>0</yOrbitRadius>
+    <OrbitRate>0</OrbitRate>
+    <OrbitTilt>0</OrbitTilt>
+    <RotationRate>10000</RotationRate>
+    <Tilt>0</Tilt>
+  </Object>
   <Object name="Sun" path ="models/sun.obj">
     <xScale>1.391400</xScale>
     <yScale>1.391400</yScale>

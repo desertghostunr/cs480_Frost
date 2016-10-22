@@ -72,6 +72,7 @@ const string ORBIT_DIVIDER = "OrbitDiv";
 const string SUN = "Sun";
 const string PLANET = "Planet";
 const string MOON = "Moon";
+const string SKYBOX = "Skybox";
 const string X_ORBIT_RADIUS = "xOrbitRadius";
 const string Y_ORBIT_RADIUS = "yOrbitRadius";
 const string ORBIT_RATE = "OrbitRate";
@@ -400,7 +401,8 @@ bool ProcessConfigurationFileHelper
 
     if( !( parentNode->first_attribute( "name" )->value( ) == PLANET )
         && !( parentNode->first_attribute( "name" )->value( ) == SUN ) 
-        && !( parentNode->first_attribute( "name" )->value( ) == MOON ) )
+        && !( parentNode->first_attribute( "name" )->value( ) == MOON )
+        && !( parentNode->first_attribute( "name" )->value( ) == SKYBOX ) )
     {
         return true;
     }
