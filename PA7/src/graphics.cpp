@@ -228,6 +228,7 @@ void Graphics::Update(unsigned int dt)
         }
         
     }
+    m_camera->setZoomSelect( planetIndex );
     m_camera->updateCamera( cameraTracking, objectRegistry[ planetRegistry[ planetIndex ]].getOrigin().translation  );
 }
 

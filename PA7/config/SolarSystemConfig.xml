@@ -120,10 +120,10 @@
         <xScale>.00366</xScale>
         <yScale>.00366</yScale>
         <zScale>.00366</zScale>
-        <xOrbitRadius>400</xOrbitRadius>
-        <yOrbitRadius>400</yOrbitRadius>
+        <xOrbitRadius>90</xOrbitRadius>
+        <yOrbitRadius>98</yOrbitRadius>
         <OrbitRate>0.016</OrbitRate>
-        <OrbitTilt>0</OrbitTilt>
+        <OrbitTilt>1.089</OrbitTilt>
         <RotationRate>500</RotationRate>
         <Tilt>0.0</Tilt>
       </Object>

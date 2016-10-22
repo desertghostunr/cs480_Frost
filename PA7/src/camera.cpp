@@ -7,6 +7,8 @@ Camera::Camera()
 	zoom = 150.0;
 	upDown = 0.0;
 	
+    zoomMinimum = { 5.0f, 5.0f, 5.0f, 5.0f, 30.0f, 30.0f, 15.0f, 10.0f, 5.0f };
+    zoomSelect = 0;
 }
 
 Camera::~Camera()
@@ -33,6 +35,8 @@ bool Camera::Initialize(int w, int h)
 
 void Camera::LookTopDown()
 {
+    zoomSelect = 0;
+
     leftRight = 0.0;
     upDown = 0.0;
     zoom = 150.0;
@@ -45,6 +49,8 @@ void Camera::LookTopDown()
 
 void Camera::LookSideToSide()
 {
+    zoomSelect = 0;
+
     leftRight = 0.0;
     upDown = 0.0;
     zoom = 150.0;
@@ -92,14 +98,33 @@ void Camera::zoomIn()
     {
         return;
     }
+
+    if( zoom <= -2000.0f )
+    {
+        return;
+    }
       
     zoom = zoom - 5;
+
+    if( ( zoom >= 0.0f ) && ( zoom < zoomMinimum[ zoomSelect ] ) )
+    {
+        zoom = -1.0f * zoomMinimum[ zoomSelect ];
+    }
 
 }
 void Camera::zoomOut()
 {
+    if( zoom >= 2000.0f )
+    {
+        return;
+    }
   
     zoom = zoom + 5;
+
+    if( ( zoom <= 0.0f ) && ( zoom > ( -1.0f * zoomMinimum[ zoomSelect ] ) ) )
+    {
+        zoom = zoomMinimum[ zoomSelect ];
+    }
    
 }
 
@@ -125,8 +150,19 @@ void Camera::updateCamera( bool isOn, glm::vec3 planet )
    if( isOn )
    {
 	float newZoom = 0.0;
+
+    if( ( zoom <= 0.0f ) && ( zoom > ( -1.0f * zoomMinimum[ zoomSelect ] ) ) )
+    {
+        zoom = -1.0f * zoomMinimum[ zoomSelect ];
+    }
+    else if( ( zoom >= 0.0f ) && ( zoom < zoomMinimum[ zoomSelect ] ) )
+    {
+        zoom = zoomMinimum[ zoomSelect ];
+    }
+
+
 	if( topDown )
-      	{
+    {
 	    leftRight = planet.x;
 	    newZoom = planet.y + zoom;
 	    upDown = planet.z;
@@ -156,6 +192,20 @@ glm::mat4 Camera::GetProjection()
 glm::mat4 Camera::GetView()
 {
     return view;
+}
+
+
+
+void Camera::setZoomSelect( unsigned int selectVal )
+{
+    if( selectVal < zoomMinimum.size( ) )
+    {
+        zoomSelect = selectVal;
+    }
+    else
+    {
+        zoomSelect = 0;
+    }
 }
 
 

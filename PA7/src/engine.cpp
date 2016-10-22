@@ -77,7 +77,6 @@ void Engine::Run()
         // Check the keyboard input
         while(SDL_PollEvent(&m_event) != 0)
         {
-            Mouse( );
             Keyboard();
         }
 
