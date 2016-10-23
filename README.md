@@ -31,3 +31,9 @@ See PA6 README.md for more information.
 
 Contributors: Andy Frost, J.J. Sibley
 
+## PA7: Solar System
+
+See PA7 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
+

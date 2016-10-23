@@ -84,10 +84,10 @@
       <Tilt>0.439822972</Tilt>
       <!-- Structure of a planet or moon -->
       <Object name ="Moon" path ="models/moon.obj">
-        <xScale>.0000222</xScale> <!-- Diameter in km -->
-        <yScale>.0000222</yScale> <!-- Diameter in km -->
-        <zScale>.0000222</zScale> <!-- Diameter in km -->
-        <xOrbitRadius>20.0</xOrbitRadius> <!-- Radius in 10^6 km -->
+        <xScale>.000222</xScale> <!-- Diameter in km -->
+        <yScale>.000222</yScale> <!-- Diameter in km -->
+        <zScale>.000222</zScale> <!-- Diameter in km -->
+        <xOrbitRadius>9.0</xOrbitRadius> <!-- Radius in 10^6 km -->
         <yOrbitRadius>10.07</yOrbitRadius> <!-- Radius in 10^6 km -->
         <OrbitRate>7.66</OrbitRate> <!-- Orbit Velocity in km / s -->
         <OrbitTilt>0.089011792</OrbitTilt> <!--Orbit Tilt in radians -->
@@ -95,11 +95,11 @@
         <Tilt>0.11693706</Tilt> <!-- Tilt of axis in Radians -->
       </Object>
       <Object name ="Moon" path ="models/moon.obj">
-        <xScale>.0000126</xScale>
-        <yScale>.0000126</yScale>
-        <zScale>.0000126</zScale>
-        <xOrbitRadius>20.07</xOrbitRadius>
-        <yOrbitRadius>20.07</yOrbitRadius>
+        <xScale>.000126</xScale>
+        <yScale>.000126</yScale>
+        <zScale>.000126</zScale>
+        <xOrbitRadius>15.07</xOrbitRadius>
+        <yOrbitRadius>15.07</yOrbitRadius>
         <OrbitRate>30.35</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>500</RotationRate>
