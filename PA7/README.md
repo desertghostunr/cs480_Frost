@@ -86,6 +86,9 @@ An example of running this program:
 * Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
 * Press s: To zoom out *unless zoomed past sun then becomes a zoom in
 
+* Press e: to cycle to the next planet and track it.
+* Press q: to cycle to the previos planet and track it.
+
 * *Following controls become inverted if zoomed past the sun:
 * Press Left arrow key: Moves camera to the left
 * Press Right arrow key: Moves camera to the right
