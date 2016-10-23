@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- See Mar's first moon for the layout of the planet / moon information. -->
 <SolarSystem>
-  <NormalizationFactor name="Diameter"> .012756 </NormalizationFactor>
-  <NormalizationFactor name="xScaleOrbit"> 5.0</NormalizationFactor>
-  <NormalizationFactor name="yScaleOrbit"> 5.0</NormalizationFactor>
+  <NormalizationFactor name="Diameter">0.12756 </NormalizationFactor>
+  <NormalizationFactor name="xScaleOrbit">42.0</NormalizationFactor>
+  <NormalizationFactor name="yScaleOrbit">42.0</NormalizationFactor>
   <NormalizationFactor name="RotationDiv">23.9</NormalizationFactor>
   <NormalizationFactor name="OrbitDiv">29.78</NormalizationFactor>
-  <NormalizationFactor name="Sun">0.05</NormalizationFactor>
+  <NormalizationFactor name="Sun">0.075</NormalizationFactor>
   <Object name="Skybox" path ="models/skybox.obj">
-    <xScale>100</xScale>
-    <yScale>100</yScale>
-    <zScale>100</zScale>
+    <xScale>40</xScale>
+    <yScale>40</yScale>
+    <zScale>40</zScale>
     <xOrbitRadius>0</xOrbitRadius>
     <yOrbitRadius>0</yOrbitRadius>
     <OrbitRate>0</OrbitRate>
@@ -64,8 +64,8 @@
         <xScale>.003475</xScale>
         <yScale>.003475</yScale>
         <zScale>.003475</zScale>
-        <xOrbitRadius>12.3</xOrbitRadius>
-        <yOrbitRadius>13.6</yOrbitRadius>
+        <xOrbitRadius>7.3</xOrbitRadius>
+        <yOrbitRadius>8.6</yOrbitRadius>
         <OrbitRate>1.0</OrbitRate>
         <OrbitTilt>0.089011792</OrbitTilt>
         <RotationRate>655.7</RotationRate>

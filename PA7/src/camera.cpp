@@ -4,10 +4,10 @@ Camera::Camera()
 {
 	topDown = true;
 	leftRight = 0.0;
-	zoom = 150.0;
+	zoom = 15.0;
 	upDown = 0.0;
 	
-    zoomMinimum = { 5.0f, 5.0f, 5.0f, 5.0f, 30.0f, 30.0f, 15.0f, 10.0f, 5.0f };
+    zoomMinimum = { 0.50f, 0.50f, 0.50f, 0.50f, 3.0f, 3.0f, 1.50f, 1.0f, 0.50f };
     zoomSelect = 0;
 }
 
@@ -28,7 +28,7 @@ bool Camera::Initialize(int w, int h)
     projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                    float(w)/float(h), //Aspect Ratio, so Circles stay Circular
                                    0.01f, //Distance to the near plane, normally a small value like this
-                                   10000.0f); //Distance to the far plane, 
+                                   1000.0f); //Distance to the far plane, 
     return true;
 }
 
@@ -39,7 +39,7 @@ void Camera::LookTopDown()
 
     leftRight = 0.0;
     upDown = 0.0;
-    zoom = 150.0;
+    zoom = 15.0;
     topDown = true;
     view = glm::lookAt( glm::vec3( 0.0, zoom, 0.0), //Eye Position
                                    glm::vec3( leftRight, 0.0, upDown), //Focus point
@@ -53,9 +53,9 @@ void Camera::LookSideToSide()
 
     leftRight = 0.0;
     upDown = 0.0;
-    zoom = 150.0;
+    zoom = 15.0;
     topDown = false;
-    view = glm::lookAt( glm::vec3( 0.0, 8.0, zoom), //Eye Position
+    view = glm::lookAt( glm::vec3( 0.0, 0.80, zoom), //Eye Position
                                    glm::vec3( leftRight, upDown, 0.0), //Focus point
                                    glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 
@@ -65,46 +65,46 @@ void Camera::moveLeft()
 {
    if( topDown )
    {
-      leftRight = leftRight + 1.0;
+      leftRight = leftRight + 0.10;
    }
    else
    {
-      leftRight = leftRight - 1.0;
+      leftRight = leftRight - 0.10;
    }
 }
 void Camera::moveRight()
 {
    if( topDown )
    {
-      leftRight = leftRight - 1.0;
+      leftRight = leftRight - 0.10;
    }
    else
    {
-      leftRight = leftRight + 1.0;
+      leftRight = leftRight + 0.10;
    }
 }
 void Camera::moveUp()
 {
-   upDown = upDown + 1.0;
+   upDown = upDown + 0.10;
 }
 void Camera::moveDown()
 {
-   upDown = upDown - 1.0;
+   upDown = upDown - 0.10;
 }
 
 void Camera::zoomIn()
 {
-    if( topDown && zoom <= 10.0f )
+    if( topDown && zoom <= 1.0f )
     {
         return;
     }
 
-    if( zoom <= -2000.0f )
+    if( zoom <= -200.0f )
     {
         return;
     }
       
-    zoom = zoom - 5;
+    zoom = zoom - 0.5;
 
     if( ( zoom >= 0.0f ) && ( zoom < zoomMinimum[ zoomSelect ] ) )
     {
@@ -114,12 +114,12 @@ void Camera::zoomIn()
 }
 void Camera::zoomOut()
 {
-    if( zoom >= 2000.0f )
+    if( zoom >= 200.0f )
     {
         return;
     }
   
-    zoom = zoom + 5;
+    zoom = zoom + 0.5;
 
     if( ( zoom <= 0.0f ) && ( zoom > ( -1.0f * zoomMinimum[ zoomSelect ] ) ) )
     {
@@ -173,7 +173,16 @@ void Camera::updateCamera( bool isOn, glm::vec3 planet )
 	else
 	{
 	    leftRight = planet.x;
-        upDown = planet.y + 5.43f;
+        upDown = planet.y;
+
+        if( ( zoomSelect == 4 )
+            || ( zoomSelect == 5 )
+            || ( zoomSelect == 6 )
+            || ( zoomSelect == 7 ) )
+        {
+            upDown += 0.13f;
+        }
+
 	    newZoom = planet.z + zoom;
    	    view = glm::lookAt( glm::vec3( leftRight, upDown, newZoom), //Eye Position
                                    planet, //Focus point

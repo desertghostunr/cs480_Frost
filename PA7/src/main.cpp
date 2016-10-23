@@ -453,7 +453,10 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.planetData[ pIndex ].scale.x;
 
-            progInfo.planetData[ pIndex ].scale.x /= normData.diameter;
+            if( normData.diameter != 0 )
+            {
+                progInfo.planetData[ pIndex ].scale.x /= normData.diameter;
+            }            
 
             if( parentNode->first_attribute( "name" )->value( ) == SUN )
             {
@@ -464,7 +467,10 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.planetData[ pIndex ].scale.y;
 
-            progInfo.planetData[ pIndex ].scale.y /= normData.diameter;
+            if( normData.diameter != 0 )
+            {
+                progInfo.planetData[ pIndex ].scale.y /= normData.diameter;
+            }            
 
             if( parentNode->first_attribute( "name" )->value( ) == SUN )
             {
@@ -475,7 +481,10 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.planetData[ pIndex ].scale.z;
 
-            progInfo.planetData[ pIndex ].scale.z /= normData.diameter;
+            if( normData.diameter != 0 )
+            {
+                progInfo.planetData[ pIndex ].scale.z /= normData.diameter;
+            }            
 
             if( parentNode->first_attribute( "name" )->value( ) == SUN )
             {
@@ -486,21 +495,30 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRad.x;
 
-            progInfo.planetData[ pIndex ].orbitRad.x /= normData.scaleOrbit.x;
+            if( normData.scaleOrbit.x != 0)
+            {
+                progInfo.planetData[ pIndex ].orbitRad.x /= normData.scaleOrbit.x;
+            }           
                         
         }
         else if( childNode->name( ) == Y_ORBIT_RADIUS )
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRad.y;
 
-            progInfo.planetData[ pIndex ].orbitRad.y /= normData.scaleOrbit.y;
+            if( normData.scaleOrbit.y != 0 )
+            {
+                progInfo.planetData[ pIndex ].orbitRad.y /= normData.scaleOrbit.y;
+            }           
                         
         }
         else if( childNode->name( ) == ORBIT_RATE )
         {
             strStream >> progInfo.planetData[ pIndex ].orbitRate;
 
-            progInfo.planetData[ pIndex ].orbitRate /= normData.orbitDivider;
+            if( normData.orbitDivider != 0 )
+            {
+                progInfo.planetData[ pIndex ].orbitRate /= normData.orbitDivider;
+            }            
         }
         else if( childNode->name( ) == ORBIT_TILT )
         {
@@ -510,8 +528,11 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.planetData[ pIndex ].rotRate;
 
-            progInfo.planetData[ pIndex ].rotRate 
-                = normData.rotDivider / progInfo.planetData[ pIndex ].rotRate;
+            if( progInfo.planetData[ pIndex ].rotRate != 0 )
+            {
+                progInfo.planetData[ pIndex ].rotRate
+                    = normData.rotDivider / progInfo.planetData[ pIndex ].rotRate;
+            }            
         }
         else if( childNode->name( ) == TILT )
         {
