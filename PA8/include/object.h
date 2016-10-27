@@ -9,25 +9,22 @@
 struct Origin
 {
     glm::vec3 translation;
-    float rotation;
+    glm::vec3 rotation;
     glm::vec3 scale;
 
-    float tilt;
-    float orbitTilt;
+    float angle;
 
     Origin( ):
         translation( glm::vec3( 0.0f ) ),
         rotation( ( 0.0f ) ),
         scale( glm::vec3( 1.0f ) ),
-        tilt( 0.0f ),
-        orbitTilt( 0.0f ){ }
+        angle( 0.0f ){ }
 
     Origin( const Origin& src ):
         translation( src.translation ),
         rotation( src.rotation ),
         scale( src.scale ),
-        tilt( src.tilt ),
-        orbitTilt( src.orbitTilt ){ }
+        angle( 0.0f ){ }
 
     const Origin& operator =( const Origin& src )
     {
@@ -36,8 +33,7 @@ struct Origin
             translation = src.translation;
             rotation = src.rotation;
             scale = src.scale;
-            tilt = src.tilt;
-            orbitTilt = src.orbitTilt;
+            angle = src.angle;
         }
         return *this;
     }
@@ -55,8 +51,6 @@ class Object
 
         glm::mat4 GetModel();
 
-        glm::mat4& ParentModel( );
-
         Origin& getOrigin( );
 
         ObjectModel& getObjectModel( );
@@ -64,26 +58,6 @@ class Object
         bool hasObjectModel( );
 
         bool Initialize( ObjectModel * const srcPtr );
-
-        void updateRotationRate( float rotFactor );
-
-        void toggleRotationDirection( );
-
-        void toggleRotationPaused( );
-
-        float getRateOfRotation( );
-
-        void updateOrbitRate( float orbitFactor );
-
-        void toggleOrbitDirection( );
-
-        void toggleOrbitPaused( );
-
-        float getRateOfOrbit( );
-
-        void toggleAllPaused( );
-
-        void setOrbitalRadius( glm::vec2 radius );
 
         bool setOrigin( const Origin& newOrigin );
 
@@ -111,21 +85,11 @@ class Object
 
         void setRotationVector( const glm::vec3 rotVec );
 
-        void setTiltAngle( float tilt );
-
         void commitTranslation( );
 
         void commitRotation( );
 
-        void commitTilt( );
-        
-        void commitParentTilt( );
-
-        void commitOrbitalTilt( );
-
         void commitScale( );
-
-        void commitOrbitalTranslation( );
 
         void commitParentLocation( );
 
@@ -135,33 +99,8 @@ class Object
 
         void setAngle( float newAngle );
 
-        void incrementOrbitAngle( unsigned int dt );
-
-        float getOrbitAngle( );
-
-        void setOrbitAngle( float newAngle );
-
-        bool isPaused( );
-
-        void incrementOrbitSpeed( );
-
-        void decrementOrbitSpeed( );
-
-        void resetOrbitSpeed( );
-
-        void incrementRotationSpeed( );
-
-        void decrementRotationSpeed( );
-
-        void resetRotationSpeed( );
-
-        void setOrbitDistanceMultiplier( float odm );
-
     private:
-        
-        // model information
-        glm::mat4 parentModel;
-
+        //model info
         glm::mat4 model;
         ObjectModel* objModelPtr;
 
@@ -170,7 +109,6 @@ class Object
 
         //transform information
         Origin parentOrigin;
-        Origin localOrigin;
         glm::vec3 scaleFactor; //scale factor
         glm::vec3 translationVector; //translation in cartesian space
         glm::vec3 rotationVector; //rotation vector in cartesian space
@@ -178,27 +116,10 @@ class Object
         //vector of transforms to apply to the object 
         std::vector<glm::mat4> transformVector;
 
-        //angle of rotation / orbit information (specialization)
-        float angle;
-        float tiltAngle;
-        float orbitalAngle;
-
-        glm::vec2 orbitalRadius;
-
-        float orbitDistanceMultiplier;
-
-        float rotationRate;
-        float orbitRate;
-
-        float rotationControlMultiplier;
-        float orbitControlMultiplier;
-
         unsigned int objectID;
         unsigned int parentID;
 
-        float orbitSpeedControl;
-
-        float rotSpeedControl;
+        float angle;
 };
 
 #endif /* OBJECT_H */

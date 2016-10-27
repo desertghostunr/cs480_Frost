@@ -11,31 +11,14 @@ Object::Object()
 
     rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
 
-    angle = 0.0f;
-    tiltAngle = 0.0f;
-    orbitalAngle = 0.0f;
-
-    orbitalRadius.x = 1.0f;
-    orbitalRadius.y = 1.0f;
-
-    rotationRate = 1.0f;
-    orbitRate = 1.0f;
-
-    rotationControlMultiplier = 1.0f;
-    orbitControlMultiplier = -1.0f;
-
     scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
 
     objectID = -1;
     parentID = -1;
 
-    orbitDistanceMultiplier = 10.0f;
+    angle = 0.0f;
 
     objModelPtr = NULL;
-
-    orbitSpeedControl = 1.0f;
-
-    rotSpeedControl = 1.0f;
 }
 
 Object::~Object()
@@ -87,11 +70,6 @@ glm::mat4 Object::GetModel()
     return model;
 }
 
-glm::mat4 & Object::ParentModel( )
-{
-    return parentModel;
-}
-
 
 // GET ORIGIN //////////////////
 /***************************************
@@ -107,7 +85,13 @@ glm::mat4 & Object::ParentModel( )
 ***************************************/
 Origin & Object::getOrigin( )
 {
-    return localOrigin;
+    Origin tmpOrigin;
+    tmpOrigin.translation = translationVector;
+    tmpOrigin.scale = scaleFactor;
+    tmpOrigin.rotation = rotationVector;
+    tmpOrigin.angle = angle;
+
+    return tmpOrigin;
 }
 
 // GET OBJECT MODEL //////////////////
@@ -223,210 +207,6 @@ void Object::Render()
 
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );
-}
-
-// UPDATE ROTATION RATE //////////////////
-/***************************************
-
-@brief updateRotationRate
-
-@details updates the objects rotation rate
-
-@param in: rotFactor: controls the direction and speed of the object's rotation
-
-@notes None
-
-***************************************/
-void Object::updateRotationRate( float rotFactor )
-{    
-    rotationRate = rotFactor;    
-}
-
-// TOGGLE ROTATION DIRECTION //////////////////
-/***************************************
-
-@brief toggleRotationDirection
-
-@details toggles the direction the object is rotating and cancels the pause state
-
-@param None
-
-@notes None
-
-***************************************/
-void Object::toggleRotationDirection( )
-{
-    if( rotationControlMultiplier == 0.0 )
-    {
-        rotationControlMultiplier = 1.0;
-    }
-
-    rotationRate *= -1.0;
-}
-
-// GET RATE OF ROTATION //////////////////
-/***************************************
-
-@brief getRateOfRotation
-
-@details returns the rate of rotation
-
-@param None
-
-@notes None
-
-***************************************/
-float Object::getRateOfRotation( )
-{
-    return rotationRate;
-}
-
-// TOGGLE ROTATION PAUSED //////////////////
-/***************************************
-
-@brief toggleRotationPaused
-
-@details toggles whether or not the rotation is paused
-
-@param None
-
-@notes None
-
-***************************************/
-void Object::toggleRotationPaused( )
-{
-    if( rotationControlMultiplier == 0.0)
-    {
-        rotationControlMultiplier = 1.0;
-    }
-    else
-    {
-        rotationControlMultiplier = 0.0;
-    }
-}
-
-
-// UPDATE ORBIT RATE //////////////////
-/***************************************
-
-@brief updateOrbitRate
-
-@details updates the objects orbit rate
-
-@param in: orbitFactor: controls the direction and speed of the object's orbit
-
-@notes None
-
-***************************************/
-void Object::updateOrbitRate( float orbitFactor )
-{    
-    orbitRate = orbitFactor;    
-}
-
-// TOGGLE ORBIT DIRECTION //////////////////
-/***************************************
-
-@brief toggleOrbitDirection
-
-@details toggles the direction the object is orbiting and cancels the pause state
-
-@param None
-
-@notes None
-
-***************************************/
-void Object::toggleOrbitDirection( )
-{
-    if( orbitControlMultiplier == 0.0 )
-    {
-        orbitControlMultiplier = -1.0;
-    }
-
-    orbitRate *= -1.0;
-}
-
-// GET RATE OF ORBIT //////////////////
-/***************************************
-
-@brief getRateOfOrbit
-
-@details returns the rate of orbit
-
-@param None
-
-@notes None
-
-***************************************/
-float Object::getRateOfOrbit( )
-{
-    return orbitRate;
-}
-
-// TOGGLE ORBIT PAUSED //////////////////
-/***************************************
-
-@brief toggleOrbitPaused
-
-@details toggles whether or not the orbit is paused
-
-@param None
-
-@notes None
-
-***************************************/
-void Object::toggleOrbitPaused( )
-{
-    if( orbitControlMultiplier == 0.0f )
-    {
-        orbitControlMultiplier = -1.0f;
-    }
-    else
-    {
-        orbitControlMultiplier = 0.0f;
-    }
-}
-
-// TOGGLE ALL PAUSED //////////////////
-/***************************************
-
-@brief toggleAllPaused
-
-@details toggles whether or not the orbit and rotation is paused
-
-@param None
-
-@notes None
-
-***************************************/
-void Object::toggleAllPaused( )
-{
-    if( ( rotationControlMultiplier == 0.0f ) && ( orbitControlMultiplier == 0.0f ) )
-    {
-        rotationControlMultiplier = 1.0f;
-        orbitControlMultiplier = -1.0f;
-    }
-    else
-    {
-        rotationControlMultiplier = 0.0f;
-        orbitControlMultiplier = 0.0f;
-    }
-}
-
-// SET ORBITAL RADIUS //////////////////
-/***************************************
-
-@brief setOrbitalRadius
-
-@details sets the object's radius of orbit
-
-@param in: radius: the radius to use.
-
-@notes None
-
-***************************************/
-void Object::setOrbitalRadius( glm::vec2 radius )
-{
-    orbitalRadius = radius;
 }
 
 // SET ORIGIN //////////////////
@@ -708,41 +488,9 @@ void Object::setRotationVector( const glm::vec3 rotVec )
     rotationVector = rotVec;
 }
 
-// SET TILT ANGLE /////////////////////
-/***************************************
-
-@brief setTiltAngle
-
-@details sets the Tilt of an object
-
-@param in: tilt: the tilt of the object
-
-@notes none
-
-***************************************/
-void Object::setTiltAngle( float tilt )
-{
-    tiltAngle = tilt;
-}
-
-// COMMIT TRANSLATION /////////////////////
-/***************************************
-
-@brief commitTranslation
-
-@details commits the translation vector for object
-
-@param None
-
-@notes none
-
-***************************************/
 void Object::commitTranslation( )
 {
-    localOrigin.translation = translationVector;
-
-    transformVector.push_back( glm::translate( glm::mat4( 1.0f ),
-                                               translationVector ) );
+    transformVector.push_back( glm::translate( translationVector ) );
 }
 
 // COMMIT ROTATION/////////////////////
@@ -759,58 +507,8 @@ void Object::commitTranslation( )
 ***************************************/
 void Object::commitRotation( )
 {
-
-    localOrigin.rotation = angle;
-
     transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
                                ( angle ), rotationVector ) );
-}
-
-// COMMIT TILT/////////////////////
-/***************************************
-
-@brief commitTilt
-
-@details commits the tilt for the object
-
-@param None
-
-@notes none
-
-***************************************/
-void Object::commitTilt( )
-{
-    localOrigin.tilt = tiltAngle;
-
-    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
-                              ( tiltAngle ), 
-                                            glm::vec3( 0.0f, 0.0f, 1.0f ) ) );
-}
-
-void Object::commitParentTilt(  )
-{
-    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
-                                           ( parentOrigin.tilt ),
-                                            glm::vec3( 0.0f, 0.0f, 1.0f ) ) );
-}
-
-// COMMIT ORBITAL TILT/////////////////////
-/***************************************
-
-@brief commitOrbitalTilt
-
-@details commits the orbital tilt for the object
-
-@param None
-
-@notes none
-
-***************************************/
-void Object::commitOrbitalTilt( )
-{
-    transformVector.push_back( glm::rotate( glm::mat4( 1.0f ),
-        ( localOrigin.orbitTilt + parentOrigin.orbitTilt ), 
-          glm::vec3( 0.0f, 0.0f, 1.0f ) ) );
 }
 
 // COMMIT SCALE /////////////////////
@@ -827,40 +525,7 @@ void Object::commitOrbitalTilt( )
 ***************************************/
 void Object::commitScale( )
 {
-    localOrigin.scale = scaleFactor;
-
     transformVector.push_back( glm::scale( scaleFactor ) );
-}
-
-
-// COMMIT ORBITAL TRANSLATION /////////////////////
-/***************************************
-
-@brief commitOrbitalTranslation
-
-@details commits the orbital translation based off of the orbital radius
-         and the orbitalAngle
-
-@param None
-
-@notes none
-
-***************************************/
-void Object::commitOrbitalTranslation( )
-{
-
-    localOrigin.translation = glm::vec3( orbitalRadius.x
-                                         * orbitDistanceMultiplier
-                                         * cos( orbitalAngle ),
-                                         ( (orbitalRadius.x 
-                                             + orbitalRadius.y ) / 2.0f ) 
-                                         * sin( localOrigin.orbitTilt * cos( orbitalAngle ) ),
-                                         orbitalRadius.y
-                                         * orbitDistanceMultiplier
-                                         * sin( orbitalAngle ) );
-
-    transformVector.push_back( glm::translate( glm::mat4( 1.0f ),
-                                               localOrigin.translation ) );
 }
 
 void Object::commitParentLocation( )
@@ -883,7 +548,7 @@ void Object::commitParentLocation( )
 ***************************************/
 void Object::incrementAngle( unsigned int dt )
 {
-    angle += rotationControlMultiplier * rotationRate * rotSpeedControl * dt * M_PI/1000;
+    angle += dt * M_PI/1000;
 }
 
 // GET ANGLE /////////////////////
@@ -919,131 +584,3 @@ void Object::setAngle( float newAngle )
 {
     angle = newAngle;
 }
-
-// INCREMENT ORBIT ANGLE /////////////////////
-/***************************************
-
-@brief incrementOrbitAngle 
-
-@details increments the angle of the object's orbit
-
-@param in: dt: the delta of time
-
-@notes none
-
-***************************************/
-void Object::incrementOrbitAngle( unsigned int dt )
-{
-    orbitalAngle += orbitControlMultiplier * orbitRate * orbitSpeedControl * dt * M_PI/1000;
-}
-
-// GET ORBITAL ANGLE /////////////////////
-/***************************************
-
-@brief getOrbitalAngle 
-
-@details gets the angle of the object's orbit
-
-@param None
-
-@notes none
-
-***************************************/
-float Object::getOrbitAngle( )
-{
-    return orbitalAngle;
-}
-
-// SET ORBIT ANGLE /////////////////////
-/***************************************
-
-@brief setOrbitAngle 
-
-@details sets the angle of the object's rotation
-
-@param in: newAngle: the new angle value
-
-@notes none
-
-***************************************/
-void Object::setOrbitAngle( float newAngle )
-{
-    orbitalAngle = newAngle;
-}
-
-
-// IS PAUSED    /////////////////////
-/***************************************
-
-@brief isPaused( )
-
-@details returns whether or not the object is paused
-
-@param None
-
-@notes none
-
-***************************************/
-bool Object::isPaused( )
-{
-    return ( ( rotationControlMultiplier == 0.0 )
-             && ( orbitControlMultiplier == 0.0 ) );
-}
-
-void Object::incrementOrbitSpeed( )
-{
-    orbitSpeedControl += 0.10f;
-}
-
-void Object::decrementOrbitSpeed( )
-{    
-    orbitSpeedControl -= 0.10f;
-
-    if( orbitSpeedControl < 0.1f )
-    {
-        orbitSpeedControl = 0.1f;
-    }
-}
-
-void Object::resetOrbitSpeed( )
-{
-    orbitSpeedControl = 1.0f;
-}
-
-void Object::incrementRotationSpeed( )
-{
-    rotSpeedControl += 0.10f;
-}
-
-void Object::decrementRotationSpeed( )
-{
-    rotSpeedControl -= 0.10f;
-
-    if( rotSpeedControl < 0.1f )
-    {
-        rotSpeedControl = 0.1f;
-    }
-}
-
-void Object::resetRotationSpeed( )
-{
-    rotSpeedControl = 1.0f;
-}
-
-// SET ORBIT DISTANCE MULTIPLIER /////////////////////
-/***************************************
-
-@brief setOrbitDistanceMultiplier
-
-@details sets the orbitDistanceMultiplier
-
-@param in odm: the value to set the orbitDistanceMultiplier to
-
-@notes none
-
-***************************************/
-void Object::setOrbitDistanceMultiplier( float odm )
-{
-    orbitDistanceMultiplier = odm;
-}
-

@@ -2,12 +2,49 @@
 
 Graphics::Graphics()
 {
-    
+    broadphasePtr = NULL;
+    collisionConfigPtr = NULL;
+    dispatcherPtr = NULL;
+    solverPtr = NULL;
+    dynamicsWorldPtr = NULL;
 }
 
 Graphics::~Graphics()
 {
+    if( dynamicsWorldPtr != NULL )
+    {
+        delete dynamicsWorldPtr;
 
+        dynamicsWorldPtr = NULL;
+    }
+
+    if( solverPtr != NULL )
+    {
+        delete solverPtr;
+
+        solverPtr = NULL;
+    }
+
+    if( dispatcherPtr != NULL )
+    {
+        delete dispatcherPtr;
+
+        dispatcherPtr = NULL;
+    }
+
+    if( collisionConfigPtr != NULL )
+    {
+        delete collisionConfigPtr;
+
+        collisionConfigPtr = NULL;
+    }
+
+    if( broadphasePtr != NULL )
+    {
+        delete broadphasePtr;
+
+        broadphasePtr = NULL;
+    }
 }
 
 bool Graphics::Initialize
@@ -98,27 +135,6 @@ bool Graphics::Initialize
         objectRegistry[ objectRegistry.getSize( ) - 1
                       ].setScale( progInfo.objectData[ pIndex ].scale );
 
-        /*objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setTiltAngle( progInfo.objectData[ pIndex ].tilt );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].updateOrbitRate( progInfo.objectData[ pIndex ].orbitRate );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1 
-                      ].updateRotationRate( progInfo.objectData[ pIndex ].rotRate );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setOrbitalRadius( progInfo.objectData[ pIndex ].orbitRad );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].setOrbitDistanceMultiplier( 1.0f );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1 
-                      ].setRotationVector( glm::vec3( 0.0f, 1.0f, 0.0f ) );
-
-        objectRegistry[ objectRegistry.getSize( ) - 1
-                      ].getOrigin( ).orbitTilt = progInfo.objectData[ pIndex ].orbitTilt;*/
-
     }
 
     for( pIndex = 0; pIndex < objectRegistry.getSize( ); pIndex++ )
@@ -202,11 +218,18 @@ bool Graphics::Initialize
             .getObjectModel( ).TextureUniformLocation( ) = tmpTextLoc;
     }
 
-    planetIndex = 0;
-
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    // INITIALIZE BULLET //////////////////////////////////////////////
+    broadphasePtr = new btDbvtBroadphase( );
+    collisionConfigPtr = new btDefaultCollisionConfiguration( );
+    dispatcherPtr = new btCollisionDispatcher( collisionConfigPtr );
+    solverPtr = new btSequentialImpulseConstraintSolver( );
+    dynamicsWorldPtr = new btDiscreteDynamicsWorld( dispatcherPtr, broadphasePtr, solverPtr, collisionConfigPtr );
+    dynamicsWorldPtr->setGravity( btVector3( 0.0, -9.8, 0.0 ) );
+    ///////////////////////////////////////////////////////////////////
 
     return true;
 }
@@ -214,17 +237,15 @@ bool Graphics::Initialize
 void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
+
     // Update the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
     {
-
         if( !objectRegistry[ index ].isChild( ) )
         {
             updateChildren( index, dt );
-        }
-        
+        }        
     }
-    //m_camera->updateCamera( cameraTracking, objectRegistry[ planetRegistry[ planetIndex ]].getOrigin().translation  );
 }
 
 void Graphics::Render()
@@ -321,13 +342,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
     objectRegistry[ objectID ].incrementAngle( dt );    
 
-    objectRegistry[ objectID ].commitRotation( );    
-
-    objectRegistry[ objectID ].commitTilt( );
-
-    objectRegistry[ objectID ].incrementOrbitAngle( dt );
-
-    objectRegistry[ objectID ].commitOrbitalTranslation( );
+    objectRegistry[ objectID ].commitRotation( );
 
     objectRegistry[ objectID ].commitParentLocation( );    
 
@@ -384,256 +399,6 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
 
  }
-
-// UPDATE ROTATION //////////////////
-/***************************************
-
-@brief updateRotation
-
-@details toggles the direction of rotation
-
-@param in: objectID: the id or index of the Object
-
-@param in: speedOfRotation: controls the speed of rotation
-
-@notes None
-
-***************************************/
-bool Graphics::updateRotation( unsigned int objectID, float speedOfRotation )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].updateRotationRate( speedOfRotation );
-        return true;
-    }
-    return false;
-}
-
-
-// UPDATE ORBIT//////////////////
-/***************************************
-
-@brief updateOrbit
-
-@details toggles the direction of orbit
-
-@param in: objectID: the id or index of the Object
-
-@param in: speedOfOrbit: controls the speed of orbit
-
-@notes None
-
-***************************************/
-bool Graphics::updateOrbit( unsigned int objectID, float speedOfOrbit )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].updateOrbitRate( speedOfOrbit );
-        return true;
-    }
-    return false;
-}
-
-
-// TOGGLE ROTATION DIRECTION //////////////////
-/***************************************
-
-@brief toggleRotationDirection
-
-@details toggles the direction the object is rotating and cancels the pause state
-
-@param in: objectID: the id or index of the Object
-
-@notes None
-
-***************************************/
-bool Graphics::toggleRotationDirection( unsigned int objectID )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].toggleRotationDirection( );
-        return true;
-    }
-    return false;
-}
-
-// TOGGLE ROTATION PAUSED //////////////////
-/***************************************
-
-@brief toggleRotationPaused
-
-@details toggles whether or not the rotation is paused
-
-@param in: objectID: the id or index of the Object
-
-@notes None
-
-***************************************/
-bool Graphics::toggleRotationPaused( unsigned int objectID )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].toggleRotationPaused( );
-        return true;
-    }
-    return false;
-}
-
-
-// TOGGLE ORBIT DIRECTION //////////////////
-/***************************************
-
-@brief toggleOrbitDirection
-
-@details toggles the direction the object is orbiting and cancels the pause state
-
-@param in: objectID: the id or index of the Object
-
-@notes None
-
-***************************************/
-bool Graphics::toggleOrbitDirection( unsigned int objectID )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].toggleOrbitDirection( );
-        return true;
-    }
-    return false;
-}
-
-// TOGGLE ORBIT PAUSED //////////////////
-/***************************************
-
-@brief toggleOrbitPaused
-
-@details toggles whether or not the orbit is paused
-
-@param in: objectID: the id or index of the Object
-
-@notes None
-
-***************************************/
-bool Graphics::toggleOrbitPaused( unsigned int objectID )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].toggleOrbitPaused( );
-        return true;
-    }
-    return false;
-}
-
-// TOGGLE ALL PAUSED //////////////////
-/***************************************
-
-@brief toggleAllPaused
-
-@details toggles whether or not the orbit and rotation is paused
-
-@param in: objectID: the id or index of the Object
-
-@notes None
-
-***************************************/
-bool Graphics::toggleAllPaused( unsigned int objectID )
-{
-    if( objectID < objectRegistry.getSize( ) )
-    {
-        objectRegistry[objectID].toggleAllPaused( );
-        return true;
-    }
-    return false;
-}
-
-// TOGGLE ALL OBJECTS PAUSED //////////////////
-/***************************************
-
-@brief toggleAllObjectsPaused
-
-@details toggles whether or not the orbit and rotation is paused for all objects
-
-@param None
-
-@notes None
-
-***************************************/
-void Graphics::toggleAllObjectsPaused( )
-{
-    bool allPausedAtCall = true;
-    unsigned int index;
-
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
-    {
-        if( !objectRegistry[ index ].isPaused( ) )
-        {
-            objectRegistry[ index ].toggleAllPaused( );
-            allPausedAtCall = false;
-        }
-    }
-
-    //if some objects weren't paused at function call, 
-    //then we've paused all of them
-    if( !allPausedAtCall )
-    {
-        return;
-    }
-
-    //however, if they all were paused
-    //then we need to unpause them
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
-    {
-        if( objectRegistry[ index ].isPaused( ) )
-        {
-            objectRegistry[ index ].toggleAllPaused( );
-        }
-    }
-
-}
-
-void Graphics::changeOrbitSpeed( unsigned int opCode )
-{
-    unsigned int index;
-
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
-    {
-        if( opCode == INCREASE_SPEED )
-        {
-            objectRegistry[ index ].incrementOrbitSpeed( );
-        }
-        else if( opCode == DECREASE_SPEED  )
-        {
-            objectRegistry[ index ].decrementOrbitSpeed( );
-        }
-        else
-        {
-            objectRegistry[ index ].resetOrbitSpeed( );
-        }
-        
-    }
-}
-
-void Graphics::changeRotSpeed( unsigned int opCode )
-{
-    unsigned int index;
-
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
-    {
-        if( opCode == INCREASE_SPEED )
-        {
-            objectRegistry[ index ].incrementRotationSpeed( );
-        }
-        else if( opCode == DECREASE_SPEED )
-        {
-            objectRegistry[ index ].decrementRotationSpeed( );
-        }
-        else
-        {
-            objectRegistry[ index ].resetRotationSpeed( );
-        }
-
-    }
-}
 
 // Change Perspective  //////////////////
 /***************************************
@@ -712,6 +477,5 @@ void Graphics::startTracking( int planet )
     }
 
    cameraTracking = true;
-   planetIndex = planet;
 }
 

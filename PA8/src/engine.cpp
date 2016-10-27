@@ -143,66 +143,63 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeOrbitSpeed( Graphics::INCREASE_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_COMMA ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeOrbitSpeed( Graphics::DECREASE_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_o ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeOrbitSpeed( Graphics::RESET_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_l ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeRotSpeed( Graphics::INCREASE_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_k ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeRotSpeed( Graphics::DECREASE_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_r ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeRotSpeed( Graphics::RESET_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_a ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeRotSpeed( Graphics::DECREASE_SPEED );
-                m_graphics->changeOrbitSpeed( Graphics::DECREASE_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_d ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeRotSpeed( Graphics::INCREASE_SPEED );
-                m_graphics->changeOrbitSpeed( Graphics::INCREASE_SPEED );
+                
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_x ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeRotSpeed( Graphics::RESET_SPEED );
-                m_graphics->changeOrbitSpeed( Graphics::RESET_SPEED );
+                
             }
         }
         else if( m_event.key.keysym.sym == SDLK_LEFT )
@@ -216,7 +213,7 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleAllObjectsPaused( );
+                
             }            
         }
 	else if( m_event.key.keysym.sym == SDLK_1 )
@@ -287,35 +284,35 @@ void Engine::Mouse( )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleOrbitDirection( 0 );
+                
             } 
         }
         else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_RIGHT ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleRotationDirection( 0 );
+                
             } 
         }
         else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_MIDDLE ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleAllPaused( 0 );
+                
             } 
         }
         else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_X1 ) )
         {
             if( m_graphics != NULL )
             {                
-                m_graphics->toggleRotationPaused( 0 );
+                
             } 
         }
         else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_X2 ) )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->toggleOrbitPaused( 0 );
+                
             } 
         }
     }
