@@ -2,9 +2,9 @@
 <Configuration>
   <Object path ="models/ball.obj">
     <name>ball</name>
-    <xScale>1</xScale>
-    <yScale>1</yScale>
-    <zScale>1</zScale>
+    <xScale>5</xScale>
+    <yScale>5</yScale>
+    <zScale>5</zScale>
     <xPosition>0</xPosition>
     <yPosition>0</yPosition>
     <yPosition>0</yPosition>
@@ -17,9 +17,9 @@
   </Object>
   <Object path ="models/cube.obj">
     <name>cube</name>
-    <xScale>1</xScale>
-    <yScale>1</yScale>
-    <zScale>1</zScale>
+    <xScale>10</xScale>
+    <yScale>10</yScale>
+    <zScale>10</zScale>
     <xPosition>0</xPosition>
     <yPosition>0</yPosition>
     <yPosition>0</yPosition>
@@ -32,9 +32,9 @@
   </Object>
   <Object path ="models/cylinder.obj">
     <name>cylinder</name>
-    <xScale>1</xScale>
-    <yScale>1</yScale>
-    <zScale>1</zScale>
+    <xScale>10</xScale>
+    <yScale>10</yScale>
+    <zScale>10</zScale>
     <xPosition>0</xPosition>
     <yPosition>0</yPosition>
     <yPosition>0</yPosition>
@@ -45,11 +45,11 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
-  <Object path ="models/box.obj">
+  <Object path ="models/boxT.obj">
     <name>table</name>
-    <xScale>1</xScale>
-    <yScale>1</yScale>
-    <zScale>1</zScale>
+    <xScale>50</xScale>
+    <yScale>50</yScale>
+    <zScale>50</zScale>
     <xPosition>0</xPosition>
     <yPosition>0</yPosition>
     <yPosition>0</yPosition>

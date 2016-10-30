@@ -316,6 +316,14 @@ void Engine::Mouse( )
             } 
         }
     }
+    else if( m_event.type == SDL_MOUSEMOTION )
+    {
+        if( m_graphics != NULL )
+        {
+            std::cout << m_event.motion.x << ", " << m_event.motion.y << std::endl;
+            m_graphics->moveBox( glm::vec3( m_event.motion.x, 0.0, m_event.motion.y ) );
+        }
+    }
     
 }
 

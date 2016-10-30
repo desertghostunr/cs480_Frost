@@ -8,10 +8,61 @@ Graphics::Graphics()
     dispatcherPtr = NULL;
     solverPtr = NULL;
     dynamicsWorldPtr = NULL;
+
+    boxIndex = 0;
 }
 
 Graphics::~Graphics()
 {
+    unsigned int index = 0, shapeIndex;
+
+    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    {
+        if( dynamicsWorldPtr != NULL )
+        {
+            if( objectRegistry[ index ].TableCollider( ).rigidBody != NULL )
+            {
+                dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].TableCollider( ).rigidBody );
+
+                delete objectRegistry[ index ].TableCollider( ).rigidBody->getMotionState( );
+                delete objectRegistry[ index ].TableCollider( ).rigidBody;
+                objectRegistry[ index ].TableCollider( ).rigidBody = NULL;
+            }
+
+            if( objectRegistry[ index ].TableCollider( ).collisionShape != NULL )
+            {
+                delete objectRegistry[ index ].TableCollider( ).collisionShape;
+                objectRegistry[ index ].TableCollider( ).collisionShape = NULL;
+            }
+
+            
+            for( shapeIndex = 0; shapeIndex < objectRegistry[ index ].CollisionInfo( ).size( ); shapeIndex++ )
+            {
+                if( objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].rigidBody != NULL )
+                {
+                    dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].rigidBody );
+
+                    delete objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].rigidBody->getMotionState( );
+                    delete objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].rigidBody;
+                    objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].rigidBody = NULL;
+                }
+
+                if( objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].collisionShape != NULL )
+                {
+                    delete objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].collisionShape;
+
+                    objectRegistry[ index ].CollisionInfo( )[ shapeIndex ].collisionShape = NULL;
+                }
+
+                
+            }
+        }
+
+        
+    }
+
+
+
     if( dynamicsWorldPtr != NULL )
     {
         delete dynamicsWorldPtr;
@@ -82,6 +133,17 @@ bool Graphics::Initialize
     bool successFlag;
     unsigned int index, pIndex;
     GLint tmpTextLoc;
+
+    btCollisionShape * tmpShapePtr = NULL;
+    btDefaultMotionState* tmpMotionState = NULL;
+
+    btRigidBody * tmpRigidBody = NULL;
+
+    btCompoundShape * tmpCompoundShape = NULL;
+
+    btScalar mass;
+    btVector3 inertia;
+    btTransform transform;
 
     // Init Camera
     m_camera = new Camera();
@@ -230,7 +292,8 @@ bool Graphics::Initialize
 
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glDepthFunc(GL_LESS);    
+
 
     // INITIALIZE BULLET //////////////////////////////////////////////
     broadphasePtr = new btDbvtBroadphase( );
@@ -238,8 +301,162 @@ bool Graphics::Initialize
     dispatcherPtr = new btCollisionDispatcher( collisionConfigPtr );
     solverPtr = new btSequentialImpulseConstraintSolver( );
     dynamicsWorldPtr = new btDiscreteDynamicsWorld( dispatcherPtr, broadphasePtr, solverPtr, collisionConfigPtr );
-    dynamicsWorldPtr->setGravity( btVector3( 0.0, -9.8, 0.0 ) );
+    dynamicsWorldPtr->setGravity( btVector3( 0.0, -9.5, 2.5 ) );
     ///////////////////////////////////////////////////////////////////
+
+    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    {
+        if( objectRegistry[ index ].getName( ) == "ball" )
+        {
+            tmpShapePtr = new btSphereShape( ( objectRegistry[ index ].getScale( ).x /2.0f ) + 1.0f );
+
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( 0, 0, 0 ) ) );
+
+            mass = 1;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+            
+        }
+        else if( objectRegistry[ index ].getName( ) == "cylinder" )
+        {
+            tmpShapePtr = new btCylinderShape( btVector3( objectRegistry[ index ].getScale( ).y, ( objectRegistry[ index ].getScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getScale( ).x / 2.0f ) + 1.0f ) );
+
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( 25, -2, 25) ) );
+
+            mass = 0;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
+            tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
+        }
+        else if( objectRegistry[ index ].getName( ) == "cube" )
+        {
+            boxIndex = index;
+
+            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getScale( ).x / 2.0f ) + 1.0f ) );
+
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( 0, -200, 0 ) ) );
+
+            mass = 0;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
+            tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
+        }
+        else if( objectRegistry[ index ].getName( ) == "table" )
+        {
+            tmpCompoundShape = new btCompoundShape( );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( 0, -3 * objectRegistry[ index ].getScale( ).y / 2, 0 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 1, 0 ), objectRegistry[ index ].getScale( ).x );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( 0, 3 * objectRegistry[ index ].getScale( ).y / 2, 0 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, -1, 0 ), objectRegistry[ index ].getScale( ).x );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( 0, 0, -6 * objectRegistry[ index ].getScale( ).z / 2 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, 1 ), objectRegistry[ index ].getScale( ).x );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( 0, 0, 6 * objectRegistry[ index ].getScale( ).z / 2 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, -1 ), objectRegistry[ index ].getScale( ).x );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( 5 * objectRegistry[ index ].getScale( ).x / 2, 0, 0 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( -1, 0, 0 ), objectRegistry[ index ].getScale( ).x );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( -5 * objectRegistry[ index ].getScale( ).x / 2, 0, 0 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 1, 0, 0 ), objectRegistry[ index ].getScale( ).x );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( 0, 0, 0 ) ) );
+
+            mass = 0;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            objectRegistry[ index ].TableCollider( ).collisionShape = tmpCompoundShape;
+            objectRegistry[ index ].TableCollider( ).rigidBody = tmpRigidBody;
+
+
+        }
+        else
+        {
+            std::cout << "Error: Unexpected Object Name!!!" << std::endl;
+            return false;
+        }
+
+
+        if( objectRegistry[ index ].getName( ) != "table" )
+        {
+            
+
+            objectRegistry[ index ].CollisionInfo( ).push_back( CollisionPtr( ) );
+
+            objectRegistry[ index ].CollisionInfo( )[ objectRegistry[ index ].CollisionInfo( ).size( ) - 1 ].collisionShape = tmpShapePtr;
+            objectRegistry[ index ].CollisionInfo( )[ objectRegistry[ index ].CollisionInfo( ).size( ) - 1 ].rigidBody = tmpRigidBody;
+        }        
+
+        dynamicsWorldPtr->addRigidBody( tmpRigidBody );
+
+        tmpCompoundShape = NULL;
+        tmpShapePtr = NULL;
+        tmpMotionState = NULL;
+        tmpRigidBody = NULL;
+    }
 
     return true;
 }
@@ -247,6 +464,9 @@ bool Graphics::Initialize
 void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
+
+    dynamicsWorldPtr->stepSimulation( dt, 10 );
+
 
     // Update the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -338,6 +558,11 @@ std::string Graphics::ErrorString(GLenum error)
 ***************************************/
 bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 {
+    btTransform trans;
+    btScalar modTrans[ 16 ];
+
+    
+
     if( ( objectID > objectRegistry.getSize( ) ) )
     {
          return false;
@@ -350,11 +575,18 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
     objectRegistry[ objectID ].commitScale( );
 
-    objectRegistry[ objectID ].incrementAngle( dt );    
+    if( !objectRegistry[ objectID ].CollisionInfo( ).empty( ) )
+    {
+        objectRegistry[ objectID ].CollisionInfo( )[ 0 ].rigidBody->getMotionState( )->getWorldTransform( trans );
 
-    objectRegistry[ objectID ].commitRotation( );
+        trans.getOpenGLMatrix( modTrans );
 
-    objectRegistry[ objectID ].commitParentLocation( );    
+        objectRegistry[ objectID ].setBulletTransform( glm::make_mat4( modTrans ) );
+
+        objectRegistry[ objectID ].commitBulletTransform( );
+    }    
+
+    
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////
@@ -487,5 +719,22 @@ void Graphics::startTracking( int planet )
     }
 
    cameraTracking = true;
+}
+
+void Graphics::moveBox( glm::vec3 pos )
+{
+    btTransform currPos;
+
+    if( objectRegistry.getSize( ) > boxIndex && !objectRegistry[ boxIndex ].CollisionInfo( ).empty( ) )
+    {
+        objectRegistry[ boxIndex ].CollisionInfo( )[ 0 ].rigidBody->getMotionState( )->getWorldTransform( currPos );
+
+        currPos.setOrigin( btVector3( pos.x / 5.0f, -25, pos.z / 5.0f ) );
+
+        objectRegistry[ boxIndex ].CollisionInfo( )[ 0 ].rigidBody->getMotionState( )->setWorldTransform( currPos );
+
+        objectRegistry[ boxIndex ].CollisionInfo( )[ 0 ].rigidBody->translate( btVector3( pos.x, pos.y, pos.z ) );
+    }
+    
 }
 

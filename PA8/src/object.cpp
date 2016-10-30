@@ -9,6 +9,8 @@ Object::Object()
 {    
     model = glm::mat4(1.0f);
 
+    bulletTransform = glm::mat2( 1.0f );
+
     rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
 
     scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
@@ -593,4 +595,24 @@ std::string & Object::Name( )
 const std::string & Object::getName( )
 {
     return name;
+}
+
+void Object::setBulletTransform( const glm::mat4 & bTrans )
+{
+    bulletTransform = bTrans;
+}
+
+void Object::commitBulletTransform( )
+{
+    transformVector.push_back( bulletTransform );
+}
+
+std::vector<CollisionPtr>& Object::CollisionInfo( )
+{
+    return collisionInfo;
+}
+
+CompoundCollisionPtr & Object::TableCollider( )
+{
+    return tableCollider;
 }

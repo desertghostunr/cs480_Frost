@@ -6,6 +6,23 @@
 #include "graphics_headers.h"
 #include "ObjectModel.h"
 
+
+struct CollisionPtr
+{
+    btCollisionShape* collisionShape;
+    btRigidBody* rigidBody;
+
+    CollisionPtr(  ): collisionShape( NULL ), rigidBody( NULL ){ }
+};
+
+struct CompoundCollisionPtr
+{
+    btCompoundShape* collisionShape;
+    btRigidBody* rigidBody;
+
+    CompoundCollisionPtr( ) : collisionShape( NULL ), rigidBody( NULL ) { }
+};
+
 struct Origin
 {
     glm::vec3 translation;
@@ -103,6 +120,14 @@ class Object
 
         const std::string& getName( );
 
+        void setBulletTransform( const glm::mat4& bTrans );
+
+        void commitBulletTransform( );
+
+        std::vector<CollisionPtr>& CollisionInfo( );
+
+        CompoundCollisionPtr& TableCollider( );
+
     private:
         //model info
         glm::mat4 model;
@@ -117,6 +142,8 @@ class Object
         glm::vec3 translationVector; //translation in cartesian space
         glm::vec3 rotationVector; //rotation vector in cartesian space
 
+        glm::mat4 bulletTransform;
+
         //vector of transforms to apply to the object 
         std::vector<glm::mat4> transformVector;
 
@@ -126,6 +153,9 @@ class Object
         float angle;
 
         std::string name;
+        std::vector<CollisionPtr> collisionInfo;
+
+        CompoundCollisionPtr tableCollider;
 };
 
 #endif /* OBJECT_H */

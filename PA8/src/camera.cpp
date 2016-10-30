@@ -21,7 +21,13 @@ bool Camera::Initialize(int w, int h)
     //    ...Like you should update it before you render more dynamic 
     //    for this project having them static will be fine
 
-    LookTopDown();
+    leftRight = 0.0;
+    upDown = 0.0;
+    zoom = 250.0;
+    topDown = false;
+    view = glm::lookAt( glm::vec3( 0.0, 250.0, zoom ), //Eye Position
+                        glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
+                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 
     projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                    float(w)/float(h), //Aspect Ratio, so Circles stay Circular
@@ -47,9 +53,9 @@ void Camera::LookSideToSide()
 {
     leftRight = 0.0;
     upDown = 0.0;
-    zoom = 150.0;
+    zoom = 250.0;
     topDown = false;
-    view = glm::lookAt( glm::vec3( 0.0, 8.0, zoom), //Eye Position
+    view = glm::lookAt( glm::vec3( 0.0, 250.0, zoom), //Eye Position
                                    glm::vec3( leftRight, upDown, 0.0), //Focus point
                                    glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 

@@ -37,6 +37,8 @@ class Graphics
 
         void startTracking( int planet );
 
+        void moveBox( glm::vec3 pos );
+
 
 
     private:
@@ -64,6 +66,8 @@ class Graphics
         btDiscreteDynamicsWorld *dynamicsWorldPtr;
 
         /////////////////////////////////////////////
+
+        unsigned int boxIndex;
 };
 
 #endif /* GRAPHICS_H */
