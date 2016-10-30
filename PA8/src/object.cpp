@@ -83,7 +83,7 @@ glm::mat4 Object::GetModel()
 @notes None
 
 ***************************************/
-Origin & Object::getOrigin( )
+Origin Object::getOrigin( )
 {
     Origin tmpOrigin;
     tmpOrigin.translation = translationVector;
@@ -583,4 +583,14 @@ float Object::getAngle( )
 void Object::setAngle( float newAngle )
 {
     angle = newAngle;
+}
+
+std::string & Object::Name( )
+{
+    return name;
+}
+
+const std::string & Object::getName( )
+{
+    return name;
 }

@@ -51,7 +51,7 @@ class Object
 
         glm::mat4 GetModel();
 
-        Origin& getOrigin( );
+        Origin getOrigin( );
 
         ObjectModel& getObjectModel( );
 
@@ -99,6 +99,10 @@ class Object
 
         void setAngle( float newAngle );
 
+        std::string& Name( );
+
+        const std::string& getName( );
+
     private:
         //model info
         glm::mat4 model;
@@ -120,6 +124,8 @@ class Object
         unsigned int parentID;
 
         float angle;
+
+        std::string name;
 };
 
 #endif /* OBJECT_H */

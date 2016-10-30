@@ -135,6 +135,15 @@ bool Graphics::Initialize
         objectRegistry[ objectRegistry.getSize( ) - 1
                       ].setScale( progInfo.objectData[ pIndex ].scale );
 
+        objectRegistry[ objectRegistry.getSize( ) - 1 
+        ].setRotationVector( progInfo.objectData[ pIndex ].rotationAxes );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1 ].setAngle( progInfo.objectData[ pIndex ].rotationAngles.y );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1 ].setTranslationVector( progInfo.objectData[ pIndex ].position );
+
+        objectRegistry[ objectRegistry.getSize( ) - 1 ].Name( ) = progInfo.objectData[ pIndex ].name;
+
     }
 
     for( pIndex = 0; pIndex < objectRegistry.getSize( ); pIndex++ )

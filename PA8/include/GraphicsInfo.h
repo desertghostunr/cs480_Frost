@@ -12,6 +12,7 @@
 #define GRAPHICSINFO_H
 
 #include <vector>
+#include <string>
 #include "graphics_headers.h"
 
 struct ObjectInfo
@@ -25,13 +26,16 @@ struct ObjectInfo
     glm::vec3 rotationAxes;
     glm::vec3 rotationAngles;
 
+    std::string name;
+
     ObjectInfo( ) :
         modelID( -1 ),
         childID(  ),
         scale( glm::vec3( 1.0f, 1.0f, 1.0f ) ),
         position( glm::vec3( 0.0f, 0.0f, 0.0f ) ),
         rotationAxes( glm::vec3( 0.0f, 0.0f, 0.0f ) ),
-        rotationAngles( glm::vec3( 0.0f, 0.0f, 0.0f ) )
+        rotationAngles( glm::vec3( 0.0f, 0.0f, 0.0f ) ),
+        name(  )
     { }
     ObjectInfo( const ObjectInfo& objInfo ) :
         modelID( objInfo.modelID ),
@@ -39,9 +43,8 @@ struct ObjectInfo
         scale( objInfo.scale ),
         position( objInfo.position ),
         rotationAxes( objInfo.rotationAxes ),
-        rotationAngles( objInfo.rotationAngles )
-
-
+        rotationAngles( objInfo.rotationAngles ),
+        name( objInfo.name )
     {
         //nothing to do
     }

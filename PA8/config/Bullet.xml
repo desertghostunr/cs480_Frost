@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <Object path ="models/ball.obj">
+    <name>ball</name>
+    <xScale>1</xScale>
+    <yScale>1</yScale>
+    <zScale>1</zScale>
+    <xPosition>0</xPosition>
+    <yPosition>0</yPosition>
+    <yPosition>0</yPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
+  <Object path ="models/cube.obj">
+    <name>cube</name>
+    <xScale>1</xScale>
+    <yScale>1</yScale>
+    <zScale>1</zScale>
+    <xPosition>0</xPosition>
+    <yPosition>0</yPosition>
+    <yPosition>0</yPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
+  <Object path ="models/cylinder.obj">
+    <name>cylinder</name>
+    <xScale>1</xScale>
+    <yScale>1</yScale>
+    <zScale>1</zScale>
+    <xPosition>0</xPosition>
+    <yPosition>0</yPosition>
+    <yPosition>0</yPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
+  <Object path ="models/box.obj">
+    <name>table</name>
     <xScale>1</xScale>
     <yScale>1</yScale>
     <zScale>1</zScale>

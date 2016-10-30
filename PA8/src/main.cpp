@@ -34,6 +34,7 @@ const string Y_ROT_ANGLE = "yRotationAngle";
 const string Z_ROT_ANGLE = "zRotationAngle";
 const string VERTEX = "Vertex";
 const string FRAGMENT = "Fragment";
+const string NAME = "name";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -337,7 +338,11 @@ bool ProcessConfigurationFileHelper
 
         std::stringstream strStream( tempStr );
 
-        if( childNode->name( ) == X_SCALE )
+        if( childNode->name( ) == NAME )
+        {
+            strStream >> progInfo.objectData[ pIndex ].name;
+        }
+        else if( childNode->name( ) == X_SCALE )
         {
             strStream >> progInfo.objectData[ pIndex ].scale.x;
         }
