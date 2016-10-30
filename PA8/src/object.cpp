@@ -9,7 +9,7 @@ Object::Object()
 {    
     model = glm::mat4(1.0f);
 
-    bulletTransform = glm::mat2( 1.0f );
+    bulletTransform = glm::mat4( 1.0f );
 
     rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
 
