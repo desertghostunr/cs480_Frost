@@ -300,7 +300,7 @@ bool ProcessConfigurationFileHelper
 
     size_t strIndex;
 
-    unsigned int pIndex = 0, mIndex = 0, planetIndex;
+    unsigned int pIndex = 0, mIndex = 0;
 
     if( parentNode == NULL )
     {

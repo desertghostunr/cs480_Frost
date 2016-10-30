@@ -14,6 +14,7 @@ endif
 # Paths, use this to set Include directories, or library directories; uncomment in all: if used
 #PATHI=-I/usr/local/include/ 
 #PATHL=-L/usr/local/lib/
+PATHB=-I/usr/include/bullet
 
 #Compiler Flags
 CXXFLAGS=-g -Wall -std=c++0x
@@ -26,37 +27,37 @@ INCLUDES=-I../include
 
 
 all: $(O_FILES)
-	$(CC) $(CXXFLAGS) -o Pinball $(O_FILES) $(LIBS) #$(PATHI) $(PATHL)
+	$(CC) $(CXXFLAGS) -o Pinball $(O_FILES) $(LIBS) #$(PATHI) $(PATHL) 
 	cp -r ../shaders .
 	cp -r ../models .
 	cp -r ../config .
 
 main.o: ../src/main.cpp
-	$(CC) $(CXXFLAGS) -c ../src/main.cpp -o main.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/main.cpp -o main.o $(INCLUDES) $(PATHB)
 
 camera.o: ../src/camera.cpp
-	$(CC) $(CXXFLAGS) -c ../src/camera.cpp -o camera.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/camera.cpp -o camera.o $(INCLUDES) $(PATHB)
 
 engine.o: ../src/engine.cpp
-	$(CC) $(CXXFLAGS) -c ../src/engine.cpp -o engine.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/engine.cpp -o engine.o $(INCLUDES) $(PATHB)
 
 graphics.o: ../src/graphics.cpp
-	$(CC) $(CXXFLAGS) -c ../src/graphics.cpp -o graphics.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/graphics.cpp -o graphics.o $(INCLUDES) $(PATHB)
 
 object.o: ../src/object.cpp
-	$(CC) $(CXXFLAGS) -c ../src/object.cpp -o object.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/object.cpp -o object.o $(INCLUDES) $(PATHB)
 
 shader.o: ../src/shader.cpp
-	$(CC) $(CXXFLAGS) -c ../src/shader.cpp -o shader.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/shader.cpp -o shader.o $(INCLUDES) $(PATHB)
 
 window.o: ../src/window.cpp
-	$(CC) $(CXXFLAGS) -c ../src/window.cpp -o window.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/window.cpp -o window.o $(INCLUDES) $(PATHB)
 
 ObjectTable.o: ../src/ObjectTable.cpp
-	$(CC) $(CXXFLAGS) -c ../src/ObjectTable.cpp -o ObjectTable.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/ObjectTable.cpp -o ObjectTable.o $(INCLUDES) $(PATHB)
 
 ObjectModel.o: ../src/ObjectModel.cpp
-	$(CC) $(CXXFLAGS) -c ../src/ObjectModel.cpp -o ObjectModel.o $(INCLUDES)
+	$(CC) $(CXXFLAGS) -c ../src/ObjectModel.cpp -o ObjectModel.o $(INCLUDES) $(PATHB)
 
 
 clean:
