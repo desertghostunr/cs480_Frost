@@ -607,7 +607,7 @@ void Object::commitBulletTransform( )
     transformVector.push_back( bulletTransform );
 }
 
-std::vector<CollisionPtr>& Object::CollisionInfo( )
+CollisionPtr & Object::CollisionInfo( )
 {
     return collisionInfo;
 }
@@ -615,4 +615,16 @@ std::vector<CollisionPtr>& Object::CollisionInfo( )
 CompoundCollisionPtr & Object::TableCollider( )
 {
     return tableCollider;
+}
+
+
+glm::vec3 & Object::getBScale( )
+{
+    return bScale;
+}
+
+
+const glm::vec3 & Object::getTransVec( )
+{
+    return translationVector;
 }

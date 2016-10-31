@@ -13,6 +13,11 @@ struct CollisionPtr
     btRigidBody* rigidBody;
 
     CollisionPtr(  ): collisionShape( NULL ), rigidBody( NULL ){ }
+
+    bool empty( )
+    {
+        return ( collisionShape == NULL ) && ( rigidBody == NULL );
+    }
 };
 
 struct CompoundCollisionPtr
@@ -21,6 +26,11 @@ struct CompoundCollisionPtr
     btRigidBody* rigidBody;
 
     CompoundCollisionPtr( ) : collisionShape( NULL ), rigidBody( NULL ) { }
+
+    bool empty( )
+    {
+        return ( collisionShape == NULL ) && ( rigidBody == NULL );
+    }
 };
 
 struct Origin
@@ -124,9 +134,13 @@ class Object
 
         void commitBulletTransform( );
 
-        std::vector<CollisionPtr>& CollisionInfo( );
+        CollisionPtr& CollisionInfo( );
 
         CompoundCollisionPtr& TableCollider( );
+
+        glm::vec3 & getBScale( );
+
+        const glm::vec3 & getTransVec( );
 
     private:
         //model info
@@ -152,8 +166,10 @@ class Object
 
         float angle;
 
+        glm::vec3 bScale;
+
         std::string name;
-        std::vector<CollisionPtr> collisionInfo;
+        CollisionPtr collisionInfo;
 
         CompoundCollisionPtr tableCollider;
 };

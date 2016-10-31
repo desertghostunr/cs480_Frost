@@ -23,6 +23,9 @@ const string SHADER = "Shader";
 const string X_SCALE = "xScale";
 const string Y_SCALE = "yScale";
 const string Z_SCALE = "zScale";
+const string BULLET_X_SCALE = "xBScale";
+const string BULLET_Y_SCALE = "yBScale";
+const string BULLET_Z_SCALE = "zBScale";
 const string X_POS = "xPosition";
 const string Y_POS = "yPosition";
 const string Z_POS = "zPosition";
@@ -353,6 +356,18 @@ bool ProcessConfigurationFileHelper
         else if( childNode->name( ) == Z_SCALE )
         {
             strStream >> progInfo.objectData[ pIndex ].scale.z;
+        }
+        else if( childNode->name( ) == BULLET_X_SCALE )
+        {
+            strStream >> progInfo.objectData[ pIndex ].bScale.x;
+        }
+        else if( childNode->name( ) == BULLET_Y_SCALE )
+        {
+            strStream >> progInfo.objectData[ pIndex ].bScale.y;
+        }
+        else if( childNode->name( ) == BULLET_Z_SCALE )
+        {
+            strStream >> progInfo.objectData[ pIndex ].bScale.z;
         }
         else if( childNode->name( ) == X_POS )
         {
