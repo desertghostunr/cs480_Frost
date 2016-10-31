@@ -10,7 +10,7 @@
     <zBScale>5</zBScale>
     <xPosition>0</xPosition>
     <yPosition>0</yPosition>
-    <yPosition>0</yPosition>
+    <zPosition>0</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -26,9 +26,9 @@
     <xBScale>10</xBScale>
     <yBScale>10</yBScale>
     <zBScale>10</zBScale>
-    <xPosition>-20</xPosition>
-    <yPosition>-2</yPosition>
-    <yPosition>20</yPosition>
+    <xPosition>-25</xPosition>
+    <yPosition>-25</yPosition>
+    <zPosition>-25</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -45,8 +45,8 @@
     <yBScale>10</yBScale>
     <zBScale>10</zBScale>
     <xPosition>30</xPosition>
-    <yPosition>-20</yPosition>
-    <yPosition>20</yPosition>
+    <yPosition>-30</yPosition>
+    <zPosition>20</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -64,7 +64,7 @@
     <zBScale>70</zBScale>
     <xPosition>0</xPosition>
     <yPosition>0</yPosition>
-    <yPosition>0</yPosition>
+    <zPosition>0</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
