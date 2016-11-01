@@ -7,6 +7,27 @@ btRigidBody* ballPtr;
 btScalar maxSpeed;
 
 
+void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
+{
+    btVector3 velocity;
+    btScalar speed;
+
+    if( ballPtr == NULL )
+    {
+        return;
+    }
+
+    velocity = ballPtr->getLinearVelocity( );
+    speed = velocity.length( );
+
+    if( speed > maxSpeed )
+    {
+        velocity *= maxSpeed / speed;
+        ballPtr->setLinearVelocity( velocity );
+    }
+}
+
+
 Graphics::Graphics()
 {
     broadphasePtr = NULL;
@@ -779,22 +800,4 @@ void Graphics::moveBox( glm::vec3 pos )
     
 }
 
-void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
-{
-    btVector3 velocity;
-    btScalar speed;
 
-    if( ballPtr == NULL )
-    {
-        return;
-    }
-
-    velocity = ballPtr->getLinearVelocity( );
-    speed = velocity.length( );
-
-    if( speed > maxSpeed )
-    {
-        velocity *= maxSpeed / speed;
-        ballPtr->setLinearVelocity( velocity );
-    }
-}

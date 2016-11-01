@@ -63,7 +63,6 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
 
     // Set the time
     m_currentTimeMillis = GetCurrentTimeMillis();
-    std::cout << "HI AGAIN1" << std::endl;
     // No errors
     return true;
 }
