@@ -43,6 +43,7 @@ Engine::~Engine()
 bool Engine::Initialize( const GraphicsInfo& progInfo )
 {
     // Start a window
+    
     m_window = new Window();
     if(!m_window->Initialize(m_WINDOW_NAME, &m_WINDOW_WIDTH, &m_WINDOW_HEIGHT))
     {
@@ -51,6 +52,7 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
     }
     trackingID = -1;
     // Start the graphics
+    
     m_graphics = new Graphics();
     if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, progInfo ))
     {
@@ -60,7 +62,7 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
 
     // Set the time
     m_currentTimeMillis = GetCurrentTimeMillis();
-
+    std::cout << "HI AGAIN1" << std::endl;
     // No errors
     return true;
 }
@@ -75,11 +77,13 @@ void Engine::Run()
         m_DT = getDT();
 
         // Check the keyboard input
+
         while(SDL_PollEvent(&m_event) != 0)
         {
             Mouse( );
             Keyboard();
         }
+
 
         // Update and render the graphics
         m_graphics->Update(m_DT);

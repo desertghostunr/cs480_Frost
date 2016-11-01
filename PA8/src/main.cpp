@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     // Start an engine and run it then cleanup after
     Engine *engine = new Engine("Tutorial Window Name", 1200, 760);
     GraphicsInfo progInfo;
-
+    
     //handle cmd line parameters
     if( !ProcessCommandLineParameters( argc, argv, progInfo ) )
     {
@@ -77,6 +77,7 @@ int main(int argc, char **argv)
     }
 
     //initialize engine and run it
+    
     if(!engine->Initialize(progInfo))
     {
         printf("The engine failed to start.\n");
@@ -84,6 +85,7 @@ int main(int argc, char **argv)
         engine = NULL;
         return 1;
     }
+    
     engine->Run();
     delete engine;
     engine = NULL;
@@ -121,7 +123,7 @@ bool ProcessCommandLineParameters
     {
         return false;
     }
-
+    
     for( index = 1; index < argCount; index++ )
     {
         tmpStr = argVector[ index ];
@@ -129,7 +131,7 @@ bool ProcessCommandLineParameters
         {
             index++;
             tmpStr = argVector[ index ];
-
+            
             if( !ReadConfigurationFile( tmpStr, progInfo ) )
             {
                 cout << "Failure processing the configuration file!" << std::endl;
@@ -186,7 +188,7 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
 {
     ifstream fileOpen( fileName.c_str( ) );
     vector<char> buffer;
-
+    
     rapidxml::xml_document<> doc;
     rapidxml::xml_node<> *rootNode;  
     
@@ -209,7 +211,7 @@ bool ReadConfigurationFile( const std::string & fileName, GraphicsInfo & progInf
     doc.parse<0>( &buffer[ 0 ] );
 
     rootNode = doc.first_node( "Configuration" );
-
+    
     return ProcessConfigurationFile( rootNode, progInfo );
 }
 
@@ -245,16 +247,18 @@ bool ProcessConfigurationFile
         {
             noError = ( noError && ProcessConfigurationFileHelper( parentNode, 
                                                                    progInfo ) );
+	  
         }
         else if( parentNode->name( ) == SHADER )
         {
             if( parentNode->first_attribute( "name" )->value( ) == VERTEX )
             {
                 vertShader = true;
-
+                
                 tempStr = parentNode->value( );
                 progInfo.shaderVector.push_back( 
                       std::pair<GLenum, string>( GL_VERTEX_SHADER, tempStr ) );
+		
             }
             else if( parentNode->first_attribute( "name" )->value( ) == FRAGMENT )
             {
@@ -263,7 +267,9 @@ bool ProcessConfigurationFile
                 tempStr = parentNode->value( );
                 progInfo.shaderVector.push_back( 
                       std::pair<GLenum, string>( GL_FRAGMENT_SHADER, tempStr ) );
+		
             }
+         
         }
         else
         {
@@ -272,7 +278,7 @@ bool ProcessConfigurationFile
     }
 
 
-
+	
     return ( noError && vertShader && fragShader && !progInfo.modelVector.empty( ) );
 }
 

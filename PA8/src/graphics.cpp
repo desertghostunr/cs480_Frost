@@ -111,7 +111,6 @@ bool Graphics::Initialize
         // This is here to grab the error that comes from glew init.
         // This error is an GL_INVALID_ENUM that has no effects on the performance
         glGetError();
-
         //Check for error
         if (status != GLEW_OK)
         {
@@ -139,7 +138,6 @@ bool Graphics::Initialize
     btScalar mass;
     btVector3 inertia;
     btTransform transform;
-
     // Init Camera
     m_camera = new Camera();
     cameraTracking = false;
@@ -148,7 +146,7 @@ bool Graphics::Initialize
         printf("Camera Failed to Initialize\n");
         return false;
     }
-
+	
     modelRegistry.clear( );
 
 
@@ -171,11 +169,12 @@ bool Graphics::Initialize
         }
 
     }
-
+    
     for( pIndex = 0; pIndex < progInfo.objectData.size( ); pIndex++ )
     {
+        
         objectRegistry.addObject( );
-
+	std::cout << pIndex << "WHAT "<< std::endl;
         if( progInfo.objectData[ pIndex ].modelID < modelRegistry.size( ) )
         {
 
@@ -204,7 +203,7 @@ bool Graphics::Initialize
 
         objectRegistry[ objectRegistry.getSize( ) - 1 ].getBScale( ) = progInfo.objectData[ pIndex ].bScale;
     }
-
+    
     for( pIndex = 0; pIndex < objectRegistry.getSize( ); pIndex++ )
     {
 
@@ -215,7 +214,7 @@ bool Graphics::Initialize
 
 
     }
-
+    std::cout << "HI AGAINShade" << std::endl;
     // Set up the shaders
     m_shader = new Shader();
     if(!m_shader->Initialize())
@@ -313,12 +312,14 @@ bool Graphics::Initialize
 
             inertia = btVector3( 0, 0, 0 );
 
+
             tmpShapePtr->calculateLocalInertia( mass, inertia );
 
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
             rigidBodyConstruct.m_restitution = 1.25f;
+  
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
             
@@ -429,6 +430,7 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
             rigidBodyConstruct.m_restitution = 1.0f;
+            
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 

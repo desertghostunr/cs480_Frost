@@ -82,6 +82,7 @@ ObjectTable::~ObjectTable( )
 ***************************************/
 unsigned int ObjectTable::addObject( unsigned int parent )
 {
+    
     if( ( ( int ) parent < -1 ) && ( parent < data.size( ) ) )
     {
         return -1;
