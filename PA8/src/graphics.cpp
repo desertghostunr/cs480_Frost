@@ -318,6 +318,8 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
+            rigidBodyConstruct.m_restitution = 1.25f;
+
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
             
         }
@@ -336,6 +338,8 @@ bool Graphics::Initialize
 
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            rigidBodyConstruct.m_restitution = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
@@ -359,6 +363,8 @@ bool Graphics::Initialize
 
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            rigidBodyConstruct.m_restitution = 0.5f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
@@ -421,6 +427,8 @@ bool Graphics::Initialize
 
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
+
+            rigidBodyConstruct.m_restitution = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
