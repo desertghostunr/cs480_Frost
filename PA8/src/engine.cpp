@@ -49,7 +49,8 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
     {
         printf("The window failed to initialize.\n");
         return false;
-    }
+    }    
+
     trackingID = -1;
     // Start the graphics
     
@@ -285,20 +286,28 @@ void Engine::Mouse( )
     Coord currentPos;
     Coord posChange;
 
+    static bool mouse_initialized = false;
+
     if( m_event.type == SDL_MOUSEBUTTONDOWN )
     {
         if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_LEFT )    )             
         {
             if( m_graphics != NULL )
             {
-                
+                if( SDL_SetRelativeMouseMode( SDL_TRUE ) )
+                {
+                    printf( "The mouse is in Relative Mode. \n" );
+                }
             } 
         }
         else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_RIGHT ) )
         {
             if( m_graphics != NULL )
             {
-                
+                if( SDL_SetRelativeMouseMode( SDL_FALSE ) )
+                {
+                    printf( "The mouse is in Relative Mode. \n" );
+                }
             } 
         }
         else if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_MIDDLE ) )
@@ -327,7 +336,16 @@ void Engine::Mouse( )
     {
         if( m_graphics != NULL )
         {
-            std::cout << m_event.motion.x << ", " << m_event.motion.y << std::endl;
+            if( !mouse_initialized )
+            {
+                if( SDL_SetRelativeMouseMode( SDL_TRUE ) )
+                {
+                    printf( "The mouse is in Relative Mode. \n" );
+                }
+
+                mouse_initialized = true;
+            }
+
             currentPos.x = m_event.motion.x;
             currentPos.y = m_event.motion.y;
 
