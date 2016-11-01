@@ -764,11 +764,11 @@ void Graphics::moveBox( glm::vec3 pos )
 
         change = currPos.getOrigin( ) + btVector3( pos.x, 0, pos.z );
 
-        change.setX( std::min( change.getX( ), boxEdges.r - 2 * objectRegistry[ boxIndex ].getBScale( ).x ) );
-        change.setX( std::max( change.getX( ), boxEdges.b + 2 * objectRegistry[ boxIndex ].getBScale( ).x ) );
+        change.setX( std::min( change.getX( ), boxEdges.r - objectRegistry[ boxIndex ].getBScale( ).x ) );
+        change.setX( std::max( change.getX( ), boxEdges.b + objectRegistry[ boxIndex ].getBScale( ).x ) );
 
-        change.setZ( std::min( change.getZ( ), boxEdges.g - 2 * objectRegistry[ boxIndex ].getBScale( ).z ) );
-        change.setZ( std::max( change.getZ( ), boxEdges.a + 2 * objectRegistry[ boxIndex ].getBScale( ).z ) );
+        change.setZ( std::min( change.getZ( ), boxEdges.g - objectRegistry[ boxIndex ].getBScale( ).z ) );
+        change.setZ( std::max( change.getZ( ), boxEdges.a + objectRegistry[ boxIndex ].getBScale( ).z ) );
 
         currPos.setOrigin( change );
 

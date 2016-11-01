@@ -23,9 +23,9 @@
     <xScale>10</xScale>
     <yScale>10</yScale>
     <zScale>10</zScale>
-    <xBScale>10</xBScale>
-    <yBScale>10</yBScale>
-    <zBScale>10</zBScale>
+    <xBScale>18</xBScale>
+    <yBScale>18</yBScale>
+    <zBScale>18</zBScale>
     <xPosition>-25</xPosition>
     <yPosition>0</yPosition>
     <zPosition>-25</zPosition>
