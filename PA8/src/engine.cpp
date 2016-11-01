@@ -282,6 +282,9 @@ void Engine::Keyboard()
 ***************************************/
 void Engine::Mouse( )
 {
+    Coord currentPos;
+    Coord posChange;
+
     if( m_event.type == SDL_MOUSEBUTTONDOWN )
     {
         if( SDL_GetMouseState( NULL, NULL ) & SDL_BUTTON( SDL_BUTTON_LEFT )    )             
@@ -325,7 +328,15 @@ void Engine::Mouse( )
         if( m_graphics != NULL )
         {
             std::cout << m_event.motion.x << ", " << m_event.motion.y << std::endl;
-            m_graphics->moveBox( glm::vec3( m_event.motion.x, 0.0, m_event.motion.y ) );
+            currentPos.x = m_event.motion.x;
+            currentPos.y = m_event.motion.y;
+
+            posChange.x = currentPos.x - previousMousePosition.x;
+            posChange.y = currentPos.y - previousMousePosition.y;
+
+            m_graphics->moveBox( glm::vec3( posChange.x, 0.0, posChange.y ) );
+
+            previousMousePosition = currentPos;
         }
     }
     

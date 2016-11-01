@@ -14,6 +14,39 @@
 #include "window.h"
 #include "graphics.h"
 
+struct Coord
+{
+    int x;
+    int y;
+
+    Coord( ) : x( 0 ), y( 0 )
+    {
+
+    }
+
+    Coord( int newX, int newY ) : x( newX ), y( newY )
+    {
+
+    }
+
+    Coord( const Coord& src ) : x( src.x ), y( src.y )
+    {
+
+    }
+
+    const Coord& operator = ( const Coord& src )
+    {
+        if( this != &src )
+        {
+            x = src.x;
+            y = src.y;
+        }
+
+        return *this;
+    }
+};
+
+
 class Engine
 {
     public:
@@ -41,7 +74,10 @@ class Engine
         long long m_currentTimeMillis;
         bool m_running;
 
-	int trackingID;
+        int trackingID;
+
+        Coord previousMousePosition;
+
 };
 
 #endif // ENGINE_H

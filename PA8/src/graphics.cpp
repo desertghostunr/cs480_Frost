@@ -1,5 +1,11 @@
 #include "graphics.h"
 
+#include <algorithm>
+
+btRigidBody* ballPtr;
+
+btScalar maxSpeed;
+
 
 Graphics::Graphics()
 {
@@ -9,7 +15,11 @@ Graphics::Graphics()
     solverPtr = NULL;
     dynamicsWorldPtr = NULL;
 
+    ballPtr = NULL;
+
     boxIndex = 0;
+
+    maxSpeed = 50;
 }
 
 Graphics::~Graphics()
@@ -51,9 +61,7 @@ Graphics::~Graphics()
 
                 objectRegistry[ index ].CollisionInfo( ).collisionShape = NULL;
             }
-        }
-
-        
+        }       
     }
 
 
@@ -174,7 +182,6 @@ bool Graphics::Initialize
     {
         
         objectRegistry.addObject( );
-	std::cout << pIndex << "WHAT "<< std::endl;
         if( progInfo.objectData[ pIndex ].modelID < modelRegistry.size( ) )
         {
 
@@ -214,7 +221,6 @@ bool Graphics::Initialize
 
 
     }
-    std::cout << "HI AGAINShade" << std::endl;
     // Set up the shaders
     m_shader = new Shader();
     if(!m_shader->Initialize())
@@ -303,6 +309,8 @@ bool Graphics::Initialize
     {
         if( objectRegistry[ index ].getName( ) == "ball" )
         {
+            
+
             tmpShapePtr = new btSphereShape( ( objectRegistry[ index ].getBScale( ).x /2.0f ) + 1.0f );
 
 
@@ -319,9 +327,14 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
             rigidBodyConstruct.m_restitution = 1.25f;
+            rigidBodyConstruct.m_friction = 1.0f;
   
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setLinearFactor( btVector3( 1, 0, 1 ) );
+
+            ballPtr = tmpRigidBody;
             
         }
         else if( objectRegistry[ index ].getName( ) == "cylinder" )
@@ -341,6 +354,7 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
             rigidBodyConstruct.m_restitution = 1.0f;
+            rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
@@ -366,6 +380,7 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
             rigidBodyConstruct.m_restitution = 0.5f;
+            rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
@@ -391,28 +406,40 @@ bool Graphics::Initialize
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, 0, -1 * objectRegistry[ index ].getBScale( ).z / 2 ) );
+
+            boxEdges.a = -1 * objectRegistry[ index ].getBScale( ).z / 2;
+
+            transform.setOrigin( btVector3( 0, 0, boxEdges.a ) );
 
             tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, 1 ), 10 );
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, 0, 1 * objectRegistry[ index ].getBScale( ).z / 2 ) );
+
+            boxEdges.g = 1 * objectRegistry[ index ].getBScale( ).z / 2;
+
+            transform.setOrigin( btVector3( 0, 0, boxEdges.g ) );
 
             tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, -1 ), 10 );
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( 1 * objectRegistry[ index ].getBScale( ).x / 2, 0, 0 ) );
+
+            boxEdges.r = 1 * objectRegistry[ index ].getBScale( ).x / 2;
+
+            transform.setOrigin( btVector3( boxEdges.r, 0, 0 ) );
 
             tmpShapePtr = new btStaticPlaneShape( btVector3( -1, 0, 0 ), 10 );
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( -1 * objectRegistry[ index ].getBScale( ).x / 2, 0, 0 ) );
+
+            boxEdges.b = -1 * objectRegistry[ index ].getBScale( ).x / 2;
+
+            transform.setOrigin( btVector3( boxEdges.b, 0, 0 ) );
 
             tmpShapePtr = new btStaticPlaneShape( btVector3( 1, 0, 0 ), 10);
 
@@ -430,6 +457,7 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
             rigidBodyConstruct.m_restitution = 1.0f;
+            rigidBodyConstruct.m_friction = 1.0f;
             
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -460,6 +488,8 @@ bool Graphics::Initialize
         tmpRigidBody = NULL;
     }
 
+    dynamicsWorldPtr->setInternalTickCallback( myTickCallback );
+
     return true;
 }
 
@@ -485,7 +515,7 @@ void Graphics::Render()
     unsigned int index;
 
     //clear the screen
-    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClearColor(0.2, 0.1, 0.4, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Start the correct program
@@ -726,12 +756,21 @@ void Graphics::startTracking( int planet )
 void Graphics::moveBox( glm::vec3 pos )
 {
     btTransform currPos;
+    btVector3 change;
 
     if( objectRegistry.getSize( ) > boxIndex && !objectRegistry[ boxIndex ].CollisionInfo( ).empty( ) )
     {
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( currPos );
 
-        currPos.setOrigin( btVector3( pos.x / 5.0f, objectRegistry[ boxIndex ].getTransVec( ).y, pos.z / 5.0f ) );
+        change = currPos.getOrigin( ) + btVector3( pos.x, 0, pos.z );
+
+        change.setX( std::min( change.getX( ), boxEdges.r - 2 * objectRegistry[ boxIndex ].getBScale( ).x ) );
+        change.setX( std::max( change.getX( ), boxEdges.b + 2 * objectRegistry[ boxIndex ].getBScale( ).x ) );
+
+        change.setZ( std::min( change.getZ( ), boxEdges.g - 2 * objectRegistry[ boxIndex ].getBScale( ).z ) );
+        change.setZ( std::max( change.getZ( ), boxEdges.a + 2 * objectRegistry[ boxIndex ].getBScale( ).z ) );
+
+        currPos.setOrigin( change );
 
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->setWorldTransform( currPos );
 
@@ -740,3 +779,22 @@ void Graphics::moveBox( glm::vec3 pos )
     
 }
 
+void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
+{
+    btVector3 velocity;
+    btScalar speed;
+
+    if( ballPtr == NULL )
+    {
+        return;
+    }
+
+    velocity = ballPtr->getLinearVelocity( );
+    speed = velocity.length( );
+
+    if( speed > maxSpeed )
+    {
+        velocity *= maxSpeed / speed;
+        ballPtr->setLinearVelocity( velocity );
+    }
+}

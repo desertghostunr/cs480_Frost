@@ -15,6 +15,8 @@ using namespace std;
 
 #include"Instance.h"
 
+static void myTickCallback( btDynamicsWorld * world, btScalar timeStep );
+
 class Graphics
 {
     public:
@@ -68,6 +70,9 @@ class Graphics
         /////////////////////////////////////////////
 
         unsigned int boxIndex;
+
+        glm::vec4 boxEdges;     
 };
+
 
 #endif /* GRAPHICS_H */
