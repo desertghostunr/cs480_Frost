@@ -370,44 +370,44 @@ bool Graphics::Initialize
             tmpCompoundShape = new btCompoundShape( );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, -3 * objectRegistry[ index ].getBScale( ).y / 2, 0 ) );
+            transform.setOrigin( btVector3( 0, -1 * objectRegistry[ index ].getBScale( ).y / 2, 0 ) );
 
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 1, 0 ), objectRegistry[ index ].getBScale( ).x );
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, 3 * objectRegistry[ index ].getBScale( ).y / 2, 0 ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, -1, 0 ), objectRegistry[ index ].getBScale( ).x );
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 1, 0 ), 10 );
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, 0, -6 * objectRegistry[ index ].getBScale( ).z / 2 ) );
+            transform.setOrigin( btVector3( 0, 1 * objectRegistry[ index ].getBScale( ).y / 2, 0 ) );
 
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, 1 ), objectRegistry[ index ].getBScale( ).x );
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, 0, 6 * objectRegistry[ index ].getBScale( ).z / 2 ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, -1 ), objectRegistry[ index ].getBScale( ).x );
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, -1, 0 ), 10);
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( 5 * objectRegistry[ index ].getBScale( ).x / 2, 0, 0 ) );
+            transform.setOrigin( btVector3( 0, 0, -1 * objectRegistry[ index ].getBScale( ).z / 2 ) );
 
-            tmpShapePtr = new btStaticPlaneShape( btVector3( -1, 0, 0 ), objectRegistry[ index ].getBScale( ).x );
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, 1 ), 10 );
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
             transform.setIdentity( );
-            transform.setOrigin( btVector3( -5 * objectRegistry[ index ].getBScale( ).x / 2, 0, 0 ) );
+            transform.setOrigin( btVector3( 0, 0, 1 * objectRegistry[ index ].getBScale( ).z / 2 ) );
 
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 1, 0, 0 ), objectRegistry[ index ].getBScale( ).x );
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, -1 ), 10 );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( 1 * objectRegistry[ index ].getBScale( ).x / 2, 0, 0 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( -1, 0, 0 ), 10 );
+
+            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
+
+            transform.setIdentity( );
+            transform.setOrigin( btVector3( -1 * objectRegistry[ index ].getBScale( ).x / 2, 0, 0 ) );
+
+            tmpShapePtr = new btStaticPlaneShape( btVector3( 1, 0, 0 ), 10);
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 
@@ -721,7 +721,7 @@ void Graphics::moveBox( glm::vec3 pos )
     {
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( currPos );
 
-        currPos.setOrigin( btVector3( pos.x / 5.0f, -25, pos.z / 5.0f ) );
+        currPos.setOrigin( btVector3( pos.x / 5.0f, objectRegistry[ boxIndex ].getTransVec( ).y, pos.z / 5.0f ) );
 
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->setWorldTransform( currPos );
 
