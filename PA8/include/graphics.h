@@ -15,8 +15,6 @@ using namespace std;
 
 #include"Instance.h"
 
-static void myTickCallback( btDynamicsWorld * world, btScalar timeStep );
-
 class Graphics
 {
     public:

@@ -7,7 +7,7 @@
 # Dependencies, Building, and Running
 
 ## Dependency Instructions
-To run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), and [ASSIMP](http://www.assimp.org/) and [OPENCV](http://opencv.org/).
+To run this project installation of these three programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), [ASSIMP](http://www.assimp.org/), [OPENCV](http://opencv.org/), and [BULLET](http://bulletphysics.org/wordpress/).
 
 This project uses OpenGL 3.3.
 
@@ -21,11 +21,11 @@ sudo apt-get install libglew-dev libglm-dev libsdl2-dev libassimp-dev libopencv-
 ```
 
 ## Building and Running
-Please build this project using CMake 2.8 +. It is recommended to create a build directory and to build the project there.
+Please build this project using CMake 2.8 + or the makefile. It is recommended to create a build directory and to build the project there.
 
 Running the make in a separate directory will allow easy cleanup of the build data, and an easy way to prevent unnecessary data to be added to the git repository.
 
-Note: If CMake fails for any reason, the makefile is also kept up to date. Again, CMake is the preferred build method.
+Note: If CMake fails for any reason, the makefile is also kept up to date.
 
 ### CMake Instructions
 
@@ -40,7 +40,7 @@ mkdir build
 cd build
 cmake ..
 make
-./SolarSystem -c config/SolarSystemConfig.xml
+./Pinball -c config/Bullet.xml
 ```
 
 ### makefile Instructions
@@ -51,7 +51,7 @@ mkdir build
 cd build
 cp ../makefile .
 make
-./SolarSystem -c config/SolarSystemConfig.xml
+./Pinball -c config/Bullet.xml
 ```
 
 ### Specific Instructions on Running
@@ -69,17 +69,23 @@ The file path for the specified shader must come directly after the option ident
 
 This program is run in the following format:
 
-./SolarSystem -[CONFIG_OPTION] [CONFIG_FILE_PATH]
+./Pinball -[CONFIG_OPTION] [CONFIG_FILE_PATH]
 
 An example of running this program:
 
 ```bash
-./SolarSystem -c config/SolarSystemConfig.xml
+./Pinball -c config/Bullet.xml
 ```
 
 ## Controls
 
-### Camera Controls:
+### Movement Controls (use these):
+* Move the mouse to move the cube.
+* Press the right mouse button to show the cursor.
+* Press the left mouse button to hide the cursor.
+* NOTE: It might be necessary to show the cursor and run the box into a wall until the cursor is over it. This keeps the cursor from going off of the screen and hindering use of the program.
+
+### Camera Controls (Don't use these except for debugging):
 * Press 1: set the camera to a top down view
 * Press 2: Set the camera to a Side by side view
 
@@ -92,20 +98,9 @@ An example of running this program:
 * Press Up arrow key: Moves Up
 * Press Down arrow key: Moves down
 
-### Speed Controls
-* Press a: to slow the entire simulation.
-* Press d: to speed up the entire simulation.
-* Press x: to reset the speed.
-* Press , (COMMA KEY): to slow the speed of orbit.
-* Press . (PERIOD KEY): to increase the speed of orbit.
-* Press o: to reset the speed of rotation.
-* Press k: to decrease the speed of rotation.
-* Press l ('L' KEY): to increase the speed of rotation.
-* Press r: to reset the speed of rotation.
-* Press space: to pause the entire simulation
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./SolarSystem -c config/SolarSystemConfig.xml
+/usr/NX/scripts/vgl/vglrun ./Pinball -c config/Bullet.xml
 ```

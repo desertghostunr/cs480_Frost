@@ -307,8 +307,6 @@ bool ProcessConfigurationFileHelper
     bool noError = true;
     string tempStr;
 
-    size_t strIndex;
-
     unsigned int pIndex = 0, mIndex = 0;
 
     if( parentNode == NULL )

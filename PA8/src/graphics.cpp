@@ -1,32 +1,35 @@
 #include "graphics.h"
-
 #include <algorithm>
 
-btRigidBody* ballPtr;
-
-btScalar maxSpeed;
-
-
-void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
+namespace
 {
-    btVector3 velocity;
-    btScalar speed;
 
-    if( ballPtr == NULL )
+    btRigidBody* ballPtr;
+
+    btScalar maxSpeed;
+
+
+    void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
     {
-        return;
+        btVector3 velocity;
+        btScalar speed;
+
+        if( ballPtr == NULL )
+        {
+            return;
+        }
+
+        velocity = ballPtr->getLinearVelocity( );
+        speed = velocity.length( );
+
+        if( speed > maxSpeed )
+        {
+            velocity *= maxSpeed / speed;
+            ballPtr->setLinearVelocity( velocity );
+        }
     }
 
-    velocity = ballPtr->getLinearVelocity( );
-    speed = velocity.length( );
-
-    if( speed > maxSpeed )
-    {
-        velocity *= maxSpeed / speed;
-        ballPtr->setLinearVelocity( velocity );
-    }
-}
-
+};
 
 Graphics::Graphics()
 {
@@ -378,9 +381,7 @@ bool Graphics::Initialize
             rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
-
-            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
-            tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
+            
         }
         else if( objectRegistry[ index ].getName( ) == "cube" )
         {
