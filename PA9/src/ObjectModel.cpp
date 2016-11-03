@@ -405,6 +405,8 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     std::vector<cv::Mat> textureImg; //image matrix
     std::vector<std::string> textureFileNames;
 
+    double addedValue = 0.0, multipliedValue= 1.0;
+
     std::string pathString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
 
     if( scene == NULL )
@@ -473,7 +475,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
         }
     }
 
-    //load texture as 8-bit bgr; note that 
+    //load texture as it is; note that 
     //this function can also be set to force the pixels to processed
     //as 8-bit, 16-bit, 32-bit, or grayscale.
     //The color channels are store contiguously for each pixel as BGR
@@ -484,7 +486,84 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
     {
         tmpImg = cv::imread( pathString + textureFileNames[ tIndex ], 
-                             CV_LOAD_IMAGE_COLOR );
+                             CV_LOAD_IMAGE_UNCHANGED );
+
+        if( tmpImg.type( ) != CV_8UC4 )
+        {
+            switch( tmpImg.channels( ) )
+            {
+                case 1:
+                {
+                    cv::cvtColor( tmpImg.clone( ), tmpImg, cv::COLOR_GRAY2BGRA );
+                    break;
+                }
+                case 3:
+                {
+                    cv::cvtColor( tmpImg.clone( ), tmpImg, cv::COLOR_BGR2BGRA );
+                    break;
+                }
+                case 4:
+                {
+                    //nothing to do
+                    break;
+                }
+                default:
+                {
+                    std::cout << "Invalid Texture: " << pathString + textureFileNames[ tIndex ] << std::endl;
+                    std::cout << "This image has an invalid number of channels: " << tmpImg.channels( ) << std::endl;
+                    return false;
+                }
+            }
+
+            switch( tmpImg.depth( ) )
+            {
+                case CV_8U:
+                {
+                    addedValue = 0.0;
+                    multipliedValue = 1.0;
+                    break;
+                }
+                case CV_8S:
+                {
+                    addedValue = 128.0;
+                    multipliedValue = 1.0;
+                    break;
+                }
+                case CV_16U:
+                {
+                    addedValue = 0.0;
+                    multipliedValue = 255.0 / 65535.0;
+                    break;
+                }
+                case CV_16S:
+                {
+                    addedValue = 128.0;
+                    multipliedValue = 255.0 / 65535.0;
+                    break;
+                }
+                case CV_32F:
+                {
+                    addedValue = 0.0;
+                    multipliedValue = 255.0;
+                    break;
+                }
+                default:
+                {
+                    std::cout << "Invalid Texture: " << pathString + textureFileNames[ tIndex ] << std::endl;
+                    std::cout << "This image has an invalid channel depth!" <<std::endl;
+                    return false;
+                }
+
+                if( multipliedValue == 1.0 && addedValue == 0.0 )
+                {
+                    //don't convert
+                }
+                else
+                {
+                    tmpImg.convertTo( tmpImg, CV_8U, multipliedValue, addedValue );
+                }
+            }
+        }
 
         textureImg.push_back( tmpImg.clone( ) );
 
@@ -525,10 +604,10 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
         glBindTexture( GL_TEXTURE_2D, texture[ tIndex ] );
 
-        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, 
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, 
                       textureImg[ tIndex ].size( ).width, 
                       textureImg[ tIndex ].size( ).height, 0, 
-                      GL_BGR, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );        
+                      GL_BGRA, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );        
 
         glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
