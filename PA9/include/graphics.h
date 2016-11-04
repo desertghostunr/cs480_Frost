@@ -39,7 +39,7 @@ class Graphics
 
         void moveBox( glm::vec3 pos );
 
-
+        void cycleShaderProgram( );
 
     private:
         std::string ErrorString(GLenum error);
@@ -47,7 +47,9 @@ class Graphics
         bool cameraTracking;
 
         Camera *m_camera;
-        Shader *m_shader;
+
+        std::vector<Shader> shaderRegistry;
+        unsigned int shaderSelect;
 
         GLint m_projectionMatrix;
         GLint m_viewMatrix;

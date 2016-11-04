@@ -58,7 +58,7 @@ struct ObjectInfo
 struct GraphicsInfo
 {
     //members
-    std::vector<std::pair<GLenum, std::string>> shaderVector;
+    std::vector<std::vector<std::pair<GLenum, std::string>>> shaderVector;
     std::vector<std::string> modelVector;
     std::vector<ObjectInfo> objectData;
 
@@ -68,10 +68,7 @@ struct GraphicsInfo
     GraphicsInfo( const GraphicsInfo& src ): 
         shaderVector( src.shaderVector ),
         modelVector( src.modelVector ), 
-        objectData( src.objectData )
-    {
-
-    }
+        objectData( src.objectData ) { }
 };
 
 #endif /* GRAPHICSINFO_H */

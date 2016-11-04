@@ -50,6 +50,9 @@ bool ProcessConfigurationFile( rapidxml::xml_node<> *rootNode,
 
 bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
                                      GraphicsInfo& progInfo );
+
+bool ProcessConfigShader( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
+
 // main ///////////////////////////////////
 
 #if defined( _WIN64 ) || ( _WIN32 )
@@ -236,40 +239,19 @@ bool ProcessConfigurationFile
 )
 {
     rapidxml::xml_node<> *parentNode;
-    bool noError = true, vertShader = false, fragShader = false;
+    bool noError = true;
     string tempStr;
 
     for( parentNode = rootNode->first_node( 0 ); 
          parentNode; parentNode = parentNode->next_sibling( ) )
-    {
-        
+    {        
         if( parentNode->name( ) == OBJECT ) 
         {
-            noError = ( noError && ProcessConfigurationFileHelper( parentNode, 
-                                                                   progInfo ) );
-	  
+            noError = ( noError && ProcessConfigurationFileHelper( parentNode, progInfo ) );	  
         }
         else if( parentNode->name( ) == SHADER )
         {
-            if( parentNode->first_attribute( "name" )->value( ) == VERTEX )
-            {
-                vertShader = true;
-                
-                tempStr = parentNode->value( );
-                progInfo.shaderVector.push_back( 
-                      std::pair<GLenum, string>( GL_VERTEX_SHADER, tempStr ) );
-		
-            }
-            else if( parentNode->first_attribute( "name" )->value( ) == FRAGMENT )
-            {
-                fragShader = true;
-
-                tempStr = parentNode->value( );
-                progInfo.shaderVector.push_back( 
-                      std::pair<GLenum, string>( GL_FRAGMENT_SHADER, tempStr ) );
-		
-            }
-         
+            noError = ( noError && ProcessConfigShader( parentNode, progInfo ) );
         }
         else
         {
@@ -279,7 +261,7 @@ bool ProcessConfigurationFile
 
 
 	
-    return ( noError && vertShader && fragShader && !progInfo.modelVector.empty( ) );
+    return ( noError && !progInfo.modelVector.empty( ) );
 }
 
 
@@ -418,6 +400,43 @@ bool ProcessConfigurationFileHelper
     }
 
     return noError;
+}
+
+bool ProcessConfigShader( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
+{
+    rapidxml::xml_node<> *childNode;
+    bool vertShader = false, fragShader = false;
+
+    string tempStr;
+
+    unsigned int pIndex = 0;
+
+    progInfo.shaderVector.push_back( std::vector<std::pair<GLenum, std::string>>( ) );
+
+    pIndex = progInfo.shaderVector.size( ) - 1;
+
+    for( childNode = parentNode->first_node( 0 ); childNode;
+         childNode = childNode->next_sibling( ) )
+    {
+        if( childNode->name( ) == VERTEX )
+        {
+            vertShader = true;
+
+            tempStr = childNode->value( );
+            progInfo.shaderVector[ pIndex ].push_back( std::pair<GLenum, string>( GL_VERTEX_SHADER, tempStr ) );
+
+        }
+        else if( childNode->name( ) == FRAGMENT )
+        {
+            fragShader = true;
+
+            tempStr = childNode->value( );
+            progInfo.shaderVector[ pIndex ].push_back( std::pair<GLenum, string>( GL_FRAGMENT_SHADER, tempStr ) );
+
+        }
+    }
+
+    return ( vertShader && fragShader );
 }
 
 

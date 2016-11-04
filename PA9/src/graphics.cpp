@@ -44,6 +44,8 @@ Graphics::Graphics()
     boxIndex = 0;
 
     maxSpeed = 50;
+
+    shaderSelect = 0;
 }
 
 Graphics::~Graphics()
@@ -157,7 +159,7 @@ bool Graphics::Initialize
     glBindVertexArray(vao);
 
     bool successFlag;
-    unsigned int index, pIndex;
+    unsigned int index, pIndex, sIndex;
     GLint tmpTextLoc;
 
     btCollisionShape * tmpShapePtr = NULL;
@@ -245,40 +247,53 @@ bool Graphics::Initialize
 
 
     }
-    // Set up the shaders
-    m_shader = new Shader();
-    if(!m_shader->Initialize())
-    {
-        printf("Shader Failed to Initialize\n");
-        return false;
-    }
     
-    for( index = 0; index < progInfo.shaderVector.size(); index++ )
+    for( sIndex = 0; sIndex < progInfo.shaderVector.size( ); sIndex++ )
     {
-        if(!m_shader->AddShader( progInfo.shaderVector[index].first, 
-                                 progInfo.shaderVector[index].second ) )
+
+        // Set up the shaders
+
+        shaderRegistry.push_back( Shader( ) );
+
+        if( !shaderRegistry[ shaderRegistry.size( ) - 1 ].Initialize( ) )
         {
-            if( progInfo.shaderVector[index].first == GL_VERTEX_SHADER )
-            {
-                printf("Vertex Shader failed to Initialize\n");
-            }
-            else
-            {
-                printf("Fragment Shader failed to Initialize\n");
-            }
+            printf( "Shader Failed to Initialize\n" );
             return false;
+        }
+
+        for( index = 0; index < progInfo.shaderVector[ sIndex ].size( ); index++ )
+        {
+            if( !shaderRegistry[ shaderRegistry.size( ) - 1 ].
+                AddShader( progInfo.shaderVector[ sIndex ][ index ].first, 
+                           progInfo.shaderVector[ sIndex ][ index ].second ) )
+            {
+                if( progInfo.shaderVector[ sIndex ][ index ].first == GL_VERTEX_SHADER )
+                {
+                    printf( "Vertex Shader failed to Initialize\n" );
+                }
+                else
+                {
+                    printf( "Fragment Shader failed to Initialize\n" );
+                }
+                return false;
+            }
         }
     }
 
-    // Connect the program
-    if(!m_shader->Finalize())
+    // Connect the programs
+
+    for( sIndex = 0; sIndex < shaderRegistry.size( ); sIndex++ )
     {
-        printf("Program to Finalize\n");
-        return false;
+        if( !shaderRegistry[ sIndex ].Finalize( ) )
+        {
+            printf( "Program to Finalize\n" );
+            return false;
+        }
     }
+    
 
     // Locate the projection matrix in the shader
-    m_projectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
+    m_projectionMatrix = shaderRegistry[shaderSelect].GetUniformLocation("projectionMatrix");
     if (m_projectionMatrix == INVALID_UNIFORM_LOCATION) 
     {
         printf("m_projectionMatrix not found\n");
@@ -286,7 +301,7 @@ bool Graphics::Initialize
     }
 
     // Locate the view matrix in the shader
-    m_viewMatrix = m_shader->GetUniformLocation("viewMatrix");
+    m_viewMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation("viewMatrix");
     if (m_viewMatrix == INVALID_UNIFORM_LOCATION) 
     {
         printf("m_viewMatrix not found\n");
@@ -294,14 +309,14 @@ bool Graphics::Initialize
     }
 
     // Locate the model matrix in the shader
-    m_modelMatrix = m_shader->GetUniformLocation("modelMatrix");
+    m_modelMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation("modelMatrix");
     if (m_modelMatrix == INVALID_UNIFORM_LOCATION) 
     {
         printf("m_modelMatrix not found\n");
         return false;
     }
 
-    tmpTextLoc = m_shader->GetUniformLocation( "textureSampler" );
+    tmpTextLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( "textureSampler" );
 
     if( tmpTextLoc == INVALID_UNIFORM_LOCATION )
     {
@@ -541,8 +556,7 @@ void Graphics::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Start the correct program
-    m_shader->Enable();
-
+    shaderRegistry[ shaderSelect ].Enable( );
     // Send in the projection and view to the shader
     glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
     glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
@@ -799,6 +813,56 @@ void Graphics::moveBox( glm::vec3 pos )
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->translate( btVector3( pos.x, pos.y, pos.z ) );
     }
     
+}
+
+void Graphics::cycleShaderProgram( )
+{
+    unsigned int index;
+    GLint tmpTextLoc;
+
+    shaderSelect++;    
+
+    if( shaderSelect >= shaderRegistry.size( ) )
+    {
+        shaderSelect = 0;
+    }
+
+    std::cout << "Shader Program " << shaderSelect + 1<< " selected." << std::endl;
+
+    // Locate the projection matrix in the shader
+    m_projectionMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "projectionMatrix" );
+    if( m_projectionMatrix == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    // Locate the view matrix in the shader
+    m_viewMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "viewMatrix" );
+    if( m_viewMatrix == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_viewMatrix not found\n" );
+    }
+
+    // Locate the model matrix in the shader
+    m_modelMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "modelMatrix" );
+    if( m_modelMatrix == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_modelMatrix not found\n" );
+    }
+
+    tmpTextLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( "textureSampler" );
+
+    if( tmpTextLoc == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "texture location uniform not found!!!\n" );
+    }
+
+    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    {
+        objectRegistry[ index ]
+            .getObjectModel( ).TextureUniformLocation( ) = tmpTextLoc;
+    }
+
 }
 
 
