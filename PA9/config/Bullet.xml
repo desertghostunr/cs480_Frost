@@ -18,7 +18,7 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
-  <Object path ="models/cube.obj">
+  <Object path ="models/testObj.obj">
     <name>cube</name>
     <xScale>10</xScale>
     <yScale>10</yScale>

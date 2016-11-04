@@ -388,6 +388,10 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
     aiString textFPath;
 
+    aiColor4D mColor;
+
+    glm::vec4 color;
+
     //open the model file 
     const aiScene* scene = importer.ReadFile( fileName.c_str( ), //file to open
                                               aiProcess_Triangulate ); //triangulate faces
@@ -433,10 +437,24 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                  tIndex++ )
             {
                 mtlPtr->GetTexture( aiTextureType_DIFFUSE, tIndex, &textFPath );
-
+                
                 textureFileNames.push_back( textFPath.C_Str( ) );                
             }
+
+            if( mtlPtr->GetTextureCount( aiTextureType_DIFFUSE ) == 0 )
+            {
+                if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
+                {
+                    color.r = mColor.r;
+                    color.g = mColor.g;
+                    color.b = mColor.b;
+                    color.a = mColor.a;
+
+                    textureFileNames.push_back( "No Texture" );
+                }
+            }
         }
+
 
         //create offset for the concatenation of meshes into one VBO and IBO
         offset = Vertices.size( );
@@ -462,7 +480,11 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                     tmpVert.uv.x = uv.x;
                     tmpVert.uv.y = 0.0 - uv.y;
                 }                
-
+                else
+                {
+                    tmpVert.uv.x = 0.0;
+                    tmpVert.uv.y = 0.0;
+                }
                 //push back vertices
                 Vertices.push_back( tmpVert );
 
@@ -485,8 +507,17 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
     for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
     {
-        tmpImg = cv::imread( pathString + textureFileNames[ tIndex ], 
-                             CV_LOAD_IMAGE_UNCHANGED );
+        if( textureFileNames[ tIndex ] == "No Texture" )
+        {            
+            tmpImg = cv::Mat( 256, 256, CV_8UC4 );
+            tmpImg.setTo( cv::Scalar( 255 * color.b, 255 * color.g, 255 * color.r, 255 * color.a ) );
+        }
+        else
+        {
+            tmpImg = cv::imread( pathString + textureFileNames[ tIndex ],
+                                 CV_LOAD_IMAGE_UNCHANGED );
+        }
+        
 
         if( tmpImg.type( ) != CV_8UC4 )
         {
