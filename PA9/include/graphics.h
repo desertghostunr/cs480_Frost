@@ -42,6 +42,11 @@ class Graphics
         void cycleShaderProgram( );
 
     private:
+        //lighting
+        glm::vec4 ambient;
+        std::vector<glm::vec4> incomingLights;
+
+
         std::string ErrorString(GLenum error);
 	
         bool cameraTracking;

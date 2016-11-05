@@ -23,16 +23,16 @@ bool Camera::Initialize(int w, int h)
 
     leftRight = 0.0;
     upDown = 0.0;
-    zoom = 250.0;
+    zoom = 255.0;
     topDown = false;
-    view = glm::lookAt( glm::vec3( 0.0, 250.0, zoom ), //Eye Position
+    view = glm::lookAt( glm::vec3( 0.0, 147.22, zoom ), //Eye Position
                         glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                         glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 
     projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                    float(w)/float(h), //Aspect Ratio, so Circles stay Circular
-                                   0.01f, //Distance to the near plane, normally a small value like this
-                                   10000.0f); //Distance to the far plane, 
+                                   0.15f, //Distance to the near plane, normally a small value like this
+                                   1000.0f); //Distance to the far plane, 
     return true;
 }
 
@@ -53,9 +53,9 @@ void Camera::LookSideToSide()
 {
     leftRight = 0.0;
     upDown = 0.0;
-    zoom = 250.0;
+    zoom = 255.0;
     topDown = false;
-    view = glm::lookAt( glm::vec3( 0.0, 250.0, zoom), //Eye Position
+    view = glm::lookAt( glm::vec3( 0.0, 147.22, zoom), //Eye Position
                                    glm::vec3( leftRight, upDown, 0.0), //Focus point
                                    glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 

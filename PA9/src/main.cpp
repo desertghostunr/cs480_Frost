@@ -38,6 +38,7 @@ const string Z_ROT_ANGLE = "zRotationAngle";
 const string VERTEX = "Vertex";
 const string FRAGMENT = "Fragment";
 const string NAME = "name";
+const string LIGHT = "light";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -52,6 +53,8 @@ bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
                                      GraphicsInfo& progInfo );
 
 bool ProcessConfigShader( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
+
+bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
 
 // main ///////////////////////////////////
 
@@ -253,6 +256,10 @@ bool ProcessConfigurationFile
         {
             noError = ( noError && ProcessConfigShader( parentNode, progInfo ) );
         }
+        else if( parentNode->name( ) == LIGHT )
+        {
+            noError = ( noError && ProcessConfigLight( parentNode, progInfo ) );
+        }
         else
         {
             //do nothing
@@ -439,5 +446,40 @@ bool ProcessConfigShader( rapidxml::xml_node<>* parentNode, GraphicsInfo & progI
     return ( vertShader && fragShader );
 }
 
+bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
+{
+    rapidxml::xml_node<> *childNode;
+    bool lightX = false, lightY = false, lightZ = false;
 
+    string tempStr;
+
+    unsigned int pIndex = 0;
+
+    progInfo.shaderVector.push_back( std::vector<std::pair<GLenum, std::string>>( ) );
+
+    pIndex = progInfo.shaderVector.size( ) - 1;
+
+    for( childNode = parentNode->first_node( 0 ); childNode;
+         childNode = childNode->next_sibling( ) )
+    {
+        tempStr = childNode->value( );
+
+        std::stringstream strStream( tempStr );
+
+        if( childNode->name( ) == X_POS )
+        {
+            strStream >> progInfo.objectData[ pIndex ].scale.x;
+        }
+        else if( childNode->name( ) == Y_POS )
+        {
+            strStream >> progInfo.objectData[ pIndex ].scale.y;
+        }
+        else if( childNode->name( ) == Z_POS )
+        {
+            strStream >> progInfo.objectData[ pIndex ].scale.z;
+        }
+    }
+
+    return lightX && lightY && lightZ;
+}
 

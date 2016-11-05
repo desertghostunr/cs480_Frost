@@ -143,6 +143,11 @@ class Object
         const glm::vec3 & getTransVec( );
 
     private:
+        //lighting info
+        glm::vec4 diffuse;
+        glm::vec4 specular;
+
+
         //model info
         glm::mat4 model;
         ObjectModel* objModelPtr;
