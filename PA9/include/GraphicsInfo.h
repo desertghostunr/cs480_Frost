@@ -57,7 +57,20 @@ struct ObjectInfo
 struct SpotLight
 {
     glm::vec4 incoming;
-    glm::vec4 brightness;
+    glm::vec4 ambient;
+    float coneAngle;
+    float fConeCosine;
+
+    SpotLight( ){ }
+
+    SpotLight( const SpotLight& src) :
+        incoming( src.incoming ),
+        ambient( src.ambient ),
+        coneAngle( src.coneAngle ),
+        fConeCosine( src.fConeCosine )
+    {
+
+    }
 };
 
 struct GraphicsInfo
@@ -69,6 +82,8 @@ struct GraphicsInfo
     std::vector<glm::vec4> lights;
     std::vector<glm::vec4> ambient;
 
+    SpotLight spotLight;
+
     //constructors
     GraphicsInfo( ) { }
 
@@ -77,7 +92,8 @@ struct GraphicsInfo
         modelVector( src.modelVector ), 
         objectData( src.objectData ),
         lights( src.lights ),
-        ambient( src.ambient ){ }
+        ambient( src.ambient ),
+        spotLight( src.spotLight ){ }
 };
 
 #endif /* GRAPHICSINFO_H */

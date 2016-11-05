@@ -39,6 +39,7 @@ const string VERTEX = "Vertex";
 const string FRAGMENT = "Fragment";
 const string NAME = "name";
 const string LIGHT = "Light";
+const string SPOT_LIGHT = "SpotLight";
 const string AMBIENT = "Ambient";
 
 // free function prototypes ////////////////
@@ -55,9 +56,9 @@ bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
 
 bool ProcessConfigShader( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
 
-bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
+bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo, bool spotLight = false );
 
-bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
+bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo, bool spotLight = false );
 
 // main ///////////////////////////////////
 
@@ -244,7 +245,7 @@ bool ProcessConfigurationFile
     GraphicsInfo & progInfo
 )
 {
-    rapidxml::xml_node<> *parentNode;
+    rapidxml::xml_node<> *parentNode, *childNode;
     bool noError = true;
     string tempStr;
 
@@ -262,6 +263,25 @@ bool ProcessConfigurationFile
         else if( parentNode->name( ) == LIGHT )
         {
             noError = ( noError && ProcessConfigLight( parentNode, progInfo ) );
+        }
+        else if( parentNode->name( ) == SPOT_LIGHT )
+        {
+            for( childNode = parentNode->first_node( 0 );
+                 childNode; childNode = childNode->next_sibling( ) )
+            {
+                /*if( childNode->name( ) == "ConeAngle" )
+                {
+
+                }
+                else if( childNode->name( ) == "FConeCosine" )
+                {
+
+                }
+                else if( childNode->name( ) == LIGHT )
+                {
+                    noError = ( noError && ProcessConfigLight( parentNode, progInfo, true ) );
+                }*/
+            }
         }
         else
         {
@@ -449,7 +469,7 @@ bool ProcessConfigShader( rapidxml::xml_node<>* parentNode, GraphicsInfo & progI
     return ( vertShader && fragShader );
 }
 
-bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
+bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo, bool spotLight )
 {
     rapidxml::xml_node<> *childNode;
     bool lightX = false, lightY = false, lightZ = false, noError = false;
@@ -457,8 +477,11 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
     string tempStr;
 
     unsigned int pIndex = 0;
-
-    progInfo.lights.push_back( glm::vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    if( !spotLight )
+    {
+        progInfo.lights.push_back( glm::vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    }
+    
 
     pIndex = progInfo.lights.size( ) - 1;
 
@@ -472,17 +495,43 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
         if( childNode->name( ) == X_POS )
         {
             lightX = true;
-            strStream >> progInfo.lights[ pIndex ].x;
+            if( spotLight )
+            {
+
+            }
+            else
+            {
+                strStream >> progInfo.lights[ pIndex ].x;
+            }
+            
         }
         else if( childNode->name( ) == Y_POS )
         {
             lightY = true;
-            strStream >> progInfo.lights[ pIndex ].y;
+            if( spotLight )
+            {
+
+            }
+            else
+            {
+                strStream >> progInfo.lights[ pIndex ].y;
+            }
+            
         }
         else if( childNode->name( ) == Z_POS )
         {
             lightZ = true;
-            strStream >> progInfo.lights[ pIndex ].z;
+
+            if( spotLight )
+            {
+
+            }
+            else
+            {
+                strStream >> progInfo.lights[ pIndex ].z;
+            }
+
+            
         }
         else if( childNode->name( ) == AMBIENT )
         {
@@ -494,7 +543,7 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
 }
 
 
-bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
+bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo, bool spotLight )
 {
     rapidxml::xml_node<> *childNode;
     bool lightX = false, lightY = false, lightZ = false;
@@ -503,7 +552,16 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
 
     unsigned int pIndex = 0;
 
-    progInfo.ambient.push_back( glm::vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    
+
+    if( spotLight )
+    {
+
+    }
+    else
+    {
+        progInfo.ambient.push_back( glm::vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    }
 
     pIndex = progInfo.ambient.size( ) - 1;
 
@@ -518,17 +576,41 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
         {
 
             lightX = true;
-            strStream >> progInfo.ambient[ pIndex ].x;
+            if( spotLight )
+            {
+
+            }
+            else
+            {
+                strStream >> progInfo.ambient[ pIndex ].x;
+            }
+            
         }
         else if( childNode->name( ) == Y_POS )
         {
             lightY = true;
-            strStream >> progInfo.ambient[ pIndex ].y;
+            if( spotLight )
+            {
+
+            }
+            else
+            {
+                strStream >> progInfo.ambient[ pIndex ].y;
+            }
+            
         }
         else if( childNode->name( ) == Z_POS )
         {
             lightZ = true;
-            strStream >> progInfo.ambient[ pIndex ].z;
+            if( spotLight )
+            {
+
+            }
+            else
+            {
+                strStream >> progInfo.ambient[ pIndex ].z;
+            }
+            
         }
     }
 

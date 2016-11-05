@@ -90,14 +90,19 @@
       <zPosition>0.64</zPosition>
     </Ambient>
   </Light>
-  <Light>
-    <xPosition>-10</xPosition>
-    <yPosition>-2</yPosition>
-    <zPosition>20</zPosition>
-    <Ambient>
-      <xPosition>0.15</xPosition>
-      <yPosition>0.15</yPosition>
-      <zPosition>0.64</zPosition>
-    </Ambient>
-  </Light>
+  <SpotLight>
+    <Light>
+      <xPosition>-10</xPosition>
+      <yPosition>-2</yPosition>
+      <zPosition>20</zPosition>
+      <Ambient>
+        <xPosition>0.15</xPosition>
+        <yPosition>0.15</yPosition>
+        <zPosition>0.64</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>15</ConeAngle>
+    <FConeCosine>1</FConeCosine>
+  </SpotLight>
+  
 </Configuration>
