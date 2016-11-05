@@ -50,6 +50,7 @@ class Graphics
         std::vector<glm::vec4> ambient;
         std::vector<glm::vec4> incomingLights;
 
+        SpotLight spotLight;
 
         std::string ErrorString(GLenum error);
 	
@@ -68,6 +69,8 @@ class Graphics
         GLint m_specular;
         GLint m_diffuse;
         GLint m_shininess;
+
+        GLint m_spotLight;
 
         ObjectTable objectRegistry; //holds the scene's objects
 

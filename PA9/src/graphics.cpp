@@ -259,6 +259,8 @@ bool Graphics::Initialize
         ambient[index] = progInfo.ambient[index];
     }
 
+    spotLight = progInfo.spotLight;
+
     ////////////////////////////////////////////////////////////////////////////
 
     

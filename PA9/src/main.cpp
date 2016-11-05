@@ -266,21 +266,27 @@ bool ProcessConfigurationFile
         }
         else if( parentNode->name( ) == SPOT_LIGHT )
         {
+            std::stringstream strStream( tempStr );
+
             for( childNode = parentNode->first_node( 0 );
                  childNode; childNode = childNode->next_sibling( ) )
             {
-                /*if( childNode->name( ) == "ConeAngle" )
+                if( childNode->name( ) == "ConeAngle" )
                 {
+                    tempStr = childNode->value( );                    
 
+                    strStream >> progInfo.spotLight.coneAngle;
                 }
                 else if( childNode->name( ) == "FConeCosine" )
                 {
+                    tempStr = childNode->value( );
 
+                    strStream >> progInfo.spotLight.coneAngle;
                 }
                 else if( childNode->name( ) == LIGHT )
                 {
-                    noError = ( noError && ProcessConfigLight( parentNode, progInfo, true ) );
-                }*/
+                    noError = ( noError && ProcessConfigLight( childNode, progInfo, true ) );
+                }
             }
         }
         else
@@ -497,7 +503,7 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
             lightX = true;
             if( spotLight )
             {
-
+                strStream >> progInfo.spotLight.incoming.x;
             }
             else
             {
@@ -510,7 +516,7 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
             lightY = true;
             if( spotLight )
             {
-
+                strStream >> progInfo.spotLight.incoming.y;
             }
             else
             {
@@ -524,7 +530,7 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
 
             if( spotLight )
             {
-
+                strStream >> progInfo.spotLight.incoming.z;
             }
             else
             {
@@ -578,7 +584,7 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
             lightX = true;
             if( spotLight )
             {
-
+                strStream >> progInfo.spotLight.ambient.x;
             }
             else
             {
@@ -591,7 +597,7 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
             lightY = true;
             if( spotLight )
             {
-
+                strStream >> progInfo.spotLight.ambient.y;
             }
             else
             {
@@ -604,7 +610,7 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
             lightZ = true;
             if( spotLight )
             {
-
+                strStream >> progInfo.spotLight.ambient.z;
             }
             else
             {
