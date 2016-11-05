@@ -43,6 +43,7 @@ class Graphics
 
         void changeBrightness( std::string lightSelect, float redParam, 
                                float greenParam, float blueParam ); 
+	void changeModelRegistryIndex( int i );
 
     private:
         //lighting
@@ -83,6 +84,7 @@ class Graphics
         /////////////////////////////////////////////
 
         unsigned int boxIndex;
+        int modelIndex;
 
         glm::vec4 boxEdges;     
 };

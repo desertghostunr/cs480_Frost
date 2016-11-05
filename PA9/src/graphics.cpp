@@ -42,6 +42,7 @@ Graphics::Graphics()
     ballCallBack::ballPtr = NULL;
 
     boxIndex = 0;
+    modelIndex = 0;
 
     ballCallBack::maxSpeed = 50;
 
@@ -978,7 +979,7 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
         {
             ambient[0].g = 1.0f;
         }
-        else if( ambient[0].r <= 0.05f && greenParam < 0.0f )
+        else if( ambient[0].g <= 0.05f && greenParam < 0.0f )
         {
             ambient[0].g = 0.0f;
         }
@@ -1006,7 +1007,48 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
 
     else if( lightSelect == "specular" )
     {
-        
+        if( modelRegistry[ modelIndex ].objModel.getSpecular().r >= 0.95f && redParam > 0.0f )
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().r = 1.0f;
+        }
+        else if( modelRegistry[ modelIndex ].objModel.getSpecular().r <= 0.05f && redParam < 0.0f )
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().r = 0.0f;
+        }
+        else
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().r = modelRegistry[ modelIndex ].objModel.getSpecular().r + redParam;
+        }
+
+
+
+        if( modelRegistry[ modelIndex ].objModel.getSpecular().g >= 0.95f && greenParam > 0.0f )
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().g = 1.0f;
+        }
+        else if( modelRegistry[ modelIndex ].objModel.getSpecular().g <= 0.05f && greenParam < 0.0f )
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().g = 0.0f;
+        }
+        else
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().g = modelRegistry[ modelIndex ].objModel.getSpecular().g + greenParam;
+        }
+
+
+
+        if( modelRegistry[ modelIndex ].objModel.getSpecular().b >= 0.95f && blueParam > 0.0f )
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().b = 1.0f;
+        }
+        else if( modelRegistry[ modelIndex ].objModel.getSpecular().b <= 0.05f && blueParam < 0.0f )
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().b = 0.0f;
+        }
+        else
+        {
+            modelRegistry[ modelIndex ].objModel.getSpecular().b = modelRegistry[ modelIndex ].objModel.getSpecular().b + blueParam;
+        }        
     }
 
 
@@ -1019,7 +1061,19 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
 }
 
 
+void Graphics::changeModelRegistryIndex( int i )
+{
 
+    modelIndex = modelIndex + i;
+    if( modelIndex == modelRegistry.size() )
+    {
+        modelIndex = 0;
+    } 
+    if( modelIndex == -1 )
+    {
+        modelIndex = modelRegistry.size() - 1;
+    } 
+}
 
 
 
