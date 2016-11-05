@@ -298,6 +298,26 @@ bool Graphics::Initialize
         }
     }
 
+    m_diffuse = shaderRegistry[ shaderSelect ].GetUniformLocation( "DiffuseColor" );
+    if( m_diffuse == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
+
+    m_specular = shaderRegistry[ shaderSelect ].GetUniformLocation( "SpecularColor" );
+    if( m_specular == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
+
+    m_shininess = shaderRegistry[ shaderSelect ].GetUniformLocation( "Shininess" );
+    if( m_shininess == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
 
     m_ambient = shaderRegistry[ shaderSelect ].GetUniformLocation( "AmbientColor" );
     if( m_ambient == INVALID_UNIFORM_LOCATION )
@@ -574,6 +594,8 @@ void Graphics::Render()
 {
     unsigned int index;
 
+    glm::vec4 tmpVec;
+
     //clear the screen
     glClearColor(0.6, 0.6, 0.6, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -593,6 +615,17 @@ void Graphics::Render()
     {
         glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
                             glm::value_ptr(objectRegistry[index].GetModel()));
+
+        tmpVec = objectRegistry[ index ].getObjectModel( ).getDiffuse( );
+
+        glUniform4f( m_diffuse, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
+
+        tmpVec = objectRegistry[ index ].getObjectModel( ).getSpecular( );
+
+        glUniform4f( m_specular, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
+
+        glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
+
         objectRegistry[index].Render();
     }
 
@@ -855,6 +888,24 @@ void Graphics::cycleShaderProgram( )
     }
 
     std::cout << "Shader Program " << shaderSelect + 1<< " selected." << std::endl;
+
+    m_diffuse = shaderRegistry[ shaderSelect ].GetUniformLocation( "DiffuseColor" );
+    if( m_diffuse == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    m_specular = shaderRegistry[ shaderSelect ].GetUniformLocation( "SpecularColor" );
+    if( m_specular == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    m_shininess = shaderRegistry[ shaderSelect ].GetUniformLocation( "Shininess" );
+    if( m_shininess == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
 
     m_ambient = shaderRegistry[ shaderSelect ].GetUniformLocation( "AmbientColor" );
     if( m_ambient == INVALID_UNIFORM_LOCATION )

@@ -63,7 +63,19 @@ class ObjectModel
         //overloaded operators
         const ObjectModel& operator = ( const ObjectModel & rhObjModel );
 
+
+        glm::vec4& getDiffuse( );
+        glm::vec4& getSpecular( );
+        float& getShininess( );
+
     private:
+
+
+        //lighting info
+        glm::vec4 diffuse;
+        glm::vec4 specular;
+        float shininess;
+
         unsigned int reference;
         std::vector<Vertex> Vertices;
         std::vector<std::vector<unsigned int>> Indices;

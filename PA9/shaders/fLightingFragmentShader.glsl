@@ -10,6 +10,9 @@ out vec4 frag_color;
 uniform sampler2D textureSampler;
 
 uniform vec4 AmbientColor;
+uniform vec4 DiffuseColor;
+uniform vec4 SpecularColor;
+uniform float Shininess;
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal );
 
@@ -39,11 +42,11 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
 
 	kd = max( dot( incoming, normal ), 0.0 );
 
-	diffuse = kd * vec4( 0.5, 0.5, 0.5, 1.0 ); //replace vec4 with diffuse product
+	diffuse = kd * DiffuseColor; 
 
-	ks = pow( max( dot( normal, halfway ), 0.0 ) , 0.5 /*shininess*/);
+	ks = pow( max( dot( normal, halfway ), 0.0 ) , Shininess );
 
-	specular = ks * vec4( 0.5, 0.5, 0.5, 0.5 ); //replace vec4 with specular product
+	specular = ks * DiffuseColor;
 
 	if( dot(incoming, normal ) < 0.0 )
 	{

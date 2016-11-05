@@ -61,6 +61,9 @@ class Graphics
         GLint m_modelMatrix;
         GLint m_ambient;
         GLint m_light;
+        GLint m_specular;
+        GLint m_diffuse;
+        GLint m_shininess;
 
         ObjectTable objectRegistry; //holds the scene's objects
 

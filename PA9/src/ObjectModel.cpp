@@ -10,6 +10,7 @@
 
 //header files
 #include "ObjectModel.h"
+#include <algorithm>
 
 //assimp
 #include <assimp/Importer.hpp>
@@ -454,6 +455,22 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                     textureFileNames.push_back( "No Texture" );
                 }
             }
+
+            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_DIFFUSE, &mColor ) )
+            {
+                diffuse.r = mColor.r;
+                diffuse.g = mColor.g;
+                diffuse.b = mColor.b;
+                diffuse.a = mColor.a;
+            }
+
+            if( AI_SUCCESS == aiGetMaterialColor( mtlPtr, AI_MATKEY_COLOR_SPECULAR, &mColor ) )
+            {
+                specular.r = mColor.r;
+                specular.g = mColor.g;
+                specular.b = mColor.b;
+                specular.a = mColor.a;
+            }
         }
 
 
@@ -514,6 +531,9 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
             }
         }
     }
+
+    //calculate shininess
+    shininess = std::max( std::max( specular.r, specular.g ), specular.b );
 
     //load texture as it is; note that 
     //this function can also be set to force the pixels to processed
@@ -712,4 +732,19 @@ const ObjectModel & ObjectModel::operator=( const ObjectModel & rhObjModel )
     }
 
     return *this;
+}
+
+glm::vec4 & ObjectModel::getDiffuse( )
+{
+    return diffuse;
+}
+
+glm::vec4 & ObjectModel::getSpecular( )
+{
+    return specular;
+}
+
+float & ObjectModel::getShininess( )
+{
+    return shininess;
 }
