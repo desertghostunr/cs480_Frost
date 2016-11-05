@@ -52,6 +52,13 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
     }    
 
     trackingID = -1;
+    specularLight = false;
+    ambientLight = true;
+    spotLight = false;
+
+    redLight = true;
+    greenLight = true;
+    blueLight = true; 
     // Start the graphics
     
     m_graphics = new Graphics();
@@ -112,91 +119,137 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {                
-                m_graphics->cameraUpOrDown( true );
-            }            
-        }
-        else if( m_event.key.keysym.sym == SDLK_w )
-        {
-            if( m_graphics != NULL )
-            {                
-                m_graphics->cameraZoomInOrOut( true );
+                if( ambientLight )
+                {
+                    if( redLight )
+                    {
+                       m_graphics->changeBrightness( "ambient", 0.05, 0.0, 0.0 );
+                    }
+                    if( greenLight )
+                    {
+                       m_graphics->changeBrightness( "ambient" , 0.0, 0.05, 0.0 );
+                    }
+                    if( blueLight )
+                    {
+                       m_graphics->changeBrightness( "ambient" , 0.0, 0.0, 0.05 );
+                    }
+                }
+                else if( specularLight )
+                {
+                    if( redLight )
+                    {
+                       m_graphics->changeBrightness( "specular" , 0.05, 0.0, 0.0 );
+                    }
+                    if( greenLight )
+                    {
+                       m_graphics->changeBrightness( "specular" , 0.0, 0.05, 0.0 );
+                    }
+                    if( blueLight )
+                    {
+                       m_graphics->changeBrightness( "specular" , 0.0, 0.0, 0.05 );
+                    }             
+                }
+                else if( spotLight )
+                {
+                    if( redLight )
+                    {
+                       m_graphics->changeBrightness( "spot" , 0.05, 0.0, 0.0 );
+                    }
+                    if( greenLight )
+                    {
+                       m_graphics->changeBrightness( "spot" , 0.0, 0.05, 0.0 );
+                    }
+                    if( blueLight )
+                    {
+                       m_graphics->changeBrightness( "spot" , 0.0, 0.0, 0.05 );
+                    }                
+                }
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_DOWN )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->cameraUpOrDown( false );
-            }        
-        }
-        else if( m_event.key.keysym.sym == SDLK_s )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->cameraZoomInOrOut( false );
+                if( ambientLight )
+                {
+                    if( redLight )
+                    {
+                       m_graphics->changeBrightness( "ambient", -0.05, 0.0, 0.0 );
+                    }
+                    if( greenLight )
+                    {
+                       m_graphics->changeBrightness( "ambient" , 0.0, -0.05, 0.0 );
+                    }
+                    if( blueLight )
+                    {
+                       m_graphics->changeBrightness( "ambient" , 0.0, 0.0, -0.05 );
+                    }
+                }
+                else if( specularLight )
+                {
+                    if( redLight )
+                    {
+                       m_graphics->changeBrightness( "specular" , -0.05, 0.0, 0.0 );
+                    }
+                    if( greenLight )
+                    {
+                       m_graphics->changeBrightness( "specular" , 0.0, -0.05, 0.0 );
+                    }
+                    if( blueLight )
+                    {
+                       m_graphics->changeBrightness( "specular" , 0.0, 0.0, -0.05 );
+                    }             
+                }
+                else if( spotLight )
+                {
+                    if( redLight )
+                    {
+                       m_graphics->changeBrightness( "spot" , -0.05, 0.0, 0.0 );
+                    }
+                    if( greenLight )
+                    {
+                       m_graphics->changeBrightness( "spot" , 0.0, -0.05, 0.0 );
+                    }
+                    if( blueLight )
+                    {
+                       m_graphics->changeBrightness( "spot" , 0.0, 0.0, -0.05 );
+                    }                
+                } 
             }        
         }
         else if( m_event.key.keysym.sym == SDLK_RIGHT )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->cameraLeftOrRight( false );
+             
             }            
         }
-        else if( ( m_event.key.keysym.sym == SDLK_PERIOD ) )
+        else if( m_event.key.keysym.sym == SDLK_LEFT )
         {
             if( m_graphics != NULL )
             {
-                
-            }
-        }
-        else if( ( m_event.key.keysym.sym == SDLK_COMMA ) )
-        {
-            if( m_graphics != NULL )
-            {
-                
-            }
-        }
-        else if( ( m_event.key.keysym.sym == SDLK_o ) )
-        {
-            if( m_graphics != NULL )
-            {
-                
-            }
-        }
-        else if( ( m_event.key.keysym.sym == SDLK_l ) )
-        {
-            if( m_graphics != NULL )
-            {
-                
-            }
-        }
-        else if( ( m_event.key.keysym.sym == SDLK_k ) )
-        {
-            if( m_graphics != NULL )
-            {
-                
-            }
+             
+            }            
         }
         else if( ( m_event.key.keysym.sym == SDLK_r ) )
         {
             if( m_graphics != NULL )
             {
-                
+               redLight = !redLight; 
             }
         }
-        else if( ( m_event.key.keysym.sym == SDLK_a ) )
+        else if( ( m_event.key.keysym.sym == SDLK_g ) )
         {
             if( m_graphics != NULL )
             {
-                
+                greenLight = !greenLight;
             }
         }
-        else if( ( m_event.key.keysym.sym == SDLK_d ) )
+        else if( ( m_event.key.keysym.sym == SDLK_b ) )
         {
             if( m_graphics != NULL )
             {
-                
+                blueLight = !blueLight;
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_x ) )
@@ -205,13 +258,6 @@ void Engine::Keyboard()
             {
                 m_graphics->cycleShaderProgram( );
             }
-        }
-        else if( m_event.key.keysym.sym == SDLK_LEFT )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->cameraLeftOrRight( true );
-            }            
         }
         else if( m_event.key.keysym.sym == SDLK_SPACE )
         {
@@ -224,46 +270,47 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                m_graphics->ChangePerspectiveStatic( 1 );
+                //m_graphics->ChangePerspectiveStatic( 1 );
+                if( spotLight || specularLight)
+                {
+                   ambientLight = true;
+                   specularLight = false;
+                   spotLight = false;
+                }
             }            
         }
 	else if( m_event.key.keysym.sym == SDLK_2 )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->ChangePerspectiveStatic( 2 );
+                //m_graphics->ChangePerspectiveStatic( 2 );
+                if( spotLight || ambientLight)
+                {
+                   ambientLight = false;
+                   specularLight = true;
+                   spotLight = false;
+                }
+            }            
+        }
+	else if( m_event.key.keysym.sym == SDLK_3 )
+        {
+            if( m_graphics != NULL )
+            {
+                if( ambientLight || specularLight)
+                {
+                   ambientLight = false;
+                   specularLight = false;
+                   spotLight = true;
+                }              
             }            
         }
 	else if( m_event.key.keysym.sym == SDLK_q )
         {
-            if( m_graphics != NULL )
-            {
-		if( trackingID <= 0 )
-  		{
-		   trackingID = 8;		  
-		}
-		else
-		{
-		   trackingID -= 1;
-		}
-
-                m_graphics->startTracking( trackingID );
-            }            
+           
         }
 	else if( m_event.key.keysym.sym == SDLK_e )
         {
-            if( m_graphics != NULL )
-            {
-		if( trackingID >= 8 )
-  		{
-		   trackingID = 0;		  
-		}
-		else
-		{
-		   trackingID += 1;
-		}
-                m_graphics->startTracking( trackingID );
-            }            
+           
         }
     }
 }

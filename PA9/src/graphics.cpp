@@ -903,4 +903,83 @@ void Graphics::cycleShaderProgram( )
     }
 }
 
+void Graphics::changeBrightness( std::string lightSelect, float redParam, 
+                               float greenParam, float blueParam )
+{
+    if( lightSelect == "ambient" )
+    {
+        if( ambient[0].r >= 0.95f && redParam > 0.0f )
+        {
+            ambient[0].r = 1.0f;
+        }
+        else if( ambient[0].r <= 0.05f && redParam < 0.0f )
+        {
+            ambient[0].r = 0.0f;
+        }
+        else
+        {
+            ambient[0].r = ambient[0].r + redParam;
+        }
+
+
+
+        if( ambient[0].g >= 0.95f && greenParam > 0.0f )
+        {
+            ambient[0].g = 1.0f;
+        }
+        else if( ambient[0].r <= 0.05f && greenParam < 0.0f )
+        {
+            ambient[0].g = 0.0f;
+        }
+        else
+        {
+            ambient[0].g = ambient[0].g + greenParam;
+        }
+
+
+
+        if( ambient[0].b >= 0.95f && blueParam > 0.0f )
+        {
+            ambient[0].b = 1.0f;
+        }
+        else if( ambient[0].b <= 0.05f && blueParam < 0.0f )
+        {
+            ambient[0].b = 0.0f;
+        }
+        else
+        {
+            ambient[0].b = ambient[0].b + blueParam;
+        }
+    }
+
+
+    else if( lightSelect == "specular" )
+    {
+        
+    }
+
+
+    else if( lightSelect == "spot" )
+    {
+        
+    } 
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
