@@ -632,3 +632,13 @@ const glm::vec3 & Object::getTransVec( )
 {
     return translationVector;
 }
+
+glm::vec4 & Object::getDiffuse( )
+{
+    return diffuse;
+}
+
+glm::vec4 & Object::getSpecular( )
+{
+    return specular;
+}

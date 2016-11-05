@@ -142,6 +142,9 @@ class Object
 
         const glm::vec3 & getTransVec( );
 
+        glm::vec4& getDiffuse( );
+        glm::vec4& getSpecular( );
+
     private:
         //lighting info
         glm::vec4 diffuse;

@@ -54,6 +54,12 @@ struct ObjectInfo
 
 };
 
+struct SpotLight
+{
+    glm::vec4 incoming;
+    glm::vec4 brightness;
+};
+
 struct GraphicsInfo
 {
     //members
@@ -61,7 +67,7 @@ struct GraphicsInfo
     std::vector<std::string> modelVector;
     std::vector<ObjectInfo> objectData;
     std::vector<glm::vec4> lights;
-    glm::vec4 ambient;
+    std::vector<glm::vec4> ambient;
 
     //constructors
     GraphicsInfo( ) { }

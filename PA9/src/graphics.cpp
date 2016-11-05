@@ -247,6 +247,19 @@ bool Graphics::Initialize
 
 
     }
+
+    //lighting information /////////////////////////////////////////////////////
+    
+    incomingLights.resize( progInfo.lights.size( ) );
+    ambient.resize( progInfo.lights.size( ) );
+    for( index = 0; index < std::min( ( int )progInfo.lights.size( ), 100 ); index++ )
+    {
+        incomingLights[ index ] = progInfo.lights[ index ];
+        ambient[index] = progInfo.ambient[index];
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
     
     shaderRegistry.resize( progInfo.shaderVector.size( ) );
 
@@ -283,6 +296,21 @@ bool Graphics::Initialize
             printf( "Program to Finalize\n" );
             return false;
         }
+    }
+
+
+    m_ambient = shaderRegistry[ shaderSelect ].GetUniformLocation( "AmbientColor" );
+    if( m_ambient == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
+
+    m_light = shaderRegistry[ shaderSelect ].GetUniformLocation( "LightArray" );
+    if( m_light == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
     }
 
     // Locate the projection matrix in the shader
@@ -326,6 +354,8 @@ bool Graphics::Initialize
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);    
+
+
 
 
     // INITIALIZE BULLET //////////////////////////////////////////////
@@ -554,6 +584,9 @@ void Graphics::Render()
     // Send in the projection and view to the shader
     glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
     glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
+
+    glUniform4f( m_ambient, ambient[0].r, ambient[0].g, ambient[0].b, ambient[0].a );
+    glUniform4f( m_light, incomingLights[ 0 ].r, incomingLights[ 0 ].g, incomingLights[ 0 ].b, incomingLights[ 0 ].a );
 
     // Render the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -822,6 +855,18 @@ void Graphics::cycleShaderProgram( )
     }
 
     std::cout << "Shader Program " << shaderSelect + 1<< " selected." << std::endl;
+
+    m_ambient = shaderRegistry[ shaderSelect ].GetUniformLocation( "AmbientColor" );
+    if( m_ambient == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    m_light = shaderRegistry[ shaderSelect ].GetUniformLocation( "LightArray" );
+    if( m_light == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
 
     // Locate the projection matrix in the shader
     m_projectionMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "projectionMatrix" );

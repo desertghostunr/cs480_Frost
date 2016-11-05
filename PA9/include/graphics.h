@@ -43,7 +43,7 @@ class Graphics
 
     private:
         //lighting
-        glm::vec4 ambient;
+        std::vector<glm::vec4> ambient;
         std::vector<glm::vec4> incomingLights;
 
 
@@ -59,6 +59,8 @@ class Graphics
         GLint m_projectionMatrix;
         GLint m_viewMatrix;
         GLint m_modelMatrix;
+        GLint m_ambient;
+        GLint m_light;
 
         ObjectTable objectRegistry; //holds the scene's objects
 

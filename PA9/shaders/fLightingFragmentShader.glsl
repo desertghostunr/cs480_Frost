@@ -9,6 +9,8 @@ out vec4 frag_color;
 
 uniform sampler2D textureSampler;
 
+uniform vec4 AmbientColor;
+
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal );
 
 void main(void)
@@ -33,7 +35,7 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
 	float ks;
 	float kd;
 
-	ambient = vec4( 0.1, 0.0, 1.0, 1.0); //replace vec4 with ambient product
+	ambient = AmbientColor;
 
 	kd = max( dot( incoming, normal ), 0.0 );
 

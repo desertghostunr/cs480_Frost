@@ -11,6 +11,12 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
+uniform vec4 LightArray;
+
+uniform vec4 AmbientColor;
+
+uniform int numberOfLights;
+
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal );
 
 void main(void)
@@ -20,7 +26,7 @@ void main(void)
 	vec3 pos = (modelView * vPos).xyz;
     vec3 normedNormal = normalize( modelView * vec4( vNormal, 0.0 ) ).xyz;
 	vec3 normedEmmission = normalize( -pos );
-	vec3 normedL = normalize( vec4( 1.0, 2.0, 3.0, 1.0)/*light pos*/.xyz  - pos );
+	vec3 normedL = normalize( LightArray.xyz  - pos );
 	vec3 halfVec = normalize( normedL + normedEmmission );
 
 
@@ -39,7 +45,7 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
 	float ks;
 	float kd;
 
-	ambient = vec4( 1.0, 1.0, 1.0, 1.0); //replace vec4 with ambient product
+	ambient = AmbientColor;
 
 	kd = max( dot( incoming, normal ), 0.0 );
 

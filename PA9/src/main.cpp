@@ -263,10 +263,6 @@ bool ProcessConfigurationFile
         {
             noError = ( noError && ProcessConfigLight( parentNode, progInfo ) );
         }
-        else if( parentNode->name( ) == AMBIENT )
-        {
-            noError = ( noError && ProcessConfigAmbient( parentNode, progInfo ) );
-        }
         else
         {
             //do nothing
@@ -456,7 +452,7 @@ bool ProcessConfigShader( rapidxml::xml_node<>* parentNode, GraphicsInfo & progI
 bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
 {
     rapidxml::xml_node<> *childNode;
-    bool lightX = false, lightY = false, lightZ = false;
+    bool lightX = false, lightY = false, lightZ = false, noError = false;
 
     string tempStr;
 
@@ -475,19 +471,26 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
 
         if( childNode->name( ) == X_POS )
         {
+            lightX = true;
             strStream >> progInfo.lights[ pIndex ].x;
         }
         else if( childNode->name( ) == Y_POS )
         {
+            lightY = true;
             strStream >> progInfo.lights[ pIndex ].y;
         }
         else if( childNode->name( ) == Z_POS )
         {
+            lightZ = true;
             strStream >> progInfo.lights[ pIndex ].z;
+        }
+        else if( childNode->name( ) == AMBIENT )
+        {
+            noError = ( ProcessConfigAmbient( childNode, progInfo ) );
         }
     }
 
-    return lightX && lightY && lightZ;
+    return lightX && lightY && lightZ && noError;
 }
 
 
@@ -498,6 +501,12 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
 
     string tempStr;
 
+    unsigned int pIndex = 0;
+
+    progInfo.ambient.push_back( glm::vec4( 1.0, 1.0, 1.0, 1.0 ) );
+
+    pIndex = progInfo.ambient.size( ) - 1;
+
     for( childNode = parentNode->first_node( 0 ); childNode;
          childNode = childNode->next_sibling( ) )
     {
@@ -507,15 +516,19 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
 
         if( childNode->name( ) == X_POS )
         {
-            strStream >> progInfo.ambient.x;
+
+            lightX = true;
+            strStream >> progInfo.ambient[ pIndex ].x;
         }
         else if( childNode->name( ) == Y_POS )
         {
-            strStream >> progInfo.ambient.y;
+            lightY = true;
+            strStream >> progInfo.ambient[ pIndex ].y;
         }
         else if( childNode->name( ) == Z_POS )
         {
-            strStream >> progInfo.ambient.z;
+            lightZ = true;
+            strStream >> progInfo.ambient[ pIndex ].z;
         }
     }
 

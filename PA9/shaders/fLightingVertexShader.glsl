@@ -13,13 +13,15 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
+uniform vec4 LightArray;
+
 void calculateLighting( vec4 lPos, vec4 vPos );
 
 void main(void)
 {
     vec4 vPos = vec4(v_position, 1.0 );
 
-	calculateLighting( vec4( 1.0, 1.0, 1.0, 1.0 ), vPos );
+	calculateLighting( LightArray, vPos );
 
     gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * vPos;
     uv = v_UV;
