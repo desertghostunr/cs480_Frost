@@ -221,14 +221,14 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-             
+                m_graphics->changeModelRegistryIndex( 1 );
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_LEFT )
         {
             if( m_graphics != NULL )
             {
-             
+                m_graphics->changeModelRegistryIndex( -1 );
             }            
         }
         else if( ( m_event.key.keysym.sym == SDLK_r ) )
