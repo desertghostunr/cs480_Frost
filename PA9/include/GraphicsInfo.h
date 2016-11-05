@@ -54,7 +54,6 @@ struct ObjectInfo
 
 };
 
-
 struct GraphicsInfo
 {
     //members

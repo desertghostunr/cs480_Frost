@@ -384,7 +384,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //assimp
     Assimp::Importer importer;
     aiMaterial* mtlPtr = NULL;
-    aiVector3D uv;
+    aiVector3D uv, normals;
 
     aiString textFPath;
 
@@ -398,7 +398,8 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
     //vertex to temporarily store data
     Vertex tmpVert( glm::vec3( 1.0f, 1.0f, 1.0f ), //vertex
-                    glm::vec2( 0.0f, 0.0f ) ); //uv
+                    glm::vec2( 0.0f, 0.0f ), //uv
+                    glm::vec3( 1.0f, 1.0f, 1.0f ) ); //normals
 
 
     //indexing
@@ -478,13 +479,30 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                     uv = scene->mMeshes[ mIndex ]->mTextureCoords[ 0 ][ vIndex ];
 
                     tmpVert.uv.x = uv.x;
-                    tmpVert.uv.y = 0.0 - uv.y;
+                    tmpVert.uv.y = 0.0f - uv.y;
                 }                
                 else
                 {
-                    tmpVert.uv.x = 0.0;
-                    tmpVert.uv.y = 0.0;
+                    tmpVert.uv.x = 0.0f;
+                    tmpVert.uv.y = 0.0f;
                 }
+
+                if( scene->mMeshes[ mIndex ]->HasNormals( ) )
+                {
+                    normals = scene->mMeshes[ mIndex ]->mNormals[ vIndex ];
+
+                    tmpVert.normal.x = normals.x;
+                    tmpVert.normal.y = normals.y;
+                    tmpVert.normal.z = normals.z;
+                }
+                else
+                {
+                    tmpVert.normal.x = 0.0f;
+                    tmpVert.normal.y = 0.0f;
+                    tmpVert.normal.z = 0.0f;
+                }
+
+
                 //push back vertices
                 Vertices.push_back( tmpVert );
 

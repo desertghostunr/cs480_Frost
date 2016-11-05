@@ -1,7 +1,7 @@
 #include "graphics.h"
 #include <algorithm>
 
-namespace
+namespace ballCallBack
 {
 
     btRigidBody* ballPtr;
@@ -39,11 +39,11 @@ Graphics::Graphics()
     solverPtr = NULL;
     dynamicsWorldPtr = NULL;
 
-    ballPtr = NULL;
+    ballCallBack::ballPtr = NULL;
 
     boxIndex = 0;
 
-    maxSpeed = 50;
+    ballCallBack::maxSpeed = 50;
 
     shaderSelect = 0;
 }
@@ -248,14 +248,13 @@ bool Graphics::Initialize
 
     }
     
+    shaderRegistry.resize( progInfo.shaderVector.size( ) );
+
     for( sIndex = 0; sIndex < progInfo.shaderVector.size( ); sIndex++ )
     {
+        // Set up the shaders      
 
-        // Set up the shaders
-
-        shaderRegistry.push_back( Shader( ) );
-
-        if( !shaderRegistry[ shaderRegistry.size( ) - 1 ].Initialize( ) )
+        if( !shaderRegistry[ sIndex ].Initialize( ) )
         {
             printf( "Shader Failed to Initialize\n" );
             return false;
@@ -263,7 +262,7 @@ bool Graphics::Initialize
 
         for( index = 0; index < progInfo.shaderVector[ sIndex ].size( ); index++ )
         {
-            if( !shaderRegistry[ shaderRegistry.size( ) - 1 ].
+            if( !shaderRegistry[ sIndex ].
                 AddShader( progInfo.shaderVector[ sIndex ][ index ].first, 
                            progInfo.shaderVector[ sIndex ][ index ].second ) )
             {
@@ -278,19 +277,13 @@ bool Graphics::Initialize
                 return false;
             }
         }
-    }
 
-    // Connect the programs
-
-    for( sIndex = 0; sIndex < shaderRegistry.size( ); sIndex++ )
-    {
         if( !shaderRegistry[ sIndex ].Finalize( ) )
         {
             printf( "Program to Finalize\n" );
             return false;
         }
     }
-    
 
     // Locate the projection matrix in the shader
     m_projectionMatrix = shaderRegistry[shaderSelect].GetUniformLocation("projectionMatrix");
@@ -373,7 +366,7 @@ bool Graphics::Initialize
 
             tmpRigidBody->setLinearFactor( btVector3( 1, 0, 1 ) );
 
-            ballPtr = tmpRigidBody;
+            ballCallBack::ballPtr = tmpRigidBody;
             
         }
         else if( objectRegistry[ index ].getName( ) == "cylinder" )
@@ -525,7 +518,7 @@ bool Graphics::Initialize
         tmpRigidBody = NULL;
     }
 
-    dynamicsWorldPtr->setInternalTickCallback( myTickCallback );
+    dynamicsWorldPtr->setInternalTickCallback( ballCallBack::myTickCallback );
 
     return true;
 }
@@ -552,11 +545,12 @@ void Graphics::Render()
     unsigned int index;
 
     //clear the screen
-    glClearColor(0.2, 0.1, 0.4, 1.0);
+    glClearColor(0.6, 0.6, 0.6, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Start the correct program
     shaderRegistry[ shaderSelect ].Enable( );
+
     // Send in the projection and view to the shader
     glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
     glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
@@ -862,7 +856,6 @@ void Graphics::cycleShaderProgram( )
         objectRegistry[ index ]
             .getObjectModel( ).TextureUniformLocation( ) = tmpTextLoc;
     }
-
 }
 
 

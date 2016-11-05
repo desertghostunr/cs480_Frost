@@ -36,14 +36,14 @@ bool Shader::Initialize()
 bool Shader::AddShader(GLenum ShaderType, const std::string& fileName)
 {
     std::string srcStr;
-
+    
     if(!loadShaderSource( fileName, srcStr ))
     {
         std::cerr << "Error opening: " << fileName <<std::endl;
         return false;
     }
 
-    GLuint ShaderObj = glCreateShader(ShaderType);
+    GLuint ShaderObj = glCreateShader( ShaderType );
 
     if (ShaderObj == 0) 
     {
@@ -86,7 +86,6 @@ bool Shader::Finalize()
 {
     GLint Success = 0;
     GLchar ErrorLog[1024] = { 0 };
-
     glLinkProgram(m_shaderProg);
 
     glGetProgramiv(m_shaderProg, GL_LINK_STATUS, &Success);
@@ -120,19 +119,19 @@ bool Shader::Finalize()
 
 void Shader::Enable()
 {
-        glUseProgram(m_shaderProg);
+    glUseProgram(m_shaderProg);
 }
 
 
 GLint Shader::GetUniformLocation(const char* pUniformName)
 {
-        GLuint Location = glGetUniformLocation(m_shaderProg, pUniformName);
+    GLuint Location = glGetUniformLocation(m_shaderProg, pUniformName);
 
-        if (Location == INVALID_UNIFORM_LOCATION) {
-                fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName);
-        }
+    if (Location == INVALID_UNIFORM_LOCATION) {
+           fprintf(stderr, "Warning! Unable to get the location of uniform '%s'\n", pUniformName);
+    }
 
-        return Location;
+    return Location;
 }
 
 // private member functions

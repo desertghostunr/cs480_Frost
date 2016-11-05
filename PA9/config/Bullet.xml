@@ -73,11 +73,11 @@
     <zRotationAngle>0</zRotationAngle>
   </Object>
   <Shader>
-    <Vertex>shaders/vLightingVertexShader.glsl</Vertex>
-    <Fragment>shaders/vLightingFragmentShader.glsl</Fragment>
-  </Shader>
-  <Shader>
     <Vertex>shaders/fLightingVertexShader.glsl</Vertex>
     <Fragment>shaders/fLightingFragmentShader.glsl</Fragment>
+  </Shader>
+  <Shader>
+    <Vertex>shaders/vLightingVertexShader.glsl</Vertex>
+    <Fragment>shaders/vLightingFragmentShader.glsl</Fragment>
   </Shader>
 </Configuration>

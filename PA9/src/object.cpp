@@ -178,11 +178,14 @@ void Object::Render()
 
     glEnableVertexAttribArray( 0 );
     glEnableVertexAttribArray( 1 );
+    glEnableVertexAttribArray( 2 );
 
     glBindBuffer( GL_ARRAY_BUFFER, objModelPtr->vertexBuffer( ) );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
-    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
+    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
                            ( void* ) offsetof( Vertex, uv ) );
+    glVertexAttribPointer( 2, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
+                           ( void* ) offsetof( Vertex, normal ) );
 
     for( index = 0; 
          index < std::max( objModelPtr->getNumberOfIBs( ), //get max size
@@ -209,6 +212,7 @@ void Object::Render()
 
     glDisableVertexAttribArray( 0 );
     glDisableVertexAttribArray( 1 );
+    glDisableVertexAttribArray( 2 );
 }
 
 // SET ORIGIN //////////////////

@@ -27,8 +27,9 @@ struct Vertex
 {
     glm::vec3 vertex;
     glm::vec2 uv;
+    glm::vec3 normal;
 
-    Vertex(glm::vec3 v, glm::vec2 u): vertex(v), uv(u) {}
+    Vertex(glm::vec3 v, glm::vec2 u, glm::vec3 n): vertex(v), uv(u), normal(n) {}
 };
 
 #endif /* GRAPHICS_HEADERS_H */
