@@ -76,6 +76,14 @@ class Engine
 
         int trackingID;
 
+        bool specularLight;
+        bool ambientLight;
+        bool spotLight;
+
+        bool redLight;
+        bool greenLight;
+        bool blueLight;      
+
         Coord previousMousePosition;
 
 };

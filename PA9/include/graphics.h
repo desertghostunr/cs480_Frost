@@ -41,6 +41,9 @@ class Graphics
 
         void cycleShaderProgram( );
 
+        void changeBrightness( std::string lightSelect, float redParam, 
+                               float greenParam, float blueParam ); 
+
     private:
         //lighting
         std::vector<glm::vec4> ambient;
