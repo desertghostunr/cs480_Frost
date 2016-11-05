@@ -60,6 +60,8 @@ struct GraphicsInfo
     std::vector<std::vector<std::pair<GLenum, std::string>>> shaderVector;
     std::vector<std::string> modelVector;
     std::vector<ObjectInfo> objectData;
+    std::vector<glm::vec4> lights;
+    glm::vec4 ambient;
 
     //constructors
     GraphicsInfo( ) { }
@@ -67,7 +69,9 @@ struct GraphicsInfo
     GraphicsInfo( const GraphicsInfo& src ): 
         shaderVector( src.shaderVector ),
         modelVector( src.modelVector ), 
-        objectData( src.objectData ) { }
+        objectData( src.objectData ),
+        lights( src.lights ),
+        ambient( src.ambient ){ }
 };
 
 #endif /* GRAPHICSINFO_H */

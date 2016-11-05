@@ -38,7 +38,8 @@ const string Z_ROT_ANGLE = "zRotationAngle";
 const string VERTEX = "Vertex";
 const string FRAGMENT = "Fragment";
 const string NAME = "name";
-const string LIGHT = "light";
+const string LIGHT = "Light";
+const string AMBIENT = "Ambient";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -55,6 +56,8 @@ bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
 bool ProcessConfigShader( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
 
 bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
+
+bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
 
 // main ///////////////////////////////////
 
@@ -260,6 +263,10 @@ bool ProcessConfigurationFile
         {
             noError = ( noError && ProcessConfigLight( parentNode, progInfo ) );
         }
+        else if( parentNode->name( ) == AMBIENT )
+        {
+            noError = ( noError && ProcessConfigAmbient( parentNode, progInfo ) );
+        }
         else
         {
             //do nothing
@@ -455,9 +462,9 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
 
     unsigned int pIndex = 0;
 
-    progInfo.shaderVector.push_back( std::vector<std::pair<GLenum, std::string>>( ) );
+    progInfo.lights.push_back( glm::vec4( 1.0, 1.0, 1.0, 1.0 ) );
 
-    pIndex = progInfo.shaderVector.size( ) - 1;
+    pIndex = progInfo.lights.size( ) - 1;
 
     for( childNode = parentNode->first_node( 0 ); childNode;
          childNode = childNode->next_sibling( ) )
@@ -468,18 +475,49 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
 
         if( childNode->name( ) == X_POS )
         {
-            strStream >> progInfo.objectData[ pIndex ].scale.x;
+            strStream >> progInfo.lights[ pIndex ].x;
         }
         else if( childNode->name( ) == Y_POS )
         {
-            strStream >> progInfo.objectData[ pIndex ].scale.y;
+            strStream >> progInfo.lights[ pIndex ].y;
         }
         else if( childNode->name( ) == Z_POS )
         {
-            strStream >> progInfo.objectData[ pIndex ].scale.z;
+            strStream >> progInfo.lights[ pIndex ].z;
         }
     }
 
     return lightX && lightY && lightZ;
 }
 
+
+bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
+{
+    rapidxml::xml_node<> *childNode;
+    bool lightX = false, lightY = false, lightZ = false;
+
+    string tempStr;
+
+    for( childNode = parentNode->first_node( 0 ); childNode;
+         childNode = childNode->next_sibling( ) )
+    {
+        tempStr = childNode->value( );
+
+        std::stringstream strStream( tempStr );
+
+        if( childNode->name( ) == X_POS )
+        {
+            strStream >> progInfo.ambient.x;
+        }
+        else if( childNode->name( ) == Y_POS )
+        {
+            strStream >> progInfo.ambient.y;
+        }
+        else if( childNode->name( ) == Z_POS )
+        {
+            strStream >> progInfo.ambient.z;
+        }
+    }
+
+    return lightX && lightY && lightZ;
+}
