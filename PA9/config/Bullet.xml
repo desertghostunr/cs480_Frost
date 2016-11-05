@@ -85,8 +85,8 @@
     <yPosition>10</yPosition>
     <zPosition>10</zPosition>    
     <Ambient>
-      <xPosition>0.15</xPosition>
-      <yPosition>0.15</yPosition>
+      <xPosition>0.64</xPosition>
+      <yPosition>0.64</yPosition>
       <zPosition>0.64</zPosition>
     </Ambient>
   </Light>
