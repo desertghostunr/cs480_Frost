@@ -235,21 +235,36 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-               redLight = !redLight; 
+               redLight = true;
+               greenLight = false;
+               blueLight = false; 
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_g ) )
         {
             if( m_graphics != NULL )
             {
-                greenLight = !greenLight;
+               redLight = false;
+               greenLight = true;
+               blueLight = false; 
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_b ) )
         {
             if( m_graphics != NULL )
             {
-                blueLight = !blueLight;
+               redLight = false;
+               greenLight = false;
+               blueLight = true;
+            }
+        }
+        else if( ( m_event.key.keysym.sym == SDLK_o ) )
+        {
+            if( m_graphics != NULL )
+            {
+                blueLight = true;
+                greenLight = true;
+                redLight = true;
             }
         }
         else if( ( m_event.key.keysym.sym == SDLK_x ) )
