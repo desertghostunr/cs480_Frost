@@ -101,7 +101,7 @@
         <zPosition>1.0</zPosition>
       </Ambient>
     </Light>
-    <ConeAngle>30.0</ConeAngle>
+    <ConeAngle>15.0</ConeAngle>
   </SpotLight>
   
 </Configuration>

@@ -649,7 +649,7 @@ void Graphics::Render()
 
     tmpVec = tmpMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 
-    glUniform4f( m_spotLight, tmpVec.x + 0.0, tmpVec.y + 10.0, tmpVec.z - 30.0, 1.0 );
+    glUniform4f( m_spotLight, tmpVec.x + 0.0, tmpVec.y + 100.0, tmpVec.z - 90.0, 1.0 );
     glUniform4f( m_sAmbient, spotLight.ambient.r, spotLight.ambient.g, spotLight.ambient.b, spotLight.ambient.a );
     glUniform3f( m_lightDir, spotLight.incoming.r, spotLight.incoming.g, spotLight.incoming.b );
     glUniform1f( m_clipCosine, spotLight.coneAngle );
