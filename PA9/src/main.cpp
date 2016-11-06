@@ -278,7 +278,6 @@ bool ProcessConfigurationFile
                 if( childNode->name( ) == CONE_ANGLE )
                 {
                     strStream >> progInfo.spotLight.coneAngle;
-                    std::cout << progInfo.spotLight.coneAngle << endl;
                 }
                 else if( childNode->name( ) == LIGHT )
                 {

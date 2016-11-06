@@ -94,7 +94,7 @@
     <Light>
       <xPosition>0.0</xPosition>
       <yPosition>-1.0</yPosition>
-      <zPosition>0.05</zPosition>
+      <zPosition>-0.05</zPosition>
       <Ambient>
         <xPosition>1.0</xPosition>
         <yPosition>1.0</yPosition>
