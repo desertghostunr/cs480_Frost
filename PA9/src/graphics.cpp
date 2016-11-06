@@ -41,7 +41,7 @@ Graphics::Graphics()
 
     ballCallBack::ballPtr = NULL;
 
-    boxIndex = 0;
+    boxIndex = ballIndex = 0;
     modelIndex = 0;
 
     ballCallBack::maxSpeed = 50;
@@ -260,6 +260,7 @@ bool Graphics::Initialize
     }
 
     spotLight = progInfo.spotLight;
+    spotLight.coneAngle = glm::cos( glm::radians( spotLight.coneAngle ) );
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -299,6 +300,35 @@ bool Graphics::Initialize
             printf( "Program to Finalize\n" );
             return false;
         }
+    }
+
+
+    m_spotLight = shaderRegistry[ shaderSelect ].GetUniformLocation( "lightPosition" );
+    if( m_spotLight == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
+
+    m_sAmbient = shaderRegistry[ shaderSelect ].GetUniformLocation( "sAmbient" );
+    if( m_sAmbient == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
+
+    m_lightDir = shaderRegistry[ shaderSelect ].GetUniformLocation( "lightDir" );
+    if( m_lightDir == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
+    }
+
+    m_clipCosine = shaderRegistry[ shaderSelect ].GetUniformLocation( "clip" );
+    if( m_clipCosine == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+        return false;
     }
 
     m_diffuse = shaderRegistry[ shaderSelect ].GetUniformLocation( "DiffuseColor" );
@@ -394,7 +424,7 @@ bool Graphics::Initialize
     {
         if( objectRegistry[ index ].getName( ) == "ball" )
         {
-            
+            ballIndex = index;
 
             tmpShapePtr = new btSphereShape( ( objectRegistry[ index ].getBScale( ).x /2.0f ) + 1.0f );
 
@@ -599,6 +629,8 @@ void Graphics::Render()
 
     glm::vec4 tmpVec;
 
+    glm::mat4 tmpMat;
+
     //clear the screen
     glClearColor(0.6, 0.6, 0.6, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -612,6 +644,15 @@ void Graphics::Render()
 
     glUniform4f( m_ambient, ambient[0].r, ambient[0].g, ambient[0].b, ambient[0].a );
     glUniform4f( m_light, incomingLights[ 0 ].r, incomingLights[ 0 ].g, incomingLights[ 0 ].b, incomingLights[ 0 ].a );
+
+    tmpMat = objectRegistry[ ballIndex ].GetModel( );
+
+    tmpVec = tmpMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+    glUniform4f( m_spotLight, tmpVec.x + 0.0, tmpVec.y + 10.0, tmpVec.z - 30.0, 1.0 );
+    glUniform4f( m_sAmbient, spotLight.ambient.r, spotLight.ambient.g, spotLight.ambient.b, spotLight.ambient.a );
+    glUniform3f( m_lightDir, spotLight.incoming.r, spotLight.incoming.g, spotLight.incoming.b );
+    glUniform1f( m_clipCosine, spotLight.coneAngle );
 
     // Render the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -892,6 +933,31 @@ void Graphics::cycleShaderProgram( )
 
     std::cout << "Shader Program " << shaderSelect + 1<< " selected." << std::endl;
 
+
+    m_spotLight = shaderRegistry[ shaderSelect ].GetUniformLocation( "lightPosition" );
+    if( m_spotLight == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    m_sAmbient = shaderRegistry[ shaderSelect ].GetUniformLocation( "sAmbient" );
+    if( m_sAmbient == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    m_lightDir = shaderRegistry[ shaderSelect ].GetUniformLocation( "lightDir" );
+    if( m_lightDir == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
+    m_clipCosine = shaderRegistry[ shaderSelect ].GetUniformLocation( "clip" );
+    if( m_clipCosine == INVALID_UNIFORM_LOCATION )
+    {
+        printf( "m_projectionMatrix not found\n" );
+    }
+
     m_diffuse = shaderRegistry[ shaderSelect ].GetUniformLocation( "DiffuseColor" );
     if( m_diffuse == INVALID_UNIFORM_LOCATION )
     {
@@ -1067,11 +1133,11 @@ void Graphics::changeModelRegistryIndex( int i )
 {
 
     modelIndex = modelIndex + i;
-    if( modelIndex == modelRegistry.size() )
+    if( modelIndex >= modelRegistry.size() )
     {
         modelIndex = 0;
     } 
-    if( modelIndex == -1 )
+    if( modelIndex <= -1 )
     {
         modelIndex = modelRegistry.size() - 1;
     } 

@@ -9,21 +9,31 @@ smooth out vec3 fN;
 smooth out vec3 fE;
 smooth out vec3 fL;
 
+smooth out vec4 inPosition;
+smooth out vec4 lPosition;
+
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
 uniform vec4 LightArray;
 
+
+uniform vec4 lightPosition;
+
 void calculateLighting( vec4 lPos, vec4 vPos );
 
 void main(void)
 {
     vec4 vPos = vec4(v_position, 1.0 );
+    mat4 modelView = viewMatrix * modelMatrix;
+
+    inPosition = (modelView * vPos);
+    lPosition = (viewMatrix * lightPosition);
 
 	calculateLighting( LightArray, vPos );
 
-    gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * vPos;
+    gl_Position = (projectionMatrix * modelView ) * vPos;
     uv = v_UV;
 }
 

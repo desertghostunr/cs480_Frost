@@ -59,17 +59,27 @@ struct SpotLight
     glm::vec4 incoming;
     glm::vec4 ambient;
     float coneAngle;
-    float fConeCosine;
 
     SpotLight( ){ }
 
     SpotLight( const SpotLight& src) :
         incoming( src.incoming ),
         ambient( src.ambient ),
-        coneAngle( src.coneAngle ),
-        fConeCosine( src.fConeCosine )
+        coneAngle( src.coneAngle )
     {
 
+    }
+
+    const SpotLight& operator = ( const SpotLight& rh )
+    {
+        if( this != &rh )
+        {
+            incoming = rh.incoming;
+            ambient = rh.ambient;
+            coneAngle = rh.coneAngle;
+        }
+
+        return *this;
     }
 };
 

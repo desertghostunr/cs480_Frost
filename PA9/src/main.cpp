@@ -41,6 +41,7 @@ const string NAME = "name";
 const string LIGHT = "Light";
 const string SPOT_LIGHT = "SpotLight";
 const string AMBIENT = "Ambient";
+const string CONE_ANGLE = "ConeAngle";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -265,23 +266,19 @@ bool ProcessConfigurationFile
             noError = ( noError && ProcessConfigLight( parentNode, progInfo ) );
         }
         else if( parentNode->name( ) == SPOT_LIGHT )
-        {
-            std::stringstream strStream( tempStr );
+        {           
 
             for( childNode = parentNode->first_node( 0 );
                  childNode; childNode = childNode->next_sibling( ) )
             {
-                if( childNode->name( ) == "ConeAngle" )
-                {
-                    tempStr = childNode->value( );                    
+                tempStr = childNode->value( );
 
-                    strStream >> progInfo.spotLight.coneAngle;
-                }
-                else if( childNode->name( ) == "FConeCosine" )
-                {
-                    tempStr = childNode->value( );
+                std::stringstream strStream( tempStr );
 
+                if( childNode->name( ) == CONE_ANGLE )
+                {
                     strStream >> progInfo.spotLight.coneAngle;
+                    std::cout << progInfo.spotLight.coneAngle << endl;
                 }
                 else if( childNode->name( ) == LIGHT )
                 {

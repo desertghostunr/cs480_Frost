@@ -81,9 +81,9 @@
     <Fragment>shaders/vLightingFragmentShader.glsl</Fragment>
   </Shader>
   <Light>
-    <xPosition>10</xPosition>
-    <yPosition>10</yPosition>
-    <zPosition>10</zPosition>    
+    <xPosition>1</xPosition>
+    <yPosition>1</yPosition>
+    <zPosition>1</zPosition>    
     <Ambient>
       <xPosition>0.64</xPosition>
       <yPosition>0.64</yPosition>
@@ -92,17 +92,16 @@
   </Light>
   <SpotLight>
     <Light>
-      <xPosition>-10</xPosition>
-      <yPosition>-2</yPosition>
-      <zPosition>20</zPosition>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.05</zPosition>
       <Ambient>
-        <xPosition>0.15</xPosition>
-        <yPosition>0.15</yPosition>
-        <zPosition>0.64</zPosition>
+        <xPosition>1.0</xPosition>
+        <yPosition>1.0</yPosition>
+        <zPosition>1.0</zPosition>
       </Ambient>
     </Light>
-    <ConeAngle>15</ConeAngle>
-    <FConeCosine>1</FConeCosine>
+    <ConeAngle>30.0</ConeAngle>
   </SpotLight>
   
 </Configuration>

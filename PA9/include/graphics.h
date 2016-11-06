@@ -71,6 +71,9 @@ class Graphics
         GLint m_shininess;
 
         GLint m_spotLight;
+        GLint m_sAmbient;
+        GLint m_lightDir;
+        GLint m_clipCosine;
 
         ObjectTable objectRegistry; //holds the scene's objects
 
@@ -87,6 +90,7 @@ class Graphics
         /////////////////////////////////////////////
 
         unsigned int boxIndex;
+        unsigned int ballIndex;
         int modelIndex;
 
         glm::vec4 boxEdges;     

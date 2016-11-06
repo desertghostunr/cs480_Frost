@@ -11,14 +11,23 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
+//light info
 uniform vec4 LightArray;
-
 uniform vec4 AmbientColor;
+
+//object info
 uniform vec4 DiffuseColor;
 uniform vec4 SpecularColor;
 uniform float Shininess;
 
+//spot light info
+uniform vec4 lightPosition;
+uniform vec4 sAmbient;
+uniform vec3 lightDir;
+uniform float clip;
+
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal );
+vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec4 lPos );
 
 void main(void)
 {
@@ -26,15 +35,15 @@ void main(void)
     mat4 modelView = viewMatrix * modelMatrix;
 	vec3 pos = (modelView * vPos).xyz;
     vec3 normedNormal = normalize( modelView * vec4( vNormal, 0.0 ) ).xyz;
-	vec3 normedEmmission = normalize( -pos );
+	vec3 normedE = normalize( -pos );
 	vec3 normedL = normalize( LightArray.xyz  - pos );
-	vec3 halfVec = normalize( normedL + normedEmmission );
+	vec3 halfVec = normalize( normedL + normedE );
 
 
     gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * vPos;
     uv = v_UV;
 
-	color = getLight( normedL, halfVec, normedNormal );
+	color = getLight( normedL, halfVec, normedNormal ) + getSpotLight( normedL, halfVec, normedNormal, modelView * vPos, viewMatrix * lightPosition );
 }
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
@@ -65,4 +74,48 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
 	retColor.a = 1.0;
 
 	return retColor;
+}
+
+vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec4 lPos )
+{
+    vec4 finalColor = vec4( 0.0, 0.0, 0.0, 0.0 );
+    float angle = 1.0;
+    vec3 lightDirection;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    float ks;
+    float kd;
+
+    float intensity;
+
+    lightDirection = normalize( lPos.xyz - vPosition.xyz );
+    
+    angle = dot( lightDirection, normalize( -lightDir ) );    
+
+    if( angle > clip )
+    {       
+
+        ambient = sAmbient;
+
+        kd = max( dot( incoming, normal ), 0.0 );
+
+        diffuse = kd * DiffuseColor;
+
+        ks = pow( max( dot( normal, halfway ), 0.0 ), Shininess );
+
+        specular = ks * SpecularColor;
+
+        if( dot( incoming, normal ) < 0.0 )
+        {
+            specular = vec4( 0.0, 0.0, 0.0, 1.0 );
+        }
+
+        intensity = max( dot( normal, lightDirection ), 0.0 ); 
+
+        finalColor =  max( intensity * diffuse + specular, ambient );
+    }
+
+    return finalColor;
+    
 }

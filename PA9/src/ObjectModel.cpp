@@ -533,7 +533,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     }
 
     //calculate shininess
-    shininess = std::max( std::max( specular.r, specular.g ), specular.b );
+    shininess = 128.0f * std::max( std::max( specular.r, specular.g ), specular.b );
 
     //load texture as it is; note that 
     //this function can also be set to force the pixels to processed
