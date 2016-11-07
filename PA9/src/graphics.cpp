@@ -1141,6 +1141,8 @@ void Graphics::changeModelRegistryIndex( int i )
     {
         modelIndex = modelRegistry.size() - 1;
     } 
+
+    std::cout << modelRegistry[ modelIndex ].modelPath << std::endl;
 }
 
 

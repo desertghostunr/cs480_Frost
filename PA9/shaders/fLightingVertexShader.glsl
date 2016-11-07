@@ -21,25 +21,39 @@ uniform vec4 LightArray;
 
 uniform vec4 lightPosition;
 
-void calculateLighting( vec4 lPos, vec4 vPos );
+void calculateLighting( vec4 lPos, vec4 vPos, vec3 normal );
 
 void main(void)
 {
     vec4 vPos = vec4(v_position, 1.0 );
     mat4 modelView = viewMatrix * modelMatrix;
+    mat4 mvp;
+    vec3 rotNormal;
+    mat3 normalMat;
 
-    inPosition = (modelView * vPos);
-    lPosition = (viewMatrix * lightPosition);
+    mvp = ( projectionMatrix * modelView );
 
-	calculateLighting( LightArray, vPos );
+    gl_Position = mvp * vPos;
 
-    gl_Position = (projectionMatrix * modelView ) * vPos;
+    normalMat = mat3( modelMatrix );
+    normalMat = inverse( normalMat );
+    normalMat = transpose( normalMat );
+
+    rotNormal = normalize( vNormal  * normalMat );
+
+
+	calculateLighting( LightArray, vPos, rotNormal );
+
+
+    inPosition = ( modelView * vPos );
+    lPosition = ( viewMatrix * lightPosition );
+
     uv = v_UV;
 }
 
-void calculateLighting( vec4 lPos, vec4 vPos )
+void calculateLighting( vec4 lPos, vec4 vPos, vec3 normal )
 {
-    fN = vNormal;
+    fN = normal;
 	fE = vPos.xyz;
 	fL = lPos.xyz;
 
