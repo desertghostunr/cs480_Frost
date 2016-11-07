@@ -8,6 +8,7 @@ smooth out vec2 uv;
 smooth out vec3 fN;
 smooth out vec3 fE;
 smooth out vec3 fL;
+smooth out vec3 sFL;
 
 smooth out vec4 inPosition;
 smooth out vec4 lPosition;
@@ -18,7 +19,6 @@ uniform mat4 modelMatrix;
 
 uniform vec4 LightArray;
 
-
 uniform vec4 lightPosition;
 
 void calculateLighting( vec4 lPos, vec4 vPos, vec3 normal );
@@ -28,26 +28,29 @@ void main(void)
     vec4 vPos = vec4(v_position, 1.0 );
     mat4 modelView = viewMatrix * modelMatrix;
     mat4 mvp;
-    vec3 rotNormal;
-    mat3 normalMat;
+    /*vec3 rotNormal;
+    mat3 normalMat;*/
+	vec4 adjustedPos;
+	vec4 adjustedNorm;
 
     mvp = ( projectionMatrix * modelView );
 
     gl_Position = mvp * vPos;
 
-    normalMat = mat3( modelMatrix );
+    /*normalMat = mat3( modelMatrix );
     normalMat = inverse( normalMat );
     normalMat = transpose( normalMat );
 
     rotNormal = normalize( vNormal  * normalMat );
 
 
-	calculateLighting( LightArray, vPos, rotNormal );
+	calculateLighting( LightArray, vPos, rotNormal );*/
 
+	adjustedPos = (modelMatrix * vPos);
+	adjustedNorm = (modelMatrix * vec4( vNormal, 1.0 ) );
 
-    inPosition = ( modelView * vPos );
-    lPosition = ( viewMatrix * lightPosition );
-
+	calculateLighting( LightArray, adjustedPos, adjustedNorm.xyz );
+	
     uv = v_UV;
 }
 
@@ -57,8 +60,5 @@ void calculateLighting( vec4 lPos, vec4 vPos, vec3 normal )
 	fE = vPos.xyz;
 	fL = lPos.xyz;
 
-	if( lPos.w != 0.0 )
-	{
-	    fL = lPos.xyz - vPos.xyz;
-	}
+	sFL = lightPosition.xyz;
 }

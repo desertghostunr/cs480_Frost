@@ -2,11 +2,9 @@
 
 smooth in vec2 uv;
 smooth in vec3 fN;
-smooth in vec3 fL;
 smooth in vec3 fE;
-
-smooth in vec4 inPosition; 
-smooth in vec4 lPosition;
+smooth in vec3 fL;
+smooth in vec3 sFL;
 
 out vec4 frag_color;
 
@@ -24,7 +22,7 @@ uniform float clip;
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal );
 
-vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec4 lPos );
+vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal );
 
 void main(void)
 {
@@ -32,9 +30,10 @@ void main(void)
 	vec3 normedNormal = normalize( fN );
 	vec3 normedEmmission = normalize( fE );
 	vec3 normedL = normalize( fL );
+	vec3 normedSL = normalize( sFL );
 	vec3 halfVec = normalize( normedL + normedEmmission );
 
-	finalLight = getLight( normedL, halfVec, normedNormal ) + getSpotLight( normedL, halfVec, normedNormal, inPosition, lPosition );
+	finalLight = getLight( normedL, halfVec, normedNormal ) + getSpotLight( normedSL,  normalize( normedSL+ normedEmmission ), normedNormal );
 
     frag_color = finalLight * texture2D( textureSampler, uv.xy );
 }
@@ -69,7 +68,7 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
 	return retColor;
 }
 
-vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec4 lPos )
+vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal )
 {
     vec4 finalColor = vec4( 0.0, 0.0, 0.0, 0.0 );
     float angle = 1.0;
@@ -82,7 +81,7 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec
 
     float intensity;
 
-    lightDirection = normalize( lPos.xyz - vPosition.xyz );
+    lightDirection = normalize( sFL.xyz - fE.xyz );
 
     angle = dot( lightDirection, normalize( -lightDir ) );
 
