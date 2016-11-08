@@ -10,8 +10,6 @@ smooth out vec3 fE;
 smooth out vec3 fL;
 smooth out vec3 sFL;
 
-smooth out vec4 followPos;
-
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
@@ -38,8 +36,6 @@ void main(void)
 	adjustedNorm = (modelMatrix * vec4( vNormal, 0.0 ) );
 
 	calculateLighting( LightArray, adjustedPos, adjustedNorm.xyz );
-
-    followPos = adjustedPos;
 	
     uv = v_UV;
 }

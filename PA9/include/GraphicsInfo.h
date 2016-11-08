@@ -60,7 +60,7 @@ struct SpotLight
     glm::vec4 ambient;
     float coneAngle;
 
-    SpotLight( ){ }
+    SpotLight( ):incoming( glm::vec4( 0.0, 0.0, 0.0, 1.0f ) ){ }
 
     SpotLight( const SpotLight& src) :
         incoming( src.incoming ),
@@ -95,7 +95,7 @@ struct GraphicsInfo
     SpotLight spotLight;
 
     //constructors
-    GraphicsInfo( ) { }
+    GraphicsInfo( ):spotLight( ) { }
 
     GraphicsInfo( const GraphicsInfo& src ): 
         shaderVector( src.shaderVector ),

@@ -260,7 +260,9 @@ bool Graphics::Initialize
     }
 
     spotLight = progInfo.spotLight;
-    spotLight.coneAngle = glm::cos( glm::radians( spotLight.coneAngle ) );//increment by some degree
+    spotLightAngle = spotLight.coneAngle;
+    spotLight.coneAngle = glm::cos( glm::radians( spotLightAngle) );//increment by some degree
+    
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -1193,11 +1195,20 @@ void Graphics::changeModelRegistryIndex( int i )
 
 void Graphics::chanceSpotLightSize( float increment )
 {
-    if( ( spotLight.coneAngle + glm::cos( glm::radians( increment ) ) ) <= 0.0f )
+    spotLightAngle += increment;
+
+    std::cout << "Spot Light Angle: " << spotLightAngle << std::endl;
+
+    if( spotLightAngle < 0.0f )
     {
-        return;
+        spotLightAngle = 0.0f;
     }
-    spotLight.coneAngle += glm::cos( glm::radians( increment ) );
+    else if( spotLightAngle > 360.0f )
+    {
+        spotLightAngle = 360.0f;
+    }
+
+    spotLight.coneAngle = glm::cos( glm::radians( spotLightAngle ) );
 }
 
 

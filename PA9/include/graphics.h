@@ -53,6 +53,7 @@ class Graphics
         std::vector<glm::vec4> incomingLights;
 
         SpotLight spotLight;
+        float spotLightAngle;
 
         std::string ErrorString(GLenum error);
 	

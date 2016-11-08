@@ -5,7 +5,6 @@ smooth in vec3 fN;
 smooth in vec3 fE;
 smooth in vec3 fL;
 smooth in vec3 sFL;
-smooth in vec4 followPos;
 
 out vec4 frag_color;
 
@@ -29,13 +28,13 @@ void main(void)
 {
     vec4 finalLight;
 	vec3 normedNormal = normalize( fN );
-	vec3 normedEmmission = normalize( fE );
+	vec3 normedE = normalize( fE );
 	vec3 normedL = normalize( fL );
 	vec3 normedSL = normalize( sFL );
-	vec3 halfVec = normalize( normedL + normedEmmission );
+	vec3 halfVec = normalize( normedL + normedE );
 
 	finalLight = getLight( normedL, halfVec, normedNormal ) 
-        + getSpotLight( normedSL,  normalize( normedSL + followPos.xyz ), normedNormal );
+        + getSpotLight( normedSL,  normalize( normedSL + normedE ), normedNormal );
 
     frag_color = finalLight * texture2D( textureSampler, uv.xy );
 }
