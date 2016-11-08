@@ -1129,6 +1129,12 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
 
     else if( lightSelect == "spot" )
     {
+        std::cout << "Spot Light Brightness: ";
+        std::cout << spotLight.ambient.r << ", ";
+        std::cout << spotLight.ambient.g << ", ";
+        std::cout << spotLight.ambient.b << "." << std::endl;
+
+
         if( spotLight.ambient.r >= 0.95f && redParam > 0.0f )
         {
             spotLight.ambient.r = 1.0f;

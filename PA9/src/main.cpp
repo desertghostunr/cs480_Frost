@@ -281,6 +281,7 @@ bool ProcessConfigurationFile
                 }
                 else if( childNode->name( ) == LIGHT )
                 {
+                    
                     noError = ( noError && ProcessConfigLight( childNode, progInfo, true ) );
                 }
             }
@@ -537,7 +538,7 @@ bool ProcessConfigLight( rapidxml::xml_node<>* parentNode, GraphicsInfo & progIn
         }
         else if( childNode->name( ) == AMBIENT )
         {
-            noError = ( ProcessConfigAmbient( childNode, progInfo ) );
+            noError = ( ProcessConfigAmbient( childNode, progInfo, spotLight ) );
         }
     }
 

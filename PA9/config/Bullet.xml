@@ -94,11 +94,11 @@
     <Light>
       <xPosition>0.0</xPosition>
       <yPosition>-1.0</yPosition>
-      <zPosition>0.05</zPosition>
+      <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.98</xPosition>
-        <yPosition>1.0</yPosition>
-        <zPosition>0.95</zPosition>
+        <xPosition>0.67</xPosition>
+        <yPosition>0.80</yPosition>
+        <zPosition>0.67</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>15.0</ConeAngle>
