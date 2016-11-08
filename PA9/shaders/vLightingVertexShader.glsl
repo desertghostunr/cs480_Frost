@@ -27,7 +27,7 @@ uniform vec3 lightDir;
 uniform float clip;
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal );
-vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec4 lPos );
+vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition );
 
 void main(void)
 {
@@ -43,7 +43,10 @@ void main(void)
     gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * vPos;
     uv = v_UV;
 
-	color = getLight( normedL, halfVec, normedNormal ) + getSpotLight( normedL, halfVec, normedNormal, modelView * vPos, viewMatrix * lightPosition );
+	color = getLight( normedL, halfVec, normedNormal ) 
+        + getSpotLight( normalize( lightPosition.xyz ),  
+                        normalize( lightPosition.xyz + (modelMatrix * vPos).xyz ), 
+                        normedNormal, modelMatrix * vPos );
 }
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
@@ -76,7 +79,7 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal )
 	return retColor;
 }
 
-vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec4 lPos )
+vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition )
 {
     vec4 finalColor = vec4( 0.0, 0.0, 0.0, 0.0 );
     float angle = 1.0;
@@ -89,7 +92,7 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec
 
     float intensity;
 
-    lightDirection = normalize( lPos.xyz - vPosition.xyz );
+    lightDirection = normalize( lightPosition.xyz - vPosition.xyz );
     
     angle = dot( lightDirection, normalize( -lightDir ) );    
 
@@ -113,7 +116,7 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, vec
 
         intensity = max( dot( normal, lightDirection ), 0.0 ); 
 
-        finalColor =  max( intensity * diffuse + specular, ambient );
+        finalColor = max( intensity * diffuse + specular, ambient );
     }
 
     return finalColor;
