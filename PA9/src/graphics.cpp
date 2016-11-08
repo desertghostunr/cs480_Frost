@@ -260,7 +260,7 @@ bool Graphics::Initialize
     }
 
     spotLight = progInfo.spotLight;
-    spotLight.coneAngle = glm::cos( glm::radians( spotLight.coneAngle ) );
+    spotLight.coneAngle = glm::cos( glm::radians( spotLight.coneAngle ) );//increment by some degree
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -1127,7 +1127,48 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
 
     else if( lightSelect == "spot" )
     {
-        
+        if( spotLight.ambient.r >= 0.95f && redParam > 0.0f )
+        {
+            spotLight.ambient.r = 1.0f;
+        }
+        else if( spotLight.ambient.r <= 0.05f && redParam < 0.0f )
+        {
+            spotLight.ambient.r = 0.0f;
+        }
+        else
+        {
+            spotLight.ambient.r = spotLight.ambient.r + redParam;
+        }
+
+
+
+        if( spotLight.ambient.g >= 0.95f && greenParam > 0.0f )
+        {
+            spotLight.ambient.g = 1.0f;
+        }
+        else if( spotLight.ambient.g <= 0.05f && greenParam < 0.0f )
+        {
+            spotLight.ambient.g = 0.0f;
+        }
+        else
+        {
+            spotLight.ambient.g = spotLight.ambient.g + greenParam;
+        }
+
+
+
+        if( spotLight.ambient.b >= 0.95f && blueParam > 0.0f )
+        {
+            spotLight.ambient.b = 1.0f;
+        }
+        else if( spotLight.ambient.b <= 0.05f && blueParam < 0.0f )
+        {
+            spotLight.ambient.b = 0.0f;
+        }
+        else
+        {
+            spotLight.ambient.b = spotLight.ambient.b + blueParam;
+        }   
     } 
 
 
@@ -1148,6 +1189,15 @@ void Graphics::changeModelRegistryIndex( int i )
     } 
 
     std::cout << modelRegistry[ modelIndex ].modelPath << std::endl;
+}
+
+void Graphics::chanceSpotLightSize( float increment )
+{
+    if( ( spotLight.coneAngle + glm::cos( glm::radians( increment ) ) ) <= 0.0f )
+    {
+        return;
+    }
+    spotLight.coneAngle += glm::cos( glm::radians( increment ) );
 }
 
 

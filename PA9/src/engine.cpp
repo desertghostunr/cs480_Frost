@@ -220,15 +220,29 @@ void Engine::Keyboard()
         else if( m_event.key.keysym.sym == SDLK_RIGHT )
         {
             if( m_graphics != NULL )
-            {
-                m_graphics->changeModelRegistryIndex( 1 );
+            {   
+                if( specularLight )
+                {
+                    m_graphics->changeModelRegistryIndex( 1 );
+                }
+                else if( spotLight )
+                {
+                    m_graphics->chanceSpotLightSize( 1 );
+                }
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_LEFT )
         {
             if( m_graphics != NULL )
             {
-                m_graphics->changeModelRegistryIndex( -1 );
+                if( specularLight )
+                {
+                    m_graphics->changeModelRegistryIndex( -1 );
+                }
+                else if( spotLight )
+                {
+                    m_graphics->chanceSpotLightSize( -1 );
+                }
             }            
         }
         else if( ( m_event.key.keysym.sym == SDLK_r ) )

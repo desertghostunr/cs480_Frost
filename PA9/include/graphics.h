@@ -45,6 +45,8 @@ class Graphics
                                float greenParam, float blueParam ); 
 	void changeModelRegistryIndex( int i );
 
+        void chanceSpotLightSize( float increment );
+
     private:
         //lighting
         std::vector<glm::vec4> ambient;
