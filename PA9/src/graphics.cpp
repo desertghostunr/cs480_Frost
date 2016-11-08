@@ -1075,6 +1075,11 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
 
     else if( lightSelect == "specular" )
     {
+        std::cout << modelRegistry[ modelIndex ].modelPath << "'s specular: ";
+        std::cout << modelRegistry[ modelIndex ].objModel.getSpecular( ).r << ", ";
+        std::cout << modelRegistry[ modelIndex ].objModel.getSpecular( ).g << ", ";
+        std::cout << modelRegistry[ modelIndex ].objModel.getSpecular( ).b << "." << std::endl;
+
         if( modelRegistry[ modelIndex ].objModel.getSpecular().r >= 0.95f && redParam > 0.0f )
         {
             modelRegistry[ modelIndex ].objModel.getSpecular().r = 1.0f;

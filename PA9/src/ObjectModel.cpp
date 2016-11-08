@@ -75,7 +75,8 @@ ObjectModel::ObjectModel( const std::string & fileName ): reference( 0 ),
 ObjectModel::ObjectModel
 ( 
     const ObjectModel & src //the ObjectModel to copy
-):  reference( 0 ), Vertices( src.Vertices ), Indices( src.Indices ), 
+):  diffuse(src.diffuse), specular(src.specular ), shininess( src.shininess),
+    reference( 0 ), Vertices( src.Vertices ), Indices( src.Indices ), 
     VB( src.VB ), IB( src.IB ),  texture( src.texture ), textUniLoc( src.textUniLoc )
 {
     //nothing to do
@@ -470,6 +471,9 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                 specular.g = mColor.g;
                 specular.b = mColor.b;
                 specular.a = mColor.a;
+
+                std::cout << mColor.r << " " << mColor.g << " " << mColor.b << std::endl;
+                std::cout << specular.a << std::endl;
             }
         }
 
@@ -532,8 +536,8 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
         }
     }
 
-    //calculate shininess
-    shininess = 60.0f;
+    //set shininess
+    shininess = 10.0f;
 
     //load texture as it is; note that 
     //this function can also be set to force the pixels to processed
@@ -723,6 +727,9 @@ const ObjectModel & ObjectModel::operator=( const ObjectModel & rhObjModel )
 {
     if( this != &rhObjModel )
     {
+        specular = rhObjModel.specular;
+        diffuse = rhObjModel.diffuse;
+        shininess = rhObjModel.shininess;
         Vertices = rhObjModel.Vertices;
         Indices = rhObjModel.Indices;
         VB = rhObjModel.VB;
