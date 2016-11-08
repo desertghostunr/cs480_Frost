@@ -471,9 +471,6 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
                 specular.g = mColor.g;
                 specular.b = mColor.b;
                 specular.a = mColor.a;
-
-                std::cout << mColor.r << " " << mColor.g << " " << mColor.b << std::endl;
-                std::cout << specular.a << std::endl;
             }
         }
 
