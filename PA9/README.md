@@ -107,6 +107,8 @@ An example of running this program:
 
 * Press b: to only adjust the blue channel.
 
+* Press o: to adjust all channels.
+
 * Press Left arrow key: 
 	* Option 2: switches to the previous object.
 	* Option 3: decreases spotlight size.
