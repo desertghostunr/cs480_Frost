@@ -253,7 +253,7 @@ bool Graphics::Initialize
     
     incomingLights.resize( progInfo.lights.size( ) );
     ambient.resize( progInfo.lights.size( ) );
-    for( index = 0; index < std::min( ( int )progInfo.lights.size( ), 100 ); index++ )
+    for( index = 0; (int) index < std::min( ( int )progInfo.lights.size( ), 100 ); index++ )
     {
         incomingLights[ index ] = progInfo.lights[ index ];
         ambient[index] = progInfo.ambient[index];
@@ -1187,7 +1187,7 @@ void Graphics::changeModelRegistryIndex( int i )
 {
 
     modelIndex = modelIndex + i;
-    if( modelIndex >= modelRegistry.size() )
+    if( modelIndex >= (int)modelRegistry.size() )
     {
         modelIndex = 0;
     } 
