@@ -37,3 +37,15 @@ See PA7 README.md for more information.
 
 Contributors: Andy Frost, J.J. Sibley
 
+## PA8: Bullet
+
+See PA8 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
+
+## PA9: Lighting
+
+See PA9 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
+
