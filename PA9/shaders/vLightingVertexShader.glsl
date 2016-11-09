@@ -92,6 +92,8 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition )
 
     float intensity;
 
+    float brightnessMultiplier;
+
     lightDirection = normalize( lightPosition.xyz - vPosition.xyz );
     
     angle = dot( lightDirection, normalize( -lightDir ) );    
@@ -114,9 +116,11 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition )
             specular = vec4( 0.0, 0.0, 0.0, 1.0 );
         }
 
-        intensity = max( dot( normal, lightDirection ), 0.0 ); 
+        intensity = max( dot( normal, lightDirection ), 0.0 );
 
-        finalColor = max( intensity * diffuse + specular, ambient );
+        brightnessMultiplier = max( max( max( ambient.r, ambient.g ), ambient.b ), 0.0 );
+
+        finalColor = brightnessMultiplier * max( intensity * diffuse + specular, ambient );
     }
 
     return finalColor;

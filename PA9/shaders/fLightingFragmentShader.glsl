@@ -29,7 +29,7 @@ void main(void)
 {
     vec4 finalLight;
 	vec3 normedNormal = normalize( fN );
-	vec3 normedE = normalize( fE );
+	vec3 normedE = normalize( -fE );
 	vec3 normedL = normalize( fL );
 	vec3 normedSL = normalize( sFL );
 	vec3 halfVec = normalize( normedL + normedE );
@@ -83,6 +83,8 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal )
 
     float intensity;
 
+    float brightnessMultiplier;
+
     lightDirection = normalize( sFL.xyz - spotPosition.xyz );
 
     angle = dot( lightDirection, normalize( -lightDir ) );
@@ -107,7 +109,9 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal )
 
         intensity = max( dot( normal, lightDirection ), 0.0 );
 
-        finalColor = max( intensity * diffuse + specular, ambient );
+        brightnessMultiplier = max( max( max( ambient.r, ambient.g ), ambient.b ), 0.0 );
+
+        finalColor = brightnessMultiplier * max( intensity * diffuse + specular, ambient );
     }
 
     return finalColor;

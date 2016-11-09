@@ -1,4 +1,4 @@
-# PA8 Bullet
+# PA8 Lighting
 
 # Contributors
 * Andy Frost
@@ -79,24 +79,37 @@ An example of running this program:
 
 ## Controls
 
+
+
 ### Movement Controls (use these):
 * Move the mouse to move the cube.
+
 * Press the right mouse button to show the cursor.
+
 * Press the left mouse button to hide the cursor.
+
 * NOTE: It might be necessary to show the cursor and run the box into a wall until the cursor is over it. This keeps the cursor from going off of the screen and hindering use of the program.
 
-### Camera Controls (Don't use these except for debugging):
-* Press 1: set the camera to a top down view
-* Press 2: Set the camera to a Side by side view
+### Lighting Controls
+* Note: the objects selected will be printed out in the terminal.
 
-* Press w: To zoom in *unless already zoomed in past sun then becomes a zoom out
-* Press s: To zoom out *unless zoomed past sun then becomes a zoom in
+* Press 1: select adjusting ambient brightness.
 
-* *Following controls become inverted if zoomed past the sun:
-* Press Left arrow key: Moves camera to the left
-* Press Right arrow key: Moves camera to the right
-* Press Up arrow key: Moves Up
-* Press Down arrow key: Moves down
+* Press 2: select adjusting objects specular brightness.
+
+* Press 3: select adjusting spotlight brightness and size.
+
+* Press Left arrow key: 
+	* Option 2: switches to the previous object.
+	* Option 3: decreases spotlight size.
+
+* Press Right arrow key: 
+	* Option 2: switches to the right object
+	* Option 3: increases spotlight size.
+
+* Press Up arrow key: increases brightness.
+
+* Press Down arrow key: decreases brightness.
 
 
 ## Ubuntu.cse.unr.edu
