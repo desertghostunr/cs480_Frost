@@ -11,7 +11,7 @@ namespace ballCallBack
 
     void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
     {
-        btVector3 velocity;
+        btVector3 velocity, angularVelocity;
         btScalar speed;
 
         if( ballPtr == NULL )
@@ -20,12 +20,22 @@ namespace ballCallBack
         }
 
         velocity = ballPtr->getLinearVelocity( );
+        angularVelocity = ballPtr->getAngularVelocity( );
+
         speed = velocity.length( );
 
         if( speed > maxSpeed )
         {
             velocity *= maxSpeed / speed;
             ballPtr->setLinearVelocity( velocity );
+        }
+
+        speed = angularVelocity.length( );
+
+        if( speed > maxSpeed )
+        {
+            angularVelocity *= maxSpeed / speed;
+            ballPtr->setAngularVelocity( angularVelocity );
         }
     }
 
