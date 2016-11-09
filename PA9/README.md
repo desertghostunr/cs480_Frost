@@ -93,6 +93,8 @@ An example of running this program:
 ### Lighting Controls
 * Note: the objects selected will be printed out in the terminal.
 
+* Press x: toggles the shader programs used.
+
 * Press 1: select adjusting ambient brightness.
 
 * Press 2: select adjusting objects specular brightness.
