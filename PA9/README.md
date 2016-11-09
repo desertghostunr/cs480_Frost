@@ -93,13 +93,19 @@ An example of running this program:
 ### Lighting Controls
 * Note: the objects selected will be printed out in the terminal.
 
-* Press x: toggles the shader programs used.
+* Press x: toggles the shader program used.
 
 * Press 1: select adjusting ambient brightness.
 
 * Press 2: select adjusting objects specular brightness.
 
 * Press 3: select adjusting spotlight brightness and size.
+
+* Press r: to only adjust the red channel.
+
+* Press g: to only adjust the green channnel.
+
+* Press b: to only adjust the blue channel.
 
 * Press Left arrow key: 
 	* Option 2: switches to the previous object.
