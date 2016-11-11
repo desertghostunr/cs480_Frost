@@ -54,18 +54,65 @@ struct ObjectInfo
 
 };
 
+//lighting info
+
+struct Light
+{
+    glm::vec4 incoming;
+    glm::vec4 ambient;
+
+    GLint incomingLoc;
+    GLint ambientLoc;
+
+    Light( ):incoming( glm::vec4( 0.0, 0.0, 0.0, 1.0f ) ) { }
+
+    Light( const Light& src ) :
+        incoming( src.incoming ),
+        ambient( src.ambient ),
+        incomingLoc( src.incomingLoc ),
+        ambientLoc( src.ambientLoc )
+    {
+
+    }
+
+    const Light& operator = ( const Light& rh )
+    {
+        if( this != &rh )
+        {
+            incoming = rh.incoming;
+            ambient = rh.ambient;
+
+            incomingLoc = rh.incomingLoc;
+            ambientLoc = rh.ambientLoc;
+        }
+
+        return *this;
+    }
+};
+
 struct SpotLight
 {
     glm::vec4 incoming;
     glm::vec4 ambient;
     float coneAngle;
+    float cosine;
+
+    GLint incomingLoc;
+    GLint ambientLoc;
+    GLint cosineLoc;
+    GLint followLoc;
 
     SpotLight( ):incoming( glm::vec4( 0.0, 0.0, 0.0, 1.0f ) ){ }
 
     SpotLight( const SpotLight& src) :
         incoming( src.incoming ),
         ambient( src.ambient ),
-        coneAngle( src.coneAngle )
+        coneAngle( src.coneAngle ),
+        cosine( src.cosine ),
+        incomingLoc( src.incomingLoc ),
+        ambientLoc( src.ambientLoc ),
+        cosineLoc( src.cosineLoc ), 
+        followLoc( src.followLoc )
     {
 
     }
@@ -77,6 +124,12 @@ struct SpotLight
             incoming = rh.incoming;
             ambient = rh.ambient;
             coneAngle = rh.coneAngle;
+            cosine = rh.cosine;
+
+            incomingLoc = rh.incomingLoc;
+            ambientLoc = rh.ambientLoc;
+            cosineLoc = rh.cosineLoc;
+            followLoc = rh.followLoc;
         }
 
         return *this;
@@ -89,10 +142,9 @@ struct GraphicsInfo
     std::vector<std::vector<std::pair<GLenum, std::string>>> shaderVector;
     std::vector<std::string> modelVector;
     std::vector<ObjectInfo> objectData;
-    std::vector<glm::vec4> lights;
-    std::vector<glm::vec4> ambient;
+    std::vector<Light> lights;
 
-    SpotLight spotLight;
+    std::vector<SpotLight> spotLight;
 
     //constructors
     GraphicsInfo( ):spotLight( ) { }
@@ -102,7 +154,6 @@ struct GraphicsInfo
         modelVector( src.modelVector ), 
         objectData( src.objectData ),
         lights( src.lights ),
-        ambient( src.ambient ),
         spotLight( src.spotLight ){ }
 };
 
