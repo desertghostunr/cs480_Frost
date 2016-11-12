@@ -2,8 +2,11 @@
 #include <algorithm>
 #include <sstream>
 
+
+
+
 //physics related callbacks
-namespace ballCallBack
+namespace ccb
 {
 
     btRigidBody* ballPtr;
@@ -41,38 +44,69 @@ namespace ballCallBack
         }
     }
 
-};
-
-
-struct ScoreContactResultCallback : public btCollisionWorld::ContactResultCallback
-{
-
-    //functions
-    ScoreContactResultCallback( int * inPtr ) : scorePtr( inPtr ){ }
-
-    btScalar addSingleResult
-    (
-        btManifoldPoint& cp,
-        const btCollisionObjectWrapper * colObj0Wrap,
-        int partId0,
-        int index0,
-        const btCollisionObjectWrapper  * colObj1Wrap,
-        int partId1,
-        int index1
-    )
+    struct ScoreContactResultCallback : public btCollisionWorld::ContactResultCallback
     {
-        if( scorePtr != NULL )
+
+        //functions
+        ScoreContactResultCallback( int * inPtr ) : scorePtr( inPtr ) { }
+
+        btScalar addSingleResult
+        (
+            btManifoldPoint& cp,
+            const btCollisionObjectWrapper * colObj0Wrap,
+            int partId0,
+            int index0,
+            const btCollisionObjectWrapper  * colObj1Wrap,
+            int partId1,
+            int index1
+        )
         {
-            *scorePtr += 1;
+            if( scorePtr != NULL )
+            {
+                *scorePtr += 1;
+
+                std::cout << "Score: " << *scorePtr << std::endl;
+            }
+
+            return 0;
         }
-        std::cout << "Score: "<< *scorePtr << std::endl;
-
-        return 0;
-    }
 
 
-    //member
-    int * scorePtr;
+        //member
+        int * scorePtr;
+    };
+
+    struct TrapContactResultCallback : public btCollisionWorld::ContactResultCallback
+    {
+
+        //functions
+        TrapContactResultCallback( bool * inPtr ) : returnPtr( inPtr ) { }
+
+        btScalar addSingleResult
+        (
+            btManifoldPoint& cp,
+            const btCollisionObjectWrapper * colObj0Wrap,
+            int partId0,
+            int index0,
+            const btCollisionObjectWrapper  * colObj1Wrap,
+            int partId1,
+            int index1
+        )
+        {
+            if( returnPtr != NULL )
+            {
+                *returnPtr = true;
+            }
+
+            return 0;
+        }
+
+
+        //member
+        bool * returnPtr;
+    };
+
+
 };
 
 
@@ -85,16 +119,16 @@ Graphics::Graphics()
     solverPtr = NULL;
     dynamicsWorldPtr = NULL;
 
-    ballCallBack::ballPtr = NULL;
+    ccb::ballPtr = NULL;
 
     boxIndex = ballIndex = 0;
     modelIndex = 0;
 
-    ballCallBack::maxSpeed = 50;
+    ccb::maxSpeed = 50;
 
     shaderSelect = 0;
-
-    pausedStateFlag = false;
+    playingStateFlag = false;
+    returnBall = false;
 }
 
 Graphics::~Graphics()
@@ -446,7 +480,7 @@ bool Graphics::Initialize
 
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
-
+            
             mass = 1;
 
             inertia = btVector3( 0, 0, 0 );
@@ -467,7 +501,7 @@ bool Graphics::Initialize
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
-            ballCallBack::ballPtr = tmpRigidBody;
+            ccb::ballPtr = tmpRigidBody;
             
         }
         else if( objectRegistry[ index ].getName( ) == "bumber" )
@@ -493,6 +527,28 @@ bool Graphics::Initialize
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
             
+        }
+        else if( objectRegistry[ index ].getName( ) == "ballReturn" )
+        {
+            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) - 1.0f ) );
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z - 5.5f ) ) );
+
+            mass = 0;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            rigidBodyConstruct.m_restitution = 1.0f;
+            rigidBodyConstruct.m_friction = 1.0f;
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
+
         }
         else if( objectRegistry[ index ].getName( ) == "cube" )
         {
@@ -621,7 +677,7 @@ bool Graphics::Initialize
         tmpRigidBody = NULL;
     }
 
-    dynamicsWorldPtr->setInternalTickCallback( ballCallBack::TickCallback );
+    dynamicsWorldPtr->setInternalTickCallback( ccb::TickCallback );
 
     return true;
 }
@@ -630,9 +686,15 @@ void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
 
-    if( !pausedStateFlag )
+    if( playingStateFlag )
     {
         dynamicsWorldPtr->stepSimulation( dt, 10 );
+    }
+
+    if( returnBall )
+    {
+        std::cout << "Game over!" << std::endl;
+        gameOver( );
     }
 
     // Update the objects
@@ -781,7 +843,8 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     btTransform trans;
     btScalar modTrans[ 16 ];
 
-    ScoreContactResultCallback cylinderCallBack( &score );
+    ccb::ScoreContactResultCallback cylinderCallBack( &score );
+    ccb::TrapContactResultCallback returnBallCallBack( &returnBall );
     
 
     if( ( objectID > objectRegistry.getSize( ) ) )
@@ -806,11 +869,18 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
         objectRegistry[ objectID ].commitBulletTransform( );
 
-        if( objectRegistry[ objectID ].getName( ) == "bumber" && !pausedStateFlag )
+        if( objectRegistry[ objectID ].getName( ) == "bumber" && playingStateFlag )
         {
             dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody, 
                                                objectRegistry[ objectID ].CollisionInfo( ).rigidBody, 
                                                cylinderCallBack );
+        }
+
+        if( objectRegistry[ objectID ].getName( ) == "ballReturn" && playingStateFlag )
+        {
+            dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody,
+                                               objectRegistry[ objectID ].CollisionInfo( ).rigidBody,
+                                               returnBallCallBack );
         }
     }    
 
@@ -969,8 +1039,6 @@ void Graphics::moveBox( glm::vec3 pos )
         currPos.setOrigin( change );
 
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->setWorldTransform( currPos );
-
-        objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->translate( btVector3( pos.x, pos.y, pos.z ) );
     }
     
 }
@@ -1350,7 +1418,41 @@ bool Graphics::linkToCurrentShaderProgram( )
 
 void Graphics::togglePausedState( )
 {
-    pausedStateFlag = !pausedStateFlag;
+    playingStateFlag = !playingStateFlag;
+}
+
+void Graphics::startGame( )
+{
+    if( !playingStateFlag )
+    {
+        playingStateFlag = true;
+
+        score = 0;
+
+    }
+}
+
+void Graphics::gameOver( )
+{
+    btTransform currPos;
+    btVector3 change;
+
+    returnBall = false;
+    playingStateFlag = false;
+
+    if( objectRegistry.getSize( ) > ballIndex && !objectRegistry[ ballIndex ].CollisionInfo( ).empty( ) )
+    {
+        currPos = objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody->getWorldTransform( );
+
+        change = btVector3( objectRegistry[ ballIndex ].getTransVec( ).x,
+                            objectRegistry[ ballIndex ].getTransVec( ).y,
+                            objectRegistry[ ballIndex ].getTransVec( ).z ) - currPos.getOrigin( );
+
+        objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody->translate( change );
+
+        objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
+        objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
+    }
 }
 
 

@@ -14,7 +14,6 @@ using namespace std;
 #include "ObjectTable.h"
 
 #include"Instance.h"
-
 class Graphics
 {
     public:
@@ -54,11 +53,15 @@ class Graphics
 
         void togglePausedState( );
 
-    private:
-        //pinball game
-        int score;
+        void startGame( );
 
-        bool pausedStateFlag;
+        void gameOver( );
+
+    private:
+        //pinball game specific
+        int score;
+        bool playingStateFlag;
+        bool returnBall;
 
         //lighting
         std::vector<Light> lights;

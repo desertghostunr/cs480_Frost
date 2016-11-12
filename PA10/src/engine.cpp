@@ -292,8 +292,9 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
+                m_graphics->startGame( );
                 
-            }            
+            }
         }
         else if( m_event.key.keysym.sym == SDLK_1 )
         {

@@ -72,6 +72,24 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
+  <Object path ="models/ballReturn.obj">
+    <name>ballReturn</name>
+    <xScale>10</xScale>
+    <yScale>10</yScale>
+    <zScale>10</zScale>
+    <xBScale>35</xBScale>
+    <yBScale>20</yBScale>
+    <zBScale>2</zBScale>
+    <xPosition>0</xPosition>
+    <yPosition>-5</yPosition>
+    <zPosition>162</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
   <Object path ="models/table.obj">
     <name>table</name>
     <xScale>110</xScale>
