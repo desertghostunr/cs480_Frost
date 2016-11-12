@@ -131,7 +131,7 @@
       <Ambient>
         <xPosition>0.67</xPosition>
         <yPosition>0.80</yPosition>
-        <zPosition>0.67</zPosition>
+        <zPosition>0.0</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>15.0</ConeAngle>
@@ -144,7 +144,7 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.67</xPosition>
+        <xPosition>0.0</xPosition>
         <yPosition>0.80</yPosition>
         <zPosition>0.67</zPosition>
       </Ambient>
@@ -160,12 +160,12 @@
       <zPosition>0.0</zPosition>
       <Ambient>
         <xPosition>0.0</xPosition>
-        <yPosition>0.67</yPosition>
-        <zPosition>0.67</zPosition>
+        <yPosition>0.89</yPosition>
+        <zPosition>0.0</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>15.0</ConeAngle>
-    <SpotHeight>100.0</SpotHeight>
+    <SpotHeight>60.0</SpotHeight>
     <FollowMe>cube</FollowMe>
   </SpotLight>
   

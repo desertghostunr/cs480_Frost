@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <sstream>
 
+//physics related callbacks
 namespace ballCallBack
 {
 
@@ -10,7 +11,7 @@ namespace ballCallBack
     btScalar maxSpeed;
 
 
-    void myTickCallback( btDynamicsWorld * world, btScalar timeStep )
+    void TickCallback( btDynamicsWorld * world, btScalar timeStep )
     {
         btVector3 velocity, angularVelocity;
         btScalar speed;
@@ -42,6 +43,40 @@ namespace ballCallBack
 
 };
 
+
+struct ScoreContactResultCallback : public btCollisionWorld::ContactResultCallback
+{
+
+    //functions
+    ScoreContactResultCallback( int * inPtr ) : scorePtr( inPtr ){ }
+
+    btScalar addSingleResult
+    (
+        btManifoldPoint& cp,
+        const btCollisionObjectWrapper * colObj0Wrap,
+        int partId0,
+        int index0,
+        const btCollisionObjectWrapper  * colObj1Wrap,
+        int partId1,
+        int index1
+    )
+    {
+        if( scorePtr != NULL )
+        {
+            *scorePtr += 1;
+        }
+        std::cout << "Score: "<< *scorePtr << std::endl;
+
+        return 0;
+    }
+
+
+    //member
+    int * scorePtr;
+};
+
+
+//graphcs engine
 Graphics::Graphics()
 {
     broadphasePtr = NULL;
@@ -195,6 +230,8 @@ bool Graphics::Initialize
         return false;
     }
 	
+    score = 0;
+
     modelRegistry.clear( );
 
 
@@ -426,6 +463,8 @@ bool Graphics::Initialize
 
             tmpRigidBody->setLinearFactor( btVector3( 1, 0, 1 ) );
 
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
+
             ballCallBack::ballPtr = tmpRigidBody;
             
         }
@@ -449,6 +488,8 @@ bool Graphics::Initialize
             rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
             
         }
         else if( objectRegistry[ index ].getName( ) == "cube" )
@@ -578,7 +619,7 @@ bool Graphics::Initialize
         tmpRigidBody = NULL;
     }
 
-    dynamicsWorldPtr->setInternalTickCallback( ballCallBack::myTickCallback );
+    dynamicsWorldPtr->setInternalTickCallback( ballCallBack::TickCallback );
 
     return true;
 }
@@ -588,7 +629,6 @@ void Graphics::Update(unsigned int dt)
     unsigned int index;
 
     dynamicsWorldPtr->stepSimulation( dt, 10 );
-
 
     // Update the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -736,6 +776,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     btTransform trans;
     btScalar modTrans[ 16 ];
 
+    ScoreContactResultCallback cylinderCallBack( &score );
     
 
     if( ( objectID > objectRegistry.getSize( ) ) )
@@ -759,6 +800,13 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
         objectRegistry[ objectID ].setBulletTransform( glm::make_mat4( modTrans ) );
 
         objectRegistry[ objectID ].commitBulletTransform( );
+
+        if( objectRegistry[ objectID ].getName( ) == "bumber" )
+        {
+            dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody, 
+                                               objectRegistry[ objectID ].CollisionInfo( ).rigidBody, 
+                                               cylinderCallBack );
+        }
     }    
 
     

@@ -53,6 +53,9 @@ class Graphics
         bool linkToCurrentShaderProgram( );
 
     private:
+        //pinball game
+        int score;
+
         //lighting
         std::vector<Light> lights;
 
