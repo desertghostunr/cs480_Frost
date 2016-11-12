@@ -52,9 +52,13 @@ class Graphics
 
         bool linkToCurrentShaderProgram( );
 
+        void togglePausedState( );
+
     private:
         //pinball game
         int score;
+
+        bool pausedStateFlag;
 
         //lighting
         std::vector<Light> lights;

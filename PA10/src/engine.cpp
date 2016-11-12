@@ -295,7 +295,7 @@ void Engine::Keyboard()
                 
             }            
         }
-	else if( m_event.key.keysym.sym == SDLK_1 )
+        else if( m_event.key.keysym.sym == SDLK_1 )
         {
             if( m_graphics != NULL )
             {
@@ -308,7 +308,7 @@ void Engine::Keyboard()
                 }
             }            
         }
-	else if( m_event.key.keysym.sym == SDLK_2 )
+        else if( m_event.key.keysym.sym == SDLK_2 )
         {
             if( m_graphics != NULL )
             {
@@ -321,7 +321,7 @@ void Engine::Keyboard()
                 }
             }            
         }
-	else if( m_event.key.keysym.sym == SDLK_3 )
+        else if( m_event.key.keysym.sym == SDLK_3 )
         {
             if( m_graphics != NULL )
             {
@@ -333,11 +333,18 @@ void Engine::Keyboard()
                 }              
             }            
         }
-	else if( m_event.key.keysym.sym == SDLK_q )
+        else if( m_event.key.keysym.sym == SDLK_p )
+        {
+            if( m_graphics != NULL )
+            {
+                m_graphics->togglePausedState( );
+            }
+        }
+        else if( m_event.key.keysym.sym == SDLK_q )
         {
            
         }
-	else if( m_event.key.keysym.sym == SDLK_e )
+        else if( m_event.key.keysym.sym == SDLK_e )
         {
            
         }

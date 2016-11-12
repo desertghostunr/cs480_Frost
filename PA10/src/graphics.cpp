@@ -93,6 +93,8 @@ Graphics::Graphics()
     ballCallBack::maxSpeed = 50;
 
     shaderSelect = 0;
+
+    pausedStateFlag = false;
 }
 
 Graphics::~Graphics()
@@ -431,7 +433,7 @@ bool Graphics::Initialize
     dispatcherPtr = new btCollisionDispatcher( collisionConfigPtr );
     solverPtr = new btSequentialImpulseConstraintSolver( );
     dynamicsWorldPtr = new btDiscreteDynamicsWorld( dispatcherPtr, broadphasePtr, solverPtr, collisionConfigPtr );
-    dynamicsWorldPtr->setGravity( btVector3( 0.0, -9.5, 2.5 ) );
+    dynamicsWorldPtr->setGravity( btVector3( 0.0f, -0.098564f, 2.71853f ) );
     ///////////////////////////////////////////////////////////////////
 
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -628,7 +630,10 @@ void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
 
-    dynamicsWorldPtr->stepSimulation( dt, 10 );
+    if( !pausedStateFlag )
+    {
+        dynamicsWorldPtr->stepSimulation( dt, 10 );
+    }
 
     // Update the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -801,7 +806,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
         objectRegistry[ objectID ].commitBulletTransform( );
 
-        if( objectRegistry[ objectID ].getName( ) == "bumber" )
+        if( objectRegistry[ objectID ].getName( ) == "bumber" && !pausedStateFlag )
         {
             dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody, 
                                                objectRegistry[ objectID ].CollisionInfo( ).rigidBody, 
@@ -1341,6 +1346,11 @@ bool Graphics::linkToCurrentShaderProgram( )
     }
 
     return true;
+}
+
+void Graphics::togglePausedState( )
+{
+    pausedStateFlag = !pausedStateFlag;
 }
 
 
