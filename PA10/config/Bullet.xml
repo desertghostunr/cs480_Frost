@@ -54,6 +54,24 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
+  <Object path ="models/cylinder.obj">
+    <name>bumber</name>
+    <xScale>10</xScale>
+    <yScale>10</yScale>
+    <zScale>10</zScale>
+    <xBScale>20</xBScale>
+    <yBScale>20</yBScale>
+    <zBScale>20</zBScale>
+    <xPosition>-30</xPosition>
+    <yPosition>-5</yPosition>
+    <zPosition>20</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
   <Object path ="models/table.obj">
     <name>table</name>
     <xScale>110</xScale>
@@ -111,6 +129,36 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
+        <xPosition>0.67</xPosition>
+        <yPosition>0.80</yPosition>
+        <zPosition>0.67</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>15.0</ConeAngle>
+    <SpotHeight>80.0</SpotHeight>
+    <FollowMe>bumber</FollowMe>
+  </SpotLight>
+  <SpotLight>
+    <Light>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.0</zPosition>
+      <Ambient>
+        <xPosition>0.67</xPosition>
+        <yPosition>0.80</yPosition>
+        <zPosition>0.67</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>15.0</ConeAngle>
+    <SpotHeight>80.0</SpotHeight>
+    <FollowMe>bumber</FollowMe>
+  </SpotLight>
+  <SpotLight>
+    <Light>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.0</zPosition>
+      <Ambient>
         <xPosition>0.0</xPosition>
         <yPosition>0.67</yPosition>
         <zPosition>0.67</zPosition>
@@ -118,7 +166,7 @@
     </Light>
     <ConeAngle>15.0</ConeAngle>
     <SpotHeight>100.0</SpotHeight>
-    <FollowMe>bumber</FollowMe>
+    <FollowMe>cube</FollowMe>
   </SpotLight>
   
 </Configuration>

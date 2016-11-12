@@ -171,7 +171,9 @@ bool Graphics::Initialize
     glBindVertexArray(vao);
 
     bool successFlag;
-    unsigned int index, pIndex, sIndex;
+    unsigned int index, pIndex, sIndex, slIndex;
+
+    std::vector<bool> taken;
     
 
     btCollisionShape * tmpShapePtr = NULL;
@@ -286,16 +288,24 @@ bool Graphics::Initialize
     numberOfLights = lights.size( );
     numberOfSpotLights = spotLight.size( );
 
+    taken.resize( 0 );
+
+    taken.resize( objectRegistry.getSize( ), false );
 
     for( pIndex = 0; pIndex < spotLight.size( ); pIndex++ )
     {
         sIndex = -1;
+
         for( index = 0; index < objectRegistry.getSize( ); index++ )
-        {
-            if(  ( spotLight[ pIndex ].objectToFollow == objectRegistry[ index ].getName( ) ) 
-                &&  ( spotLight[ pIndex ].oTFIndex == -1 ) )
+        {            
+            if( !taken[ index ] 
+                && spotLight[ pIndex ].objectToFollow == objectRegistry[ index ].getName( ) )
             {
                 sIndex = index;
+
+                taken[ index ] = true;
+
+                break;
             }
         }
 
