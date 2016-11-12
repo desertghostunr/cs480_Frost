@@ -279,8 +279,49 @@ bool Graphics::Initialize
     for( index = 0; index < spotLight.size( ); index++ )
     {
         spotLight[ index ].cosine = glm::cos( glm::radians( spotLight[ index ].coneAngle ) );
+
+        spotLight[ index ].oTFIndex = -1;
     }    
     
+    numberOfLights = lights.size( );
+    numberOfSpotLights = spotLight.size( );
+
+
+    for( pIndex = 0; pIndex < spotLight.size( ); pIndex++ )
+    {
+        sIndex = -1;
+        for( index = 0; index < objectRegistry.getSize( ); index++ )
+        {
+            if(  ( spotLight[ pIndex ].objectToFollow == objectRegistry[ index ].getName( ) ) 
+                &&  ( spotLight[ pIndex ].oTFIndex == -1 ) )
+            {
+                sIndex = index;
+            }
+        }
+
+        if( sIndex == -1 )
+        {
+            for( index = 0; index < objectRegistry.getSize( ); index++ )
+            {
+                if( spotLight[ pIndex ].objectToFollow == objectRegistry[ index ].getName( ) )
+                {
+                    sIndex = index;
+                }
+            }
+        }
+
+        spotLight[ pIndex ].oTFIndex = sIndex;
+    }
+
+    for( pIndex = 0; pIndex < spotLight.size( ); pIndex++ )
+    {
+        if( spotLight[ pIndex ].oTFIndex == -1 )
+        {
+            std::cout << "Error unmapped spot light to object!" << std::endl;
+            return false;
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -378,7 +419,7 @@ bool Graphics::Initialize
             ballCallBack::ballPtr = tmpRigidBody;
             
         }
-        else if( objectRegistry[ index ].getName( ) == "cylinder" )
+        else if( objectRegistry[ index ].getName( ) == "bumber" )
         {
             tmpShapePtr = new btCylinderShape( btVector3( objectRegistry[ index ].getBScale( ).y, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f ) );
 
@@ -571,7 +612,9 @@ void Graphics::Render()
     glUniform1i( m_numLights, ( GLint ) lights.size( ) );
     glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
 
-    for( index = 0; index < lights.size( ); index++ )
+    for( index = 0; 
+         index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
+         index++ )
     {
         glUniform4f( lights[ index ].ambientLoc, lights[ index ].ambient.r, 
                      lights[ index ].ambient.g, lights[ index ].ambient.b, 
@@ -580,15 +623,19 @@ void Graphics::Render()
         glUniform4f( lights[ index ].incomingLoc, lights[ index ].incoming.r, 
                      lights[ index ].incoming.g, lights[ index ].incoming.b, 
                      lights[ index ].incoming.a );
-    }    
+    } 
 
-    tmpMat = objectRegistry[ ballIndex ].GetModel( );
-
-    tmpVec = tmpMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-
-    for( index = 0; index < spotLight.size( ); index++ )
+    for( index = 0; 
+         index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
+         index++ )
     {
-        glUniform4f( spotLight[ index ].followLoc, tmpVec.x + 0.0, tmpVec.y + 80.0, tmpVec.z, 1.0 );
+
+        tmpMat = objectRegistry[ spotLight[ index ].oTFIndex ].GetModel( );
+
+        tmpVec = tmpMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+        glUniform4f( spotLight[ index ].followLoc, tmpVec.x + 0.0, 
+                     tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
 
         glUniform4f( spotLight[ index ].ambientLoc, spotLight[ index ].ambient.r, 
                      spotLight[ index ].ambient.g, spotLight[ index ].ambient.b, 

@@ -42,6 +42,8 @@ const string LIGHT = "Light";
 const string SPOT_LIGHT = "SpotLight";
 const string AMBIENT = "Ambient";
 const string CONE_ANGLE = "ConeAngle";
+const string SPOT_HEIGHT = "SpotHeight";
+const string FOLLOW_OBJ = "FollowMe";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -284,6 +286,14 @@ bool ProcessConfigurationFile
                 if( childNode->name( ) == CONE_ANGLE )
                 {
                     strStream >> progInfo.spotLight[ sIndex ].coneAngle;
+                }
+                else if( childNode->name( ) == SPOT_HEIGHT )
+                {
+                    strStream >> progInfo.spotLight[ sIndex ].spotHeight;
+                }
+                else if( childNode->name( ) == FOLLOW_OBJ )
+                {
+                    strStream >> progInfo.spotLight[ sIndex ].objectToFollow;
                 }
                 else if( childNode->name( ) == LIGHT )
                 {

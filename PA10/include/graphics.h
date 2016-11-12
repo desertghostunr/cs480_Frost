@@ -58,6 +58,11 @@ class Graphics
 
         std::vector<SpotLight> spotLight;
 
+        unsigned int numberOfLights;
+
+        unsigned int numberOfSpotLights;
+
+
         std::string ErrorString(GLenum error);
 	
         bool cameraTracking;

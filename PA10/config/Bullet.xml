@@ -37,7 +37,7 @@
     <zRotationAngle>0</zRotationAngle>
   </Object>
   <Object path ="models/cylinder.obj">
-    <name>cylinder</name>
+    <name>bumber</name>
     <xScale>10</xScale>
     <yScale>10</yScale>
     <zScale>10</zScale>
@@ -102,6 +102,23 @@
       </Ambient>
     </Light>
     <ConeAngle>15.0</ConeAngle>
+    <SpotHeight>80.0</SpotHeight>
+    <FollowMe>ball</FollowMe>
+  </SpotLight>
+  <SpotLight>
+    <Light>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.0</zPosition>
+      <Ambient>
+        <xPosition>0.0</xPosition>
+        <yPosition>0.67</yPosition>
+        <zPosition>0.67</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>15.0</ConeAngle>
+    <SpotHeight>100.0</SpotHeight>
+    <FollowMe>bumber</FollowMe>
   </SpotLight>
   
 </Configuration>

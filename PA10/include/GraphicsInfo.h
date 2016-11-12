@@ -97,6 +97,12 @@ struct SpotLight
     float coneAngle;
     float cosine;
 
+    float spotHeight;
+
+    std::string objectToFollow;
+
+    unsigned int oTFIndex;
+
     GLint incomingLoc;
     GLint ambientLoc;
     GLint cosineLoc;
@@ -109,6 +115,9 @@ struct SpotLight
         ambient( src.ambient ),
         coneAngle( src.coneAngle ),
         cosine( src.cosine ),
+        spotHeight( src.spotHeight ),
+        objectToFollow( src.objectToFollow ),
+        oTFIndex( src.oTFIndex ),
         incomingLoc( src.incomingLoc ),
         ambientLoc( src.ambientLoc ),
         cosineLoc( src.cosineLoc ), 
@@ -125,6 +134,9 @@ struct SpotLight
             ambient = rh.ambient;
             coneAngle = rh.coneAngle;
             cosine = rh.cosine;
+            spotHeight = rh.spotHeight;
+            objectToFollow = rh.objectToFollow;
+            oTFIndex = rh.oTFIndex;
 
             incomingLoc = rh.incomingLoc;
             ambientLoc = rh.ambientLoc;
