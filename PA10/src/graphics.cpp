@@ -129,6 +129,8 @@ Graphics::Graphics()
     shaderSelect = 0;
     playingStateFlag = false;
     returnBall = false;
+
+    rightPaddle = leftPaddle = 0;
 }
 
 Graphics::~Graphics()
@@ -550,9 +552,20 @@ bool Graphics::Initialize
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
         }
-        else if( objectRegistry[ index ].getName( ) == "cube" )
+        else if( objectRegistry[ index ].getName( ) == "paddleR" 
+                 || objectRegistry[ index ].getName( ) == "paddleL" )
         {
             boxIndex = index;
+
+            //this is where paddle indices are assigned
+            if( objectRegistry[ index ].getName( ) == "paddleR" )
+            {
+                rightPaddle = index;
+            }
+            else
+            {
+                leftPaddle = index;
+            }
 
             tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) + 1.0f ) );
 
@@ -1019,6 +1032,7 @@ void Graphics::startTracking( int planet )
    cameraTracking = true;
 }
 
+//create a function similar to this to rotate the paddles
 void Graphics::moveBox( glm::vec3 pos )
 {
     btTransform currPos;
@@ -1452,6 +1466,29 @@ void Graphics::gameOver( )
 
         objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
         objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
+    }
+}
+
+//implement the code for turning the paddle here and in the engine class
+//when calling this function pass in Graphics::LEFT_PADDLE for the left paddle
+//and Graphics::RIGHT_PADDLE for the right paddle
+
+void Graphics::turnPaddle( bool select )
+{
+    if( select == LEFT_PADDLE )
+    {
+        //implement rotation of the left paddle here
+        //modify the paddle using the leftPaddle index to access the object registry
+
+
+
+    }
+    else if( select == RIGHT_PADDLE )
+    {
+        //implement rotation of the right paddle here
+        //modify the paddle using the right Paddle index to access the object registry
+
+
     }
 }
 

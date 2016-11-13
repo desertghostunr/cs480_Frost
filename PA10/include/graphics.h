@@ -18,6 +18,8 @@ class Graphics
 {
     public:
         static const int MAX_NUM_LIGHTS = 8;
+        static const bool LEFT_PADDLE = true;
+        static const bool RIGHT_PADDLE = false;
 
         Graphics();
         ~Graphics();
@@ -57,11 +59,21 @@ class Graphics
 
         void gameOver( );
 
+        void turnPaddle( bool select );
+
     private:
         //pinball game specific
         int score;
         bool playingStateFlag;
         bool returnBall;
+        unsigned int leftPaddle;
+        unsigned int rightPaddle;
+        unsigned int boxIndex;
+        unsigned int ballIndex;
+        int modelIndex;
+
+        glm::vec4 boxEdges;
+
 
         //lighting
         std::vector<Light> lights;
@@ -105,11 +117,7 @@ class Graphics
 
         /////////////////////////////////////////////
 
-        unsigned int boxIndex;
-        unsigned int ballIndex;
-        int modelIndex;
-
-        glm::vec4 boxEdges;     
+          
 };
 
 

@@ -19,7 +19,7 @@
     <zRotationAngle>0</zRotationAngle>
   </Object>
   <Object path ="models/cube.obj">
-    <name>cube</name>
+    <name>paddleL</name>
     <xScale>10</xScale>
     <yScale>10</yScale>
     <zScale>10</zScale>
@@ -27,6 +27,24 @@
     <yBScale>18</yBScale>
     <zBScale>18</zBScale>
     <xPosition>-25</xPosition>
+    <yPosition>0</yPosition>
+    <zPosition>-25</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
+  <Object path ="models/cube.obj">
+    <name>paddleR</name>
+    <xScale>10</xScale>
+    <yScale>10</yScale>
+    <zScale>10</zScale>
+    <xBScale>18</xBScale>
+    <yBScale>18</yBScale>
+    <zBScale>18</zBScale>
+    <xPosition>25</xPosition>
     <yPosition>0</yPosition>
     <zPosition>-25</zPosition>
     <xRotationAxis>0</xRotationAxis>
@@ -184,7 +202,7 @@
     </Light>
     <ConeAngle>15.0</ConeAngle>
     <SpotHeight>60.0</SpotHeight>
-    <FollowMe>cube</FollowMe>
+    <FollowMe>paddleL</FollowMe>
   </SpotLight>
   
 </Configuration>
