@@ -131,6 +131,8 @@ Graphics::Graphics()
     returnBall = false;
 
     rightPaddle = leftPaddle = 0;
+
+    numberOfBalls = 3;
 }
 
 Graphics::~Graphics()
@@ -699,15 +701,24 @@ void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
 
+    if( returnBall )
+    {
+        resetBall( );
+
+        if( numberOfBalls == 0 )
+        {
+            std::cout << "Game over!" << std::endl;
+            std::cout << "Press space to restart the game." << std::endl;
+        }
+        else
+        {
+            dynamicsWorldPtr->stepSimulation( dt, 10 );
+        }
+    }
+
     if( playingStateFlag )
     {
         dynamicsWorldPtr->stepSimulation( dt, 10 );
-    }
-
-    if( returnBall )
-    {
-        std::cout << "Game over!" << std::endl;
-        gameOver( );
     }
 
     // Update the objects
@@ -1441,12 +1452,20 @@ void Graphics::startGame( )
     {
         playingStateFlag = true;
 
-        score = 0;
+        if( numberOfBalls <= 0 )
+        {
+            score = 0;
+            numberOfBalls = 3;
+        }
+        else
+        {
+            numberOfBalls -= 1;
+        }
 
     }
 }
 
-void Graphics::gameOver( )
+void Graphics::resetBall( )
 {
     btTransform currPos;
     btVector3 change;

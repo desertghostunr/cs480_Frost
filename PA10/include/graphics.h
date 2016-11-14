@@ -57,13 +57,14 @@ class Graphics
 
         void startGame( );
 
-        void gameOver( );
+        void resetBall( );
 
         void turnPaddle( bool select );
 
     private:
         //pinball game specific
         int score;
+        int numberOfBalls;
         bool playingStateFlag;
         bool returnBall;
         unsigned int leftPaddle;
