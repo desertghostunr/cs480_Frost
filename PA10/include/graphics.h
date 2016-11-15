@@ -76,6 +76,13 @@ class Graphics
         glm::vec4 boxEdges;
 
 
+        bool rightPaddleUp;
+        bool leftPaddleUp;
+
+        void updateLeftPaddle( unsigned int dt );
+        void updateRightPaddle( unsigned int dt );
+
+
         //lighting
         std::vector<Light> lights;
 
