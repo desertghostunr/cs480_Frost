@@ -121,7 +121,8 @@ Graphics::Graphics()
 
     ccb::ballPtr = NULL;
 
-    boxIndex = ballIndex = 0;
+    boxIndex = -1;
+    ballIndex = 0;
     modelIndex = 0;
 
     ccb::maxSpeed = 50;
@@ -581,8 +582,7 @@ bool Graphics::Initialize
         else if( objectRegistry[ index ].getName( ) == "paddleR" 
                  || objectRegistry[ index ].getName( ) == "paddleL" )
         {
-            boxIndex = index;
-
+           
             //this is where paddle indices are assigned
             if( objectRegistry[ index ].getName( ) == "paddleR" )
             {
@@ -598,7 +598,7 @@ bool Graphics::Initialize
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
 
-            mass = 0;
+            mass = 1;
 
             inertia = btVector3( 0, 0, 0 );
 
@@ -1520,20 +1520,35 @@ void Graphics::resetBall( )
 
 void Graphics::turnPaddle( bool select )
 {
+    btTransform turn;
+    turn.setIdentity();
+    btQuaternion quat;  
+    btScalar x, y, z;
+
     if( select == LEFT_PADDLE )
     {
         //implement rotation of the left paddle here
-        //modify the paddle using the leftPaddle index to access the object registry
 
+        objectRegistry[ leftPaddle ].CollisionInfo( ).rigidBody->getCenterOfMassTransform().getBasis().getEulerZYX(z, y, x);  
+        quat.setEulerZYX( z, y + glm::radians( 45.0f ) , x );
+        turn.setRotation(quat);
+        //modify the paddle using the leftPaddle index to access the object registry
+        objectRegistry[ leftPaddle ].CollisionInfo( ).rigidBody->setCenterOfMassTransform( turn );  
 
 
     }
     else if( select == RIGHT_PADDLE )
     {
         //implement rotation of the right paddle here
-        //modify the paddle using the right Paddle index to access the object registry
 
-
+        objectRegistry[ 3 ].CollisionInfo( ).rigidBody->getCenterOfMassTransform().getBasis().getEulerZYX(z, y, x);
+        std::cout << "This is before: " << y << std::endl;
+        y =  y + glm::radians( 30.0f );
+        std::cout << "This is after: " << y << std::endl;
+        quat.setEulerZYX( z, y , x );
+        turn.setRotation(quat);
+        //modify the paddle using the leftPaddle index to access the object registry
+        objectRegistry[ 3 ].CollisionInfo( ).rigidBody->setCenterOfMassTransform( turn );  
     }
 }
 

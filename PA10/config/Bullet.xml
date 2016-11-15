@@ -44,9 +44,9 @@
     <xBScale>50</xBScale>
     <yBScale>14</yBScale>
     <zBScale>14</zBScale>
-    <xPosition>45</xPosition>
+    <xPosition>0</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-125</zPosition>
+    <zPosition>125</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
