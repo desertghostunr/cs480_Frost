@@ -341,13 +341,19 @@ void Engine::Keyboard()
                 m_graphics->togglePausedState( );
             }
         }
-        else if( m_event.key.keysym.sym == SDLK_q )
+        else if( m_event.key.keysym.sym == SDLK_a )
         {
-           
+            if( m_graphics != NULL )
+            {
+                m_graphics->turnPaddle( true );
+            }           
         }
-        else if( m_event.key.keysym.sym == SDLK_e )
+        else if( m_event.key.keysym.sym == SDLK_d )
         {
-           
+            if( m_graphics != NULL )
+            {
+                m_graphics->turnPaddle( false );
+            }         
         }
     }
 }
