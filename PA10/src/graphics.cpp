@@ -1541,14 +1541,15 @@ void Graphics::turnPaddle( bool select )
     {
         //implement rotation of the right paddle here
 
-        objectRegistry[ 3 ].CollisionInfo( ).rigidBody->getCenterOfMassTransform().getBasis().getEulerZYX(z, y, x);
+        objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
+        objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->getMotionState()->getWorldTransform( turn );
         std::cout << "This is before: " << y << std::endl;
-        y =  y + glm::radians( 30.0f );
+        y =  y + btRadians( -30 );
         std::cout << "This is after: " << y << std::endl;
-        quat.setEulerZYX( z, y , x );
+        quat.setEulerZYX( 0, y , 0 );
         turn.setRotation(quat);
         //modify the paddle using the leftPaddle index to access the object registry
-        objectRegistry[ 3 ].CollisionInfo( ).rigidBody->setCenterOfMassTransform( turn );  
+        objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->getMotionState( )->setWorldTransform( turn );  
     }
 }
 
