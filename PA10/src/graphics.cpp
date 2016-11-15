@@ -121,7 +121,8 @@ Graphics::Graphics()
 
     ccb::ballPtr = NULL;
 
-    boxIndex = ballIndex = 0;
+    boxIndex = -1;
+    ballIndex = 0;
     modelIndex = 0;
 
     ccb::maxSpeed = 50;
@@ -581,7 +582,7 @@ bool Graphics::Initialize
         else if( objectRegistry[ index ].getName( ) == "paddleR" 
                  || objectRegistry[ index ].getName( ) == "paddleL" )
         {
-            boxIndex = index;
+            
 
             //this is where paddle indices are assigned
             if( objectRegistry[ index ].getName( ) == "paddleR" )
@@ -598,7 +599,7 @@ bool Graphics::Initialize
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
 
-            mass = 0;
+            mass = 1;
 
             inertia = btVector3( 0, 0, 0 );
 
@@ -917,8 +918,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
         objectRegistry[ objectID ].commitBulletTransform( );
 
-        if( ( objectRegistry[ objectID ].getName( ) == "bumber" 
-              || objectRegistry[ objectID ].getName( ) == "bumberSquare" ) 
+        if( ( objectRegistry[ objectID ].getName( ) == "bumber" )
             && playingStateFlag )
         {
             dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody, 
