@@ -510,7 +510,7 @@ bool Graphics::Initialize
         }
         else if( objectRegistry[ index ].getName( ) == "bumber" )
         {
-            tmpShapePtr = new btCylinderShape( btVector3( objectRegistry[ index ].getBScale( ).y, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f ) );
+            tmpShapePtr = new btCylinderShape( btVector3( ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f ) );
 
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
@@ -531,6 +531,30 @@ bool Graphics::Initialize
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
             
+        }
+        else if( objectRegistry[ index ].getName( ) == "bumberSquare" )
+        {
+            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) + 1.0f ) );
+
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
+
+            mass = 0;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            rigidBodyConstruct.m_restitution = 1.0f;
+            rigidBodyConstruct.m_friction = 1.0f;
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
+
         }
         else if( objectRegistry[ index ].getName( ) == "ballReturn" )
         {
@@ -893,7 +917,9 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
         objectRegistry[ objectID ].commitBulletTransform( );
 
-        if( objectRegistry[ objectID ].getName( ) == "bumber" && playingStateFlag )
+        if( ( objectRegistry[ objectID ].getName( ) == "bumber" 
+              || objectRegistry[ objectID ].getName( ) == "bumberSquare" ) 
+            && playingStateFlag )
         {
             dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody, 
                                                objectRegistry[ objectID ].CollisionInfo( ).rigidBody, 
