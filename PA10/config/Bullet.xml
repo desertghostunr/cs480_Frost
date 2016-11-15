@@ -54,6 +54,24 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
+  <Object path ="models/plunger.obj">
+    <name>plunger</name>
+    <xScale>10</xScale>
+    <yScale>7</yScale>
+    <zScale>7</zScale>
+    <xBScale>50</xBScale>
+    <yBScale>14</yBScale>
+    <zBScale>14</zBScale>
+    <xPosition>-60</xPosition>
+    <yPosition>0</yPosition>
+    <zPosition>-90</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
   <Object path ="models/building2.obj">
     <name>bumber</name>
     <xScale>15</xScale>
@@ -90,6 +108,42 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
+  <Object path ="models/building1.obj">
+    <name>bumber</name>
+    <xScale>15</xScale>
+    <yScale>15</yScale>
+    <zScale>15</zScale>
+    <xBScale>30</xBScale>
+    <yBScale>15</yBScale>
+    <zBScale>28</zBScale>
+    <xPosition>68</xPosition>
+    <yPosition>0</yPosition>
+    <zPosition>105</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
+  <Object path ="models/building1.obj">
+    <name>bumber</name>
+    <xScale>15</xScale>
+    <yScale>15</yScale>
+    <zScale>15</zScale>
+    <xBScale>30</xBScale>
+    <yBScale>15</yBScale>
+    <zBScale>28</zBScale>
+    <xPosition>-68</xPosition>
+    <yPosition>0</yPosition>
+    <zPosition>105</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
   <Object path ="models/building3.obj">
     <name>bumberSquare</name>
     <xScale>20</xScale>
@@ -100,7 +154,7 @@
     <zBScale>37</zBScale>
     <xPosition>40</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-125</zPosition>
+    <zPosition>-105</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>

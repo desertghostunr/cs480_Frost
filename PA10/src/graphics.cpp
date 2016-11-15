@@ -525,8 +525,8 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 1.0f;
-            rigidBodyConstruct.m_friction = 1.0f;
+            rigidBodyConstruct.m_restitution = 1.5f;
+            rigidBodyConstruct.m_friction = 0.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
@@ -610,6 +610,36 @@ bool Graphics::Initialize
 
             rigidBodyConstruct.m_restitution = 0.5f;
             rigidBodyConstruct.m_friction = 1.0f;
+
+            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
+
+            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
+            tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
+        }
+
+        else if( objectRegistry[ index ].getName( ) == "plunger" )
+        {
+
+
+            //this is where plunger indices are assigned
+            boxIndex = index;
+            
+            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) + 1.0f ) );
+
+
+            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
+
+            mass = 100;
+
+            inertia = btVector3( 0, 0, 0 );
+
+            tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+
+            rigidBodyConstruct.m_restitution = 2.5f;
+            rigidBodyConstruct.m_friction = 0.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
@@ -1079,13 +1109,10 @@ void Graphics::moveBox( glm::vec3 pos )
     {
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( currPos );
 
-        change = currPos.getOrigin( ) + btVector3( pos.x, 0, pos.z );
+        change = currPos.getOrigin( ) + btVector3( pos.x, 0, 0 );
 
-        change.setX( std::min( change.getX( ), boxEdges.r - objectRegistry[ boxIndex ].getBScale( ).x ) );
-        change.setX( std::max( change.getX( ), boxEdges.b + objectRegistry[ boxIndex ].getBScale( ).x ) );
-
-        change.setZ( std::min( change.getZ( ), boxEdges.g - objectRegistry[ boxIndex ].getBScale( ).z ) );
-        change.setZ( std::max( change.getZ( ), boxEdges.a + objectRegistry[ boxIndex ].getBScale( ).z ) );
+        change.setX( std::min( change.getX( ), boxEdges.b + objectRegistry[ boxIndex ].getBScale( ).x - 18 ) );
+        change.setX( std::max( change.getX( ), boxEdges.b + objectRegistry[ boxIndex ].getBScale( ).x - 50 ) );
 
         currPos.setOrigin( change );
 
@@ -1541,14 +1568,14 @@ void Graphics::turnPaddle( bool select )
     {
         //implement rotation of the right paddle here
 
-        objectRegistry[ 3 ].CollisionInfo( ).rigidBody->getCenterOfMassTransform().getBasis().getEulerZYX(z, y, x);
+        objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->getCenterOfMassTransform().getBasis().getEulerZYX(z, y, x);
         std::cout << "This is before: " << y << std::endl;
         y =  y + glm::radians( 30.0f );
         std::cout << "This is after: " << y << std::endl;
         quat.setEulerZYX( z, y , x );
         turn.setRotation(quat);
         //modify the paddle using the leftPaddle index to access the object registry
-        objectRegistry[ 3 ].CollisionInfo( ).rigidBody->setCenterOfMassTransform( turn );  
+        objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->setCenterOfMassTransform( turn );  
     }
 }
 
