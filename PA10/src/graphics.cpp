@@ -758,6 +758,11 @@ void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
 
+    //put step rotation function here ////
+
+    /////////////////////////////////////
+
+
     if( returnBall )
     {
         resetBall( );
@@ -1586,6 +1591,7 @@ void Graphics::updateLeftPaddle( unsigned int dt )
         turn.setRotation(quat);
         
         objectRegistry[ leftPaddle ].CollisionInfo( ).rigidBody->getMotionState( )->setWorldTransform( turn );
+
     }
     else if( y <= btRadians( 0 ) ) 
     {
