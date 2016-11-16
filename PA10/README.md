@@ -1,4 +1,4 @@
-# PA9 Lighting
+# PA10 Pinball
 
 # Contributors
 * Andy Frost
@@ -79,16 +79,22 @@ An example of running this program:
 
 ## Controls
 
-
-
-### Movement Controls (use these):
-* Move the mouse to move the cube.
+### Movement Controls:
+* Move the mouse to move the plunger.
 
 * Press the right mouse button to show the cursor.
 
 * Press the left mouse button to hide the cursor.
 
-* NOTE: It might be necessary to show the cursor and run the box into a wall until the cursor is over it. This keeps the cursor from going off of the screen and hindering use of the program.
+* NOTE: It might be necessary to show the cursor and run the plunger into a wall until the cursor is over it. This keeps the cursor from going off of the screen and hindering use of the program.
+
+* Press d: rotates the right paddle.
+
+* Press a: rotates the left paddle.
+
+* Press space bar: starts the game.
+
+* Press p: pauses the game.
 
 ### Lighting Controls
 * Note: the objects selected will be printed out in the terminal.

@@ -3,6 +3,9 @@
 #include <sstream>
 
 
+#if defined( _WIN64 ) || ( _WIN32 )
+    #define M_PI 3.14159265359
+#endif
 
 
 //physics related callbacks
@@ -601,7 +604,7 @@ bool Graphics::Initialize
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
 
-            mass = 1;
+            mass = 100;
 
             inertia = btVector3( 0, 0, 0 );
 
@@ -610,7 +613,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 0.5f;
+            rigidBodyConstruct.m_restitution = 0.75f;
             rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -718,7 +721,7 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
             rigidBodyConstruct.m_restitution = 1.0f;
-            rigidBodyConstruct.m_friction = 1.0f;
+            rigidBodyConstruct.m_friction = 1.25f;
             
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -759,7 +762,8 @@ void Graphics::Update(unsigned int dt)
     unsigned int index;
 
     //put step rotation function here ////
-
+    updateLeftPaddle( dt );
+    updateRightPaddle( dt );
     /////////////////////////////////////
 
 
@@ -942,8 +946,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     //This does the basic operations... I still don't know how to tilt orbits
     //Play around with changing the order of events / things
     // write transforms here //////////////////////////
-    updateLeftPaddle( dt );
-    updateRightPaddle( dt );
+    
 
     objectRegistry[ objectID ].commitScale( );
 
@@ -1114,14 +1117,19 @@ void Graphics::moveBox( glm::vec3 pos )
     btTransform currPos;
     btVector3 change;
 
+    if( !playingStateFlag )
+    {
+        return;
+    }
+
     if( objectRegistry.getSize( ) > boxIndex && !objectRegistry[ boxIndex ].CollisionInfo( ).empty( ) )
     {
         objectRegistry[ boxIndex ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( currPos );
 
-        change = currPos.getOrigin( ) + btVector3( pos.x, 0, 0 );
+        change = currPos.getOrigin( ) + btVector3( 0, 0, pos.z );
 
-        change.setX( std::min( change.getX( ), boxEdges.b + objectRegistry[ boxIndex ].getBScale( ).x - 18 ) );
-        change.setX( std::max( change.getX( ), boxEdges.b + objectRegistry[ boxIndex ].getBScale( ).x - 50 ) );
+        change.setZ( std::max( change.getZ( ), boxEdges.g + objectRegistry[ boxIndex ].getBScale( ).z - 115 ) );
+        change.setZ( std::min( change.getZ( ), boxEdges.g + objectRegistry[ boxIndex ].getBScale( ).z - 95 ) );
 
         currPos.setOrigin( change );
 
@@ -1533,7 +1541,6 @@ void Graphics::resetBall( )
     btVector3 change;
 
     returnBall = false;
-    playingStateFlag = false;
 
     if( objectRegistry.getSize( ) > ballIndex && !objectRegistry[ ballIndex ].CollisionInfo( ).empty( ) )
     {
@@ -1556,6 +1563,10 @@ void Graphics::resetBall( )
 
 void Graphics::turnPaddle( bool select )
 {
+    if( !playingStateFlag )
+    {
+        return;
+    }
 
     if( select == LEFT_PADDLE )
     {
@@ -1661,7 +1672,7 @@ void Graphics::updateRightPaddle( unsigned int dt )
      else
      {
         y += dt * M_PI/250;
-        std::cout << "This is after: " << y << std::endl;
+        //std::cout << "This is after: " << y << std::endl;
         quat.setEulerZYX( 0, y , 0 );
         turn.setRotation(quat);
         

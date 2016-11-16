@@ -8,9 +8,9 @@
     <xBScale>10</xBScale>
     <yBScale>10</yBScale>
     <zBScale>10</zBScale>
-    <xPosition>-35</xPosition>
+    <xPosition>74</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-87</zPosition>
+    <zPosition>87</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -56,15 +56,15 @@
   </Object>
   <Object path ="models/plunger.obj">
     <name>plunger</name>
-    <xScale>10</xScale>
+    <xScale>6</xScale>
     <yScale>7</yScale>
-    <zScale>7</zScale>
-    <xBScale>50</xBScale>
+    <zScale>10</zScale>
+    <xBScale>14</xBScale>
     <yBScale>14</yBScale>
-    <zBScale>14</zBScale>
-    <xPosition>-60</xPosition>
+    <zBScale>50</zBScale>
+    <xPosition>73</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-90</zPosition>
+    <zPosition>130</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -80,9 +80,9 @@
     <xBScale>30</xBScale>
     <yBScale>15</yBScale>
     <zBScale>28</zBScale>
-    <xPosition>45</xPosition>
+    <xPosition>0</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>0</zPosition>
+    <zPosition>-60</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -116,7 +116,25 @@
     <xBScale>30</xBScale>
     <yBScale>15</yBScale>
     <zBScale>28</zBScale>
-    <xPosition>70</xPosition>
+    <xPosition>35</xPosition>
+    <yPosition>0</yPosition>
+    <zPosition>10</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
+  <Object path ="models/building4.obj">
+    <name>bumber</name>
+    <xScale>15</xScale>
+    <yScale>15</yScale>
+    <zScale>15</zScale>
+    <xBScale>30</xBScale>
+    <yBScale>25</yBScale>
+    <zBScale>30</zBScale>
+    <xPosition>-70</xPosition>
     <yPosition>0</yPosition>
     <zPosition>110</zPosition>
     <xRotationAxis>0</xRotationAxis>
@@ -129,14 +147,14 @@
   <Object path ="models/building1.obj">
     <name>bumber</name>
     <xScale>15</xScale>
-    <yScale>15</yScale>
+    <yScale>8</yScale>
     <zScale>15</zScale>
     <xBScale>30</xBScale>
-    <yBScale>15</yBScale>
+    <yBScale>10</yBScale>
     <zBScale>28</zBScale>
-    <xPosition>-70</xPosition>
+    <xPosition>66</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>110</zPosition>
+    <zPosition>-130</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -146,15 +164,15 @@
   </Object>
   <Object path ="models/building3.obj">
     <name>bumberSquare</name>
-    <xScale>20</xScale>
+    <xScale>24</xScale>
     <yScale>20</yScale>
-    <zScale>24</zScale>
-    <xBScale>55</xBScale>
+    <zScale>20</zScale>
+    <xBScale>37</xBScale>
     <yBScale>20</yBScale>
-    <zBScale>37</zBScale>
-    <xPosition>40</xPosition>
+    <zBScale>55</zBScale>
+    <xPosition>-60</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-120</zPosition>
+    <zPosition>-125</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -200,15 +218,15 @@
   </Object>
   <Object path ="models/building4.obj">
     <name>bumberSquare</name>
-    <xScale>25</xScale>
+    <xScale>6</xScale>
     <yScale>4</yScale>
-    <zScale>12</zScale>
-    <xBScale>50</xBScale>
+    <zScale>25</zScale>
+    <xBScale>20</xBScale>
     <yBScale>20</yBScale>
-    <zBScale>28</zBScale>
-    <xPosition>-54</xPosition>
+    <zBScale>50</zBScale>
+    <xPosition>60</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-70</zPosition>
+    <zPosition>110</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -265,9 +283,9 @@
     <yPosition>100</yPosition>
     <zPosition>0</zPosition>    
     <Ambient>
-      <xPosition>0.24</xPosition>
-      <yPosition>0.24</yPosition>
-      <zPosition>0.24</zPosition>
+      <xPosition>0.14</xPosition>
+      <yPosition>0.14</yPosition>
+      <zPosition>0.14</zPosition>
     </Ambient>
   </Light>
   <SpotLight>
@@ -291,44 +309,13 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.20</xPosition>
-        <yPosition>0.20</yPosition>
-        <zPosition>0.20</zPosition>
+        <xPosition>0.5</xPosition>
+        <yPosition>0.5</yPosition>
+        <zPosition>0.5</zPosition>
       </Ambient>
     </Light>
-    <ConeAngle>15.0</ConeAngle>
+    <ConeAngle>18.0</ConeAngle>
     <SpotHeight>80.0</SpotHeight>
     <FollowMe>bumber</FollowMe>
-  </SpotLight>
-  <SpotLight>
-    <Light>
-      <xPosition>0.0</xPosition>
-      <yPosition>-1.0</yPosition>
-      <zPosition>0.0</zPosition>
-      <Ambient>
-        <xPosition>0.0</xPosition>
-        <yPosition>0.20</yPosition>
-        <zPosition>0.20</zPosition>
-      </Ambient>
-    </Light>
-    <ConeAngle>15.0</ConeAngle>
-    <SpotHeight>80.0</SpotHeight>
-    <FollowMe>ballReturn</FollowMe>
-  </SpotLight>
-  <SpotLight>
-    <Light>
-      <xPosition>0.0</xPosition>
-      <yPosition>-1.0</yPosition>
-      <zPosition>0.0</zPosition>
-      <Ambient>
-        <xPosition>0.0</xPosition>
-        <yPosition>0.89</yPosition>
-        <zPosition>0.0</zPosition>
-      </Ambient>
-    </Light>
-    <ConeAngle>15.0</ConeAngle>
-    <SpotHeight>60.0</SpotHeight>
-    <FollowMe>paddleL</FollowMe>
-  </SpotLight>
-  
+  </SpotLight> 
 </Configuration>
