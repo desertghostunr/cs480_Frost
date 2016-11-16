@@ -1579,7 +1579,7 @@ void Graphics::updateLeftPaddle( unsigned int dt )
     objectRegistry[ leftPaddle ].CollisionInfo( ).rigidBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     objectRegistry[ leftPaddle ].CollisionInfo( ).rigidBody->getMotionState()->getWorldTransform( turn );
     //std::cout << "This is before: " << y << std::endl;
-    if( y >= 1.4f && leftPaddleUp )
+    if( y >= 1.5f && leftPaddleUp )
     {
         leftPaddleUp = false;
     }
@@ -1587,6 +1587,10 @@ void Graphics::updateLeftPaddle( unsigned int dt )
     {
         y += dt * M_PI/250;
         //std::cout << "This is after: " << y << std::endl;
+        if( y > 1.55 )
+        {
+         y = 1.5;     
+        }
         quat.setEulerZYX( 0, y , 0 );
         turn.setRotation(quat);
         
@@ -1627,14 +1631,19 @@ void Graphics::updateRightPaddle( unsigned int dt )
     objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     objectRegistry[ rightPaddle ].CollisionInfo( ).rigidBody->getMotionState()->getWorldTransform( turn );
     //std::cout << "This is before: " << y << std::endl;
-    if( y <= -1.4f && rightPaddleUp )
+    if( y <= -1.5f && rightPaddleUp )
     {
         rightPaddleUp = false;
     }
     else if( rightPaddleUp )
     {
+        
         y -= dt * M_PI/250;
         //std::cout << "This is after: " << y << std::endl;
+        if( y < -1.55 )
+        {
+         y = -1.5;
+        }
         quat.setEulerZYX( 0, y , 0 );
         turn.setRotation(quat);
         
@@ -1652,7 +1661,7 @@ void Graphics::updateRightPaddle( unsigned int dt )
      else
      {
         y += dt * M_PI/250;
-        //std::cout << "This is after: " << y << std::endl;
+        std::cout << "This is after: " << y << std::endl;
         quat.setEulerZYX( 0, y , 0 );
         turn.setRotation(quat);
         
