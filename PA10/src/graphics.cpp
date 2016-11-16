@@ -252,7 +252,7 @@ bool Graphics::Initialize
     glBindVertexArray(vao);
 
     bool successFlag;
-    unsigned int index, pIndex, sIndex, slIndex;
+    unsigned int index, pIndex, sIndex;
 
     std::vector<bool> taken;
     
@@ -392,7 +392,7 @@ bool Graphics::Initialize
             }
         }
 
-        if( sIndex == -1 )
+        if( (int)sIndex == -1 )
         {
             for( index = 0; index < objectRegistry.getSize( ); index++ )
             {
@@ -408,7 +408,7 @@ bool Graphics::Initialize
 
     for( pIndex = 0; pIndex < spotLight.size( ); pIndex++ )
     {
-        if( spotLight[ pIndex ].oTFIndex == -1 )
+        if( (int)spotLight[ pIndex ].oTFIndex == -1 )
         {
             std::cout << "Error unmapped spot light to object!" << std::endl;
             return false;
