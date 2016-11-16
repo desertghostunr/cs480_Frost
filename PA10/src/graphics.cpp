@@ -759,32 +759,24 @@ bool Graphics::Initialize
 
 void Graphics::Update(unsigned int dt)
 {
-    unsigned int index;
-
-    //put step rotation function here ////
-    updateLeftPaddle( dt );
-    updateRightPaddle( dt );
-    /////////////////////////////////////
+    unsigned int index;   
 
 
     if( returnBall )
     {
         resetBall( );
-
-        if( numberOfBalls == 0 )
-        {
-            std::cout << "Game over!" << std::endl;
-            std::cout << "Press space to restart the game." << std::endl;
-        }
-        else
-        {
-            dynamicsWorldPtr->stepSimulation( dt, 10 );
-        }
+        dynamicsWorldPtr->stepSimulation( dt, 10 );
     }
 
     if( playingStateFlag )
     {
+        //put step rotation function here ////
+        updateLeftPaddle( dt );
+        updateRightPaddle( dt );
+        /////////////////////////////////////
+
         dynamicsWorldPtr->stepSimulation( dt, 10 );
+
     }
 
     // Update the objects
@@ -1522,16 +1514,6 @@ void Graphics::startGame( )
     {
         playingStateFlag = true;
 
-        if( numberOfBalls <= 0 )
-        {
-            score = 0;
-            numberOfBalls = 3;
-        }
-        else
-        {
-            numberOfBalls -= 1;
-        }
-
     }
 }
 
@@ -1541,6 +1523,21 @@ void Graphics::resetBall( )
     btVector3 change;
 
     returnBall = false;
+
+    if( numberOfBalls <= 1 )
+    {
+        score = 0;
+        numberOfBalls = 3;
+
+        playingStateFlag = false;
+
+        std::cout << "Game over!" << std::endl;
+        std::cout << "Press space to restart the game." << std::endl;
+    }
+    else
+    {
+        numberOfBalls -= 1;
+    }
 
     if( objectRegistry.getSize( ) > ballIndex && !objectRegistry[ ballIndex ].CollisionInfo( ).empty( ) )
     {
