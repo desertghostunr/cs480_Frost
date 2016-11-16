@@ -501,7 +501,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 1.25f;
+            rigidBodyConstruct.m_restitution = 1.0f;
             rigidBodyConstruct.m_friction = 1.0f;
   
 
@@ -576,7 +576,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 1.0f;
+            rigidBodyConstruct.m_restitution = 0.0f;
             rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -613,7 +613,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 0.75f;
+            rigidBodyConstruct.m_restitution = 1.0f;
             rigidBodyConstruct.m_friction = 1.0f;
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -720,7 +720,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
-            rigidBodyConstruct.m_restitution = 1.0f;
+            rigidBodyConstruct.m_restitution = 0.95f;
             rigidBodyConstruct.m_friction = 1.25f;
             
 
