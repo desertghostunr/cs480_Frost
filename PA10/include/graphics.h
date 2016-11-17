@@ -61,6 +61,8 @@ class Graphics
 
         void turnPaddle( bool select );
 
+        void resetView( );
+
     private:
         //pinball game specific
         int score;
@@ -81,6 +83,8 @@ class Graphics
 
         void updateLeftPaddle( unsigned int dt );
         void updateRightPaddle( unsigned int dt );
+
+        bool pauseNotifier;
 
 
         //lighting

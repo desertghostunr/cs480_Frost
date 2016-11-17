@@ -21,11 +21,11 @@ bool Camera::Initialize(int w, int h)
     //    ...Like you should update it before you render more dynamic 
     //    for this project having them static will be fine
 
-    leftRight = 0.0;
+    leftRight = 0.5f;
     upDown = 0.0;
     zoom = 255.0;
     topDown = false;
-    view = glm::lookAt( glm::vec3( 0.0, 147.22, zoom ), //Eye Position
+    view = glm::lookAt( glm::vec3( leftRight, 147.22  + upDown, zoom ), //Eye Position
                         glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                         glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 
@@ -71,6 +71,10 @@ void Camera::moveLeft()
    {
       leftRight = leftRight - 1.0;
    }
+
+   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, 255 ), //Eye Position
+                       glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
+                       glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 void Camera::moveRight()
 {
@@ -82,14 +86,24 @@ void Camera::moveRight()
    {
       leftRight = leftRight + 1.0;
    }
+
+   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, 255 ), //Eye Position
+                       glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
+                       glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 void Camera::moveUp()
 {
    upDown = upDown + 1.0;
+   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, zoom ), //Eye Position
+                       glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
+                       glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 void Camera::moveDown()
 {
    upDown = upDown - 1.0;
+   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, zoom ), //Eye Position
+                       glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
+                       glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 
 void Camera::zoomIn()
@@ -107,6 +121,15 @@ void Camera::zoomOut()
   
     zoom = zoom + 5;
    
+}
+
+void Camera::resetView( )
+{
+    upDown = 0.0f;
+    leftRight = 0.5f;
+    view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, zoom ), //Eye Position
+                        glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
+                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 
 void Camera::updateLookAt()

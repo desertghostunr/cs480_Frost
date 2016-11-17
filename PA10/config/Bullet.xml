@@ -76,7 +76,7 @@
     <name>bumber</name>
     <xScale>15</xScale>
     <yScale>15</yScale>
-    <zScale>30</zScale>
+    <zScale>15</zScale>
     <xBScale>30</xBScale>
     <yBScale>15</yBScale>
     <zBScale>28</zBScale>
@@ -165,7 +165,7 @@
   <Object path ="models/building3.obj">
     <name>bumberSquare</name>
     <xScale>24</xScale>
-    <yScale>20</yScale>
+    <yScale>15</yScale>
     <zScale>20</zScale>
     <xBScale>37</xBScale>
     <yBScale>20</yBScale>

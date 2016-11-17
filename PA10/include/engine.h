@@ -79,6 +79,7 @@ class Engine
         bool specularLight;
         bool ambientLight;
         bool spotLight;
+        bool viewControls;
 
         bool redLight;
         bool greenLight;

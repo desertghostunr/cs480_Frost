@@ -139,6 +139,8 @@ Graphics::Graphics()
     rightPaddle = leftPaddle = 0;
 
     numberOfBalls = 3;
+
+    pauseNotifier = false;
 }
 
 Graphics::~Graphics()
@@ -798,7 +800,7 @@ void Graphics::Render()
     glm::mat4 tmpMat;
 
     //clear the screen
-    glClearColor(0.6, 0.6, 0.6, 1.0);
+    glClearColor(0.2, 0.15, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Start the correct program
@@ -1061,7 +1063,7 @@ void Graphics::cameraLeftOrRight( bool left )
    {
       m_camera->moveRight();
    }
-   m_camera->updateLookAt();
+   //m_camera->updateLookAt();
    cameraTracking = false;
 }
 
@@ -1075,7 +1077,7 @@ void Graphics::cameraUpOrDown( bool up)
    {
       m_camera->moveDown();
    }
-   m_camera->updateLookAt();
+   //m_camera->updateLookAt();
    cameraTracking = false;
 }
 
@@ -1111,6 +1113,17 @@ void Graphics::moveBox( glm::vec3 pos )
 
     if( !playingStateFlag )
     {
+        if( pauseNotifier )
+        {
+            return;
+        }
+
+        pauseNotifier = true;
+        std::cout << std::endl;
+        std::cout << "The game is either paused or has not begun!" << std::endl;
+        std::cout << "Press the space bar to start the game." << std::endl;
+        std::cout << "Press p to unpause the game." << std::endl;
+        std::cout << std::endl;
         return;
     }
 
@@ -1506,6 +1519,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 void Graphics::togglePausedState( )
 {
     playingStateFlag = !playingStateFlag;
+    pauseNotifier = false;
 }
 
 void Graphics::startGame( )
@@ -1513,6 +1527,7 @@ void Graphics::startGame( )
     if( !playingStateFlag )
     {
         playingStateFlag = true;
+        pauseNotifier = false;
 
     }
 }
@@ -1562,6 +1577,17 @@ void Graphics::turnPaddle( bool select )
 {
     if( !playingStateFlag )
     {
+        if( pauseNotifier )
+        {
+            return;
+        }
+
+        pauseNotifier = true;
+        std::cout << std::endl;
+        std::cout << "The game is either paused or has not begun!" << std::endl;
+        std::cout << "Press the space bar to start the game." << std::endl;
+        std::cout << "Press p to unpause the game." << std::endl;
+        std::cout << std::endl;
         return;
     }
 
@@ -1575,6 +1601,11 @@ void Graphics::turnPaddle( bool select )
     {
         rightPaddleUp = true;
     }
+}
+
+void Graphics::resetView( )
+{
+    m_camera->resetView( );
 }
 
 void Graphics::updateLeftPaddle( unsigned int dt )

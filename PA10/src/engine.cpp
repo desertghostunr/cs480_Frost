@@ -59,6 +59,8 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
     redLight = true;
     greenLight = true;
     blueLight = true; 
+
+    viewControls = false;
     // Start the graphics
     
     m_graphics = new Graphics();
@@ -164,6 +166,10 @@ void Engine::Keyboard()
                        m_graphics->changeBrightness( "spot" , 0.0, 0.0, 0.05 );
                     }                
                 }
+                else if( viewControls )
+                {
+                    m_graphics->cameraUpOrDown( true );
+                }
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_DOWN )
@@ -214,7 +220,11 @@ void Engine::Keyboard()
                     {
                        m_graphics->changeBrightness( "spot" , 0.0, 0.0, -0.05 );
                     }                
-                } 
+                }
+                else if( viewControls )
+                {
+                    m_graphics->cameraUpOrDown( false );
+                }
             }        
         }
         else if( m_event.key.keysym.sym == SDLK_RIGHT )
@@ -229,6 +239,11 @@ void Engine::Keyboard()
                 {
                     m_graphics->chanceSpotLightSize( 1 );
                 }
+                else if( viewControls )
+                {
+                    m_graphics->cameraLeftOrRight( false );
+                }
+
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_LEFT )
@@ -242,6 +257,10 @@ void Engine::Keyboard()
                 else if( spotLight )
                 {
                     m_graphics->chanceSpotLightSize( -1 );
+                }
+                else if( viewControls )
+                {
+                    m_graphics->cameraLeftOrRight( true );
                 }
             }            
         }
@@ -300,38 +319,30 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                //m_graphics->ChangePerspectiveStatic( 1 );
-                if( spotLight || specularLight)
-                {
-                   ambientLight = true;
-                   specularLight = false;
-                   spotLight = false;
-                }
+                ambientLight = true;
+                specularLight = false;
+                viewControls = false;
+                spotLight = false;
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_2 )
         {
             if( m_graphics != NULL )
             {
-                //m_graphics->ChangePerspectiveStatic( 2 );
-                if( spotLight || ambientLight)
-                {
-                   ambientLight = false;
-                   specularLight = true;
-                   spotLight = false;
-                }
-            }            
+                ambientLight = false;
+                specularLight = true;
+                viewControls = false;
+                spotLight = false;
+            }
         }
         else if( m_event.key.keysym.sym == SDLK_3 )
         {
             if( m_graphics != NULL )
             {
-                if( ambientLight || specularLight)
-                {
-                   ambientLight = false;
-                   specularLight = false;
-                   spotLight = true;
-                }              
+                ambientLight = false;
+                specularLight = false;
+                viewControls = false;
+                spotLight = true;
             }            
         }
         else if( m_event.key.keysym.sym == SDLK_p )
@@ -355,6 +366,18 @@ void Engine::Keyboard()
                 m_graphics->turnPaddle( false );
             }         
         }
+        else if( m_event.key.keysym.sym == SDLK_v ) 
+        {
+            ambientLight = false;
+            specularLight = false;
+            spotLight = false;
+            viewControls = true;
+        }
+        else if( m_event.key.keysym.sym == SDLK_RETURN )
+        {
+            m_graphics->resetView( );
+        }
+ 
     }
 }
 
