@@ -75,7 +75,7 @@
   <Object path ="models/building2.obj">
     <name>bumber</name>
     <xScale>15</xScale>
-    <yScale>15</yScale>
+    <yScale>18</yScale>
     <zScale>15</zScale>
     <xBScale>30</xBScale>
     <yBScale>15</yBScale>
@@ -144,17 +144,17 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </Object>
-  <Object path ="models/building1.obj">
+  <Object path ="models/building5.obj">
     <name>bumber</name>
-    <xScale>15</xScale>
-    <yScale>8</yScale>
-    <zScale>15</zScale>
+    <xScale>20</xScale>
+    <yScale>20</yScale>
+    <zScale>20</zScale>
     <xBScale>30</xBScale>
     <yBScale>10</yBScale>
     <zBScale>28</zBScale>
     <xPosition>66</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-130</zPosition>
+    <zPosition>-128</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
@@ -280,8 +280,8 @@
   </Shader>
   <Light>
     <xPosition>0</xPosition>
-    <yPosition>100</yPosition>
-    <zPosition>0</zPosition>    
+    <yPosition>45</yPosition>
+    <zPosition>-25</zPosition>    
     <Ambient>
       <xPosition>0.14</xPosition>
       <yPosition>0.14</yPosition>
