@@ -21,7 +21,7 @@ bool Camera::Initialize(int w, int h)
     //    ...Like you should update it before you render more dynamic 
     //    for this project having them static will be fine
 
-    leftRight = 0.5f;
+    leftRight = 0.0f;
     upDown = 0.0;
     zoom = 255.0;
     topDown = false;
@@ -126,7 +126,7 @@ void Camera::zoomOut()
 void Camera::resetView( )
 {
     upDown = 0.0f;
-    leftRight = 0.5f;
+    leftRight = 0.0f;
     view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, zoom ), //Eye Position
                         glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                         glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
