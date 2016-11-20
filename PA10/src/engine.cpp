@@ -372,6 +372,8 @@ void Engine::Keyboard()
             specularLight = false;
             spotLight = false;
             viewControls = true;
+
+			m_graphics->turnOffSplash( );
         }
         else if( m_event.key.keysym.sym == SDLK_RETURN )
         {

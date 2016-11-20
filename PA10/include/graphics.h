@@ -63,11 +63,20 @@ class Graphics
 
         void resetView( );
 
+		void idleSplash( unsigned int dt );
+
+		void turnOffSplash( );
+
     private:
         //pinball game specific
         int score;
         int numberOfBalls;
         bool playingStateFlag;
+		bool activeIdleState;
+		bool goingUp;
+		bool goingRight;
+		int numberOfRightCalls;
+		int numberOfUpCalls;
         bool returnBall;
         unsigned int leftPaddle;
         unsigned int rightPaddle;

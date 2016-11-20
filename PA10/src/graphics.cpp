@@ -141,6 +141,14 @@ Graphics::Graphics()
     numberOfBalls = 3;
 
     pauseNotifier = false;
+
+	activeIdleState = true;
+
+	numberOfRightCalls = 0;
+	numberOfUpCalls = 0;
+
+	goingUp = true;
+	goingRight = true;
 }
 
 Graphics::~Graphics()
@@ -780,6 +788,10 @@ void Graphics::Update(unsigned int dt)
         dynamicsWorldPtr->stepSimulation( dt, 10 );
 
     }
+	else if( activeIdleState )
+	{
+		idleSplash( dt );
+	}
 
     // Update the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -1526,8 +1538,14 @@ void Graphics::startGame( )
 {
     if( !playingStateFlag )
     {
+		if( activeIdleState )
+		{
+			resetView( );
+		}
+
         playingStateFlag = true;
         pauseNotifier = false;
+		activeIdleState = false;
 
     }
 }
@@ -1545,6 +1563,7 @@ void Graphics::resetBall( )
         numberOfBalls = 3;
 
         playingStateFlag = false;
+		activeIdleState = true;
 
         std::cout << "Game over!" << std::endl;
         std::cout << "Press space to restart the game." << std::endl;
@@ -1606,6 +1625,47 @@ void Graphics::turnPaddle( bool select )
 void Graphics::resetView( )
 {
     m_camera->resetView( );
+}
+
+void Graphics::idleSplash( unsigned int dt )
+{
+	if( numberOfUpCalls < 2000 && goingUp )
+	{
+		m_camera->moveUp( );
+		numberOfUpCalls += dt;
+	}
+	else if( numberOfUpCalls > -2000 && goingRight )
+	{
+		m_camera->moveDown( );
+		numberOfUpCalls -= dt;
+
+		goingUp = false;
+	}
+	else
+	{
+		goingUp = true;
+	}
+
+	if( numberOfRightCalls < 10000 && goingRight )
+	{
+		m_camera->moveRight( );
+		numberOfRightCalls += dt;
+	}
+	else if( numberOfRightCalls > -10000 && goingUp )
+	{
+		m_camera->moveLeft( );
+		numberOfRightCalls -= dt;
+		goingRight = false;
+	}
+	else
+	{
+		goingRight = true;
+	}
+}
+
+void Graphics::turnOffSplash( )
+{
+	activeIdleState = false;
 }
 
 void Graphics::updateLeftPaddle( unsigned int dt )
