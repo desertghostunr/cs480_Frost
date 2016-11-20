@@ -149,12 +149,12 @@
     <xScale>20</xScale>
     <yScale>20</yScale>
     <zScale>20</zScale>
-    <xBScale>30</xBScale>
+    <xBScale>33</xBScale>
     <yBScale>10</yBScale>
-    <zBScale>28</zBScale>
+    <zBScale>33</zBScale>
     <xPosition>66</xPosition>
     <yPosition>0</yPosition>
-    <zPosition>-128</zPosition>
+    <zPosition>-140</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
