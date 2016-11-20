@@ -96,7 +96,9 @@ An example of running this program:
 
 * Press p: pauses the game.
 
-### Lighting Controls
+* Press enter: resets the ball.
+
+### Lighting and View Controls
 * Note: the objects selected will be printed out in the terminal.
 
 * Press x: toggles the shader program used.
@@ -106,6 +108,10 @@ An example of running this program:
 * Press 2: select adjusting objects specular brightness.
 
 * Press 3: select adjusting spotlight brightness and size.
+
+* Press v: to use the arrow keys to move the camera.
+
+* Press shift: to reset the camera position.
 
 * Press r: to only adjust the red channel.
 

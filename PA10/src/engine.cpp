@@ -375,10 +375,14 @@ void Engine::Keyboard()
 
 			m_graphics->turnOffSplash( );
         }
-        else if( m_event.key.keysym.sym == SDLK_RETURN )
+        else if( m_event.key.keysym.sym == SDLK_RSHIFT || m_event.key.keysym.sym == SDLK_LSHIFT )
         {
             m_graphics->resetView( );
         }
+		else if( m_event.key.keysym.sym == SDLK_RETURN || m_event.key.keysym.sym == SDLK_RETURN )
+		{
+			m_graphics->resetBall( );
+		}
  
     }
 }
