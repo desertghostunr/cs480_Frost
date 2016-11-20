@@ -78,6 +78,7 @@ class Graphics
 		int numberOfRightCalls;
 		int numberOfUpCalls;
         bool returnBall;
+		bool gameOverStep;
         unsigned int leftPaddle;
         unsigned int rightPaddle;
         unsigned int boxIndex;

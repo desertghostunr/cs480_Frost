@@ -149,6 +149,7 @@ Graphics::Graphics()
 
 	goingUp = true;
 	goingRight = true;
+	gameOverStep = false;
 }
 
 Graphics::~Graphics()
@@ -769,8 +770,13 @@ bool Graphics::Initialize
 
 void Graphics::Update(unsigned int dt)
 {
-    unsigned int index;   
+    unsigned int index;
 
+	if( gameOverStep )
+	{
+		dynamicsWorldPtr->stepSimulation( dt, 10 );
+		gameOverStep = false;
+	}
 
     if( returnBall )
     {
@@ -1547,6 +1553,9 @@ void Graphics::startGame( )
         pauseNotifier = false;
 		activeIdleState = false;
 
+		score = 0;
+		numberOfBalls = 3;
+
     }
 }
 
@@ -1559,19 +1568,21 @@ void Graphics::resetBall( )
 
     if( numberOfBalls <= 1 )
     {
-        score = 0;
-        numberOfBalls = 3;
 
         playingStateFlag = false;
 		activeIdleState = true;
 
         std::cout << "Game over!" << std::endl;
         std::cout << "Press space to restart the game." << std::endl;
+
+		gameOverStep = true;
     }
-    else
-    {
-        numberOfBalls -= 1;
-    }
+	else
+	{
+		gameOverStep = false;
+	}
+
+	numberOfBalls -= 1;
 
     if( objectRegistry.getSize( ) > ballIndex && !objectRegistry[ ballIndex ].CollisionInfo( ).empty( ) )
     {
@@ -1629,12 +1640,12 @@ void Graphics::resetView( )
 
 void Graphics::idleSplash( unsigned int dt )
 {
-	if( numberOfUpCalls < 2000 && goingUp )
+	if( numberOfUpCalls < 1500 && goingUp )
 	{
 		m_camera->moveUp( );
 		numberOfUpCalls += dt;
 	}
-	else if( numberOfUpCalls > -2000 && goingRight )
+	else if( numberOfUpCalls > -1500 && goingRight )
 	{
 		m_camera->moveDown( );
 		numberOfUpCalls -= dt;
@@ -1646,12 +1657,12 @@ void Graphics::idleSplash( unsigned int dt )
 		goingUp = true;
 	}
 
-	if( numberOfRightCalls < 10000 && goingRight )
+	if( numberOfRightCalls < 8000 && goingRight )
 	{
 		m_camera->moveRight( );
 		numberOfRightCalls += dt;
 	}
-	else if( numberOfRightCalls > -10000 && goingUp )
+	else if( numberOfRightCalls > -8000 && goingUp )
 	{
 		m_camera->moveLeft( );
 		numberOfRightCalls -= dt;
