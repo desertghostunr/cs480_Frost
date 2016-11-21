@@ -7,7 +7,6 @@
 
 #include <string>
 #include <thread>
-#include <vector>
 static Uint8 *soundPosition;
 static Uint32 soundRemaining;
 void myCallback( void *userData, Uint8 *stream, int length);
@@ -29,7 +28,7 @@ class Sound
 
     private:
 
-		std::vector<std::thread> threadManager;
+		std::thread * threadManager;
         
         Uint32 soundLength;
         Uint8 *soundBuffer;

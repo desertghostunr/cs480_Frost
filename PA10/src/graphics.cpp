@@ -154,6 +154,7 @@ Graphics::Graphics()
 	goingUp = true;
 	goingRight = true;
 	gameOverStep = false;
+    gameStarted = false;
 }
 
 Graphics::~Graphics()
@@ -1551,6 +1552,9 @@ bool Graphics::linkToCurrentShaderProgram( )
 
 void Graphics::togglePausedState( )
 {
+    if( !gameStarted){
+        return;
+    }
     playingStateFlag = !playingStateFlag;
     pauseNotifier = false;
 }
@@ -1570,6 +1574,8 @@ void Graphics::startGame( )
 
 		score = 0;
 		numberOfBalls = 3;
+
+        gameStarted = true;
 
     }
 }
@@ -1591,6 +1597,7 @@ void Graphics::resetBall( )
         std::cout << "Press space to restart the game." << std::endl;
 
 		gameOverStep = true;
+        gameStarted = false;
     }
 	else
 	{

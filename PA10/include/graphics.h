@@ -85,6 +85,7 @@ class Graphics
         unsigned int boxIndex;
         unsigned int ballIndex;
         int modelIndex;
+        bool gameStarted;
 
         glm::vec4 boxEdges;
 

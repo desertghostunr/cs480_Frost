@@ -5,10 +5,11 @@ Sound::Sound()
 {     
      soundLoaded = false;
 	 soundPlaying = false;
+
+     threadManager = NULL;
 }
 Sound::~Sound()
 {
-	size_t index;
 
 	SDL_PauseAudio( 1 );
 
@@ -19,10 +20,12 @@ Sound::~Sound()
         SDL_FreeWAV( soundBuffer );
     }
 
-	for( index = 0; index < threadManager.size( ); index++ )
-	{
-		threadManager[ index ].join( );
-	}
+	if( threadManager != NULL )
+    {
+        threadManager->join();
+        delete threadManager;
+        threadManager = NULL;
+    }
   
 }
 
@@ -75,7 +78,16 @@ void Sound::launchSound( )
 		return;
 	}
 
-	threadManager.push_back( std::thread( &Sound::playSound, this ) );
+	if( threadManager != NULL )
+    {
+        threadManager->join();
+        delete threadManager;
+        threadManager = NULL;
+    }
+    else
+    {
+        threadManager = new std::thread( &Sound::playSound, this );
+    }
 }
 
 bool Sound::SoundPlaying( )
