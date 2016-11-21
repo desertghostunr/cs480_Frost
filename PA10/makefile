@@ -30,6 +30,7 @@ all: $(O_FILES)
 	$(CC) $(CXXFLAGS) -o Pinball $(O_FILES) $(LIBS) #$(PATHI) $(PATHL) 
 	cp -r ../shaders .
 	cp -r ../models .
+	cp -r ../sounds .
 	cp -r ../config .
 
 main.o: ../src/main.cpp
@@ -46,6 +47,9 @@ graphics.o: ../src/graphics.cpp
 
 object.o: ../src/object.cpp
 	$(CC) $(CXXFLAGS) -c ../src/object.cpp -o object.o $(INCLUDES) $(PATHB)
+
+sound.o: ../src/sound.cpp
+	$(CC) $(CXXFLAGS) -c ../src/sound.cpp -o sound.o $(INCLUDES) $(PATHB)
 
 shader.o: ../src/shader.cpp
 	$(CC) $(CXXFLAGS) -c ../src/shader.cpp -o shader.o $(INCLUDES) $(PATHB)
@@ -64,4 +68,5 @@ clean:
 	-@if rm *.o SolarSystem 2>/dev/null || true; then echo "Main Removed"; else echo "No Main"; fi
 	rm shaders -rf
 	rm models -rf
+	rm sounds -rf
 	rm config -rf

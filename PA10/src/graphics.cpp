@@ -289,6 +289,8 @@ bool Graphics::Initialize
 	
     score = 0;
 
+    objectCollidedSound.loadSound("sounds/spin_jump-Brandino480-2020916281.wav");
+
     modelRegistry.clear( );
 
 
@@ -944,6 +946,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 {
     btTransform trans;
     btScalar modTrans[ 16 ];
+    int tempScore = score;
 
     ccb::ScoreContactResultCallback cylinderCallBack( &score );
     ccb::TrapContactResultCallback returnBallCallBack( &returnBall );
@@ -987,7 +990,10 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
                                                returnBallCallBack );
         }
     }    
-
+    if( tempScore != score )
+    {
+        objectCollidedSound.playSound();
+    }
     
 
     objectRegistry[ objectID ].Update( dt );

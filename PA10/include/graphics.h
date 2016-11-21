@@ -8,6 +8,7 @@ using namespace std;
 #include "graphics_headers.h"
 #include "camera.h"
 #include "shader.h"
+#include "sound.h"
 #include "object.h"
 
 #include "GraphicsInfo.h"
@@ -126,6 +127,8 @@ class Graphics
         GLint m_numSpotLights;
 
         ObjectTable objectRegistry; //holds the scene's objects
+ 
+        Sound objectCollidedSound;
 
         std::vector<Instance> modelRegistry;
 
