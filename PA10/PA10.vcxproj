@@ -146,7 +146,8 @@ xcopy /y /d  "$(ASSIMP_LIBRARY_AND_BIN_x64)Release\assimp-vc140-mt.dll" "$(Proje
 xcopy /y /d  "$(OPENCV_BIN)Release\*.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
 xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y
-xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
+xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y
+xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -164,7 +165,8 @@ xcopy /y /d  "$(ASSIMP_LIBRARY_AND_BIN_x64)Release\assimp-vc140-mt.dll" "$(Proje
 xcopy /y /d  "$(OPENCV_BIN)Release\*.dll" "$(ProjectDir)build"
 xcopy "$(ProjectDir)models" "$(ProjectDir)build\models" /s /i /y
 xcopy "$(ProjectDir)shaders" "$(ProjectDir)build\shaders" /s /i /y
-xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
+xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y
+xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -176,6 +178,7 @@ xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
     <ClCompile Include="src\ObjectModel.cpp" />
     <ClCompile Include="src\ObjectTable.cpp" />
     <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +192,7 @@ xcopy "$(ProjectDir)config" "$(ProjectDir)build\config" /s /i /y</Command>
     <ClInclude Include="include\ObjectModel.h" />
     <ClInclude Include="include\ObjectTable.h" />
     <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\sound.h" />
     <ClInclude Include="include\window.h" />
   </ItemGroup>
   <ItemGroup>

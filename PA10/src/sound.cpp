@@ -4,14 +4,25 @@
 Sound::Sound()
 {     
      soundLoaded = false;
+	 soundPlaying = false;
 }
 Sound::~Sound()
 {
- 
+	size_t index;
+
+	SDL_PauseAudio( 1 );
+
+	SDL_CloseAudio( );
+
     if( soundLoaded )
     {
         SDL_FreeWAV( soundBuffer );
     }
+
+	for( index = 0; index < threadManager.size( ); index++ )
+	{
+		threadManager[ index ].join( );
+	}
   
 }
 
@@ -26,20 +37,23 @@ void Sound::loadSound( std::string soundPath )
     soundSpec.userdata = NULL;
     soundLoaded = true;
 
+	if( SDL_OpenAudio( &soundSpec, NULL ) < 0 )
+	{
+		std::cout << "Couldn't open audio: " << SDL_GetError( ) << std::endl;
+		exit( -1 );
+
+	}
+
+	SDL_PauseAudio( 1 );
+
 }
 
 
 void Sound::playSound()
 {
+	soundPlaying = true;
     soundPosition = soundBuffer;
     soundRemaining = soundLength;
-
-    if( SDL_OpenAudio( &soundSpec, NULL ) < 0 )
-    {
-         std::cout << "Couldn't open audio: " << SDL_GetError() << std::endl;
-         exit( -1 );   
-    
-    }
 
     SDL_PauseAudio( 0 );
     
@@ -48,10 +62,25 @@ void Sound::playSound()
         SDL_Delay(100);
     }
 
-    SDL_CloseAudio();
+	SDL_PauseAudio( 1 );
 
-    
+	soundPlaying = false;
  
+}
+
+void Sound::launchSound( )
+{
+	if( soundPlaying )
+	{
+		return;
+	}
+
+	threadManager.push_back( std::thread( &Sound::playSound, this ) );
+}
+
+bool Sound::SoundPlaying( )
+{
+	return soundPlaying;
 }
 
 void myCallback( void *userData, Uint8 *stream, int length)

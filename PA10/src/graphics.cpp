@@ -4,7 +4,11 @@
 
 
 #if defined( _WIN64 ) || ( _WIN32 )
-    #define M_PI 3.14159265359
+	#if defined( M_PI )
+		//do nothing
+	#else
+		#define M_PI 3.14159265359
+	#endif
 #endif
 
 
@@ -230,6 +234,11 @@ Graphics::~Graphics()
 
         broadphasePtr = NULL;
     }
+
+	while( objectCollidedSound.SoundPlaying( ) )
+	{
+		//wait for sound to finish
+	}
 }
 
 bool Graphics::Initialize
@@ -289,7 +298,7 @@ bool Graphics::Initialize
 	
     score = 0;
 
-    objectCollidedSound.loadSound("sounds/spin_jump-Brandino480-2020916281.wav");
+    objectCollidedSound.loadSound("sounds/bumpSound.wav");
 
     modelRegistry.clear( );
 
@@ -992,7 +1001,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     }    
     if( tempScore != score )
     {
-        objectCollidedSound.playSound();
+        objectCollidedSound.launchSound();
     }
     
 
