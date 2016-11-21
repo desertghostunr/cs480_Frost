@@ -4,11 +4,11 @@ UNAME_S := $(shell uname -s)
 # Linux
 ifeq ($(UNAME_S), Linux)
 	CC=g++
-	LIBS=-lSDL2 -lGLEW -lGL -lassimp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lBulletDynamics -lBulletSoftBody -lBulletCollision -lLinearMath
+	LIBS=-lSDL2 -lGLEW -lGL -lassimp -pthread -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lBulletDynamics -lBulletSoftBody -lBulletCollision -lLinearMath
 # Mac
 else
 	CC=clang++
-	LIBS=-lSDL2 -framework OpenGL -framework Cocoa -lGLEW -lassimp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lBulletDynamics -lBulletSoftBody -lBulletCollision -lLinearMath -stdlib=libc++
+	LIBS=-lSDL2 -framework OpenGL -framework Cocoa -lGLEW -pthread -lassimp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_flann -lBulletDynamics -lBulletSoftBody -lBulletCollision -lLinearMath -stdlib=libc++
 endif
 
 # Paths, use this to set Include directories, or library directories; uncomment in all: if used
@@ -20,7 +20,7 @@ PATHB=-I/usr/include/bullet
 CXXFLAGS=-g -Wall -std=c++0x
 
 # .o Compilation
-O_FILES=main.o camera.o engine.o graphics.o object.o shader.o window.o ObjectTable.o ObjectModel.o
+O_FILES=main.o camera.o engine.o graphics.o object.o shader.o window.o ObjectTable.o ObjectModel.o sound.o
 
 # Point to includes of local directories
 INCLUDES=-I../include
