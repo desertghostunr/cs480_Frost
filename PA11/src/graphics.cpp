@@ -165,19 +165,19 @@ Graphics::~Graphics()
     {
         if( dynamicsWorldPtr != NULL )
         {
-            if( objectRegistry[ index ].TableCollider( ).rigidBody != NULL )
+            if( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody != NULL )
             {
-                dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].TableCollider( ).rigidBody );
+                dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody );
 
-                delete objectRegistry[ index ].TableCollider( ).rigidBody->getMotionState( );
-                delete objectRegistry[ index ].TableCollider( ).rigidBody;
-                objectRegistry[ index ].TableCollider( ).rigidBody = NULL;
+                delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody->getMotionState( );
+                delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody;
+                objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = NULL;
             }
 
-            if( objectRegistry[ index ].TableCollider( ).collisionShape != NULL )
+            if( objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape != NULL )
             {
-                delete objectRegistry[ index ].TableCollider( ).collisionShape;
-                objectRegistry[ index ].TableCollider( ).collisionShape = NULL;
+                delete objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape;
+                objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape = NULL;
             }
 
             
@@ -749,8 +749,8 @@ bool Graphics::Initialize
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
-            objectRegistry[ index ].TableCollider( ).collisionShape = tmpCompoundShape;
-            objectRegistry[ index ].TableCollider( ).rigidBody = tmpRigidBody;
+            objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape = tmpCompoundShape;
+            objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = tmpRigidBody;
 
 
         }

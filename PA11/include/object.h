@@ -69,8 +69,11 @@ struct Origin
 class Object
 {
     public:
+
+		const int BASE_OBJECT = 0;
+
         Object();
-        ~Object();
+        virtual ~Object();
 
         void Update(unsigned int dt);
 
@@ -136,11 +139,13 @@ class Object
 
         CollisionPtr& CollisionInfo( );
 
-        CompoundCollisionPtr& TableCollider( );
+        CompoundCollisionPtr& CompoundCollisionInfo( );
 
         glm::vec3 & getBScale( );
 
         const glm::vec3 & getTransVec( );
+
+		virtual int getObjectType( );
 
     private:
         //model info
@@ -169,9 +174,10 @@ class Object
         glm::vec3 bScale;
 
         std::string name;
+
         CollisionPtr collisionInfo;
 
-        CompoundCollisionPtr tableCollider;
+        CompoundCollisionPtr compoundCollisionInfo;
 };
 
 #endif /* OBJECT_H */

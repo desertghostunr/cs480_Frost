@@ -616,9 +616,9 @@ CollisionPtr & Object::CollisionInfo( )
     return collisionInfo;
 }
 
-CompoundCollisionPtr & Object::TableCollider( )
+CompoundCollisionPtr & Object::CompoundCollisionInfo( )
 {
-    return tableCollider;
+    return compoundCollisionInfo;
 }
 
 
@@ -631,4 +631,9 @@ glm::vec3 & Object::getBScale( )
 const glm::vec3 & Object::getTransVec( )
 {
     return translationVector;
+}
+
+int Object::getObjectType( )
+{
+	return BASE_OBJECT;
 }
