@@ -63,3 +63,6 @@ build/
 /PA10/.vs/PA10/v14
 /PA10/x64/Debug
 /PA10/sounds/bumpSound.aup
+/PA11/.vs
+/PA11/packages
+/PA11/x64/Release
