@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
+  <Window width ="1200" height ="760">Broadside</Window>
   <Object path ="models/ball.obj">
     <name>ball</name>
     <xScale>5</xScale>

@@ -44,6 +44,9 @@ const string AMBIENT = "Ambient";
 const string CONE_ANGLE = "ConeAngle";
 const string SPOT_HEIGHT = "SpotHeight";
 const string FOLLOW_OBJ = "FollowMe";
+const string WINDOW_INFO = "Window";
+const string WIDTH = "width";
+const string HEIGHT = "height";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -72,8 +75,11 @@ bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, GraphicsInfo& progI
 int main(int argc, char **argv)
 {
     // Start an engine and run it then cleanup after
-    Engine *engine = new Engine("Tutorial Window Name", 1200, 760);
+	Engine *engine = NULL;
     GraphicsInfo progInfo;
+
+	progInfo.windowName = "Tutorial";
+	progInfo.windowSize = glm::vec2( 1200, 760 );
     
     //handle cmd line parameters
     if( !ProcessCommandLineParameters( argc, argv, progInfo ) )
@@ -83,11 +89,16 @@ int main(int argc, char **argv)
         cout <<"Terminating the program."<<endl<<endl;
 
         cout <<"Run ./Pinball --h for help with using the program."<<endl<<endl;
-
-        delete engine;
-        engine = NULL;
-        return 1;
+        return -1;
     }
+
+	engine = new Engine( progInfo.windowName, progInfo.windowSize.x, progInfo.windowSize.y );
+
+	if( engine == NULL )
+	{
+		printf( "Failed to allocate memory for the engine.\n" );
+		return -1;
+	}
 
     //initialize engine and run it
     
@@ -96,7 +107,7 @@ int main(int argc, char **argv)
         printf("The engine failed to start.\n");
         delete engine;
         engine = NULL;
-        return 1;
+        return -1;
     }
     
     engine->Run();
@@ -251,6 +262,7 @@ bool ProcessConfigurationFile
     rapidxml::xml_node<> *parentNode, *childNode;
     bool noError = true;
     string tempStr;
+	std::stringstream strStream;
 
     int sIndex;
 
@@ -302,6 +314,39 @@ bool ProcessConfigurationFile
                 }
             }
         }
+		else if( parentNode->name( ) == WINDOW_INFO )
+		{
+			strStream.clear( );
+			strStream.str( std::string( ) );
+
+			if( parentNode->first_attribute( WIDTH.c_str( ) ) )
+			{
+				tempStr = parentNode->first_attribute( WIDTH.c_str( ) )->value( );
+
+				strStream << tempStr;
+
+				strStream >> progInfo.windowSize.x;
+			}
+
+			strStream.clear( );
+			strStream.str( std::string( ) );
+
+			if( parentNode->first_attribute( HEIGHT.c_str( ) ) )
+			{
+				tempStr = parentNode->first_attribute( HEIGHT.c_str( ) )->value( );
+
+				strStream << tempStr;
+
+				strStream >> progInfo.windowSize.y;
+			}
+
+			tempStr = parentNode->value( );
+
+			if( !tempStr.empty( ) )
+			{
+				progInfo.windowName = tempStr;
+			}
+		}
         else
         {
             //do nothing

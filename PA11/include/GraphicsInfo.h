@@ -157,6 +157,8 @@ struct GraphicsInfo
     std::vector<Light> lights;
 
     std::vector<SpotLight> spotLight;
+	glm::vec2 windowSize;
+	std::string windowName;
 
     //constructors
     GraphicsInfo( ):spotLight( ) { }
@@ -166,7 +168,8 @@ struct GraphicsInfo
         modelVector( src.modelVector ), 
         objectData( src.objectData ),
         lights( src.lights ),
-        spotLight( src.spotLight ){ }
+        spotLight( src.spotLight ),
+		windowSize( src.windowSize ),
+		windowName( src.windowName ){ }
 };
-
 #endif /* GRAPHICSINFO_H */
