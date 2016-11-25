@@ -21,6 +21,35 @@ Object::Object()
     angle = 0.0f;
 
     objModelPtr = NULL;
+
+	type = BASE_OBJECT;
+}
+
+Object::Object( int nType )
+{
+	model = glm::mat4( 1.0f );
+
+	bulletTransform = glm::mat4( 1.0f );
+
+	rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
+
+	scaleFactor = glm::vec3( 1.0f, 1.0f, 1.0f );
+
+	objectID = -1;
+	parentID = -1;
+
+	angle = 0.0f;
+
+	objModelPtr = NULL;
+
+	if( nType == BASE_OBJECT || nType == P_OBJECT || nType == PC_OBJECT )
+	{
+		type = nType;
+	}
+	else
+	{
+		type = BASE_OBJECT;
+	}
 }
 
 Object::~Object()
@@ -635,5 +664,5 @@ const glm::vec3 & Object::getTransVec( )
 
 int Object::getObjectType( )
 {
-	return BASE_OBJECT;
+	return type;
 }

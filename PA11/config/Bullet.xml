@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <Window width ="1200" height ="760">Broadside</Window>
-  <Object path ="models/ball.obj">
+  <PObject path ="models/ball.obj">
     <name>ball</name>
     <xScale>5</xScale>
     <yScale>5</yScale>
@@ -18,8 +18,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/paddleLeft.obj">
+  </PObject>
+  <PObject path ="models/paddleLeft.obj">
     <name>paddleL</name>
     <xScale>7</xScale>
     <yScale>7</yScale>
@@ -36,8 +36,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/paddleRight.obj">
+  </PObject>
+  <PObject path ="models/paddleRight.obj">
     <name>paddleR</name>
     <xScale>7</xScale>
     <yScale>7</yScale>
@@ -54,8 +54,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/plunger.obj">
+  </PObject>
+  <PObject path ="models/plunger.obj">
     <name>plunger</name>
     <xScale>6</xScale>
     <yScale>7</yScale>
@@ -72,8 +72,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building2.obj">
+  </PObject>
+  <PObject path ="models/building2.obj">
     <name>bumber</name>
     <xScale>15</xScale>
     <yScale>18</yScale>
@@ -90,8 +90,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building1.obj">
+  </PObject>
+  <PObject path ="models/building1.obj">
     <name>bumber</name>
     <xScale>15</xScale>
     <yScale>15</yScale>
@@ -108,8 +108,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building1.obj">
+  </PObject>
+  <PObject path ="models/building1.obj">
     <name>bumber</name>
     <xScale>15</xScale>
     <yScale>15</yScale>
@@ -126,8 +126,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building4.obj">
+  </PObject>
+  <PObject path ="models/building4.obj">
     <name>bumber</name>
     <xScale>15</xScale>
     <yScale>15</yScale>
@@ -144,8 +144,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building5.obj">
+  </PObject>
+  <PObject path ="models/building5.obj">
     <name>bumber</name>
     <xScale>20</xScale>
     <yScale>20</yScale>
@@ -162,8 +162,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building3.obj">
+  </PObject>
+  <PObject path ="models/building3.obj">
     <name>bumberSquare</name>
     <xScale>24</xScale>
     <yScale>15</yScale>
@@ -180,8 +180,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building4.obj">
+  </PObject>
+  <PObject path ="models/building4.obj">
     <name>bumberSquare</name>
     <xScale>25</xScale>
     <yScale>12</yScale>
@@ -198,8 +198,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building4.obj">
+  </PObject>
+  <PObject path ="models/building4.obj">
     <name>bumberSquare</name>
     <xScale>25</xScale>
     <yScale>12</yScale>
@@ -216,8 +216,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/building4.obj">
+  </PObject>
+  <PObject path ="models/building4.obj">
     <name>bumberSquare</name>
     <xScale>6</xScale>
     <yScale>4</yScale>
@@ -234,8 +234,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/ballReturn.obj">
+  </PObject>
+  <PObject path ="models/ballReturn.obj">
     <name>ballReturn</name>
     <xScale>10</xScale>
     <yScale>10</yScale>
@@ -252,8 +252,8 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
-  <Object path ="models/table.obj">
+  </PObject>
+  <PCObject path ="models/table.obj">
     <name>table</name>
     <xScale>110</xScale>
     <yScale>110</yScale>
@@ -270,7 +270,7 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
-  </Object>
+  </PCObject>
   <Shader>
     <Vertex>shaders/fLightingVertexShader.glsl</Vertex>
     <Fragment>shaders/fLightingFragmentShader.glsl</Fragment>

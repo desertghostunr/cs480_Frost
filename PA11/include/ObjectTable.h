@@ -19,8 +19,7 @@
 
 class ObjectTable
 {
-    public: 
-
+    public:
         //constructors
         ObjectTable( );
         ObjectTable( const ObjectTable& src );
@@ -29,7 +28,7 @@ class ObjectTable
         ~ObjectTable( );
 
         //set methods
-        unsigned int addObject( unsigned int parent = -1 );
+        unsigned int addObject( unsigned int parent = -1, int type = Object::BASE_OBJECT );
 
         bool setChild( unsigned int objID, unsigned int parentToBeID );
 

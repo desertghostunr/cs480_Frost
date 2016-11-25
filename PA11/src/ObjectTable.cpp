@@ -90,15 +90,16 @@ ObjectTable::~ObjectTable( )
 @notes parentId must be valid, returns the object's id
 
 ***************************************/
-unsigned int ObjectTable::addObject( unsigned int parent )
+unsigned int ObjectTable::addObject( unsigned int parent, int type )
 {
     
     if( ( ( int ) parent < -1 ) && ( parent < data.size( ) ) )
     {
+
         return -1;
     }
 
-    data.push_back( new Object( ) );
+	data.push_back( new Object( type ) );    
 
     data[ data.size( ) - 1 ]->setObjectsID( data.size( ) - 1 );
 

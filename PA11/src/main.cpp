@@ -18,7 +18,6 @@ const string HELP_OPT = "--h";
 const char TAB_CHAR = '\t';
 
 //xml types
-const string OBJECT = "Object";
 const string SHADER = "Shader";
 const string X_SCALE = "xScale";
 const string Y_SCALE = "yScale";
@@ -65,6 +64,8 @@ bool ProcessConfigShader( rapidxml::xml_node<> *parentNode, GraphicsInfo& progIn
 bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo, bool spotLight = false );
 
 bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo, bool spotLight = false );
+
+bool IsObjectType( const string& type );
 
 // main ///////////////////////////////////
 
@@ -269,7 +270,7 @@ bool ProcessConfigurationFile
     for( parentNode = rootNode->first_node( 0 ); 
          parentNode; parentNode = parentNode->next_sibling( ) )
     {        
-        if( parentNode->name( ) == OBJECT ) 
+        if( IsObjectType( parentNode->name( ) ) )
         {
             noError = ( noError && ProcessConfigurationFileHelper( parentNode, progInfo ) );	  
         }
@@ -400,6 +401,8 @@ bool ProcessConfigurationFileHelper
     progInfo.objectData.push_back( ObjectInfo( ) );
     pIndex = progInfo.objectData.size( ) - 1;
 
+	progInfo.objectData[ pIndex ].type = parentNode->name( );
+
     for( mIndex = 0; mIndex < progInfo.modelVector.size( ); mIndex++ )
     {
         if( tempStr == progInfo.modelVector[ mIndex ] )
@@ -485,7 +488,7 @@ bool ProcessConfigurationFileHelper
         {
             strStream >> progInfo.objectData[ pIndex ].rotationAngles.z;
         }
-        else if( childNode->name( ) == OBJECT )
+        else if( IsObjectType( childNode->name( ) ) )
         {
             progInfo.objectData[ pIndex ].childID.push_back( progInfo.objectData.size( ) );
 
@@ -681,4 +684,16 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
     }
 
     return lightX && lightY && lightZ;
+}
+
+bool IsObjectType( const string & type )
+{
+	if( ( type == OBJECT_TYPE ) 
+		|| ( type == P_OBJECT_TYPE ) 
+		|| ( type == P_C_OBJECT_TYPE ) )
+	{
+		return true;
+	}
+
+	return false;
 }

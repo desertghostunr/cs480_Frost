@@ -70,9 +70,12 @@ class Object
 {
     public:
 
-		const int BASE_OBJECT = 0;
+		static const int BASE_OBJECT = 0;
+		static const int P_OBJECT = 1;
+		static const int PC_OBJECT = 2;
 
         Object();
+		Object( int nType );
         virtual ~Object();
 
         void Update(unsigned int dt);
@@ -178,6 +181,8 @@ class Object
         CollisionPtr collisionInfo;
 
         CompoundCollisionPtr compoundCollisionInfo;
+
+		int type;
 };
 
 #endif /* OBJECT_H */

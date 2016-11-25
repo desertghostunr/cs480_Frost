@@ -161,45 +161,48 @@ Graphics::~Graphics()
 {
     unsigned int index = 0;
 
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
-    {
-        if( dynamicsWorldPtr != NULL )
-        {
-            if( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody != NULL )
-            {
-                dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody );
+	if( dynamicsWorldPtr != NULL )
+	{
+		for( index = 0; index < objectRegistry.getSize( ); index++ )
+		{
+			if( objectRegistry[ index ].getObjectsID( ) == Object::PC_OBJECT )
+			{
+				if( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody != NULL )
+				{
+					dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody );
 
-                delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody->getMotionState( );
-                delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody;
-                objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = NULL;
-            }
+					delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody->getMotionState( );
+					delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody;
+					objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = NULL;
+				}
 
-            if( objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape != NULL )
-            {
-                delete objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape;
-                objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape = NULL;
-            }
+				if( objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape != NULL )
+				{
+					delete objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape;
+					objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape = NULL;
+				}
+			}
 
-            
-            if( objectRegistry[ index ].CollisionInfo( ).rigidBody != NULL )
-            {
-                dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CollisionInfo( ).rigidBody );
+			if( objectRegistry[ index ].getObjectsID( ) == Object::P_OBJECT )
+			{
+				if( objectRegistry[ index ].CollisionInfo( ).rigidBody != NULL )
+				{
+					dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CollisionInfo( ).rigidBody );
 
-                delete objectRegistry[ index ].CollisionInfo( ).rigidBody->getMotionState( );
-                delete objectRegistry[ index ].CollisionInfo( ).rigidBody;
-                objectRegistry[ index ].CollisionInfo( ).rigidBody = NULL;
-            }
+					delete objectRegistry[ index ].CollisionInfo( ).rigidBody->getMotionState( );
+					delete objectRegistry[ index ].CollisionInfo( ).rigidBody;
+					objectRegistry[ index ].CollisionInfo( ).rigidBody = NULL;
+				}
 
-            if( objectRegistry[ index ].CollisionInfo( ).collisionShape != NULL )
-            {
-                delete objectRegistry[ index ].CollisionInfo( ).collisionShape;
+				if( objectRegistry[ index ].CollisionInfo( ).collisionShape != NULL )
+				{
+					delete objectRegistry[ index ].CollisionInfo( ).collisionShape;
 
-                objectRegistry[ index ].CollisionInfo( ).collisionShape = NULL;
-            }
-        }       
-    }
-
-
+					objectRegistry[ index ].CollisionInfo( ).collisionShape = NULL;
+				}
+			}
+		}
+	} 
 
     if( dynamicsWorldPtr != NULL )
     {
@@ -326,8 +329,19 @@ bool Graphics::Initialize
     
     for( pIndex = 0; pIndex < progInfo.objectData.size( ); pIndex++ )
     {
+		if( progInfo.objectData[ pIndex ].type == P_OBJECT_TYPE )
+		{
+			objectRegistry.addObject( -1, Object::P_OBJECT );
+		}
+		else if( progInfo.objectData[ pIndex ].type == P_C_OBJECT_TYPE )
+		{
+			objectRegistry.addObject( -1, Object::PC_OBJECT );
+		}
+		else
+		{
+			objectRegistry.addObject( -1, Object::BASE_OBJECT );
+		}
         
-        objectRegistry.addObject( );
         if( progInfo.objectData[ pIndex ].modelID < modelRegistry.size( ) )
         {
 
@@ -761,7 +775,8 @@ bool Graphics::Initialize
         }
 
 
-        if( objectRegistry[ index ].getName( ) != "table" )
+        if( objectRegistry[ index ].getName( ) != "table" 
+			&& objectRegistry[ index ].getObjectType( ) == Object::P_OBJECT )
         {
             objectRegistry[ index ].CollisionInfo( ).collisionShape = tmpShapePtr;
             objectRegistry[ index ].CollisionInfo( ).rigidBody = tmpRigidBody;
@@ -970,12 +985,12 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     //here is an example for the general call of transforms for a planet
     //This does the basic operations... I still don't know how to tilt orbits
     //Play around with changing the order of events / things
-    // write transforms here //////////////////////////
-    
+    // write transforms here //////////////////////////    
 
     objectRegistry[ objectID ].commitScale( );
 
-    if( !objectRegistry[ objectID ].CollisionInfo( ).empty( ) )
+    if( objectRegistry[ objectID ].getObjectType( ) == Object::P_OBJECT 
+		&& !objectRegistry[ objectID ].CollisionInfo( ).empty( ) )
     {
         objectRegistry[ objectID ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( trans );
 
@@ -999,7 +1014,8 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
                                                objectRegistry[ objectID ].CollisionInfo( ).rigidBody,
                                                returnBallCallBack );
         }
-    }    
+    } 
+
     if( tempScore != score )
     {
         objectCollidedSound.launchSound();

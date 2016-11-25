@@ -15,6 +15,11 @@
 #include <string>
 #include "graphics_headers.h"
 
+//global constants
+const std::string OBJECT_TYPE = "Object";
+const std::string P_OBJECT_TYPE = "PObject";
+const std::string P_C_OBJECT_TYPE = "PCObject";
+
 struct ObjectInfo
 {
     unsigned int modelID; //the ID of the model in the model vector
@@ -28,6 +33,7 @@ struct ObjectInfo
     glm::vec3 rotationAngles;
 
     std::string name;
+	std::string type;
 
     ObjectInfo( ) :
         modelID( -1 ),
@@ -37,8 +43,9 @@ struct ObjectInfo
         position( glm::vec3( 0.0f, 0.0f, 0.0f ) ),
         rotationAxes( glm::vec3( 0.0f, 0.0f, 0.0f ) ),
         rotationAngles( glm::vec3( 0.0f, 0.0f, 0.0f ) ),
-        name(  )
-    { }
+        name( ),
+		type( ){ }
+
     ObjectInfo( const ObjectInfo& objInfo ) :
         modelID( objInfo.modelID ),
         childID( objInfo.childID ),
@@ -47,7 +54,8 @@ struct ObjectInfo
         position( objInfo.position ),
         rotationAxes( objInfo.rotationAxes ),
         rotationAngles( objInfo.rotationAngles ),
-        name( objInfo.name )
+        name( objInfo.name ),
+		type( objInfo.type )
     {
         //nothing to do
     }

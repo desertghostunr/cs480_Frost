@@ -177,7 +177,6 @@ xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     <ClCompile Include="src\object.cpp" />
     <ClCompile Include="src\ObjectModel.cpp" />
     <ClCompile Include="src\ObjectTable.cpp" />
-    <ClCompile Include="src\PObject.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\window.cpp" />
@@ -192,7 +191,6 @@ xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     <ClInclude Include="include\object.h" />
     <ClInclude Include="include\ObjectModel.h" />
     <ClInclude Include="include\ObjectTable.h" />
-    <ClInclude Include="include\PObject.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\sound.h" />
     <ClInclude Include="include\window.h" />
