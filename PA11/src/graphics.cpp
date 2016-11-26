@@ -498,15 +498,10 @@ bool Graphics::Initialize
         std::cout << "Failed to find the proper uniforms in the program!" << std::endl;
         return false;
     }
-        
-    
 
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);    
-
-
-
+    glDepthFunc(GL_LESS);   
 
     // INITIALIZE BULLET //////////////////////////////////////////////
     broadphasePtr = new btDbvtBroadphase( );
@@ -514,7 +509,7 @@ bool Graphics::Initialize
     dispatcherPtr = new btCollisionDispatcher( collisionConfigPtr );
     solverPtr = new btSequentialImpulseConstraintSolver( );
     dynamicsWorldPtr = new btDiscreteDynamicsWorld( dispatcherPtr, broadphasePtr, solverPtr, collisionConfigPtr );
-    dynamicsWorldPtr->setGravity( btVector3( 0.0f, -0.098564f, 2.71853f ) );
+    dynamicsWorldPtr->setGravity( btVector3( 0.0f, -9.8f, 0.0f ) );
     ///////////////////////////////////////////////////////////////////
 
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -688,7 +683,7 @@ bool Graphics::Initialize
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
             tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
         }
-        else if( objectRegistry[ index ].getName( ) == "table" )
+        else if( objectRegistry[ index ].getName( ) == "ocean" )
         {
             tmpCompoundShape = new btCompoundShape( );
 
@@ -768,6 +763,10 @@ bool Graphics::Initialize
 
 
         }
+		else if( objectRegistry[ index ].getName( ) == "sky" )
+		{
+			//do nothing
+		}
         else
         {
             std::cout << "Error: Unexpected Object Name!!!" << std::endl;
@@ -775,14 +774,17 @@ bool Graphics::Initialize
         }
 
 
-        if( objectRegistry[ index ].getName( ) != "table" 
-			&& objectRegistry[ index ].getObjectType( ) == Object::P_OBJECT )
+        if( objectRegistry[ index ].getObjectType( ) == Object::P_OBJECT )
         {
             objectRegistry[ index ].CollisionInfo( ).collisionShape = tmpShapePtr;
             objectRegistry[ index ].CollisionInfo( ).rigidBody = tmpRigidBody;
         }        
 
-        dynamicsWorldPtr->addRigidBody( tmpRigidBody );
+		if( objectRegistry[ index ].getObjectType( ) == Object::P_OBJECT 
+			|| objectRegistry[ index ].getObjectType( ) == Object::PC_OBJECT )
+		{
+			dynamicsWorldPtr->addRigidBody( tmpRigidBody );
+		}        
 
         tmpCompoundShape = NULL;
         tmpShapePtr = NULL;
@@ -1014,7 +1016,14 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
                                                objectRegistry[ objectID ].CollisionInfo( ).rigidBody,
                                                returnBallCallBack );
         }
-    } 
+    }
+	else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
+	{
+		objectRegistry[ objectID ].commitTranslation( );
+		objectRegistry[ objectID ].incrementAngle( dt );
+		objectRegistry[ objectID ].commitRotation( );
+		
+	}
 
     if( tempScore != score )
     {

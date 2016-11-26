@@ -253,8 +253,8 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </PObject>
-  <PCObject path ="models/table.obj">
-    <name>table</name>
+  <PCObject path ="models/ocean.obj">
+    <name>ocean</name>
     <xScale>110</xScale>
     <yScale>110</yScale>
     <zScale>110</zScale>
@@ -271,6 +271,24 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </PCObject>
+  <Object path ="models/skybox.obj">
+    <name>sky</name>
+    <xScale>300</xScale>
+    <yScale>125</yScale>
+    <zScale>300</zScale>
+    <xBScale>180</xBScale>
+    <yBScale>60</yBScale>
+    <zBScale>350</zBScale>
+    <xPosition>0</xPosition>
+    <yPosition>-250</yPosition>
+    <zPosition>0</zPosition>
+    <xRotationAxis>1</xRotationAxis>
+    <yRotationAxis>0</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </Object>
   <Shader>
     <Vertex>shaders/fLightingVertexShader.glsl</Vertex>
     <Fragment>shaders/fLightingFragmentShader.glsl</Fragment>
