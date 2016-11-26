@@ -514,7 +514,7 @@ bool Graphics::Initialize
 
     for( index = 0; index < objectRegistry.getSize( ); index++ )
     {
-        if( objectRegistry[ index ].getName( ) == "ball" )
+        if( objectRegistry[ index ].getName( ) == "ship" )
         {
             ballIndex = index;
 
@@ -691,53 +691,6 @@ bool Graphics::Initialize
             transform.setOrigin( btVector3( 0, -1 * objectRegistry[ index ].getBScale( ).y / 2, 0 ) );
 
             tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 1, 0 ), 10 );
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-            transform.setOrigin( btVector3( 0, 1 * objectRegistry[ index ].getBScale( ).y / 2, 0 ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, -1, 0 ), 10);
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-
-            boxEdges.a = -1 * objectRegistry[ index ].getBScale( ).z / 2;
-
-            transform.setOrigin( btVector3( 0, 0, boxEdges.a ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, 1 ), 10 );
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-
-            boxEdges.g = 1 * objectRegistry[ index ].getBScale( ).z / 2;
-
-            transform.setOrigin( btVector3( 0, 0, boxEdges.g ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 0, 0, -1 ), 10 );
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-
-            boxEdges.r = 1 * objectRegistry[ index ].getBScale( ).x / 2;
-
-            transform.setOrigin( btVector3( boxEdges.r, 0, 0 ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( -1, 0, 0 ), 10 );
-
-            tmpCompoundShape->addChildShape( transform, tmpShapePtr );
-
-            transform.setIdentity( );
-
-            boxEdges.b = -1 * objectRegistry[ index ].getBScale( ).x / 2;
-
-            transform.setOrigin( btVector3( boxEdges.b, 0, 0 ) );
-
-            tmpShapePtr = new btStaticPlaneShape( btVector3( 1, 0, 0 ), 10);
 
             tmpCompoundShape->addChildShape( transform, tmpShapePtr );
 

@@ -2,7 +2,7 @@
 <Configuration>
   <Window width ="1200" height ="760">Broadside</Window>
   <PObject path ="models/ball.obj">
-    <name>ball</name>
+    <name>ship</name>
     <xScale>5</xScale>
     <yScale>5</yScale>
     <zScale>5</zScale>
@@ -19,250 +19,16 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </PObject>
-  <PObject path ="models/paddleLeft.obj">
-    <name>paddleL</name>
-    <xScale>7</xScale>
-    <yScale>7</yScale>
-    <zScale>7</zScale>
-    <xBScale>50</xBScale>
-    <yBScale>14</yBScale>
-    <zBScale>14</zBScale>
-    <xPosition>-38</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>125</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/paddleRight.obj">
-    <name>paddleR</name>
-    <xScale>7</xScale>
-    <yScale>7</yScale>
-    <zScale>7</zScale>
-    <xBScale>50</xBScale>
-    <yBScale>14</yBScale>
-    <zBScale>14</zBScale>
-    <xPosition>38</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>125</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/plunger.obj">
-    <name>plunger</name>
-    <xScale>6</xScale>
-    <yScale>7</yScale>
-    <zScale>10</zScale>
-    <xBScale>14</xBScale>
-    <yBScale>14</yBScale>
-    <zBScale>50</zBScale>
-    <xPosition>73</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>130</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building2.obj">
-    <name>bumber</name>
-    <xScale>15</xScale>
-    <yScale>18</yScale>
-    <zScale>15</zScale>
-    <xBScale>30</xBScale>
-    <yBScale>15</yBScale>
-    <zBScale>28</zBScale>
-    <xPosition>0</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>-60</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building1.obj">
-    <name>bumber</name>
-    <xScale>15</xScale>
-    <yScale>15</yScale>
-    <zScale>15</zScale>
-    <xBScale>30</xBScale>
-    <yBScale>15</yBScale>
-    <zBScale>28</zBScale>
-    <xPosition>-35</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>10</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building1.obj">
-    <name>bumber</name>
-    <xScale>15</xScale>
-    <yScale>15</yScale>
-    <zScale>15</zScale>
-    <xBScale>30</xBScale>
-    <yBScale>15</yBScale>
-    <zBScale>28</zBScale>
-    <xPosition>35</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>10</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building4.obj">
-    <name>bumber</name>
-    <xScale>15</xScale>
-    <yScale>15</yScale>
-    <zScale>15</zScale>
-    <xBScale>30</xBScale>
-    <yBScale>25</yBScale>
-    <zBScale>30</zBScale>
-    <xPosition>-70</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>118</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building5.obj">
-    <name>bumber</name>
-    <xScale>20</xScale>
-    <yScale>20</yScale>
-    <zScale>20</zScale>
-    <xBScale>33</xBScale>
-    <yBScale>10</yBScale>
-    <zBScale>33</zBScale>
-    <xPosition>66</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>-140</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building3.obj">
-    <name>bumberSquare</name>
-    <xScale>24</xScale>
-    <yScale>15</yScale>
-    <zScale>20</zScale>
-    <xBScale>37</xBScale>
-    <yBScale>20</yBScale>
-    <zBScale>55</zBScale>
-    <xPosition>-60</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>-125</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building4.obj">
-    <name>bumberSquare</name>
-    <xScale>25</xScale>
-    <yScale>12</yScale>
-    <zScale>12</zScale>
-    <xBScale>50</xBScale>
-    <yBScale>20</yBScale>
-    <zBScale>28</zBScale>
-    <xPosition>54</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>150</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building4.obj">
-    <name>bumberSquare</name>
-    <xScale>25</xScale>
-    <yScale>12</yScale>
-    <zScale>12</zScale>
-    <xBScale>50</xBScale>
-    <yBScale>20</yBScale>
-    <zBScale>28</zBScale>
-    <xPosition>-54</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>150</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/building4.obj">
-    <name>bumberSquare</name>
-    <xScale>6</xScale>
-    <yScale>4</yScale>
-    <zScale>25</zScale>
-    <xBScale>20</xBScale>
-    <yBScale>20</yBScale>
-    <zBScale>50</zBScale>
-    <xPosition>60</xPosition>
-    <yPosition>0</yPosition>
-    <zPosition>110</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
-  <PObject path ="models/ballReturn.obj">
-    <name>ballReturn</name>
-    <xScale>10</xScale>
-    <yScale>10</yScale>
-    <zScale>10</zScale>
-    <xBScale>35</xBScale>
-    <yBScale>20</yBScale>
-    <zBScale>2</zBScale>
-    <xPosition>0</xPosition>
-    <yPosition>-5</yPosition>
-    <zPosition>162</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </PObject>
   <PCObject path ="models/ocean.obj">
     <name>ocean</name>
-    <xScale>110</xScale>
-    <yScale>110</yScale>
-    <zScale>110</zScale>
+    <xScale>100</xScale>
+    <yScale>100</yScale>
+    <zScale>100</zScale>
     <xBScale>180</xBScale>
     <yBScale>60</yBScale>
     <zBScale>350</zBScale>
     <xPosition>0</xPosition>
-    <yPosition>10</yPosition>
+    <yPosition>0</yPosition>
     <zPosition>0</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
@@ -330,21 +96,6 @@
     </Light>
     <ConeAngle>15.0</ConeAngle>
     <SpotHeight>80.0</SpotHeight>
-    <FollowMe>ball</FollowMe>
-  </SpotLight>
-  <SpotLight>
-    <Light>
-      <xPosition>0.0</xPosition>
-      <yPosition>-1.0</yPosition>
-      <zPosition>0.0</zPosition>
-      <Ambient>
-        <xPosition>0.5</xPosition>
-        <yPosition>0.5</yPosition>
-        <zPosition>0.5</zPosition>
-      </Ambient>
-    </Light>
-    <ConeAngle>18.0</ConeAngle>
-    <SpotHeight>80.0</SpotHeight>
-    <FollowMe>bumber</FollowMe>
+    <FollowMe>ship</FollowMe>
   </SpotLight> 
 </Configuration>
