@@ -972,9 +972,10 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     }
 	else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
 	{
-		objectRegistry[ objectID ].commitTranslation( );
+		
 		objectRegistry[ objectID ].incrementAngle( dt );
 		objectRegistry[ objectID ].commitRotation( );
+		objectRegistry[ objectID ].commitTranslation( );
 		
 	}
 

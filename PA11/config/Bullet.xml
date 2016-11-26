@@ -40,7 +40,7 @@
   <Object path ="models/skybox.obj">
     <name>sky</name>
     <xScale>300</xScale>
-    <yScale>125</yScale>
+    <yScale>300</yScale>
     <zScale>300</zScale>
     <xBScale>180</xBScale>
     <yBScale>60</yBScale>
