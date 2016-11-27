@@ -581,9 +581,9 @@ void Object::commitParentLocation( )
 @notes none
 
 ***************************************/
-void Object::incrementAngle( unsigned int dt )
+void Object::incrementAngle( unsigned int dt, double multiplier )
 {
-    angle += dt * M_PI/1000;
+    angle += ( multiplier * dt ) * ( M_PI / 1000 );
 }
 
 // GET ANGLE /////////////////////

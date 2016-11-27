@@ -126,7 +126,7 @@ class Object
 
         void commitParentLocation( );
 
-        void incrementAngle( unsigned int dt );
+        void incrementAngle( unsigned int dt, double multiplier = 1.0 );
 
         float getAngle( );
 
