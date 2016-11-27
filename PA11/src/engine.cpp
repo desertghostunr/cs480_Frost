@@ -363,11 +363,11 @@ void Engine::Keyboard()
         }
 		else if( m_event.key.keysym.sym == SDLK_w )
 		{
-			m_graphics->moveShip( 0, 1 );
+			m_graphics->moveShip( 0, 1.0f, true );
 		}
 		if( m_event.key.keysym.sym == SDLK_s )
 		{
-			m_graphics->moveShip( 0, -0.25f );
+			m_graphics->reverseShip( 0 );
 		}
 		else if( m_event.key.keysym.sym == SDLK_a )
 		{
@@ -399,7 +399,11 @@ void Engine::Keyboard()
 		{
 			if( m_event.key.keysym.sym == SDLK_w )
 			{
-				m_graphics->moveShip( 0, -0.25f );
+				m_graphics->slowShipToHalt( 0 );
+			}
+			else if( m_event.key.keysym.sym == SDLK_s )
+			{
+				m_graphics->slowShipToHalt( 0 );
 			}
 		}		
 	}

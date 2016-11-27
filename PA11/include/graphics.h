@@ -23,6 +23,7 @@ struct ShipController
 	size_t index;
 	btVector3 force;
 	bool slowDown;
+	bool shipReversed;
 
 	float accTorque;
 	bool slowRotDown;
@@ -30,7 +31,8 @@ struct ShipController
 	ShipController( ): 
 		index( 0 ), 
 		force( btVector3( 0, 0, 0 ) ),
-		slowDown( false ), 
+		slowDown( false ),
+		shipReversed( false ),
 		accTorque( 0.0f ),
 		slowRotDown( false ){ }
 
@@ -38,6 +40,7 @@ struct ShipController
 		index( newIndex ), 
 		force( btVector3( 0, 0, 0 ) ),
 		slowDown( false ),
+		shipReversed( false ),
 		accTorque( 0.0f ),
 		slowRotDown( false ){ }
 
@@ -45,6 +48,7 @@ struct ShipController
 		index( src.index ), 
 		force( src.force ),
 		slowDown( src.slowDown ),
+		shipReversed( src.shipReversed ),
 		accTorque( src.accTorque ),
 		slowRotDown( src.slowRotDown ){ }
 
@@ -55,6 +59,7 @@ struct ShipController
 			index = src.index;
 			force = src.force;
 			slowDown = src.slowDown;
+			shipReversed = src.shipReversed;
 			accTorque = src.accTorque;
 			slowRotDown = src.slowRotDown;
 		}
@@ -116,14 +121,18 @@ class Graphics
 
 		void turnOffSplash( );
 
-		void moveShip( size_t ship, float force );
+		void moveShip( size_t ship, float force, bool slowDownOverride = false );
 
 		void rotateShip( size_t ship, float torque );
 
-		void applyShipForces( );
+		void slowShipToHalt( size_t ship );
+
+		void reverseShip( size_t ship );
 
     private:
 		//helper functions
+		void applyShipForces( );
+
 		bool sameSign( float first, float second );
 
 		//Broadside specific members

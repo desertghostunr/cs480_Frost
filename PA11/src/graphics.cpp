@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <sstream>
 
-
 #if defined( _WIN64 ) || ( _WIN32 )
 	#if defined( M_PI )
 		//do nothing
@@ -1678,7 +1677,7 @@ void Graphics::turnOffSplash( )
 	activeIdleState = false;
 }
 
-void Graphics::moveShip( size_t ship, float force )
+void Graphics::moveShip( size_t ship, float force, bool slowDownOverride )
 {
 	Object* shipPtr = NULL;
 	btRigidBody* shipBodyPtr = NULL;
@@ -1687,16 +1686,12 @@ void Graphics::moveShip( size_t ship, float force )
 	btVector3 correctedForce = btVector3( 0.0f, 0.0f, 0.0f );
 	btTransform shipTransform;
 
-	
+	std::cout << "Acc" << std::endl;
 	if( ship < shipRegistry.size( ) )
 	{
 		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
-
-		if( force < 0 )
-		{
-			shipRegistry[ ship ].slowDown = true;
-		}
-		else
+		
+		if( slowDownOverride )
 		{
 			shipRegistry[ ship ].slowDown = false;
 		}
@@ -1763,10 +1758,31 @@ void Graphics::rotateShip( size_t ship, float torque )
 	shipBodyPtr = NULL;
 }
 
+void Graphics::slowShipToHalt( size_t ship )
+{
+	if( ship < shipRegistry.size( ) )
+	{
+		shipRegistry[ ship ].slowDown = true;
+		shipRegistry[ ship ].shipReversed = false;
+		std::cout << "Slowing!" << std::endl;
+	}
+}
+
+void Graphics::reverseShip( size_t ship )
+{
+	if( ship < shipRegistry.size( ) && !shipRegistry[ ship ].shipReversed )
+	{
+		moveShip( ship, -0.5f );
+		shipRegistry[ ship ].shipReversed = true;
+	}
+
+}
+
 void Graphics::applyShipForces( )
 {
 	Object* shipPtr = NULL;
 	btRigidBody* shipBodyPtr = NULL;
+	btScalar velocity;
 
 	size_t index;
 
@@ -1791,15 +1807,19 @@ void Graphics::applyShipForces( )
 
 			shipBodyPtr->activate( );
 
-			/*if( shipRegistry[ index ].slowDown )
+			velocity = shipBodyPtr->getLinearVelocity( ).length( );
+
+			if( velocity > 0.9f && shipRegistry[ index ].slowDown )
 			{
 				moveShip( index, -0.25f );
+				std::cout << "applying negative speed to: " << velocity << std::endl;
 			}
 			else if( shipRegistry[ index ].slowDown )
 			{
+				std::cout << "Halted!" << std::endl;
 				shipBodyPtr->setLinearVelocity( btVector3( 0, 0, 0 ) );
 				shipRegistry[ index ].slowDown = false;
-			}*/
+			}
 		}
 
 		shipPtr = NULL;
