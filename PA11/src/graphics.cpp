@@ -1763,7 +1763,6 @@ void Graphics::slowShipToHalt( size_t ship )
 	if( ship < shipRegistry.size( ) )
 	{
 		shipRegistry[ ship ].slowDown = true;
-		shipRegistry[ ship ].shipReversed = false;
 		std::cout << "Slowing!" << std::endl;
 	}
 }
@@ -1772,7 +1771,8 @@ void Graphics::reverseShip( size_t ship )
 {
 	if( ship < shipRegistry.size( ) && !shipRegistry[ ship ].shipReversed )
 	{
-		moveShip( ship, -0.5f );
+		moveShip( ship, -1.0f );
+		shipRegistry[ ship ].slowDown = false;
 		shipRegistry[ ship ].shipReversed = true;
 	}
 
@@ -1809,9 +1809,11 @@ void Graphics::applyShipForces( )
 
 			velocity = shipBodyPtr->getLinearVelocity( ).length( );
 
-			if( velocity > 0.9f && shipRegistry[ index ].slowDown )
+			if( velocity > 0.9f 
+				&& shipRegistry[ index ].slowDown 
+				&& !shipRegistry[ index ].shipReversed )
 			{
-				moveShip( index, -0.25f );
+				moveShip( index, -0.5f );
 				std::cout << "applying negative speed to: " << velocity << std::endl;
 			}
 			else if( shipRegistry[ index ].slowDown )
@@ -1819,6 +1821,7 @@ void Graphics::applyShipForces( )
 				std::cout << "Halted!" << std::endl;
 				shipBodyPtr->setLinearVelocity( btVector3( 0, 0, 0 ) );
 				shipRegistry[ index ].slowDown = false;
+				shipRegistry[ index ].shipReversed = false;
 			}
 		}
 
