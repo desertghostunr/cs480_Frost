@@ -18,15 +18,35 @@ using namespace std;
 
 struct ShipController
 {
+	static const int MAX_ROT = 2;
+
 	size_t index;
 	btVector3 force;
-	float accForce;
+	bool slowDown;
 
-	ShipController( ): index( 0 ), force( btVector3( 0, 0, 0 ) ), accForce( 0 ){ }
+	float accTorque;
+	bool slowRotDown;
 
-	ShipController( size_t newIndex ): index( newIndex ), force( btVector3( 0, 0, 0 ) ), accForce( 0 ) { }
+	ShipController( ): 
+		index( 0 ), 
+		force( btVector3( 0, 0, 0 ) ),
+		slowDown( false ), 
+		accTorque( 0.0f ),
+		slowRotDown( false ){ }
 
-	ShipController( const ShipController& src ): index( src.index ), force( src.force ), accForce( src.accForce ) { }
+	ShipController( size_t newIndex ): 
+		index( newIndex ), 
+		force( btVector3( 0, 0, 0 ) ),
+		slowDown( false ),
+		accTorque( 0.0f ),
+		slowRotDown( false ){ }
+
+	ShipController( const ShipController& src ): 
+		index( src.index ), 
+		force( src.force ),
+		slowDown( src.slowDown ),
+		accTorque( src.accTorque ),
+		slowRotDown( src.slowRotDown ){ }
 
 	const ShipController& operator=( const ShipController& src )
 	{
@@ -34,7 +54,9 @@ struct ShipController
 		{
 			index = src.index;
 			force = src.force;
-			accForce = src.accForce;
+			slowDown = src.slowDown;
+			accTorque = src.accTorque;
+			slowRotDown = src.slowRotDown;
 		}
 
 		return *this;
@@ -51,8 +73,7 @@ class Graphics
 
         Graphics();
         ~Graphics();
-        bool Initialize(int width, int height, 
-                                        const GraphicsInfo& progInfo );
+        bool Initialize(int width, int height, const GraphicsInfo& progInfo );
         void Update(unsigned int dt);
         void Render();
 
@@ -97,9 +118,14 @@ class Graphics
 
 		void moveShip( size_t ship, float force );
 
+		void rotateShip( size_t ship, float torque );
+
 		void applyShipForces( );
 
     private:
+		//helper functions
+		bool sameSign( float first, float second );
+
 		//Broadside specific members
 		std::vector<ShipController> shipRegistry;
 

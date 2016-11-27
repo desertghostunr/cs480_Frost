@@ -351,21 +351,7 @@ void Engine::Keyboard()
             {
                 m_graphics->togglePausedState( );
             }
-        }
-        else if( m_event.key.keysym.sym == SDLK_a )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->turnPaddle( true );
-            }           
-        }
-        else if( m_event.key.keysym.sym == SDLK_d )
-        {
-            if( m_graphics != NULL )
-            {
-                m_graphics->turnPaddle( false );
-            }         
-        }
+        }        
         else if( m_event.key.keysym.sym == SDLK_v ) 
         {
             ambientLight = false;
@@ -379,9 +365,23 @@ void Engine::Keyboard()
 		{
 			m_graphics->moveShip( 0, 1 );
 		}
-		else if( m_event.key.keysym.sym == SDLK_s )
+		if( m_event.key.keysym.sym == SDLK_s )
 		{
-			m_graphics->moveShip( 0, -1 );
+			m_graphics->moveShip( 0, -0.25f );
+		}
+		else if( m_event.key.keysym.sym == SDLK_a )
+		{
+			if( m_graphics != NULL )
+			{
+				m_graphics->rotateShip( 0, 1 );
+			}
+		}
+		else if( m_event.key.keysym.sym == SDLK_d )
+		{
+			if( m_graphics != NULL )
+			{
+				m_graphics->rotateShip( 0, -1 );
+			}
 		}
         else if( m_event.key.keysym.sym == SDLK_RSHIFT || m_event.key.keysym.sym == SDLK_LSHIFT )
         {
@@ -393,6 +393,17 @@ void Engine::Keyboard()
 		}
  
     }
+	else if( m_event.type == SDL_KEYUP ) 
+	{	
+		if( m_graphics != NULL )
+		{
+			if( m_event.key.keysym.sym == SDLK_w )
+			{
+				m_graphics->moveShip( 0, -0.25f );
+			}
+		}		
+	}
+
 }
 
 // MOUSE //////////////////

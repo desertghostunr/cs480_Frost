@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <Window width ="1200" height ="760">Broadside</Window>
-  <PObject path ="models/ball.obj">
+  <PObject path ="models/Ship.obj">
     <name>ship</name>
     <xScale>5</xScale>
     <yScale>5</yScale>

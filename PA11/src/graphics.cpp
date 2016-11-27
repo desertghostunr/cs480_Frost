@@ -19,13 +19,12 @@ namespace ccb
     std::vector<btRigidBody*> shipPtrReg;
 
     btScalar maxSpeed;
-	btScalar maxRotSpeed;
 
 
     void TickCallback( btDynamicsWorld * world, btScalar timeStep )
     {
 		size_t index;
-        btVector3 velocity, angularVelocity;
+        btVector3 velocity;
         btScalar speed;
 
 		for( index = 0; index < shipPtrReg.size( ); index++ )
@@ -33,7 +32,6 @@ namespace ccb
 			if( shipPtrReg[ index ] != NULL )
 			{
 				velocity = shipPtrReg[ index ]->getLinearVelocity( );
-				angularVelocity = shipPtrReg[ index ]->getAngularVelocity( );
 
 				speed = velocity.length( );
 
@@ -41,14 +39,6 @@ namespace ccb
 				{
 					velocity *= maxSpeed / speed;
 					shipPtrReg[ index ]->setLinearVelocity( velocity );
-				}
-
-				speed = angularVelocity.length( );
-
-				if( speed > maxRotSpeed )
-				{
-					angularVelocity *= maxRotSpeed / speed;
-					shipPtrReg[ index ]->setAngularVelocity( angularVelocity );
 				}
 			}			
 		}
@@ -137,8 +127,7 @@ Graphics::Graphics()
     ballIndex = 0;
     modelIndex = 0;
 
-    ccb::maxSpeed = 50;
-	ccb::maxRotSpeed = 15;
+    ccb::maxSpeed = 15;
 
     shaderSelect = 0;
     playingStateFlag = false;
@@ -712,8 +701,8 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
-            rigidBodyConstruct.m_restitution = 0.95f;
-            rigidBodyConstruct.m_friction = 10.00f;
+            rigidBodyConstruct.m_restitution = 0.45f;
+            rigidBodyConstruct.m_friction = 1000.00f;
             
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -1698,10 +1687,59 @@ void Graphics::moveShip( size_t ship, float force )
 	btVector3 correctedForce = btVector3( 0.0f, 0.0f, 0.0f );
 	btTransform shipTransform;
 
-	std::cout << "Ship: " << ship << std::endl;
+	
+	if( ship < shipRegistry.size( ) )
+	{
+		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
+
+		if( force < 0 )
+		{
+			shipRegistry[ ship ].slowDown = true;
+		}
+		else
+		{
+			shipRegistry[ ship ].slowDown = false;
+		}
+
+		if( !shipPtr->CollisionInfo( ).empty( ) )
+		{
+			shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
+		}
+
+		if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
+		{
+		shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
+		}
+
+		if( ( shipBodyPtr != NULL ) )
+		{
+
+			shipBodyPtr->getMotionState( )->getWorldTransform( shipTransform );
+
+			correctedForce = ( shipTransform * relativeForce ) - shipTransform.getOrigin( );
+		}
+	}
+
+	shipPtr = NULL;
+	shipBodyPtr = NULL;
+
+	shipRegistry[ ship ].force = correctedForce;
+}
+
+void Graphics::rotateShip( size_t ship, float torque )
+{
+	Object* shipPtr = NULL;
+	btRigidBody* shipBodyPtr = NULL;
+
 
 	if( ship < shipRegistry.size( ) )
 	{
+		if( sameSign( shipRegistry[ ship ].accTorque, torque ) 
+			&& shipRegistry[ ship ].accTorque >= ( float ) ShipController::MAX_ROT )
+		{
+			return;
+		}
+
 		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
 
 		if( !shipPtr->CollisionInfo( ).empty( ) )
@@ -1714,24 +1752,15 @@ void Graphics::moveShip( size_t ship, float force )
 			shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
 		}
 
-		if( ( shipBodyPtr != NULL ) 
-			&& ( force >= 0 || shipRegistry[ ship ].accForce > 0 ) )
+		if( ( shipBodyPtr != NULL ) )
 		{
-			shipRegistry[ ship ].accForce += force;
-			
-
-			shipBodyPtr->getMotionState( )->getWorldTransform( shipTransform );
-
-			correctedForce = ( shipTransform * relativeForce ) - shipTransform.getOrigin( );			
-
-			std::cout << "Accelerating: " << ship << std::endl;
+			shipRegistry[ ship ].accTorque += torque;
+			shipBodyPtr->applyTorque( btVector3( 0.0f, torque, 0.0f ) );
 		}
 	}
 
 	shipPtr = NULL;
 	shipBodyPtr = NULL;
-
-	shipRegistry[ ship ].force = correctedForce;
 }
 
 void Graphics::applyShipForces( )
@@ -1761,11 +1790,32 @@ void Graphics::applyShipForces( )
 			shipRegistry[ index ].force = btVector3( 0, 0, 0 );
 
 			shipBodyPtr->activate( );
+
+			/*if( shipRegistry[ index ].slowDown )
+			{
+				moveShip( index, -0.25f );
+			}
+			else if( shipRegistry[ index ].slowDown )
+			{
+				shipBodyPtr->setLinearVelocity( btVector3( 0, 0, 0 ) );
+				shipRegistry[ index ].slowDown = false;
+			}*/
 		}
 
 		shipPtr = NULL;
 		shipBodyPtr = NULL;
 	}
+}
+
+bool Graphics::sameSign( float first, float second )
+{
+	if( ( first >= 0.0f && second >= 0.0f ) 
+		|| ( first < 0.0f && second < 0.0f ) )
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void Graphics::updateLeftPaddle( unsigned int dt )
