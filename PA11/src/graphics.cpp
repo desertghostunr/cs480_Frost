@@ -16,39 +16,44 @@
 namespace ccb
 {
 
-    btRigidBody* ballPtr;
+    std::vector<btRigidBody*> shipPtrReg;
 
     btScalar maxSpeed;
+	btScalar maxRotSpeed;
 
 
     void TickCallback( btDynamicsWorld * world, btScalar timeStep )
     {
+		size_t index;
         btVector3 velocity, angularVelocity;
         btScalar speed;
 
-        if( ballPtr == NULL )
-        {
-            return;
-        }
+		for( index = 0; index < shipPtrReg.size( ); index++ )
+		{
+			if( shipPtrReg[ index ] != NULL )
+			{
+				velocity = shipPtrReg[ index ]->getLinearVelocity( );
+				angularVelocity = shipPtrReg[ index ]->getAngularVelocity( );
 
-        velocity = ballPtr->getLinearVelocity( );
-        angularVelocity = ballPtr->getAngularVelocity( );
+				speed = velocity.length( );
 
-        speed = velocity.length( );
+				if( speed > maxSpeed )
+				{
+					velocity *= maxSpeed / speed;
+					shipPtrReg[ index ]->setLinearVelocity( velocity );
+				}
 
-        if( speed > maxSpeed )
-        {
-            velocity *= maxSpeed / speed;
-            ballPtr->setLinearVelocity( velocity );
-        }
+				speed = angularVelocity.length( );
 
-        speed = angularVelocity.length( );
+				if( speed > maxRotSpeed )
+				{
+					angularVelocity *= maxRotSpeed / speed;
+					shipPtrReg[ index ]->setAngularVelocity( angularVelocity );
+				}
+			}			
+		}
 
-        if( speed > maxSpeed )
-        {
-            angularVelocity *= maxSpeed / speed;
-            ballPtr->setAngularVelocity( angularVelocity );
-        }
+        
     }
 
     struct ScoreContactResultCallback : public btCollisionWorld::ContactResultCallback
@@ -126,13 +131,14 @@ Graphics::Graphics()
     solverPtr = NULL;
     dynamicsWorldPtr = NULL;
 
-    ccb::ballPtr = NULL;
+    
 
     boxIndex = -1;
     ballIndex = 0;
     modelIndex = 0;
 
     ccb::maxSpeed = 50;
+	ccb::maxRotSpeed = 15;
 
     shaderSelect = 0;
     playingStateFlag = false;
@@ -543,7 +549,8 @@ bool Graphics::Initialize
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
-            ccb::ballPtr = tmpRigidBody;
+			ccb::shipPtrReg.push_back( tmpRigidBody );
+			shipRegistry.push_back( index );
             
         }
         else if( objectRegistry[ index ].getName( ) == "bumber" )
@@ -706,7 +713,7 @@ bool Graphics::Initialize
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
             rigidBodyConstruct.m_restitution = 0.95f;
-            rigidBodyConstruct.m_friction = 1.25f;
+            rigidBodyConstruct.m_friction = 10.00f;
             
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -753,6 +760,8 @@ bool Graphics::Initialize
 void Graphics::Update(unsigned int dt)
 {
     unsigned int index;
+
+	applyShipForces( );
 
 	if( gameOverStep )
 	{
@@ -1678,6 +1687,85 @@ void Graphics::idleSplash( unsigned int dt )
 void Graphics::turnOffSplash( )
 {
 	activeIdleState = false;
+}
+
+void Graphics::moveShip( size_t ship, float force )
+{
+	Object* shipPtr = NULL;
+	btRigidBody* shipBodyPtr = NULL;
+
+	btVector3 relativeForce = btVector3( force, 0.0f, 0.0f );
+	btVector3 correctedForce = btVector3( 0.0f, 0.0f, 0.0f );
+	btTransform shipTransform;
+
+	std::cout << "Ship: " << ship << std::endl;
+
+	if( ship < shipRegistry.size( ) )
+	{
+		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
+
+		if( !shipPtr->CollisionInfo( ).empty( ) )
+		{
+			shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
+		}
+
+		if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
+		{
+			shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
+		}
+
+		if( ( shipBodyPtr != NULL ) 
+			&& ( force >= 0 || shipRegistry[ ship ].accForce > 0 ) )
+		{
+			shipRegistry[ ship ].accForce += force;
+			
+
+			shipBodyPtr->getMotionState( )->getWorldTransform( shipTransform );
+
+			correctedForce = ( shipTransform * relativeForce ) - shipTransform.getOrigin( );			
+
+			std::cout << "Accelerating: " << ship << std::endl;
+		}
+	}
+
+	shipPtr = NULL;
+	shipBodyPtr = NULL;
+
+	shipRegistry[ ship ].force = correctedForce;
+}
+
+void Graphics::applyShipForces( )
+{
+	Object* shipPtr = NULL;
+	btRigidBody* shipBodyPtr = NULL;
+
+	size_t index;
+
+	for( index = 0; index < shipRegistry.size( ); index++ )
+	{
+		shipPtr = &objectRegistry[ shipRegistry[ index ].index ];
+
+		if( !shipPtr->CollisionInfo( ).empty( ) )
+		{
+			shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
+		}
+
+		if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
+		{
+			shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
+		}
+
+		if( shipBodyPtr != NULL )
+		{
+			shipBodyPtr->applyCentralImpulse( shipRegistry[ index ].force );
+			shipRegistry[ index ].force = btVector3( 0, 0, 0 );
+
+			shipBodyPtr->activate( );
+		}
+
+		shipPtr = NULL;
+		shipBodyPtr = NULL;
+	}
 }
 
 void Graphics::updateLeftPaddle( unsigned int dt )

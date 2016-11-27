@@ -375,6 +375,14 @@ void Engine::Keyboard()
 
 			m_graphics->turnOffSplash( );
         }
+		else if( m_event.key.keysym.sym == SDLK_w )
+		{
+			m_graphics->moveShip( 0, 1 );
+		}
+		else if( m_event.key.keysym.sym == SDLK_s )
+		{
+			m_graphics->moveShip( 0, -1 );
+		}
         else if( m_event.key.keysym.sym == SDLK_RSHIFT || m_event.key.keysym.sym == SDLK_LSHIFT )
         {
             m_graphics->resetView( );

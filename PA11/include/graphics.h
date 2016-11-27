@@ -15,6 +15,33 @@ using namespace std;
 #include "ObjectTable.h"
 
 #include"Instance.h"
+
+struct ShipController
+{
+	size_t index;
+	btVector3 force;
+	float accForce;
+
+	ShipController( ): index( 0 ), force( btVector3( 0, 0, 0 ) ), accForce( 0 ){ }
+
+	ShipController( size_t newIndex ): index( newIndex ), force( btVector3( 0, 0, 0 ) ), accForce( 0 ) { }
+
+	ShipController( const ShipController& src ): index( src.index ), force( src.force ), accForce( src.accForce ) { }
+
+	const ShipController& operator=( const ShipController& src )
+	{
+		if( this != &src )
+		{
+			index = src.index;
+			force = src.force;
+			accForce = src.accForce;
+		}
+
+		return *this;
+	}
+};
+
+
 class Graphics
 {
     public:
@@ -68,7 +95,14 @@ class Graphics
 
 		void turnOffSplash( );
 
+		void moveShip( size_t ship, float force );
+
+		void applyShipForces( );
+
     private:
+		//Broadside specific members
+		std::vector<ShipController> shipRegistry;
+
         //pinball game specific
         int score;
         int numberOfBalls;
