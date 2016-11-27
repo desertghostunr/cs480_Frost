@@ -18,6 +18,7 @@ using namespace std;
 
 struct ShipController
 {
+	static const int MAX_SPEED = 15;
 	static const int MAX_ROT = 2;
 
 	size_t index;
@@ -27,6 +28,7 @@ struct ShipController
 
 	float accTorque;
 	bool slowRotDown;
+
 
 	ShipController( ): 
 		index( 0 ), 

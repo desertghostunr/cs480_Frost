@@ -126,7 +126,7 @@ Graphics::Graphics()
     ballIndex = 0;
     modelIndex = 0;
 
-    ccb::maxSpeed = 15;
+    ccb::maxSpeed = ShipController::MAX_SPEED;
 
     shaderSelect = 0;
     playingStateFlag = false;
@@ -1813,8 +1813,7 @@ void Graphics::applyShipForces( )
 				&& shipRegistry[ index ].slowDown 
 				&& !shipRegistry[ index ].shipReversed )
 			{
-				moveShip( index, -0.5f );
-				std::cout << "applying negative speed to: " << velocity << std::endl;
+				moveShip( index, -0.25f );
 			}
 			else if( shipRegistry[ index ].slowDown )
 			{
