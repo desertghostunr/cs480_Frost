@@ -18,15 +18,16 @@ using namespace std;
 
 struct ShipController
 {
-	static const int MAX_SPEED = 15;
-	static const int MAX_ROT = 2;
+	static const float MAX_SPEED;
+	static const float MAX_ROT;
 
 	size_t index;
 	btVector3 force;
 	bool slowDown;
 	bool shipReversed;
 
-	float accTorque;
+	btVector3 torque;
+	float torqueAcc;
 	bool slowRotDown;
 
 
@@ -35,7 +36,8 @@ struct ShipController
 		force( btVector3( 0, 0, 0 ) ),
 		slowDown( false ),
 		shipReversed( false ),
-		accTorque( 0.0f ),
+		torque( btVector3( 0, 0, 0 ) ),
+		torqueAcc( 0 ),
 		slowRotDown( false ){ }
 
 	ShipController( size_t newIndex ): 
@@ -43,7 +45,8 @@ struct ShipController
 		force( btVector3( 0, 0, 0 ) ),
 		slowDown( false ),
 		shipReversed( false ),
-		accTorque( 0.0f ),
+		torque( btVector3( 0, 0, 0 ) ),
+		torqueAcc( 0 ),
 		slowRotDown( false ){ }
 
 	ShipController( const ShipController& src ): 
@@ -51,7 +54,8 @@ struct ShipController
 		force( src.force ),
 		slowDown( src.slowDown ),
 		shipReversed( src.shipReversed ),
-		accTorque( src.accTorque ),
+		torque( src.torque ),
+		torqueAcc( src.torqueAcc ),
 		slowRotDown( src.slowRotDown ){ }
 
 	const ShipController& operator=( const ShipController& src )
@@ -62,7 +66,8 @@ struct ShipController
 			force = src.force;
 			slowDown = src.slowDown;
 			shipReversed = src.shipReversed;
-			accTorque = src.accTorque;
+			torque = src.torque;
+			torqueAcc = src.torqueAcc;
 			slowRotDown = src.slowRotDown;
 		}
 

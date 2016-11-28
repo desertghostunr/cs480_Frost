@@ -10,6 +10,8 @@
 	#endif
 #endif
 
+const float ShipController::MAX_SPEED = 15.0f;
+const float ShipController::MAX_ROT = 0.5f;
 
 //physics related callbacks
 namespace ccb
@@ -1725,16 +1727,11 @@ void Graphics::rotateShip( size_t ship, float torque )
 {
 	Object* shipPtr = NULL;
 	btRigidBody* shipBodyPtr = NULL;
+	btScalar angVel;
 
 
 	if( ship < shipRegistry.size( ) )
 	{
-		if( sameSign( shipRegistry[ ship ].accTorque, torque ) 
-			&& shipRegistry[ ship ].accTorque >= ( float ) ShipController::MAX_ROT )
-		{
-			return;
-		}
-
 		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
 
 		if( !shipPtr->CollisionInfo( ).empty( ) )
@@ -1749,8 +1746,23 @@ void Graphics::rotateShip( size_t ship, float torque )
 
 		if( ( shipBodyPtr != NULL ) )
 		{
-			shipRegistry[ ship ].accTorque += torque;
-			shipBodyPtr->applyTorque( btVector3( 0.0f, torque, 0.0f ) );
+			angVel = shipBodyPtr->getAngularVelocity( ).length( );
+
+			if( angVel >= ShipController::MAX_ROT 
+				&& sameSign( torque, shipRegistry[ ship ].torqueAcc ) )
+			{
+				shipRegistry[ ship ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+
+				std::cout << "Angular Velocity " << angVel << std::endl;
+			}
+			else
+			{
+				shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
+				shipRegistry[ ship ].torqueAcc += torque;
+			}
+
+			shipBodyPtr->applyTorque( shipRegistry[ ship ].torque );
+			
 		}
 	}
 
