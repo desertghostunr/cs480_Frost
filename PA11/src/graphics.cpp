@@ -1772,7 +1772,6 @@ void Graphics::reverseShip( size_t ship )
 	if( ship < shipRegistry.size( ) && !shipRegistry[ ship ].shipReversed )
 	{
 		moveShip( ship, -1.0f );
-		shipRegistry[ ship ].slowDown = false;
 		shipRegistry[ ship ].shipReversed = true;
 	}
 
