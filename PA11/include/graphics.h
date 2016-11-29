@@ -16,18 +16,25 @@ using namespace std;
 
 #include"Instance.h"
 
-struct ShipController
+struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when key signals were interrupted!
 {
 	static const float MAX_SPEED;
 	static const float MAX_ROT;
-	static const float SLIP_COS;
+	static const float STD_FORCE;
+	static const float STD_REVERSE;
+	static const float STD_TORQUE;
 
 	size_t index;
+
 	btVector3 force;
+	bool forceOn;
 	bool slowDown;
+
 	bool shipReversed;
+	int shipReverseCounter;
 
 	btVector3 torque;
+	bool torqueOn;
 	float torqueAcc;
 	bool slowRotDown;
 
@@ -35,27 +42,36 @@ struct ShipController
 	ShipController( ): 
 		index( 0 ), 
 		force( btVector3( 0, 0, 0 ) ),
+		forceOn( false ),
 		slowDown( false ),
 		shipReversed( false ),
+		shipReverseCounter( 0 ),
 		torque( btVector3( 0, 0, 0 ) ),
+		torqueOn( false ),
 		torqueAcc( 0 ),
 		slowRotDown( false ){ }
 
 	ShipController( size_t newIndex ): 
 		index( newIndex ), 
 		force( btVector3( 0, 0, 0 ) ),
+		forceOn( false ),
 		slowDown( false ),
 		shipReversed( false ),
+		shipReverseCounter( 0 ),
 		torque( btVector3( 0, 0, 0 ) ),
+		torqueOn( false ),
 		torqueAcc( 0 ),
 		slowRotDown( false ){ }
 
 	ShipController( const ShipController& src ): 
 		index( src.index ), 
 		force( src.force ),
+		forceOn( src.forceOn ),
 		slowDown( src.slowDown ),
 		shipReversed( src.shipReversed ),
+		shipReverseCounter( src.shipReverseCounter ),
 		torque( src.torque ),
+		torqueOn( src.torqueOn ),
 		torqueAcc( src.torqueAcc ),
 		slowRotDown( src.slowRotDown ){ }
 
@@ -65,9 +81,12 @@ struct ShipController
 		{
 			index = src.index;
 			force = src.force;
+			forceOn = src.forceOn;
 			slowDown = src.slowDown;
 			shipReversed = src.shipReversed;
+			shipReverseCounter = src.shipReverseCounter;
 			torque = src.torque;
+			torqueOn = src.torqueOn;
 			torqueAcc = src.torqueAcc;
 			slowRotDown = src.slowRotDown;
 		}
@@ -129,7 +148,7 @@ class Graphics
 
 		void turnOffSplash( );
 
-		void moveShip( size_t ship, float force );
+		void moveShip( size_t ship );
 
 		void rotateShip( size_t ship, float torque );
 

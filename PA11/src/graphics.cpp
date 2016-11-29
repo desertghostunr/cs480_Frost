@@ -12,7 +12,9 @@
 
 const float ShipController::MAX_SPEED = 15.0f;
 const float ShipController::MAX_ROT = 0.05f;
-const float ShipController::SLIP_COS = glm::cos( glm::radians( 30.0f ) );
+const float ShipController::STD_FORCE = 2.0f;
+const float ShipController::STD_REVERSE = -1.0f;
+const float ShipController::STD_TORQUE = 1.0f;
 
 //physics related callbacks
 namespace ccb
@@ -1680,12 +1682,11 @@ void Graphics::turnOffSplash( )
 	activeIdleState = false;
 }
 
-void Graphics::moveShip( size_t ship, float force )
+void Graphics::moveShip( size_t ship )
 {
 	shipRegistry[ ship ].slowDown = false;
 	shipRegistry[ ship ].shipReversed = false;
-
-	shipRegistry[ ship ].force = btVector3( force, 0.0f, 0.0f );
+	shipRegistry[ ship ].forceOn = true;
 }
 
 void Graphics::rotateShip( size_t ship, float torque )
@@ -1695,6 +1696,7 @@ void Graphics::rotateShip( size_t ship, float torque )
 		shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
 
 		shipRegistry[ ship ].slowRotDown = false;
+		shipRegistry[ ship ].torqueOn = true;
 
 	}
 	
@@ -1705,18 +1707,18 @@ void Graphics::slowShipToHalt( size_t ship )
 	if( ship < shipRegistry.size( ) )
 	{
 		shipRegistry[ ship ].slowDown = true;
+		shipRegistry[ ship ].forceOn = false;
+		shipRegistry[ ship ].shipReverseCounter = 0;
 		std::cout << "Slowing!" << std::endl;
 	}
 }
 
 void Graphics::reverseShip( size_t ship )
 {
-	if( ship < shipRegistry.size( ) 
-		&& !shipRegistry[ ship ].shipReversed 
-		&& !shipRegistry[ ship ].slowDown )
+	if( ship < shipRegistry.size( ) && !shipRegistry[ ship ].slowDown )
 	{
-		moveShip( ship, -1.0f );
 		shipRegistry[ ship ].shipReversed = true;
+		shipRegistry[ ship ].forceOn = true;
 	}
 
 }
@@ -1726,6 +1728,7 @@ void Graphics::stopShipsRotation( size_t ship )
 	if( ship < shipRegistry.size( ) )
 	{
 		shipRegistry[ ship ].slowRotDown = true;
+		shipRegistry[ ship ].torqueOn = false;
 		std::cout << "Stopping ship rotation!" << std::endl;
 	}
 }
@@ -1769,6 +1772,26 @@ void Graphics::applyShipForces( )
 			angVel = shipBodyPtr->getAngularVelocity( ).length( );
 
 			shipRot = shipBodyPtr->getWorldTransform( ).getBasis( );
+
+			//check controller flags and alter force accordingly
+			if( shipRegistry[ index ].forceOn && shipRegistry[ index ].torqueOn )
+			{
+				shipRegistry[ index ].slowDown = true;				
+			}
+			else if( shipRegistry[ index ].forceOn )
+			{
+				shipRegistry[ index ].slowDown = false;
+				if( shipRegistry[ index ].shipReversed 
+					&& shipRegistry[ index ].shipReverseCounter <= 0 )
+				{
+					shipRegistry[ index ].force = btVector3( ShipController::STD_REVERSE, 0.0f, 0.0f );
+					shipRegistry[ index ].shipReverseCounter++;
+				}
+				else if( !shipRegistry[ index ].shipReversed )
+				{
+					shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
+				}
+			}
 
 			//turn the ship
 
@@ -1818,7 +1841,6 @@ void Graphics::applyShipForces( )
 				shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
 				shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
 				shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-				shipRegistry[ index ].slowRotDown = true;
 			}
 
 			//move forward or back
@@ -1826,6 +1848,7 @@ void Graphics::applyShipForces( )
 				&& shipRegistry[ index ].slowDown )
 			{				
 				shipBodyPtr->setLinearVelocity( rawVelocity - ( rawVelocity / 30.0f ) );
+				shipRegistry[ index ].shipReverseCounter = 0;
 			}
 			else if( shipRegistry[ index ].slowDown )
 			{
@@ -1843,7 +1866,6 @@ void Graphics::applyShipForces( )
 
 				shipBodyPtr->applyCentralImpulse( shipRegistry[ index ].force );
 				shipRegistry[ index ].force = btVector3( 0, 0, 0 );
-				shipRegistry[ index ].slowDown = true;
 			}
 
 			shipBodyPtr->activate( );

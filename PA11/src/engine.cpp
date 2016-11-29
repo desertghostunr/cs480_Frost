@@ -61,6 +61,7 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
     blueLight = true; 
 
     viewControls = false;
+
     // Start the graphics
     
     m_graphics = new Graphics();
@@ -363,7 +364,7 @@ void Engine::Keyboard()
         }
 		else if( m_event.key.keysym.sym == SDLK_w )
 		{
-			m_graphics->moveShip( 0, 2.0f );
+			m_graphics->moveShip( 0 );
 			std::cout << "W down" << std::endl;
 		}
 		if( m_event.key.keysym.sym == SDLK_s )
@@ -375,7 +376,7 @@ void Engine::Keyboard()
 		{
 			if( m_graphics != NULL )
 			{
-				m_graphics->rotateShip( 0, 0.75f );
+				m_graphics->rotateShip( 0, ShipController::STD_TORQUE );
 				std::cout << "A down" << std::endl;
 			}
 		}
@@ -383,7 +384,7 @@ void Engine::Keyboard()
 		{
 			if( m_graphics != NULL )
 			{
-				m_graphics->rotateShip( 0, -0.75f );
+				m_graphics->rotateShip( 0, ( -1.0f * ShipController::STD_TORQUE ) );
 				std::cout << "D down" << std::endl;
 			}
 		}
