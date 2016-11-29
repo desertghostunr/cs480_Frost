@@ -363,24 +363,28 @@ void Engine::Keyboard()
         }
 		else if( m_event.key.keysym.sym == SDLK_w )
 		{
-			m_graphics->moveShip( 0, 1.0f, true );
+			m_graphics->moveShip( 0, 2.0f );
+			std::cout << "W down" << std::endl;
 		}
 		if( m_event.key.keysym.sym == SDLK_s )
 		{
 			m_graphics->reverseShip( 0 );
+			std::cout << "S down" << std::endl;
 		}
 		else if( m_event.key.keysym.sym == SDLK_a )
 		{
 			if( m_graphics != NULL )
 			{
-				m_graphics->rotateShip( 0, 1 );
+				m_graphics->rotateShip( 0, 0.75f );
+				std::cout << "A down" << std::endl;
 			}
 		}
 		else if( m_event.key.keysym.sym == SDLK_d )
 		{
 			if( m_graphics != NULL )
 			{
-				m_graphics->rotateShip( 0, -1 );
+				m_graphics->rotateShip( 0, -0.75f );
+				std::cout << "D down" << std::endl;
 			}
 		}
         else if( m_event.key.keysym.sym == SDLK_RSHIFT || m_event.key.keysym.sym == SDLK_LSHIFT )
@@ -400,10 +404,28 @@ void Engine::Keyboard()
 			if( m_event.key.keysym.sym == SDLK_w )
 			{
 				m_graphics->slowShipToHalt( 0 );
+				std::cout << "W up" << std::endl;
 			}
 			else if( m_event.key.keysym.sym == SDLK_s )
 			{
 				m_graphics->slowShipToHalt( 0 );
+				std::cout << "S up" << std::endl;
+			}
+			else if( m_event.key.keysym.sym == SDLK_a )
+			{
+				if( m_graphics != NULL )
+				{
+					m_graphics->stopShipsRotation( 0 );
+					std::cout << "A up" << std::endl;
+				}
+			}
+			else if( m_event.key.keysym.sym == SDLK_d )
+			{
+				if( m_graphics != NULL )
+				{
+					m_graphics->stopShipsRotation( 0 );
+					std::cout << "D up" << std::endl;
+				}
 			}
 		}		
 	}

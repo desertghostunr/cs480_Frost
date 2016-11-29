@@ -90,11 +90,11 @@
       <zPosition>0.0</zPosition>
       <Ambient>
         <xPosition>0.70</xPosition>
-        <yPosition>0.49</yPosition>
+        <yPosition>0.65</yPosition>
         <zPosition>0.70</zPosition>
       </Ambient>
     </Light>
-    <ConeAngle>15.0</ConeAngle>
+    <ConeAngle>23.5</ConeAngle>
     <SpotHeight>80.0</SpotHeight>
     <FollowMe>ship</FollowMe>
   </SpotLight> 

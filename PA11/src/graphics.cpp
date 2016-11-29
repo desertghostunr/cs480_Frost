@@ -11,7 +11,8 @@
 #endif
 
 const float ShipController::MAX_SPEED = 15.0f;
-const float ShipController::MAX_ROT = 0.5f;
+const float ShipController::MAX_ROT = 0.05f;
+const float ShipController::SLIP_COS = glm::cos( glm::radians( 30.0f ) );
 
 //physics related callbacks
 namespace ccb
@@ -529,8 +530,8 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 1.0f;
-            rigidBodyConstruct.m_friction = 1.0f;
+            rigidBodyConstruct.m_restitution = 0.15f;
+            rigidBodyConstruct.m_friction = 10.0f;
   
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -702,7 +703,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpCompoundShape, inertia );
 
-            rigidBodyConstruct.m_restitution = 0.45f;
+            rigidBodyConstruct.m_restitution = 0.0f;
             rigidBodyConstruct.m_friction = 1000.00f;
             
 
@@ -1679,95 +1680,24 @@ void Graphics::turnOffSplash( )
 	activeIdleState = false;
 }
 
-void Graphics::moveShip( size_t ship, float force, bool slowDownOverride )
+void Graphics::moveShip( size_t ship, float force )
 {
-	Object* shipPtr = NULL;
-	btRigidBody* shipBodyPtr = NULL;
+	shipRegistry[ ship ].slowDown = false;
+	shipRegistry[ ship ].shipReversed = false;
 
-	btVector3 relativeForce = btVector3( force, 0.0f, 0.0f );
-	btVector3 correctedForce = btVector3( 0.0f, 0.0f, 0.0f );
-	btTransform shipTransform;
-
-	std::cout << "Acc" << std::endl;
-	if( ship < shipRegistry.size( ) )
-	{
-		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
-		
-		if( slowDownOverride )
-		{
-			shipRegistry[ ship ].slowDown = false;
-		}
-
-		if( !shipPtr->CollisionInfo( ).empty( ) )
-		{
-			shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
-		}
-
-		if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
-		{
-		shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
-		}
-
-		if( ( shipBodyPtr != NULL ) )
-		{
-
-			shipBodyPtr->getMotionState( )->getWorldTransform( shipTransform );
-
-			correctedForce = ( shipTransform * relativeForce ) - shipTransform.getOrigin( );
-		}
-	}
-
-	shipPtr = NULL;
-	shipBodyPtr = NULL;
-
-	shipRegistry[ ship ].force = correctedForce;
+	shipRegistry[ ship ].force = btVector3( force, 0.0f, 0.0f );
 }
 
 void Graphics::rotateShip( size_t ship, float torque )
 {
-	Object* shipPtr = NULL;
-	btRigidBody* shipBodyPtr = NULL;
-	btScalar angVel;
-
-
 	if( ship < shipRegistry.size( ) )
 	{
-		shipPtr = &objectRegistry[ shipRegistry[ ship ].index ];
+		shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
 
-		if( !shipPtr->CollisionInfo( ).empty( ) )
-		{
-			shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
-		}
+		shipRegistry[ ship ].slowRotDown = false;
 
-		if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
-		{
-			shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
-		}
-
-		if( ( shipBodyPtr != NULL ) )
-		{
-			angVel = shipBodyPtr->getAngularVelocity( ).length( );
-
-			if( angVel >= ShipController::MAX_ROT 
-				&& sameSign( torque, shipRegistry[ ship ].torqueAcc ) )
-			{
-				shipRegistry[ ship ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-
-				std::cout << "Angular Velocity " << angVel << std::endl;
-			}
-			else
-			{
-				shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
-				shipRegistry[ ship ].torqueAcc += torque;
-			}
-
-			shipBodyPtr->applyTorque( shipRegistry[ ship ].torque );
-			
-		}
 	}
-
-	shipPtr = NULL;
-	shipBodyPtr = NULL;
+	
 }
 
 void Graphics::slowShipToHalt( size_t ship )
@@ -1781,7 +1711,9 @@ void Graphics::slowShipToHalt( size_t ship )
 
 void Graphics::reverseShip( size_t ship )
 {
-	if( ship < shipRegistry.size( ) && !shipRegistry[ ship ].shipReversed )
+	if( ship < shipRegistry.size( ) 
+		&& !shipRegistry[ ship ].shipReversed 
+		&& !shipRegistry[ ship ].slowDown )
 	{
 		moveShip( ship, -1.0f );
 		shipRegistry[ ship ].shipReversed = true;
@@ -1789,11 +1721,27 @@ void Graphics::reverseShip( size_t ship )
 
 }
 
+void Graphics::stopShipsRotation( size_t ship )
+{
+	if( ship < shipRegistry.size( ) )
+	{
+		shipRegistry[ ship ].slowRotDown = true;
+		std::cout << "Stopping ship rotation!" << std::endl;
+	}
+}
+
 void Graphics::applyShipForces( )
 {
 	Object* shipPtr = NULL;
 	btRigidBody* shipBodyPtr = NULL;
+
+	btVector3 rawVelocity;
 	btScalar velocity;
+	btScalar angVel;
+
+	btVector3 relativeForce;
+	btVector3 correctedForce;
+	btMatrix3x3 shipRot;
 
 	size_t index;
 
@@ -1813,18 +1761,71 @@ void Graphics::applyShipForces( )
 
 		if( shipBodyPtr != NULL )
 		{
-			shipBodyPtr->applyCentralImpulse( shipRegistry[ index ].force );
-			shipRegistry[ index ].force = btVector3( 0, 0, 0 );
+			//information about the ships travel
 
-			shipBodyPtr->activate( );
+			rawVelocity = shipBodyPtr->getLinearVelocity( );
+			velocity = rawVelocity.length( );
 
-			velocity = shipBodyPtr->getLinearVelocity( ).length( );
+			angVel = shipBodyPtr->getAngularVelocity( ).length( );
 
-			if( velocity > 0.9f 
-				&& shipRegistry[ index ].slowDown 
-				&& !shipRegistry[ index ].shipReversed )
+			shipRot = shipBodyPtr->getWorldTransform( ).getBasis( );
+
+			//turn the ship
+
+			if( angVel >= ShipController::MAX_ROT
+				&& sameSign( shipRegistry[ index ].torque.getY( ),
+							 shipRegistry[ index ].torqueAcc )
+				&& !shipRegistry[ index ].slowRotDown )
 			{
-				moveShip( index, -0.25f );
+				
+			}
+			else if( shipRegistry[ index ].slowRotDown )
+			{
+				if( angVel > 0.01f )
+				{
+					if( shipRegistry[ index ].torqueAcc < 0.0f )
+					{
+						shipRegistry[ index ].torque
+							= btVector3( 0.0f, ShipController::MAX_ROT / 1.5f, 0.0f );
+
+					}
+					else if( shipRegistry[ index ].torqueAcc > 0.0f )
+					{
+						shipRegistry[ index ].torque
+							= btVector3( 0.0f, -1.0f * ( ShipController::MAX_ROT / 2.0f ), 0.0f );
+					}
+					else
+					{
+						shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+						std::cout << "Error reducing speed!" << std::endl;
+					}
+
+					shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
+					shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
+					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+				}
+				else
+				{
+					shipRegistry[ index ].slowRotDown = false;
+					shipRegistry[ index ].torqueAcc = 0.0;
+					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+					shipBodyPtr->setAngularVelocity( btVector3( 0.0f, 0.0f, 0.0f ) );
+				}
+
+			}
+			else
+			{
+				shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
+				shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
+				shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+				shipRegistry[ index ].slowRotDown = true;
+			}
+
+			//move forward or back
+			if( velocity > 0.1f 
+				&& shipRegistry[ index ].slowDown )
+			{				
+				shipBodyPtr->setLinearVelocity( rawVelocity - ( rawVelocity / 30.0f ) );
 			}
 			else if( shipRegistry[ index ].slowDown )
 			{
@@ -1833,6 +1834,20 @@ void Graphics::applyShipForces( )
 				shipRegistry[ index ].slowDown = false;
 				shipRegistry[ index ].shipReversed = false;
 			}
+			else if( shipRegistry[ index ].force.length( ) > 0 )
+			{
+				relativeForce = shipRegistry[ index ].force;
+				correctedForce = shipRot * relativeForce;
+
+				shipRegistry[ index ].force = correctedForce;
+
+				shipBodyPtr->applyCentralImpulse( shipRegistry[ index ].force );
+				shipRegistry[ index ].force = btVector3( 0, 0, 0 );
+				shipRegistry[ index ].slowDown = true;
+			}
+
+			shipBodyPtr->activate( );
+
 		}
 
 		shipPtr = NULL;

@@ -20,6 +20,7 @@ struct ShipController
 {
 	static const float MAX_SPEED;
 	static const float MAX_ROT;
+	static const float SLIP_COS;
 
 	size_t index;
 	btVector3 force;
@@ -128,13 +129,15 @@ class Graphics
 
 		void turnOffSplash( );
 
-		void moveShip( size_t ship, float force, bool slowDownOverride = false );
+		void moveShip( size_t ship, float force );
 
 		void rotateShip( size_t ship, float torque );
 
 		void slowShipToHalt( size_t ship );
 
 		void reverseShip( size_t ship );
+
+		void stopShipsRotation( size_t ship );
 
     private:
 		//helper functions
