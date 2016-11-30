@@ -10,11 +10,11 @@
 	#endif
 #endif
 
-const float ShipController::MAX_SPEED = 15.0f;
+const float ShipController::MAX_SPEED = 14.0f;
 const float ShipController::MAX_ROT = 0.03f;
-const float ShipController::STD_FORCE = 2.0f;
+const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
-const float ShipController::STD_TORQUE = 1.0f;
+const float ShipController::STD_TORQUE = 0.75f;
 
 //physics related callbacks
 namespace ccb
@@ -1779,7 +1779,7 @@ void Graphics::applyShipForces( )
 			//check controller flags and alter force accordingly
 			if( shipRegistry[ index ].forceOn 
 				&& shipRegistry[ index ].torqueOn 
-				&& velocity >= ShipController::MAX_SPEED / 2.0f )
+				&& velocity >= ShipController::MAX_SPEED / 2.5f )
 			{
 				shipRegistry[ index ].slowDown = true;				
 			}
