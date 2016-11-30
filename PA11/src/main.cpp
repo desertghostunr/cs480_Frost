@@ -61,9 +61,11 @@ bool ProcessConfigurationFileHelper( rapidxml::xml_node<> *parentNode,
 
 bool ProcessConfigShader( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
 
-bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo, bool spotLight = false );
+bool ProcessConfigLight( rapidxml::xml_node<> *parentNode, 
+						 GraphicsInfo& progInfo, bool spotLight = false );
 
-bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo, bool spotLight = false );
+bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, 
+						   GraphicsInfo& progInfo, bool spotLight = false );
 
 bool IsObjectType( const string& type );
 
@@ -520,7 +522,8 @@ bool ProcessConfigShader( rapidxml::xml_node<>* parentNode, GraphicsInfo & progI
             vertShader = true;
 
             tempStr = childNode->value( );
-            progInfo.shaderVector[ pIndex ].push_back( std::pair<GLenum, string>( GL_VERTEX_SHADER, tempStr ) );
+            progInfo.shaderVector[ pIndex ].push_back( 
+				std::pair<GLenum, string>( GL_VERTEX_SHADER, tempStr ) );
 
         }
         else if( childNode->name( ) == FRAGMENT )
@@ -528,7 +531,8 @@ bool ProcessConfigShader( rapidxml::xml_node<>* parentNode, GraphicsInfo & progI
             fragShader = true;
 
             tempStr = childNode->value( );
-            progInfo.shaderVector[ pIndex ].push_back( std::pair<GLenum, string>( GL_FRAGMENT_SHADER, tempStr ) );
+            progInfo.shaderVector[ pIndex ].push_back( 
+				std::pair<GLenum, string>( GL_FRAGMENT_SHADER, tempStr ) );
 
         }
     }

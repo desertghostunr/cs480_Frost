@@ -369,30 +369,26 @@ void Engine::Keyboard()
 		}
 		if( m_event.key.keysym.sym == SDLK_s )
 		{
-			m_graphics->reverseShip( 0 );
+			//m_graphics->reverseShip( 0 );
 			std::cout << "S down" << std::endl;
 		}
 		else if( m_event.key.keysym.sym == SDLK_a )
 		{
-			if( m_graphics != NULL )
-			{
-				m_graphics->rotateShip( 0, ShipController::STD_TORQUE );
-				std::cout << "A down" << std::endl;
-			}
+			m_graphics->rotateShip( 0, ShipController::STD_TORQUE );
+			std::cout << "A down" << std::endl;
 		}
 		else if( m_event.key.keysym.sym == SDLK_d )
 		{
-			if( m_graphics != NULL )
-			{
-				m_graphics->rotateShip( 0, ( -1.0f * ShipController::STD_TORQUE ) );
-				std::cout << "D down" << std::endl;
-			}
+			m_graphics->rotateShip( 0, ( -1.0f * ShipController::STD_TORQUE ) );
+			std::cout << "D down" << std::endl;
 		}
-        else if( m_event.key.keysym.sym == SDLK_RSHIFT || m_event.key.keysym.sym == SDLK_LSHIFT )
+        else if( m_event.key.keysym.sym == SDLK_RSHIFT 
+				 || m_event.key.keysym.sym == SDLK_LSHIFT )
         {
             m_graphics->resetView( );
         }
-		else if( m_event.key.keysym.sym == SDLK_RETURN || m_event.key.keysym.sym == SDLK_RETURN )
+		else if( m_event.key.keysym.sym == SDLK_RETURN 
+				 || m_event.key.keysym.sym == SDLK_RETURN )
 		{
 			m_graphics->resetBall( );
 		}
@@ -414,19 +410,13 @@ void Engine::Keyboard()
 			}
 			else if( m_event.key.keysym.sym == SDLK_a )
 			{
-				if( m_graphics != NULL )
-				{
-					m_graphics->stopShipsRotation( 0 );
-					std::cout << "A up" << std::endl;
-				}
+				m_graphics->stopShipsRotation( 0 );
+				std::cout << "A up" << std::endl;
 			}
 			else if( m_event.key.keysym.sym == SDLK_d )
 			{
-				if( m_graphics != NULL )
-				{
-					m_graphics->stopShipsRotation( 0 );
-					std::cout << "D up" << std::endl;
-				}
+				m_graphics->stopShipsRotation( 0 );
+				std::cout << "D up" << std::endl;
 			}
 		}		
 	}
