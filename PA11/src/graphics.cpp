@@ -11,7 +11,7 @@
 #endif
 
 const float ShipController::MAX_SPEED = 15.0f;
-const float ShipController::MAX_ROT = 0.05f;
+const float ShipController::MAX_ROT = 0.03f;
 const float ShipController::STD_FORCE = 2.0f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 1.0f;
@@ -1691,7 +1691,8 @@ void Graphics::moveShip( size_t ship )
 
 void Graphics::rotateShip( size_t ship, float torque )
 {
-	if( ship < shipRegistry.size( ) )
+	if( ship < shipRegistry.size( ) 
+		&& !shipRegistry[ ship ].shipReversed )
 	{
 		shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
 
@@ -1715,7 +1716,9 @@ void Graphics::slowShipToHalt( size_t ship )
 
 void Graphics::reverseShip( size_t ship )
 {
-	if( ship < shipRegistry.size( ) && !shipRegistry[ ship ].slowDown )
+	if( ship < shipRegistry.size( ) 
+		&& !shipRegistry[ ship ].slowDown 
+		&& !shipRegistry[ ship ].torqueOn )
 	{
 		shipRegistry[ ship ].shipReversed = true;
 		shipRegistry[ ship ].forceOn = true;
@@ -1774,9 +1777,28 @@ void Graphics::applyShipForces( )
 			shipRot = shipBodyPtr->getWorldTransform( ).getBasis( );
 
 			//check controller flags and alter force accordingly
-			if( shipRegistry[ index ].forceOn && shipRegistry[ index ].torqueOn )
+			if( shipRegistry[ index ].forceOn 
+				&& shipRegistry[ index ].torqueOn 
+				&& velocity >= ShipController::MAX_SPEED / 2.0f )
 			{
 				shipRegistry[ index ].slowDown = true;				
+			}
+			if( shipRegistry[ index ].forceOn
+				&& shipRegistry[ index ].torqueOn )
+			{
+				shipRegistry[ index ].slowDown = false;
+				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
+			}
+			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 5.0f )
+			{
+				shipRegistry[ index ].slowDown = true;
+				std::cout << "Slow!" << std::endl;
+			}
+			else if( shipRegistry[ index ].torqueOn )
+			{
+				shipRegistry[ index ].slowDown = false;
+				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE / 10.0f, 0.0f, 0.0f );
+				std::cout << "Slow enough!" << std::endl;
 			}
 			else if( shipRegistry[ index ].forceOn )
 			{
@@ -1792,6 +1814,11 @@ void Graphics::applyShipForces( )
 					shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
 				}
 			}
+			else if( velocity >= 0.1f )
+			{
+				shipRegistry[ index ].slowDown = true;
+			}
+			
 
 			//turn the ship
 
@@ -1809,13 +1836,13 @@ void Graphics::applyShipForces( )
 					if( shipRegistry[ index ].torqueAcc < 0.0f )
 					{
 						shipRegistry[ index ].torque
-							= btVector3( 0.0f, ShipController::MAX_ROT / 1.5f, 0.0f );
+							= btVector3( 0.0f, ShipController::MAX_ROT / 1.25f, 0.0f );
 
 					}
 					else if( shipRegistry[ index ].torqueAcc > 0.0f )
 					{
 						shipRegistry[ index ].torque
-							= btVector3( 0.0f, -1.0f * ( ShipController::MAX_ROT / 2.0f ), 0.0f );
+							= btVector3( 0.0f, -1.0f * ( ShipController::MAX_ROT / 1.25f ), 0.0f );
 					}
 					else
 					{
