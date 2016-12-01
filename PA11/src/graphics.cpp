@@ -10,7 +10,7 @@
 	#endif
 #endif
 
-const float ShipController::MAX_SPEED = 14.0f;
+const float ShipController::MAX_SPEED = 4.11f;
 const float ShipController::MAX_ROT = 0.03f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
@@ -296,7 +296,20 @@ bool Graphics::Initialize
 	std::cout << progInfo.windDirection.y << ", " << progInfo.windDirection.z;
 	std::cout << "." << std::endl;
 
-	windDirection = progInfo.windDirection;
+	windDirection = btVector3( progInfo.windDirection.x, 
+							   progInfo.windDirection.y, 
+							   progInfo.windDirection.z );
+
+	windDirection = windDirection.normalized( );
+
+	if( progInfo.windForce <= 0.01f )
+	{
+		windForce = ShipController::STD_FORCE;
+	}
+	else
+	{
+		windForce = progInfo.windForce;
+	}
 
     // Init Camera
     m_camera = new Camera();
@@ -1755,7 +1768,10 @@ void Graphics::applyShipForces( )
 
 	btVector3 relativeForce;
 	btVector3 correctedForce;
+	btVector3 shipDirection;
 	btMatrix3x3 shipRot;
+
+	float windScalar;
 
 	size_t index;
 
@@ -1795,9 +1811,9 @@ void Graphics::applyShipForces( )
 				&& shipRegistry[ index ].torqueOn )
 			{
 				shipRegistry[ index ].slowDown = false;
-				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
+				shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
 			}
-			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 5.0f )
+			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 2.5f )
 			{
 				shipRegistry[ index ].slowDown = true;
 				std::cout << "Slow!" << std::endl;
@@ -1805,7 +1821,7 @@ void Graphics::applyShipForces( )
 			else if( shipRegistry[ index ].torqueOn )
 			{
 				shipRegistry[ index ].slowDown = false;
-				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE / 10.0f, 0.0f, 0.0f );
+				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
 				std::cout << "Slow enough!" << std::endl;
 			}
 			else if( shipRegistry[ index ].forceOn )
@@ -1894,7 +1910,26 @@ void Graphics::applyShipForces( )
 			}
 			else if( shipRegistry[ index ].force.length( ) > 0 )
 			{
-				relativeForce = shipRegistry[ index ].force;
+				
+				//dot product for wind power
+				shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
+
+				windScalar = windDirection.dot( shipDirection );
+
+				//compute the maximum level of force possible based on sail position
+				windScalar = std::max( windScalar, 
+					                ( float )std::max( windScalar 
+													    + glm::cos( glm::radians( 80.0f ) ), 
+													  windScalar 
+													    + glm::cos( glm::radians( -80.0f ) ) ) );
+
+				windScalar = std::min( windScalar, 1.00f );
+				windScalar = std::max( windScalar, 0.01f );
+
+				std::cout << "Wind Scalar: " << windScalar << std::endl;
+
+				relativeForce = ( windScalar * shipRegistry[ index ].force );
+
 				correctedForce = shipRot * relativeForce;
 
 				shipRegistry[ index ].force = correctedForce;

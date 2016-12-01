@@ -168,11 +168,13 @@ struct GraphicsInfo
 	glm::vec2 windowSize;
 	std::string windowName;
 	glm::vec3 windDirection;
+	float windForce;
 
     //constructors
 	GraphicsInfo( ) : spotLight( ) 
 	{
-		windDirection = glm::vec3( 1.0f, 1.0f, 1.0f ); 
+		windDirection = glm::vec3( 1.0f, 0.0f, 1.0f ); 
+		windForce = 1.0f;
 	}
 
     GraphicsInfo( const GraphicsInfo& src ): 
@@ -183,6 +185,7 @@ struct GraphicsInfo
         spotLight( src.spotLight ),
 		windowSize( src.windowSize ),
 		windowName( src.windowName ), 
-		windDirection( src.windDirection ){ }
+		windDirection( src.windDirection ),
+		windForce( src.windForce ){ }
 };
 #endif /* GRAPHICSINFO_H */

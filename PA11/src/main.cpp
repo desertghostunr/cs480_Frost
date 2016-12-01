@@ -724,6 +724,11 @@ bool ProcessWind( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
 			strStream >> progInfo.windDirection.z;
 
 		}
+		else if( childNode->name( ) == X_SCALE )
+		{
+			strStream >> progInfo.windForce;
+
+		}
 	}
 	return true;
 }
