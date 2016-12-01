@@ -167,9 +167,13 @@ struct GraphicsInfo
     std::vector<SpotLight> spotLight;
 	glm::vec2 windowSize;
 	std::string windowName;
+	glm::vec3 windDirection;
 
     //constructors
-    GraphicsInfo( ):spotLight( ) { }
+	GraphicsInfo( ) : spotLight( ) 
+	{
+		windDirection = glm::vec3( 1.0f, 1.0f, 1.0f ); 
+	}
 
     GraphicsInfo( const GraphicsInfo& src ): 
         shaderVector( src.shaderVector ),
@@ -178,6 +182,7 @@ struct GraphicsInfo
         lights( src.lights ),
         spotLight( src.spotLight ),
 		windowSize( src.windowSize ),
-		windowName( src.windowName ){ }
+		windowName( src.windowName ), 
+		windDirection( src.windDirection ){ }
 };
 #endif /* GRAPHICSINFO_H */

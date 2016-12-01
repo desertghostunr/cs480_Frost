@@ -290,6 +290,14 @@ bool Graphics::Initialize
     btScalar mass;
     btVector3 inertia;
     btTransform transform;
+
+	//wind direction
+	std::cout << "Wind direction: " << progInfo.windDirection.x << ", ";
+	std::cout << progInfo.windDirection.y << ", " << progInfo.windDirection.z;
+	std::cout << "." << std::endl;
+
+	windDirection = progInfo.windDirection;
+
     // Init Camera
     m_camera = new Camera();
     cameraTracking = false;

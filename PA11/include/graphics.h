@@ -166,6 +166,7 @@ class Graphics
 
 		//Broadside specific members
 		std::vector<ShipController> shipRegistry;
+		glm::vec3 windDirection;
 
         //pinball game specific
         int score;

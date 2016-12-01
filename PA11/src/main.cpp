@@ -46,6 +46,7 @@ const string FOLLOW_OBJ = "FollowMe";
 const string WINDOW_INFO = "Window";
 const string WIDTH = "width";
 const string HEIGHT = "height";
+const string WIND_DIRECTION = "Wind_Direction";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -66,6 +67,8 @@ bool ProcessConfigLight( rapidxml::xml_node<> *parentNode,
 
 bool ProcessConfigAmbient( rapidxml::xml_node<> *parentNode, 
 						   GraphicsInfo& progInfo, bool spotLight = false );
+
+bool ProcessWind( rapidxml::xml_node<> *parentNode, GraphicsInfo& progInfo );
 
 bool IsObjectType( const string& type );
 
@@ -350,13 +353,15 @@ bool ProcessConfigurationFile
 				progInfo.windowName = tempStr;
 			}
 		}
+		else if( parentNode->name( ) == WIND_DIRECTION )
+		{
+			noError = ( noError && ProcessWind( parentNode, progInfo ) );
+		}
         else
         {
             //do nothing
         }
     }
-
-
 	
     return ( noError && !progInfo.modelVector.empty( ) );
 }
@@ -688,6 +693,39 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
     }
 
     return lightX && lightY && lightZ;
+}
+
+bool ProcessWind( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
+{
+	rapidxml::xml_node<> *childNode;
+	bool lightX = false, lightY = false, lightZ = false;
+
+	string tempStr;
+
+	for( childNode = parentNode->first_node( 0 ); childNode;
+		 childNode = childNode->next_sibling( ) )
+	{
+		tempStr = childNode->value( );
+
+		std::stringstream strStream( tempStr );
+
+		if( childNode->name( ) == X_POS )
+		{
+			strStream >> progInfo.windDirection.x;
+
+		}
+		else if( childNode->name( ) == Y_POS )
+		{
+			strStream >> progInfo.windDirection.y;
+
+		}
+		else if( childNode->name( ) == Z_POS )
+		{
+			strStream >> progInfo.windDirection.z;
+
+		}
+	}
+	return true;
 }
 
 bool IsObjectType( const string & type )

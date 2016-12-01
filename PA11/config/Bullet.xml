@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <Window width ="1200" height ="760">Broadside</Window>
+  <Wind_Direction>
+    <xPosition>0.5</xPosition>
+    <yPosition>0</yPosition>
+    <zPosition>1></zPosition>
+  </Wind_Direction>
   <PObject path ="models/Ship.obj">
     <name>ship</name>
     <xScale>5</xScale>
