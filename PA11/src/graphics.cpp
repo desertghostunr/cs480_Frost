@@ -19,10 +19,22 @@ const float ShipController::STD_TORQUE = 0.75f;
 //physics related callbacks
 namespace ccb
 {
+	struct Ship
+	{
+		btRigidBody* shipPtr;
+		btScalar maxSpeed;
 
-    std::vector<btRigidBody*> shipPtrReg;
+		Ship( ) : shipPtr( NULL ), maxSpeed( ShipController::MAX_SPEED ){ }
 
-    btScalar maxSpeed;
+		Ship( btRigidBody* bodyPtr, btScalar newMaxSpeed ) 
+			: shipPtr( bodyPtr ),
+			maxSpeed( newMaxSpeed )
+		{ }
+
+		Ship( const Ship& src ): shipPtr( src.shipPtr ), maxSpeed( src.maxSpeed ){ }
+	};
+
+    std::vector<Ship> shipReg;
 
 
     void TickCallback( btDynamicsWorld * world, btScalar timeStep )
@@ -31,18 +43,19 @@ namespace ccb
         btVector3 velocity;
         btScalar speed;
 
-		for( index = 0; index < shipPtrReg.size( ); index++ )
+		for( index = 0; index < shipReg.size( ); index++ )
 		{
-			if( shipPtrReg[ index ] != NULL )
+			if( shipReg[ index ].shipPtr != NULL )
 			{
-				velocity = shipPtrReg[ index ]->getLinearVelocity( );
+				velocity = shipReg[ index ].shipPtr->getLinearVelocity( );
 
 				speed = velocity.length( );
 
-				if( speed > maxSpeed )
+				if( speed > shipReg[ index ].maxSpeed 
+					&& shipReg[ index ].maxSpeed >= 0.0f )
 				{
-					velocity *= maxSpeed / speed;
-					shipPtrReg[ index ]->setLinearVelocity( velocity );
+					velocity *= shipReg[ index ].maxSpeed / speed;
+					shipReg[ index ].shipPtr->setLinearVelocity( velocity );
 				}
 			}			
 		}
@@ -130,8 +143,6 @@ Graphics::Graphics()
     boxIndex = -1;
     ballIndex = 0;
     modelIndex = 0;
-
-    ccb::maxSpeed = ShipController::MAX_SPEED;
 
     shaderSelect = 0;
     playingStateFlag = false;
@@ -563,7 +574,8 @@ bool Graphics::Initialize
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
-			ccb::shipPtrReg.push_back( tmpRigidBody );
+			//initialize Ship Registries
+			ccb::shipReg.push_back( ccb::Ship( tmpRigidBody, ShipController::MAX_SPEED ) );
 			shipRegistry.push_back( index );
             
         }
@@ -1816,13 +1828,11 @@ void Graphics::applyShipForces( )
 			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 2.5f )
 			{
 				shipRegistry[ index ].slowDown = true;
-				std::cout << "Slow!" << std::endl;
 			}
 			else if( shipRegistry[ index ].torqueOn )
 			{
 				shipRegistry[ index ].slowDown = false;
 				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
-				std::cout << "Slow enough!" << std::endl;
 			}
 			else if( shipRegistry[ index ].forceOn )
 			{
@@ -1835,7 +1845,7 @@ void Graphics::applyShipForces( )
 				}
 				else if( !shipRegistry[ index ].shipReversed )
 				{
-					shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
+					shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
 				}
 			}
 			else if( velocity >= 0.1f )
@@ -1897,8 +1907,8 @@ void Graphics::applyShipForces( )
 			//move forward or back
 			if( velocity > 0.1f 
 				&& shipRegistry[ index ].slowDown )
-			{				
-				shipBodyPtr->setLinearVelocity( rawVelocity - ( rawVelocity / 30.0f ) );
+			{
+				ccb::shipReg[ index ].maxSpeed -= ( ccb::shipReg[ index ].maxSpeed / 50.0f );
 				shipRegistry[ index ].shipReverseCounter = 0;
 			}
 			else if( shipRegistry[ index ].slowDown )
@@ -1914,7 +1924,7 @@ void Graphics::applyShipForces( )
 				//dot product for wind power
 				shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
 
-				windScalar = windDirection.dot( shipDirection );
+				windScalar = windDirection.dot( shipDirection.normalized( ) );
 
 				//compute the maximum level of force possible based on sail position
 				windScalar = std::max( windScalar, 
@@ -1925,6 +1935,9 @@ void Graphics::applyShipForces( )
 
 				windScalar = std::min( windScalar, 1.00f );
 				windScalar = std::max( windScalar, 0.01f );
+
+				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
+														   ShipController::MAX_SPEED * 0.25f );
 
 				std::cout << "Wind Scalar: " << windScalar << std::endl;
 
