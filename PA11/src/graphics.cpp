@@ -16,6 +16,10 @@ const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
 
+//glm::decompose
+//SDL window size
+//convexTriangleMesh or convexhullshape for dynamic triangle mesh
+
 //physics related callbacks
 namespace ccb
 {
