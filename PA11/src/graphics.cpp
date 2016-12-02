@@ -11,7 +11,7 @@
 #endif
 
 const float ShipController::MAX_SPEED = 4.11f;
-const float ShipController::MAX_ROT = 0.03f;
+const float ShipController::MAX_ROT = 1.25f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
@@ -27,15 +27,25 @@ namespace ccb
 	{
 		btRigidBody* shipPtr;
 		btScalar maxSpeed;
+		btScalar maxAngSpeed;
 
-		Ship( ) : shipPtr( NULL ), maxSpeed( ShipController::MAX_SPEED ){ }
-
-		Ship( btRigidBody* bodyPtr, btScalar newMaxSpeed ) 
-			: shipPtr( bodyPtr ),
-			maxSpeed( newMaxSpeed )
+		Ship( ) : 
+			shipPtr( NULL ), 
+			maxSpeed( ShipController::MAX_SPEED ), 
+			maxAngSpeed( ShipController::MAX_SPEED )
 		{ }
 
-		Ship( const Ship& src ): shipPtr( src.shipPtr ), maxSpeed( src.maxSpeed ){ }
+		Ship( btRigidBody* bodyPtr, btScalar newMaxSpeed, btScalar newMaxAngSpeed ) 
+			: shipPtr( bodyPtr ),
+			maxSpeed( newMaxSpeed ),
+			maxAngSpeed( newMaxAngSpeed )
+		{ }
+
+		Ship( const Ship& src ): 
+			shipPtr( src.shipPtr ), 
+			maxSpeed( src.maxSpeed ),
+			maxAngSpeed( src.maxAngSpeed )
+		{ }
 	};
 
     std::vector<Ship> shipReg;
@@ -45,7 +55,9 @@ namespace ccb
     {
 		size_t index;
         btVector3 velocity;
+		btVector3 angVelocity;
         btScalar speed;
+		btScalar angSpeed;
 
 		for( index = 0; index < shipReg.size( ); index++ )
 		{
@@ -60,6 +72,18 @@ namespace ccb
 				{
 					velocity *= shipReg[ index ].maxSpeed / speed;
 					shipReg[ index ].shipPtr->setLinearVelocity( velocity );
+				}
+
+				angVelocity = shipReg[ index ].shipPtr->getAngularVelocity( );
+
+				angSpeed = angVelocity.length( );
+
+				if( speed > shipReg[ index ].maxAngSpeed 
+					&& shipReg[ index ].maxAngSpeed >= 0.0f )
+				{
+					std::cout << "HUH?" << std::endl;
+					//angVelocity -= ( angVelocity / 2.0f );
+					shipReg[ index ].shipPtr->setAngularVelocity( angVelocity );
 				}
 			}			
 		}
@@ -579,7 +603,9 @@ bool Graphics::Initialize
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
 			//initialize Ship Registries
-			ccb::shipReg.push_back( ccb::Ship( tmpRigidBody, ShipController::MAX_SPEED ) );
+			ccb::shipReg.push_back( ccb::Ship( tmpRigidBody, 
+											   ShipController::MAX_SPEED, 
+											   ShipController::MAX_ROT ) );
 			shipRegistry.push_back( index );
             
         }
@@ -1710,7 +1736,7 @@ void Graphics::applyShipForces( )
 							 shipRegistry[ index ].torqueAcc )
 				&& !shipRegistry[ index ].slowRotDown )
 			{
-				
+				ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
 			}
 			else if( shipRegistry[ index ].slowRotDown )
 			{
@@ -1733,6 +1759,9 @@ void Graphics::applyShipForces( )
 						std::cout << "Error reducing speed!" << std::endl;
 					}
 
+					/*ccb::shipReg[ index ].maxAngSpeed -= 
+						( ccb::shipReg[ index ].maxAngSpeed / 1.25f );*/
+
 					shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
 					shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
 					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
@@ -1745,7 +1774,7 @@ void Graphics::applyShipForces( )
 					shipRegistry[ index ].torqueAcc = 0.0;
 					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
 					shipBodyPtr->setAngularVelocity( btVector3( 0.0f, 0.0f, 0.0f ) );
-
+					ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
 					std::cout << "Stopped Rot" << std::endl;
 				}
 
@@ -1754,6 +1783,7 @@ void Graphics::applyShipForces( )
 			{
 				shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
 				shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
+				ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
 				shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
 			}
 
