@@ -9,15 +9,33 @@
   </Wind_Direction>
   <PObject path ="models/Ship.obj">
     <name>ship</name>
-    <xScale>7</xScale>
-    <yScale>7</yScale>
-    <zScale>7</zScale>
-    <xBScale>10</xBScale>
+    <xScale>6</xScale>
+    <yScale>6</yScale>
+    <zScale>6</zScale>
+    <xBScale>38</xBScale>
     <yBScale>10</yBScale>
-    <zBScale>10</zBScale>
+    <zBScale>20</zBScale>
     <xPosition>74</xPosition>
     <yPosition>10</yPosition>
     <zPosition>87</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </PObject>
+  <PObject path ="models/Ship.obj">
+    <name>ship</name>
+    <xScale>6</xScale>
+    <yScale>6</yScale>
+    <zScale>6</zScale>
+    <xBScale>38</xBScale>
+    <yBScale>10</yBScale>
+    <zBScale>20</zBScale>
+    <xPosition>-74</xPosition>
+    <yPosition>10</yPosition>
+    <zPosition>-87</zPosition>
     <xRotationAxis>0</xRotationAxis>
     <yRotationAxis>1</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>

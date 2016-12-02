@@ -553,8 +553,7 @@ bool Graphics::Initialize
         {
             ballIndex = index;
 
-            tmpShapePtr = new btSphereShape( ( objectRegistry[ index ].getBScale( ).x /2.0f ) + 1.0f );
-
+			tmpShapePtr = new btBoxShape( btVector3( objectRegistry[ index ].getBScale( ).x + 1, objectRegistry[ index ].getBScale( ).y + 1, objectRegistry[ index ].getBScale( ).z + 1 ) );
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
             
@@ -582,143 +581,6 @@ bool Graphics::Initialize
 			ccb::shipReg.push_back( ccb::Ship( tmpRigidBody, ShipController::MAX_SPEED ) );
 			shipRegistry.push_back( index );
             
-        }
-        else if( objectRegistry[ index ].getName( ) == "bumber" )
-        {
-            tmpShapePtr = new btCylinderShape( btVector3( ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f ) );
-
-
-            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
-
-            mass = 0;
-
-            inertia = btVector3( 0, 0, 0 );
-
-            tmpShapePtr->calculateLocalInertia( mass, inertia );
-
-
-            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
-
-            rigidBodyConstruct.m_restitution = 1.5f;
-            rigidBodyConstruct.m_friction = 0.0f;
-
-            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
-
-            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
-            
-        }
-        else if( objectRegistry[ index ].getName( ) == "bumberSquare" )
-        {
-            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) + 1.0f ) );
-
-
-            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
-
-            mass = 0;
-
-            inertia = btVector3( 0, 0, 0 );
-
-            tmpShapePtr->calculateLocalInertia( mass, inertia );
-
-
-            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
-
-            rigidBodyConstruct.m_restitution = 1.0f;
-            rigidBodyConstruct.m_friction = 1.0f;
-
-            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
-
-            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
-
-        }
-        else if( objectRegistry[ index ].getName( ) == "ballReturn" )
-        {
-            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) - 1.0f ) );
-
-            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z - 5.5f ) ) );
-
-            mass = 0;
-
-            inertia = btVector3( 0, 0, 0 );
-
-            tmpShapePtr->calculateLocalInertia( mass, inertia );
-
-            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
-
-            rigidBodyConstruct.m_restitution = 0.0f;
-            rigidBodyConstruct.m_friction = 1.0f;
-
-            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
-
-            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
-
-        }
-        else if( objectRegistry[ index ].getName( ) == "paddleR" 
-                 || objectRegistry[ index ].getName( ) == "paddleL" )
-        {
-            
-
-            //this is where paddle indices are assigned
-            if( objectRegistry[ index ].getName( ) == "paddleR" )
-            {
-                rightPaddle = index;
-            }
-            else
-            {
-                leftPaddle = index;
-            }
-
-            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) + 1.0f ) );
-
-
-            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
-
-            mass = 100;
-
-            inertia = btVector3( 0, 0, 0 );
-
-            tmpShapePtr->calculateLocalInertia( mass, inertia );
-
-
-            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
-
-            rigidBodyConstruct.m_restitution = 1.0f;
-            rigidBodyConstruct.m_friction = 1.0f;
-
-            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
-
-            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
-            tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
-        }
-
-        else if( objectRegistry[ index ].getName( ) == "plunger" )
-        {
-
-
-            //this is where plunger indices are assigned
-            boxIndex = index;
-            
-            tmpShapePtr = new btBoxShape( btVector3( ( objectRegistry[ index ].getBScale( ).x / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).y / 2.0f ) + 1.0f, ( objectRegistry[ index ].getBScale( ).z / 2.0f ) + 1.0f ) );
-
-
-            tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
-
-            mass = 100;
-
-            inertia = btVector3( 0, 0, 0 );
-
-            tmpShapePtr->calculateLocalInertia( mass, inertia );
-
-
-            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
-
-            rigidBodyConstruct.m_restitution = 2.5f;
-            rigidBodyConstruct.m_friction = 0.0f;
-
-            tmpRigidBody = new btRigidBody( rigidBodyConstruct );
-
-            tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_KINEMATIC_OBJECT );
-            tmpRigidBody->setActivationState( DISABLE_DEACTIVATION );
         }
         else if( objectRegistry[ index ].getName( ) == "ocean" )
         {
@@ -760,7 +622,6 @@ bool Graphics::Initialize
         else
         {
             std::cout << "Error: Unexpected Object Name!!!" << std::endl;
-            return false;
         }
 
 
@@ -1874,6 +1735,8 @@ void Graphics::applyShipForces( )
 					shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
 					shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
 					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+
+					std::cout << "Slowing Rot" << std::endl;
 				}
 				else
 				{
@@ -1881,6 +1744,8 @@ void Graphics::applyShipForces( )
 					shipRegistry[ index ].torqueAcc = 0.0;
 					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
 					shipBodyPtr->setAngularVelocity( btVector3( 0.0f, 0.0f, 0.0f ) );
+
+					std::cout << "Stopped Rot" << std::endl;
 				}
 
 			}
