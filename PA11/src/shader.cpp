@@ -3,6 +3,7 @@
 Shader::Shader()
 {
     m_shaderProg = 0;
+	inUse = false;
 }
 
 Shader::~Shader()
@@ -120,6 +121,12 @@ bool Shader::Finalize()
 void Shader::Enable()
 {
     glUseProgram(m_shaderProg);
+	inUse = true;
+}
+
+void Shader::Disable( )
+{
+	inUse = false;
 }
 
 

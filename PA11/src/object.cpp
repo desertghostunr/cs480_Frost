@@ -666,3 +666,24 @@ int Object::getObjectType( )
 {
 	return type;
 }
+
+glm::vec4 Object::getPositionInWorld( )
+{ 
+	return model * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+}
+
+glm::vec3 Object::getRotationInWorld( )
+{
+	glm::vec3 inverseScale;
+	glm::mat4 tmpMat;
+	glm::mat3 rotMat;
+
+	inverseScale = glm::vec3( 1.0f / scaleFactor.x, 1.0f / scaleFactor.y, 1.0f / scaleFactor.z );
+
+	//remove scaling
+	tmpMat = glm::scale( model, inverseScale );
+
+	rotMat = glm::mat3( tmpMat );
+
+	return rotMat * glm::vec3( 1.0f, 1.0f, 1.0f );
+}

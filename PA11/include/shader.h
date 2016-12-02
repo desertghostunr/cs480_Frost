@@ -13,7 +13,8 @@ class Shader
         Shader();
         ~Shader();
         bool Initialize();
-        void Enable();
+        void Enable( );
+		void Disable( );
         bool AddShader(GLenum ShaderType, const std::string& fileName); 
         bool Finalize();
         GLint GetUniformLocation(const char* pUniformName);
@@ -21,6 +22,8 @@ class Shader
     private:
         GLuint m_shaderProg;        
         std::vector<GLuint> m_shaderObjList;
+
+		bool inUse;
 
         // private member functions
 

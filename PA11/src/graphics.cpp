@@ -803,10 +803,6 @@ void Graphics::Update(unsigned int dt)
 
     if( playingStateFlag )
     {
-        //put step rotation function here ////
-        updateLeftPaddle( dt );
-        updateRightPaddle( dt );
-        /////////////////////////////////////
 
         dynamicsWorldPtr->stepSimulation( dt, 10 );
 
@@ -824,6 +820,15 @@ void Graphics::Update(unsigned int dt)
             updateChildren( index, dt );
         }        
     }
+
+	if( playingStateFlag )
+	{
+		//put camera stuff here ///////
+		//m_camera->updateCamera( true, objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ) );
+		//////////////////////////////
+	}
+
+	
 }
 
 void Graphics::Render()
@@ -831,8 +836,6 @@ void Graphics::Render()
     unsigned int index;
 
     glm::vec4 tmpVec;
-
-    glm::mat4 tmpMat;
 
     //clear the screen
     glClearColor(0.2, 0.15, 0.2, 1.0);
@@ -865,10 +868,7 @@ void Graphics::Render()
          index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
          index++ )
     {
-
-        tmpMat = objectRegistry[ spotLight[ index ].oTFIndex ].GetModel( );
-
-        tmpVec = tmpMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+		tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
 
         glUniform4f( spotLight[ index ].followLoc, tmpVec.x + 0.0, 
                      tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
@@ -901,6 +901,8 @@ void Graphics::Render()
 
         objectRegistry[index].Render();
     }
+
+	shaderRegistry[ shaderSelect ].Disable( );
 
     // Get any errors from OpenGL
     auto error = glGetError();
@@ -961,11 +963,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 {
     btTransform trans;
     btScalar modTrans[ 16 ];
-    int tempScore = score;
-
-    ccb::ScoreContactResultCallback cylinderCallBack( &score );
-    ccb::TrapContactResultCallback returnBallCallBack( &returnBall );
-    
+    int tempScore = score;    
 
     if( ( objectID > objectRegistry.getSize( ) ) )
     {
@@ -989,21 +987,6 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
         objectRegistry[ objectID ].setBulletTransform( glm::make_mat4( modTrans ) );
 
         objectRegistry[ objectID ].commitBulletTransform( );
-
-        if( ( objectRegistry[ objectID ].getName( ) == "bumber" )
-            && playingStateFlag )
-        {
-            dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody, 
-                                               objectRegistry[ objectID ].CollisionInfo( ).rigidBody, 
-                                               cylinderCallBack );
-        }
-
-        if( objectRegistry[ objectID ].getName( ) == "ballReturn" && playingStateFlag )
-        {
-            dynamicsWorldPtr->contactPairTest( objectRegistry[ ballIndex ].CollisionInfo( ).rigidBody,
-                                               objectRegistry[ objectID ].CollisionInfo( ).rigidBody,
-                                               returnBallCallBack );
-        }
     }
 	else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
 	{
@@ -1933,8 +1916,11 @@ void Graphics::applyShipForces( )
 													  windScalar 
 													    + glm::cos( glm::radians( -80.0f ) ) ) );
 
+
 				windScalar = std::min( windScalar, 1.00f );
-				windScalar = std::max( windScalar, 0.01f );
+				windScalar = std::max( windScalar, -1.00f );
+
+				windScalar = std::max( windScalar, 0.001f );
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
 														   ShipController::MAX_SPEED * 0.25f );

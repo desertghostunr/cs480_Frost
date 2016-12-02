@@ -150,6 +150,10 @@ class Object
 
 		virtual int getObjectType( );
 
+		glm::vec4 getPositionInWorld( );
+
+		glm::vec3 getRotationInWorld( );
+
     private:
         //model info
         glm::mat4 model;
