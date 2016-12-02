@@ -574,6 +574,7 @@ bool Graphics::Initialize
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
             tmpRigidBody->setLinearFactor( btVector3( 1, 0, 1 ) );
+			tmpRigidBody->setAngularFactor( btVector3( 0, 1, 0 ) );
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
