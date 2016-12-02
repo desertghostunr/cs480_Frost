@@ -1808,7 +1808,7 @@ void Graphics::applyShipForces( )
 				shipRegistry[ index ].slowDown = false;
 				shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
 			}
-			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 2.5f )
+			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 1.5f )
 			{
 				shipRegistry[ index ].slowDown = true;
 			}
