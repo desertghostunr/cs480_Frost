@@ -1920,10 +1920,10 @@ void Graphics::applyShipForces( )
 				windScalar = std::min( windScalar, 1.00f );
 				windScalar = std::max( windScalar, -1.00f );
 
-				windScalar = std::max( windScalar, 0.001f );
+				windScalar = std::max( windScalar, 0.008f );
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
-														   ShipController::MAX_SPEED * 0.5f );
+														   ShipController::MAX_SPEED * 0.33334f );
 
 				std::cout << "Wind Scalar: " << windScalar << std::endl;
 
