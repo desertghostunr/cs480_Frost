@@ -557,7 +557,7 @@ bool Graphics::Initialize
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
             
-            mass = 1;
+            mass = 1.5f;
 
             inertia = btVector3( 0, 0, 0 );
 
@@ -567,7 +567,7 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 0.15f;
+            rigidBodyConstruct.m_restitution = 0.05f;
             rigidBodyConstruct.m_friction = 10.0f;
   
 
