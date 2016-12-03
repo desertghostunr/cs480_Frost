@@ -902,19 +902,13 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 	{
 		if( objectRegistry[ objectID ].getName( ) == "sky" )
 		{
-			objectRegistry[ objectID ].incrementAngle( dt, .0095 );
+			objectRegistry[ objectID ].incrementAngle( dt, 0.0065 );
 			objectRegistry[ objectID ].commitRotation( );
 			objectRegistry[ objectID ].commitTranslation( );
 		}
 		
 		
-	}
-
-    if( tempScore != score )
-    {
-        objectCollidedSound.launchSound();
-    }
-    
+	}    
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////
