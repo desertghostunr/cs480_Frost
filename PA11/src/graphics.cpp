@@ -906,6 +906,10 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 			objectRegistry[ objectID ].commitRotation( );
 			objectRegistry[ objectID ].commitTranslation( );
 		}
+		else if( objectRegistry[ objectID ].getName( ) == "sail_nt" )
+		{
+			objectRegistry[ objectID ].commitTranslation( );
+		}
 		
 		
 	}    
@@ -1855,7 +1859,15 @@ void Graphics::applyShipForces( )
 
 				for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
 				{
-					objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
+					if( objectRegistry[ 
+							objectRegistry[ 
+								shipRegistry[ index ].index 
+							].getChildsWorldID( cIndex ) 
+						].getName( ) == "sail" )
+					{
+						objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
+					}
+					
 				}
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 

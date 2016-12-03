@@ -61,7 +61,7 @@
       <zRotationAngle>0</zRotationAngle>
     </Object>
     <Object path ="models/sail3.obj">
-      <name>sail</name>
+      <name>sail_nt</name>
       <xScale>1</xScale>
       <yScale>1</yScale>
       <zScale>1</zScale>
