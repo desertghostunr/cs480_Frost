@@ -2,6 +2,10 @@
 
 #define MAX_NUM_LIGHTS 8
 
+#define LIGHTING_TYPE 0
+#define NO_LIGHTING_TYPE 1
+#define WAVE_TYPE 2
+
 //vertex buffer information
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec2 v_UV;
@@ -43,61 +47,87 @@ uniform vec4 DiffuseColor;
 uniform vec4 SpecularColor;
 uniform float Shininess;
 
+//type of object
+uniform int typeOfObject;
+
+void ProcessLitObject( );
+void ProcessUnlitObject( );
+
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient );
 vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, int index );
 
 void main(void)
 {
-    int index, numLights, numSpotLights;
+	if( typeOfObject == NO_LIGHTING_TYPE )
+	{
+		ProcessUnlitObject( );
+	}
+	else
+	{
+		ProcessLitObject( );
+	}
+}
 
-    vec4 vPos = vec4(v_position, 1.0);
-    mat4 modelView = viewMatrix * modelMatrix;
-	vec3 pos = (modelView * vPos).xyz;
-    vec3 normedNormal = normalize( modelView * vec4( vNormal, 0.0 ) ).xyz;
+void ProcessLitObject( )
+{
+	int index, numLights, numSpotLights;
+
+	vec4 vPos = vec4( v_position, 1.0 );
+	mat4 modelView = viewMatrix * modelMatrix;
+	vec3 pos = ( modelView * vPos ).xyz;
+	vec3 normedNormal = normalize( modelView * vec4( vNormal, 0.0 ) ).xyz;
 	vec3 normedE = normalize( -pos );
-    vec3 normedL;
-    vec3 halfVec;
+	vec3 normedL;
+	vec3 halfVec;
 
 
-    gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * vPos;
-    uv = v_UV;
+	gl_Position = ( projectionMatrix * viewMatrix * modelMatrix ) * vPos;
+	uv = v_UV;
 
-    if( numberOfLights > MAX_NUM_LIGHTS )
-    {
-        numLights = MAX_NUM_LIGHTS;
-    }
-    else
-    {
-        numLights = numberOfLights;
-    }
+	if( numberOfLights > MAX_NUM_LIGHTS )
+	{
+		numLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numLights = numberOfLights;
+	}
 
-    if( numberOfSpotLights > MAX_NUM_LIGHTS )
-    {
-        numSpotLights = MAX_NUM_LIGHTS;
-    }
-    else
-    {
-        numSpotLights = numberOfSpotLights;
-    }
+	if( numberOfSpotLights > MAX_NUM_LIGHTS )
+	{
+		numSpotLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numSpotLights = numberOfSpotLights;
+	}
 
-    color = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+	color = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 
-    for( index = 0; index < numLights; index++ )
-    {
-        normedL = normalize( light[ index ].position.xyz - pos );
-        halfVec = normalize( normedL + normedE );
+	for( index = 0; index < numLights; index++ )
+	{
+		normedL = normalize( light[ index ].position.xyz - pos );
+		halfVec = normalize( normedL + normedE );
 
-        color += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );
-    }
+		color += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );
+	}
 
-    for( index = 0; index < numSpotLights; index++ )
-    {
-        color += getSpotLight( normalize( spotLight[ index ].position.xyz ),
-                               normalize( spotLight[ index ].position.xyz 
-                                          + ( modelMatrix * vPos ).xyz ),
-                               normedNormal, modelMatrix * vPos, index );
-    }
+	for( index = 0; index < numSpotLights; index++ )
+	{
+		color += getSpotLight( normalize( spotLight[ index ].position.xyz ),
+							   normalize( spotLight[ index ].position.xyz
+										  + ( modelMatrix * vPos ).xyz ),
+							   normedNormal, modelMatrix * vPos, index );
+	}
+}
+
+void ProcessUnlitObject( )
+{
+	vec4 vPos = vec4( v_position, 1.0 );
+	gl_Position = ( projectionMatrix * viewMatrix * modelMatrix ) * vPos;
+	uv = v_UV;
+	color = vec4( 1.0f, 1.0f, 1.0f, 1.0f );
 }
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )

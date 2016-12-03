@@ -74,6 +74,10 @@ class Object
 		static const int P_OBJECT = 1;
 		static const int PC_OBJECT = 2;
 
+		static const int DEFAULT_LIGHTING = 0;
+		static const int NO_LIGHTING = 1;
+		static const int WAVE = 2;
+
         Object();
 		Object( int nType );
         virtual ~Object();
@@ -154,6 +158,8 @@ class Object
 
 		glm::vec3 getRotationInWorld( );
 
+		int& LightCode( );
+
     private:
         //model info
         glm::mat4 model;
@@ -187,6 +193,8 @@ class Object
         CompoundCollisionPtr compoundCollisionInfo;
 
 		int type;
+
+		int lightCode;
 };
 
 #endif /* OBJECT_H */

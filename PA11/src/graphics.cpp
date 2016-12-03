@@ -11,7 +11,7 @@
 #endif
 
 const float ShipController::MAX_SPEED = 4.11f;
-const float ShipController::MAX_ROT = 1.25f;
+const float ShipController::MAX_ROT = 2.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
@@ -78,11 +78,10 @@ namespace ccb
 
 				angSpeed = angVelocity.length( );
 
-				if( speed > shipReg[ index ].maxAngSpeed 
+				if( angSpeed > shipReg[ index ].maxAngSpeed 
 					&& shipReg[ index ].maxAngSpeed >= 0.0f )
 				{
-					std::cout << "HUH?" << std::endl;
-					//angVelocity -= ( angVelocity / 2.0f );
+					angVelocity *= shipReg[ index ].maxAngSpeed / angSpeed;
 					shipReg[ index ].shipPtr->setAngularVelocity( angVelocity );
 				}
 			}			
@@ -427,6 +426,17 @@ bool Graphics::Initialize
 
         objectRegistry[ objectRegistry.getSize( ) - 1 ].Name( ) = progInfo.objectData[ pIndex ].name;
 
+		//set lighting code
+		if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "sky" )
+		{
+			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::NO_LIGHTING;
+		}
+		else
+		{
+			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
+		}
+
+
         objectRegistry[ objectRegistry.getSize( ) - 1 ].getBScale( ) = progInfo.objectData[ pIndex ].bScale;
     }
     
@@ -581,7 +591,7 @@ bool Graphics::Initialize
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
             
-            mass = 1.5f;
+            mass = 2.5f;
 
             inertia = btVector3( 0, 0, 0 );
 
@@ -591,8 +601,8 @@ bool Graphics::Initialize
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
 
-            rigidBodyConstruct.m_restitution = 0.05f;
-            rigidBodyConstruct.m_friction = 10.0f;
+            rigidBodyConstruct.m_restitution = 0.015f;
+            rigidBodyConstruct.m_friction = 100.0f;
   
 
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
@@ -726,6 +736,7 @@ void Graphics::Update(unsigned int dt)
 void Graphics::Render()
 {
     unsigned int index;
+	int lightCode = -1;
 
     glm::vec4 tmpVec;
 
@@ -790,6 +801,13 @@ void Graphics::Render()
         glUniform4f( m_specular, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
 
         glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
+
+		if( lightCode != objectRegistry[ index ].LightCode( ) )
+		{
+			lightCode = objectRegistry[ index ].LightCode( );
+			glUniform1i( m_objectType, lightCode );
+			std::cout << objectRegistry[ index ].Name( ) << std::endl;
+		}
 
         objectRegistry[index].Render();
     }
@@ -882,10 +900,13 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     }
 	else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
 	{
+		if( objectRegistry[ objectID ].getName( ) == "sky" )
+		{
+			objectRegistry[ objectID ].incrementAngle( dt, .0095 );
+			objectRegistry[ objectID ].commitRotation( );
+			objectRegistry[ objectID ].commitTranslation( );
+		}
 		
-		objectRegistry[ objectID ].incrementAngle( dt, .0050 );
-		objectRegistry[ objectID ].commitRotation( );
-		objectRegistry[ objectID ].commitTranslation( );
 		
 	}
 
@@ -1283,6 +1304,13 @@ bool Graphics::linkToCurrentShaderProgram( )
     GLint tmpTextLoc;
     std::ostringstream strStream;
 
+
+	m_objectType = shaderRegistry[ shaderSelect ].GetUniformLocation( "typeOfObject" );
+	if( m_objectType == INVALID_UNIFORM_LOCATION )
+	{
+		printf( "object type code not found\n" );
+		return false;
+	}
 
     m_numLights = shaderRegistry[ shaderSelect ].GetUniformLocation( "numberOfLights" );
 
@@ -1690,7 +1718,7 @@ void Graphics::applyShipForces( )
 			//check controller flags and alter force accordingly
 			if( shipRegistry[ index ].forceOn 
 				&& shipRegistry[ index ].torqueOn 
-				&& velocity >= ShipController::MAX_SPEED / 2.5f )
+				&& velocity >= ShipController::MAX_SPEED / 1.75f )
 			{
 				shipRegistry[ index ].slowDown = true;				
 			}
@@ -1700,7 +1728,7 @@ void Graphics::applyShipForces( )
 				shipRegistry[ index ].slowDown = false;
 				shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
 			}
-			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 1.5f )
+			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 1.25f )
 			{
 				shipRegistry[ index ].slowDown = true;
 			}
@@ -1759,10 +1787,7 @@ void Graphics::applyShipForces( )
 						std::cout << "Error reducing speed!" << std::endl;
 					}
 
-					/*ccb::shipReg[ index ].maxAngSpeed -= 
-						( ccb::shipReg[ index ].maxAngSpeed / 1.25f );*/
-
-					shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
+					ccb::shipReg[ index ].maxAngSpeed -= ( ccb::shipReg[ index ].maxAngSpeed / 1.25f );
 					shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
 					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
 
@@ -1823,7 +1848,7 @@ void Graphics::applyShipForces( )
 				windScalar = std::max( windScalar, 0.008f );
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
-														   ShipController::MAX_SPEED * 0.33334f );
+														   ShipController::MAX_SPEED * 0.33333334f );
 
 				std::cout << "Wind Scalar: " << windScalar << std::endl;
 

@@ -687,3 +687,8 @@ glm::vec3 Object::getRotationInWorld( )
 
 	return rotMat * glm::vec3( 1.0f, 1.0f, 1.0f );
 }
+
+int & Object::LightCode( )
+{
+	return lightCode;
+}

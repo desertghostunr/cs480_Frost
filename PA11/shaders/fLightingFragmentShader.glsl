@@ -2,6 +2,10 @@
 
 #define MAX_NUM_LIGHTS 8
 
+#define LIGHTING_TYPE 0
+#define NO_LIGHTING_TYPE 1
+#define WAVE_TYPE 2
+
 struct SpotLightInfo
 {
     vec3 sFL;
@@ -49,57 +53,80 @@ uniform SpotLight spotLight[ MAX_NUM_LIGHTS ];
 
 uniform int numberOfSpotLights;
 
+//type of object
+uniform int typeOfObject;
+
+void ProcessLitObject( );
+void ProcessUnlitObject( );
+
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient );
 
 vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, int index );
 
 void main(void)
 {
-    int index, numLights, numSpotLights;
+	if( typeOfObject == NO_LIGHTING_TYPE )
+	{
+		ProcessUnlitObject( );
+	}
+	else
+	{
+		ProcessLitObject( );
+	}
+}
 
-    vec4 finalLight = vec4( 0.0, 0.0f, 0.0f, 1.0f );
+void ProcessLitObject( )
+{
+	int index, numLights, numSpotLights;
+
+	vec4 finalLight = vec4( 0.0, 0.0f, 0.0f, 1.0f );
 	vec3 normedNormal = normalize( fN );
 	vec3 normedE = normalize( -fE );
-    vec3 normedL;
-    vec3 normedSL;
-    vec3 halfVec;
+	vec3 normedL;
+	vec3 normedSL;
+	vec3 halfVec;
 
-    if( numberOfLights > MAX_NUM_LIGHTS )
-    {
-        numLights = MAX_NUM_LIGHTS;
-    }
-    else
-    {
-        numLights = numberOfLights;
-    }
+	if( numberOfLights > MAX_NUM_LIGHTS )
+	{
+		numLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numLights = numberOfLights;
+	}
 
-    if( numberOfSpotLights > MAX_NUM_LIGHTS )
-    {
-        numSpotLights = MAX_NUM_LIGHTS;
-    }
-    else
-    {
-        numSpotLights = numberOfSpotLights;
-    }
+	if( numberOfSpotLights > MAX_NUM_LIGHTS )
+	{
+		numSpotLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numSpotLights = numberOfSpotLights;
+	}
 
-    for( index = 0; index < numLights; index++ )
-    {
-        normedL = normalize( fL[ index ] );
-        halfVec = normalize( normedL + normedE );
+	for( index = 0; index < numLights; index++ )
+	{
+		normedL = normalize( fL[ index ] );
+		halfVec = normalize( normedL + normedE );
 
-        finalLight += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );
-    }
+		finalLight += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );
+	}
 
-    for( index = 0; index < numSpotLights; index++ )
-    {
-        normedSL = normalize( sLInfo[ index ].sFL );
+	for( index = 0; index < numSpotLights; index++ )
+	{
+		normedSL = normalize( sLInfo[ index ].sFL );
 
-        finalLight += getSpotLight( normedSL,
-                                    normalize( sLInfo[ index ].sFL + sLInfo[ index ].spotPosition ),
-                                    normedNormal, index );
-    }
+		finalLight += getSpotLight( normedSL,
+									normalize( sLInfo[ index ].sFL + sLInfo[ index ].spotPosition ),
+									normedNormal, index );
+	}
 
-    frag_color = finalLight * texture2D( textureSampler, uv.xy );
+	frag_color = finalLight * texture2D( textureSampler, uv.xy );
+}
+
+void ProcessUnlitObject( )
+{
+	frag_color = texture2D( textureSampler, uv.xy );
 }
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )

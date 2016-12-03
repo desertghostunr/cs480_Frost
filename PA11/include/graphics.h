@@ -226,6 +226,7 @@ class Graphics
         GLint m_shininess;
         GLint m_numLights;
         GLint m_numSpotLights;
+		GLint m_objectType;
 
         ObjectTable objectRegistry; //holds the scene's objects
  
