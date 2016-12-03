@@ -1,4 +1,4 @@
-# PA10 Pinball
+# PA11 Broadside
 
 # Contributors
 * Andy Frost
@@ -40,7 +40,7 @@ mkdir build
 cd build
 cmake ..
 make
-./Pinball -c config/Bullet.xml
+./Broadside -c config/Bullet.xml
 ```
 
 ### makefile Instructions
@@ -51,7 +51,7 @@ mkdir build
 cd build
 cp ../makefile .
 make
-./Pinball -c config/Bullet.xml
+./Broadside -c config/Bullet.xml
 ```
 
 ### Specific Instructions on Running
@@ -74,7 +74,7 @@ This program is run in the following format:
 An example of running this program:
 
 ```bash
-./Pinball -c config/Bullet.xml
+./Broadside -c config/Bullet.xml
 ```
 
 ## Controls

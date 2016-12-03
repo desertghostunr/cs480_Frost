@@ -27,7 +27,7 @@ INCLUDES=-I../include
 
 
 all: $(O_FILES)
-	$(CC) $(CXXFLAGS) -o Pinball $(O_FILES) $(LIBS) #$(PATHI) $(PATHL) 
+	$(CC) $(CXXFLAGS) -o Broadside $(O_FILES) $(LIBS) #$(PATHI) $(PATHL) 
 	cp -r ../shaders .
 	cp -r ../models .
 	cp -r ../sounds .
