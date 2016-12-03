@@ -806,7 +806,7 @@ void Graphics::Render()
 		{
 			lightCode = objectRegistry[ index ].LightCode( );
 			glUniform1i( m_objectType, lightCode );
-			std::cout << objectRegistry[ index ].Name( ) << std::endl;
+			//std::cout << objectRegistry[ index ].Name( ) << std::endl;
 		}
 
         objectRegistry[index].Render();
