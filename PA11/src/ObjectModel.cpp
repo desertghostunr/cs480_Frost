@@ -441,7 +441,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
             {
                 mtlPtr->GetTexture( aiTextureType_DIFFUSE, tIndex, &textFPath );
                 
-                textureFileNames.push_back( textFPath.C_Str( ) );                
+                textureFileNames.push_back( textFPath.C_Str( ) );
             }
 
             if( mtlPtr->GetTextureCount( aiTextureType_DIFFUSE ) == 0 )

@@ -66,6 +66,8 @@ struct Origin
     }
 };
 
+
+
 class Object
 {
     public:
@@ -160,10 +162,14 @@ class Object
 
 		int& LightCode( );
 
-    private:
+		void setParentModel( const glm::mat4& parent );
+
+    private:		
         //model info
         glm::mat4 model;
         ObjectModel* objModelPtr;
+
+		glm::mat4 parentModel;
 
         //children vector containg the worldID's of the objects children
         std::vector<unsigned int> childrenVector;

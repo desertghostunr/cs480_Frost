@@ -445,7 +445,8 @@ bool Graphics::Initialize
 
         for( index = 0; index < progInfo.objectData[ pIndex ].childID.size( ); index++ )
         {
-            objectRegistry.setChild( progInfo.objectData[ pIndex ].childID[ index ], pIndex );
+            std::cout<<objectRegistry.setChild( progInfo.objectData[ pIndex ].childID[ index ], pIndex );
+			std::cout << progInfo.objectData[ pIndex ].name << std::endl;
         }
 
 
@@ -618,6 +619,8 @@ bool Graphics::Initialize
 											   ShipController::MAX_ROT ) );
 			shipRegistry.push_back( index );
             
+			//allocate ship
+			//objectRegistry[ index ].allocShip( m_modelMatrix );
         }
         else if( objectRegistry[ index ].getName( ) == "ocean" )
         {
@@ -651,14 +654,6 @@ bool Graphics::Initialize
             objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = tmpRigidBody;
 
 
-        }
-		else if( objectRegistry[ index ].getName( ) == "sky" )
-		{
-			//do nothing
-		}
-        else
-        {
-            std::cout << "Error: Unexpected Object Name!!!" << std::endl;
         }
 
 
@@ -906,6 +901,11 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 			objectRegistry[ objectID ].commitRotation( );
 			objectRegistry[ objectID ].commitTranslation( );
 		}
+		else if( objectRegistry[ objectID ].getName( ) == "sail" )
+		{
+			objectRegistry[ objectID ].commitRotation( );
+			objectRegistry[ objectID ].commitTranslation( );
+		}
 		
 		
 	}    
@@ -951,8 +951,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
          if( childsID < objectRegistry.getSize( ) )
          {
-             objectRegistry[ childsID ].setOrigin( 
-                                       objectRegistry[ objectID ].getOrigin( ) );
+			objectRegistry[ childsID ].setParentModel( objectRegistry[ objectID ].GetModel( ) );
             
             noErrors = ( noErrors  && updateChildren( childsID, dt ) );
          }
@@ -1682,7 +1681,9 @@ void Graphics::applyShipForces( )
 
 	float windScalar;
 
-	size_t index;
+	float angle;
+
+	size_t index, cIndex;
 
 	for( index = 0; index < shipRegistry.size( ); index++ )
 	{
@@ -1826,7 +1827,7 @@ void Graphics::applyShipForces( )
 				//dot product for wind power
 				shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
 
-				windScalar = windDirection.dot( shipDirection.normalized( ) );
+				windScalar = windDirection.dot( shipDirection.normalized( ) );			
 
 				//compute the maximum level of force possible based on sail position
 				windScalar = std::max( windScalar, 
@@ -1840,6 +1841,22 @@ void Graphics::applyShipForces( )
 				windScalar = std::max( windScalar, -1.00f );
 
 				windScalar = std::max( windScalar, 0.008f );
+
+				angle = glm::acos( windScalar );
+
+				if( angle <= glm::radians( 60.0f ) )
+				{
+					angle = 0.0f - ( angle );
+				}
+				else
+				{
+					angle = 0.0f - glm::radians( 60.0f );
+				}
+
+				for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
+				{
+					objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
+				}
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
 														   ShipController::MAX_SPEED * 0.33333334f );

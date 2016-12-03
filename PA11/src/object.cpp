@@ -6,7 +6,7 @@
 #endif
 
 Object::Object()
-{    
+{
     model = glm::mat4(1.0f);
 
     bulletTransform = glm::mat4( 1.0f );
@@ -23,10 +23,13 @@ Object::Object()
     objModelPtr = NULL;
 
 	type = BASE_OBJECT;
+
+	parentModel = glm::mat4( 1.0f );
 }
 
 Object::Object( int nType )
 {
+
 	model = glm::mat4( 1.0f );
 
 	bulletTransform = glm::mat4( 1.0f );
@@ -50,10 +53,13 @@ Object::Object( int nType )
 	{
 		type = BASE_OBJECT;
 	}
+
+	parentModel = glm::mat4( 1.0f );
 }
 
 Object::~Object()
 {
+
     if( objModelPtr != NULL )
     {
         objModelPtr->decrementReference( );
@@ -90,7 +96,7 @@ void Object::Update( unsigned int dt )
         rhMat = lhMat * rhMat;
     }
 
-    model = rhMat;
+    model = parentModel * rhMat;
 
     transformVector.clear( );
 }
@@ -691,4 +697,9 @@ glm::vec3 Object::getRotationInWorld( )
 int & Object::LightCode( )
 {
 	return lightCode;
+}
+
+void Object::setParentModel( const glm::mat4 & parent )
+{
+	parentModel = parent;
 }
