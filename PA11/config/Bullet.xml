@@ -46,7 +46,7 @@
   <PCObject path ="models/ocean.obj">
     <name>ocean</name>
     <xScale>100</xScale>
-    <yScale>100</yScale>
+    <yScale>26</yScale>
     <zScale>100</zScale>
     <xBScale>180</xBScale>
     <yBScale>60</yBScale>
