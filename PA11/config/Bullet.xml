@@ -153,9 +153,9 @@
   </PObject>
   <PCObject path ="models/ocean.obj">
     <name>ocean</name>
-    <xScale>100</xScale>
+    <xScale>500</xScale>
     <yScale>26</yScale>
-    <zScale>100</zScale>
+    <zScale>500</zScale>
     <xBScale>180</xBScale>
     <yBScale>60</yBScale>
     <zBScale>350</zBScale>
@@ -171,12 +171,12 @@
   </PCObject>
   <Object path ="models/skybox.obj">
     <name>sky</name>
-    <xScale>100</xScale>
-    <yScale>100</yScale>
-    <zScale>100</zScale>
-    <xBScale>180</xBScale>
-    <yBScale>60</yBScale>
-    <zBScale>350</zBScale>
+    <xScale>500</xScale>
+    <yScale>500</yScale>
+    <zScale>500</zScale>
+    <xBScale>0</xBScale>
+    <yBScale>0</yBScale>
+    <zBScale>0</zBScale>
     <xPosition>0</xPosition>
     <yPosition>-250</yPosition>
     <zPosition>0</zPosition>

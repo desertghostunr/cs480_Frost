@@ -721,7 +721,7 @@ void Graphics::Update(unsigned int dt)
 	if( playingStateFlag )
 	{
 		//put camera stuff here ///////
-		//m_camera->updateCamera( true, objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ) );
+		m_camera->updateCamera( true, objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ) );
 		//////////////////////////////
 	}
 
