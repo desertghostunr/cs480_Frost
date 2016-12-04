@@ -1792,6 +1792,48 @@ void Graphics::applyShipForces( )
 			{
 				shipRegistry[ index ].slowDown = true;
 			}
+
+			//dot product for wind power
+			shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
+
+			windScalar = windDirection.dot( shipDirection.normalized( ) );
+
+			//compute the maximum level of force possible based on sail position
+			windScalar = std::max( windScalar,
+				( float ) std::max( windScalar
+									+ glm::cos( glm::radians( 80.0f ) ),
+									windScalar
+									+ glm::cos( glm::radians( -80.0f ) ) ) );
+
+
+			windScalar = std::min( windScalar, 1.00f );
+			windScalar = std::max( windScalar, -1.00f );
+
+			windScalar = std::max( windScalar, 0.008f );
+
+			angle = glm::acos( windScalar );
+
+			if( angle <= glm::radians( 60.0f ) )
+			{
+				angle = 0.0f - ( angle );
+			}
+			else
+			{
+				angle = 0.0f - glm::radians( 60.0f );
+			}
+
+			for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
+			{
+				if( objectRegistry[
+					objectRegistry[
+						shipRegistry[ index ].index
+					].getChildsWorldID( cIndex )
+				].getName( ) == "sail" )
+				{
+					objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
+				}
+
+			}
 			
 
 			//turn the ship
@@ -1866,47 +1908,7 @@ void Graphics::applyShipForces( )
 			else if( shipRegistry[ index ].force.length( ) > 0 )
 			{
 				
-				//dot product for wind power
-				shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
-
-				windScalar = windDirection.dot( shipDirection.normalized( ) );			
-
-				//compute the maximum level of force possible based on sail position
-				windScalar = std::max( windScalar, 
-					                ( float )std::max( windScalar 
-													    + glm::cos( glm::radians( 80.0f ) ), 
-													  windScalar 
-													    + glm::cos( glm::radians( -80.0f ) ) ) );
-
-
-				windScalar = std::min( windScalar, 1.00f );
-				windScalar = std::max( windScalar, -1.00f );
-
-				windScalar = std::max( windScalar, 0.008f );
-
-				angle = glm::acos( windScalar );
-
-				if( angle <= glm::radians( 60.0f ) )
-				{
-					angle = 0.0f - ( angle );
-				}
-				else
-				{
-					angle = 0.0f - glm::radians( 60.0f );
-				}
-
-				for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
-				{
-					if( objectRegistry[ 
-							objectRegistry[ 
-								shipRegistry[ index ].index 
-							].getChildsWorldID( cIndex ) 
-						].getName( ) == "sail" )
-					{
-						objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
-					}
-					
-				}
+				
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
 														   ShipController::MAX_SPEED * 0.33333334f );

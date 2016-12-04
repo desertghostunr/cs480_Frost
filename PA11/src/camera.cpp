@@ -166,8 +166,8 @@ void Camera::updateCamera( bool isOn, glm::vec3 planet )
 	else
 	{
 	    leftRight = planet.x;
-        upDown = planet.y + 147.45f;
-	    newZoom = planet.z + zoom;
+        upDown = planet.y + 50;
+	    newZoom = planet.z + 145;
    	    view = glm::lookAt( glm::vec3( leftRight, upDown, newZoom), //Eye Position
                                    planet, //Focus point
                                    glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up

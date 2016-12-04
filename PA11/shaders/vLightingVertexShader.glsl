@@ -20,6 +20,8 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
+uniform sampler2D textureSampler;
+
 //light info
 struct Light
 {
@@ -56,6 +58,7 @@ uniform float time;
 
 void ProcessLitObject( );
 void ProcessUnlitObject( );
+void ProcessOcean( );
 
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient );
@@ -71,22 +74,11 @@ void main(void)
 	else
 	{
 		ProcessLitObject( );
-	}
-
-	vec2 waveUV = vec2( uv.x + time, uv.y + time );
-	vec4 waveHeight = texture2D( waveMap, waveUV );
-
-	if( waveHeight.x < 0 )
-	{
-		waveHeight.x = 1 + waveHeight.x;
-	}
+	}	
 
 	if( typeOfObject == WAVE_TYPE )
 	{
-		color.r = color.r * waveHeight.x;
-		color.g = color.g * waveHeight.x;
-		color.b = color.b * waveHeight.x;
-		color.a = color.a * waveHeight.x;
+		ProcessOcean( );
 	}
 }
 
@@ -177,6 +169,105 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )
 
 	return retColor;
 }
+
+void ProcessOcean( )
+{
+	
+
+	int index, numLights, numSpotLights;
+
+	vec4 vPos = vec4( v_position, 1.0 );
+	mat4 modelView = viewMatrix * modelMatrix;
+	vec3 pos = ( modelView * vPos ).xyz;
+	vec3 normedNormal = normalize( modelView * vec4( vNormal, 0.0 ) ).xyz;
+	vec3 normedE = normalize( -pos );
+	vec3 normedL;
+	vec3 halfVec;
+
+
+	gl_Position = ( projectionMatrix * viewMatrix * modelMatrix ) * vPos;
+	uv = v_UV;
+
+
+	float mixLevel;
+
+	//waves ///////////////////////////////////////////////////////
+	/************************************************************************
+	Based off of code from http://ogre3d.org/forums/viewtopic.php?f=2&t=59928
+	*************************************************************************/
+	vec3 waveRise = vec3( 0, 0, 0 );
+	vec2 waveUV;
+	vec4 waveHeight;
+	vec3 reflection;
+	vec4 reflColor;
+	float interp;
+
+	waveUV = vec2( uv.x + 0.0013 * time, uv.y + 0.0018 * time );
+	waveHeight = texture2D( waveMap, waveUV );
+
+	waveRise.y = 2.0 * waveHeight.x - 1.0;
+
+	waveRise.z = 0;
+
+	waveRise = normalize( vec3( modelView * vec4( vNormal, 0.0 ) ) + waveRise );
+
+	reflection = reflect( pos, waveRise );
+
+	reflColor = texture2D( textureSampler, reflection.xy );
+
+	interp = 1.0 - dot( -normalize( pos ), waveRise );
+
+	mixLevel = clamp( 0.3 + pow( interp, 6.08 ), 0.0, 1.0 );
+
+	reflColor = mix( vec4( 0.0, 0.123, 0.54, 1.0 ), reflColor, mixLevel );
+	// end waves /////////////////////////////////////////////////////////	
+
+	//lighting////////////////////////////////////////////////////////////
+
+	normedNormal = waveRise;
+	if( numberOfLights > MAX_NUM_LIGHTS )
+	{
+		numLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numLights = numberOfLights;
+	}
+
+	if( numberOfSpotLights > MAX_NUM_LIGHTS )
+	{
+		numSpotLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numSpotLights = numberOfSpotLights;
+	}
+
+	color = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+
+	for( index = 0; index < numLights; index++ )
+	{
+		normedL = normalize( light[ index ].position.xyz - pos );
+		halfVec = normalize( normedL + normedE );
+
+		color += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );
+	}
+
+	for( index = 0; index < numSpotLights; index++ )
+	{
+		color += getSpotLight( normalize( spotLight[ index ].position.xyz ),
+							   normalize( spotLight[ index ].position.xyz
+										  + ( modelMatrix * vPos ).xyz ),
+							   normedNormal, modelMatrix * vPos, index );
+	}
+
+	//end lighting///////////////////////////////////////////////////////
+
+	//result
+
+	color = mix( reflColor, color * vec4( 0.0, 0.123, 0.54, 1.0 ), 1.0 - mixLevel );
+}
+
 
 vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, int index )
 {

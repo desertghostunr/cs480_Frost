@@ -63,12 +63,7 @@ uniform float time;
 
 void ProcessLitObject( );
 void ProcessUnlitObject( );
-/*
-void ProcessWave( );
-
-vec3 calculateNormal( vec3 eye );
-
-float getWaveMapPoint( vec3 input );*/
+void ProcessOcean( );
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient );
 
@@ -76,7 +71,7 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, int index );
 
 void main(void)
 {
-	vec2 waveUV;
+	
 
 	if( typeOfObject == NO_LIGHTING_TYPE )
 	{
@@ -85,21 +80,8 @@ void main(void)
 	else if( typeOfObject == WAVE_TYPE )
 	{
 		//ProcessWave( );
-		ProcessLitObject( );
-
-		waveUV = vec2( uv.x + time, uv.y + time );
-		vec4 waveHeight = texture2D( waveMap, waveUV );
-
-		if( waveHeight.x < 0 )
-		{
-			waveHeight.x = 1 + waveHeight.x;
-		}
-
-		frag_color.r = frag_color.r * waveHeight.x;
-		frag_color.g = frag_color.g * waveHeight.x;
-		frag_color.b = frag_color.b * waveHeight.x;
-		frag_color.a = frag_color.a * waveHeight.x;
-
+		ProcessLitObject( );		
+		ProcessOcean( );
 	}
 	else
 	{
@@ -161,42 +143,105 @@ void ProcessUnlitObject( )
 	frag_color = texture2D( textureSampler, uv.xy );
 }
 
-/***************************************************
+/************************
 
-@brief ProcessWave
+@brief ProcessOcean
 
-@details generates waves. partially based off of Alexander Alekseev's "Seascape"
-		 which was published under the 
-		 Creative Commons Attribution-NonCommercial-ShareAlike3.0 Unported License
-		 see: https://www.shadertoy.com/view/Ms2SD1
+@details generates waves. based on code from the following link(s):
+			http://ogre3d.org/forums/viewtopic.php?f=2&t=59928
 
-@note None
+@note none
 
-***************************************************/
-/*void ProcessWave( )
+*************************/
+
+
+void ProcessOcean( )
 {
-	vec3 wNormal;
-	//use fE from the vertex shader lighting calculations to get the dir of eye
-	vec3 eyePos = fE;
+	int index, numLights, numSpotLights;
+
+	vec4 finalLight = vec4( 0.0, 0.0f, 0.0f, 1.0f );
+	vec3 normedNormal;
+	vec3 normedE = normalize( -fE );
+	vec3 normedL;
+	vec3 normedSL;
+	vec3 halfVec;
+
+	float mixLevel;
+	//waves ///////////////////////////////////////////////////////
+	/************************************************************************
+	Based off of code from http://ogre3d.org/forums/viewtopic.php?f=2&t=59928
+	*************************************************************************/
+	vec3 waveRise = vec3( 0, 0, 0 );
+	vec2 waveUV;
+	vec4 waveHeight;
+	vec3 reflection;
+	vec4 reflColor;
+	float interp;
+
+	waveUV = vec2( uv.x + 0.13 * time, uv.y + 0.18 * time );
+	waveHeight = texture2D( waveMap, waveUV );
 	
+	//make this work on all 3 axes
+	waveRise.y = 2.0 * waveHeight.x  - 1.0;
 
-	//calculate a new normal for the wave
-	wNormal = calculateNormal( eyePos );
+	waveRise = normalize( fN + waveRise ); //add in anti-aliasing
 
+	reflection = reflect( fE, waveRise );
+
+	reflColor = texture2D( textureSampler, reflection.xy );
+
+	interp = 1.0 - dot( -normalize( fE ), waveRise );
+
+	mixLevel = clamp( 0.3 + pow( interp, 6.08 ), 0.0, 1.0 );
+
+	frag_color = mix( vec4( 0.0, 0.123, 0.54, 1.0 ), reflColor, mixLevel );
+	// end waves /////////////////////////////////////////////////////////	
+
+	//lighting////////////////////////////////////////////////////////////
+
+	normedNormal = waveRise;
+
+	if( numberOfLights > MAX_NUM_LIGHTS )
+	{
+		numLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numLights = numberOfLights;
+	}
+
+	if( numberOfSpotLights > MAX_NUM_LIGHTS )
+	{
+		numSpotLights = MAX_NUM_LIGHTS;
+	}
+	else
+	{
+		numSpotLights = numberOfSpotLights;
+	}
+
+	for( index = 0; index < numLights; index++ )
+	{
+		normedL = normalize( fL[ index ] );
+		halfVec = normalize( normedL + normedE );
+
+		finalLight += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );
+	}
+
+	for( index = 0; index < numSpotLights; index++ )
+	{
+		normedSL = normalize( sLInfo[ index ].sFL );
+
+		finalLight += getSpotLight( normedSL,
+									normalize( sLInfo[ index ].sFL + sLInfo[ index ].spotPosition ),
+									normedNormal, index );
+	}
+
+	//end lighting///////////////////////////////////////////////////////
+
+	//result
+
+	frag_color = mix( frag_color, finalLight * vec4( 0.0, 0.123, 0.54, 1.0 ), 1.0 - mixLevel );
 }
-
-vec3 calculateNormal( vec3 eye )
-{
-	vec3 wNorm;
-	float tempVal;
-
-	tempVal = getWaveMapPoint( eye );
-}
-
-float getWaveMapPoint( vec3 input )
-{
-
-}*/
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )
 {
