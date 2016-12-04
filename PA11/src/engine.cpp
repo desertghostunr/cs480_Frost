@@ -65,7 +65,8 @@ bool Engine::Initialize( const GraphicsInfo& progInfo )
     // Start the graphics
     
     m_graphics = new Graphics();
-    if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, progInfo ))
+    if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, 
+								progInfo, GetCurrentTimeMillis( ) ))
     {
         printf("The graphics failed to initialize.\n");
         return false;
@@ -97,7 +98,7 @@ void Engine::Run()
 
         // Update and render the graphics
         m_graphics->Update(m_DT);
-        m_graphics->Render();
+        m_graphics->Render(m_DT);
 
         // Swap to the Window
         m_window->Swap();

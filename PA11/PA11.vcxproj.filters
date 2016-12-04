@@ -48,6 +48,9 @@
     <ClCompile Include="src\OpenSimplexNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\HeightMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenSimplexNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HeightMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -62,6 +62,7 @@ void ProcessUnlitObject( );
 
 void main(void)
 {
+
 	if( typeOfObject == NO_LIGHTING_TYPE )
 	{
 		ProcessUnlitObject( );

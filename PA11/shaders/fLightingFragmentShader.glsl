@@ -6,6 +6,8 @@
 #define NO_LIGHTING_TYPE 1
 #define WAVE_TYPE 2
 
+#define STEP_NUMBER 8
+
 struct SpotLightInfo
 {
     vec3 sFL;
@@ -56,8 +58,17 @@ uniform int numberOfSpotLights;
 //type of object
 uniform int typeOfObject;
 
+uniform sampler2D waveMap;
+uniform float time;
+
 void ProcessLitObject( );
 void ProcessUnlitObject( );
+/*
+void ProcessWave( );
+
+vec3 calculateNormal( vec3 eye );
+
+float getWaveMapPoint( vec3 input );*/
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient );
 
@@ -65,9 +76,30 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, int index );
 
 void main(void)
 {
+	vec2 waveUV;
+
 	if( typeOfObject == NO_LIGHTING_TYPE )
 	{
 		ProcessUnlitObject( );
+	}
+	else if( typeOfObject == WAVE_TYPE )
+	{
+		//ProcessWave( );
+		ProcessLitObject( );
+
+		waveUV = vec2( uv.x + time, uv.y + time );
+		vec4 waveHeight = texture2D( waveMap, waveUV );
+
+		if( waveHeight.x < 0 )
+		{
+			waveHeight.x = 1 + waveHeight.x;
+		}
+
+		frag_color.r = frag_color.r * waveHeight.x;
+		frag_color.g = frag_color.g * waveHeight.x;
+		frag_color.b = frag_color.b * waveHeight.x;
+		frag_color.a = frag_color.a * waveHeight.x;
+
 	}
 	else
 	{
@@ -128,6 +160,43 @@ void ProcessUnlitObject( )
 {
 	frag_color = texture2D( textureSampler, uv.xy );
 }
+
+/***************************************************
+
+@brief ProcessWave
+
+@details generates waves. partially based off of Alexander Alekseev's "Seascape"
+		 which was published under the 
+		 Creative Commons Attribution-NonCommercial-ShareAlike3.0 Unported License
+		 see: https://www.shadertoy.com/view/Ms2SD1
+
+@note None
+
+***************************************************/
+/*void ProcessWave( )
+{
+	vec3 wNormal;
+	//use fE from the vertex shader lighting calculations to get the dir of eye
+	vec3 eyePos = fE;
+	
+
+	//calculate a new normal for the wave
+	wNormal = calculateNormal( eyePos );
+
+}
+
+vec3 calculateNormal( vec3 eye )
+{
+	vec3 wNorm;
+	float tempVal;
+
+	tempVal = getWaveMapPoint( eye );
+}
+
+float getWaveMapPoint( vec3 input )
+{
+
+}*/
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )
 {

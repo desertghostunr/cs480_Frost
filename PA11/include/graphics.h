@@ -16,6 +16,8 @@ using namespace std;
 
 #include"Instance.h"
 
+#include"HeightMap.h"
+
 struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when key signals were interrupted!
 {
 	static const float MAX_SPEED;
@@ -105,9 +107,12 @@ class Graphics
 
         Graphics();
         ~Graphics();
-        bool Initialize(int width, int height, const GraphicsInfo& progInfo );
+        bool Initialize(int width, int height, 
+						 const GraphicsInfo& progInfo, 
+						 long long time = 0 );
+
         void Update(unsigned int dt);
-        void Render();
+        void Render( unsigned int dt );
 
         bool updateList( unsigned int objectID, unsigned int dt );
 
@@ -168,6 +173,10 @@ class Graphics
 		std::vector<ShipController> shipRegistry;
 		btVector3 windDirection;
 		btScalar windForce;
+		HeightMap oceanHeightMap;
+
+		unsigned int cumultiveTime;
+		
 
         //pinball game specific
         int score;
@@ -227,6 +236,7 @@ class Graphics
         GLint m_numLights;
         GLint m_numSpotLights;
 		GLint m_objectType;
+		GLint m_time;
 
         ObjectTable objectRegistry; //holds the scene's objects
  

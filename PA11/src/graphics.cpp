@@ -286,7 +286,8 @@ bool Graphics::Initialize
 (
     int width, 
     int height, 
-    const GraphicsInfo& progInfo
+    const GraphicsInfo& progInfo,
+	long long time
 )
 {
     // Used for the linux OS
@@ -328,6 +329,10 @@ bool Graphics::Initialize
     btScalar mass;
     btVector3 inertia;
     btTransform transform;
+
+	oceanHeightMap = HeightMap( ( long ) time );
+
+	oceanHeightMap.generateHeightMap( 1024, 1024 );
 
 	//wind direction
 	std::cout << "Wind direction: " << progInfo.windDirection.x << ", ";
@@ -431,6 +436,10 @@ bool Graphics::Initialize
 		{
 			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::NO_LIGHTING;
 		}
+		else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "ocean" )
+		{
+			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::WAVE;
+		}
 		else
 		{
 			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
@@ -445,8 +454,7 @@ bool Graphics::Initialize
 
         for( index = 0; index < progInfo.objectData[ pIndex ].childID.size( ); index++ )
         {
-            std::cout<<objectRegistry.setChild( progInfo.objectData[ pIndex ].childID[ index ], pIndex );
-			std::cout << progInfo.objectData[ pIndex ].name << std::endl;
+            objectRegistry.setChild( progInfo.objectData[ pIndex ].childID[ index ], pIndex );
         }
 
 
@@ -618,9 +626,6 @@ bool Graphics::Initialize
 											   ShipController::MAX_SPEED, 
 											   ShipController::MAX_ROT ) );
 			shipRegistry.push_back( index );
-            
-			//allocate ship
-			//objectRegistry[ index ].allocShip( m_modelMatrix );
         }
         else if( objectRegistry[ index ].getName( ) == "ocean" )
         {
@@ -728,10 +733,11 @@ void Graphics::Update(unsigned int dt)
 	
 }
 
-void Graphics::Render()
+void Graphics::Render( unsigned int dt )
 {
     unsigned int index;
 	int lightCode = -1;
+	float normedCTime;
 
     glm::vec4 tmpVec;
 
@@ -748,6 +754,14 @@ void Graphics::Render()
 
     glUniform1i( m_numLights, ( GLint ) lights.size( ) );
     glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
+
+	cumultiveTime += dt;
+	normedCTime = cumultiveTime;
+	normedCTime /= 1000000.0f;
+
+	glUniform1f( m_time, normedCTime );
+
+	
 
     for( index = 0; 
          index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
@@ -801,7 +815,13 @@ void Graphics::Render()
 		{
 			lightCode = objectRegistry[ index ].LightCode( );
 			glUniform1i( m_objectType, lightCode );
-			//std::cout << objectRegistry[ index ].Name( ) << std::endl;
+		}
+
+		if( lightCode == Object::WAVE )
+		{
+			glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
+			glActiveTexture( GL_TEXTURE1 );
+		    glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
 		}
 
         objectRegistry[index].Render();
@@ -1302,8 +1322,26 @@ bool Graphics::linkToCurrentShaderProgram( )
     std::ostringstream strStream;
 
 
+	m_time = shaderRegistry[ shaderSelect ].GetUniformLocation( "time" );
+
+	if( m_time == -1 )
+	{
+		printf( "time not found!\n" );
+		return false;
+	}
+
+	tmpTextLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( "waveMap" );
+
+	oceanHeightMap.HeightMapUniform( ) = tmpTextLoc;
+
+	if( tmpTextLoc == -1 )
+	{
+		printf( "waveMap not found\n" );
+		return false;
+	}
+
 	m_objectType = shaderRegistry[ shaderSelect ].GetUniformLocation( "typeOfObject" );
-	if( m_objectType == INVALID_UNIFORM_LOCATION )
+	if( m_objectType == -1 )
 	{
 		printf( "object type code not found\n" );
 		return false;
@@ -1311,7 +1349,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
     m_numLights = shaderRegistry[ shaderSelect ].GetUniformLocation( "numberOfLights" );
 
-    if( m_numLights == INVALID_UNIFORM_LOCATION )
+    if( m_numLights == -1 )
     {
         printf( "number of lights not found\n" );
         return false;
@@ -1319,7 +1357,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
     m_numSpotLights = shaderRegistry[ shaderSelect ].GetUniformLocation( "numberOfSpotLights" );
 
-    if( m_numSpotLights == INVALID_UNIFORM_LOCATION )
+    if( m_numSpotLights == -1 )
     {
         printf( "number of spot lights not found\n" );
         return false;
@@ -1334,7 +1372,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
         strStream.str( std::string( ) );
 
-        if( spotLight[ index ].followLoc == INVALID_UNIFORM_LOCATION )
+        if( spotLight[ index ].followLoc == -1 )
         {
             printf( "spot light follow loc not found\n" );
             return false;
@@ -1346,7 +1384,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
         strStream.str( std::string( ) );
 
-        if( spotLight[ index ].ambientLoc == INVALID_UNIFORM_LOCATION )
+        if( spotLight[ index ].ambientLoc == -1 )
         {
             printf( "spot light ambient loc not found\n" );
             return false;
@@ -1356,7 +1394,7 @@ bool Graphics::linkToCurrentShaderProgram( )
         spotLight[ index ].incomingLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( strStream.str( ).c_str( ) );
         strStream.str( std::string( ) );
 
-        if( spotLight[ index ].incomingLoc == INVALID_UNIFORM_LOCATION )
+        if( spotLight[ index ].incomingLoc == -1 )
         {
             printf( "spot light direction not found\n" );
             return false;
@@ -1366,7 +1404,7 @@ bool Graphics::linkToCurrentShaderProgram( )
         spotLight[ index ].cosineLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( strStream.str( ).c_str( ) );
         strStream.str( std::string( ) );
 
-        if( spotLight[ index ].cosineLoc == INVALID_UNIFORM_LOCATION )
+        if( spotLight[ index ].cosineLoc == -1 )
         {
             printf( "spot light clip cosine not found\n" );
             return false;
@@ -1376,21 +1414,21 @@ bool Graphics::linkToCurrentShaderProgram( )
     
 
     m_diffuse = shaderRegistry[ shaderSelect ].GetUniformLocation( "DiffuseColor" );
-    if( m_diffuse == INVALID_UNIFORM_LOCATION )
+    if( m_diffuse == -1 )
     {
         printf( "diffuse color not found\n" );
         return false;
     }
 
     m_specular = shaderRegistry[ shaderSelect ].GetUniformLocation( "SpecularColor" );
-    if( m_specular == INVALID_UNIFORM_LOCATION )
+    if( m_specular == -1 )
     {
         printf( "specular color not found\n" );
         return false;
     }
 
     m_shininess = shaderRegistry[ shaderSelect ].GetUniformLocation( "Shininess" );
-    if( m_shininess == INVALID_UNIFORM_LOCATION )
+    if( m_shininess == -1 )
     {
         printf( "shininess not found\n" );
         return false;
@@ -1404,7 +1442,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
         strStream.str( std::string( ) );
 
-        if( lights[ index ].ambientLoc == INVALID_UNIFORM_LOCATION )
+        if( lights[ index ].ambientLoc == -1 )
         {
             printf( "light ambient not found\n" );
             return false;
@@ -1416,7 +1454,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
         strStream.str( std::string( ) );
 
-        if( lights[ index ].incomingLoc == INVALID_UNIFORM_LOCATION )
+        if( lights[ index ].incomingLoc == -1 )
         {
             printf( "light position not found\n" );
             return false;
@@ -1425,7 +1463,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
     // Locate the projection matrix in the shader
     m_projectionMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "projectionMatrix" );
-    if( m_projectionMatrix == INVALID_UNIFORM_LOCATION )
+    if( m_projectionMatrix == -1 )
     {
         printf( "m_projectionMatrix not found\n" );
         return false;
@@ -1433,7 +1471,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
     // Locate the view matrix in the shader
     m_viewMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "viewMatrix" );
-    if( m_viewMatrix == INVALID_UNIFORM_LOCATION )
+    if( m_viewMatrix == -1 )
     {
         printf( "m_viewMatrix not found\n" );
         return false;
@@ -1441,7 +1479,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
     // Locate the model matrix in the shader
     m_modelMatrix = shaderRegistry[ shaderSelect ].GetUniformLocation( "modelMatrix" );
-    if( m_modelMatrix == INVALID_UNIFORM_LOCATION )
+    if( m_modelMatrix == -1 )
     {
         printf( "m_modelMatrix not found\n" );
         return false;
@@ -1449,7 +1487,7 @@ bool Graphics::linkToCurrentShaderProgram( )
 
     tmpTextLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( "textureSampler" );
 
-    if( tmpTextLoc == INVALID_UNIFORM_LOCATION )
+    if( tmpTextLoc == -1 )
     {
         printf( "texture location uniform not found\n" );
         return false;

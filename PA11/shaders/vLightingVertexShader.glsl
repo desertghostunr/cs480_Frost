@@ -50,6 +50,10 @@ uniform float Shininess;
 //type of object
 uniform int typeOfObject;
 
+//heightmap for waves
+uniform sampler2D waveMap;
+uniform float time;
+
 void ProcessLitObject( );
 void ProcessUnlitObject( );
 
@@ -59,6 +63,7 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 vPosition, int
 
 void main(void)
 {
+
 	if( typeOfObject == NO_LIGHTING_TYPE )
 	{
 		ProcessUnlitObject( );
@@ -66,6 +71,22 @@ void main(void)
 	else
 	{
 		ProcessLitObject( );
+	}
+
+	vec2 waveUV = vec2( uv.x + time, uv.y + time );
+	vec4 waveHeight = texture2D( waveMap, waveUV );
+
+	if( waveHeight.x < 0 )
+	{
+		waveHeight.x = 1 + waveHeight.x;
+	}
+
+	if( typeOfObject == WAVE_TYPE )
+	{
+		color.r = color.r * waveHeight.x;
+		color.g = color.g * waveHeight.x;
+		color.b = color.b * waveHeight.x;
+		color.a = color.a * waveHeight.x;
 	}
 }
 

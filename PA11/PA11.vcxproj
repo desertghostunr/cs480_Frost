@@ -173,6 +173,7 @@ xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\engine.cpp" />
     <ClCompile Include="src\graphics.cpp" />
+    <ClCompile Include="src\HeightMap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\object.cpp" />
     <ClCompile Include="src\ObjectModel.cpp" />
@@ -188,6 +189,7 @@ xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     <ClInclude Include="include\graphics.h" />
     <ClInclude Include="include\GraphicsInfo.h" />
     <ClInclude Include="include\graphics_headers.h" />
+    <ClInclude Include="include\HeightMap.h" />
     <ClInclude Include="include\Instance.h" />
     <ClInclude Include="include\object.h" />
     <ClInclude Include="include\ObjectModel.h" />
