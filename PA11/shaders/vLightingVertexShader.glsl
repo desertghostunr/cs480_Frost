@@ -206,8 +206,8 @@ void ProcessOcean( )
 	waveHeight = texture2D( waveMap, waveUV );
 
 	waveRise.y = 2.0 * waveHeight.x - 1.0;
-
-	waveRise.z = 0;
+	waveRise.x = waveRise.y * 0.967;
+	waveRise.z = waveRise.y * 0.893;
 
 	waveRise = normalize( vec3( modelView * vec4( vNormal, 0.0 ) ) + waveRise );
 

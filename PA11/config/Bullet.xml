@@ -153,9 +153,9 @@
   </PObject>
   <PCObject path ="models/ocean.obj">
     <name>ocean</name>
-    <xScale>500</xScale>
+    <xScale>350</xScale>
     <yScale>26</yScale>
-    <zScale>500</zScale>
+    <zScale>350</zScale>
     <xBScale>180</xBScale>
     <yBScale>60</yBScale>
     <zBScale>350</zBScale>

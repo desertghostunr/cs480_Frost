@@ -178,13 +178,15 @@ void ProcessOcean( )
 	vec4 reflColor;
 	float interp;
 
-	waveUV = vec2( uv.x + 0.13 * time, uv.y + 0.18 * time );
+	waveUV = vec2( uv.x + 0.32 * time, uv.y + 0.22 * time );
 	waveHeight = texture2D( waveMap, waveUV );
 	
 	//make this work on all 3 axes
 	waveRise.y = 2.0 * waveHeight.x  - 1.0;
+	waveRise.x = waveRise.y * 0.967;
+	waveRise.z = waveRise.y * 0.893;
 
-	waveRise = normalize( fN + waveRise ); //add in anti-aliasing
+	waveRise = normalize( ( fN + waveRise ) ); //to do: add in anti-aliasing
 
 	reflection = reflect( fE, waveRise );
 
@@ -240,7 +242,7 @@ void ProcessOcean( )
 
 	//result
 
-	frag_color = mix( frag_color, finalLight * vec4( 0.0, 0.123, 0.54, 1.0 ), 1.0 - mixLevel );
+	frag_color = mix( finalLight * vec4( 0.0, 0.123, 0.54, 1.0 ), frag_color, mixLevel );
 }
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )
