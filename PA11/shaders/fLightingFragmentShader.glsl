@@ -182,9 +182,9 @@ void ProcessOcean( )
 	waveHeight = texture2D( waveMap, waveUV );
 	
 	//make this work on all 3 axes
-	waveRise.y = 2.0 * waveHeight.x  - 1.0;
-	waveRise.x = waveRise.y * 0.967;
-	waveRise.z = waveRise.y * 0.893;
+	waveRise.x = 2.0 * waveHeight.x  - 1.0;
+	waveRise.y = waveRise.x * 1.092;
+	waveRise.z = waveRise.x * 0.893;
 
 	waveRise = normalize( ( fN + waveRise ) ); //to do: add in anti-aliasing
 

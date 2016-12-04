@@ -71,14 +71,13 @@ void main(void)
 	{
 		ProcessUnlitObject( );
 	}
+	else if( typeOfObject == WAVE_TYPE )
+	{
+			ProcessOcean( );
+	}
 	else
 	{
 		ProcessLitObject( );
-	}	
-
-	if( typeOfObject == WAVE_TYPE )
-	{
-		ProcessOcean( );
 	}
 }
 
@@ -188,43 +187,23 @@ void ProcessOcean( )
 	gl_Position = ( projectionMatrix * viewMatrix * modelMatrix ) * vPos;
 	uv = v_UV;
 
-
-	float mixLevel;
-
 	//waves ///////////////////////////////////////////////////////
-	/************************************************************************
-	Based off of code from http://ogre3d.org/forums/viewtopic.php?f=2&t=59928
-	*************************************************************************/
-	vec3 waveRise = vec3( 0, 0, 0 );
 	vec2 waveUV;
+	vec3 waveRise;
 	vec4 waveHeight;
-	vec3 reflection;
-	vec4 reflColor;
-	float interp;
 
-	waveUV = vec2( uv.x + 0.0013 * time, uv.y + 0.0018 * time );
+	waveUV = vec2( uv.x + 0.13 * time, uv.y + 0.18 * time );
 	waveHeight = texture2D( waveMap, waveUV );
 
-	waveRise.y = 2.0 * waveHeight.x - 1.0;
-	waveRise.x = waveRise.y * 0.967;
-	waveRise.z = waveRise.y * 0.893;
+	waveRise.y = waveHeight.x;
+	waveRise.x = waveRise.y;
 
-	waveRise = normalize( vec3( modelView * vec4( vNormal, 0.0 ) ) + waveRise );
+	uv.x += waveRise.x;
+	uv.y += waveRise.y;
 
-	reflection = reflect( pos, waveRise );
-
-	reflColor = texture2D( textureSampler, reflection.xy );
-
-	interp = 1.0 - dot( -normalize( pos ), waveRise );
-
-	mixLevel = clamp( 0.3 + pow( interp, 6.08 ), 0.0, 1.0 );
-
-	reflColor = mix( vec4( 0.0, 0.123, 0.54, 1.0 ), reflColor, mixLevel );
 	// end waves /////////////////////////////////////////////////////////	
 
 	//lighting////////////////////////////////////////////////////////////
-
-	normedNormal = waveRise;
 	if( numberOfLights > MAX_NUM_LIGHTS )
 	{
 		numLights = MAX_NUM_LIGHTS;
@@ -262,10 +241,6 @@ void ProcessOcean( )
 	}
 
 	//end lighting///////////////////////////////////////////////////////
-
-	//result
-
-	color = mix( reflColor, color * vec4( 0.0, 0.123, 0.54, 1.0 ), 1.0 - mixLevel );
 }
 
 
