@@ -158,7 +158,7 @@ class Object
 
 		glm::vec4 getPositionInWorld( );
 
-		glm::vec3 getRotationInWorld( );
+		glm::vec3 getRotationInWorld( glm::vec3 forward );
 
 		int& LightCode( );
 

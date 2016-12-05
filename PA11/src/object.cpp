@@ -678,7 +678,23 @@ glm::vec4 Object::getPositionInWorld( )
 	return model * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 }
 
-glm::vec3 Object::getRotationInWorld( )
+/********************
+
+@brief getRotationInWorld
+
+@details gets the rotation in world space
+
+@param in: forward: the forward direction local to the object
+					i.e. to set the x axis as forward pass in glm::vec3( 1.0f, 0.0f, 0.0f )
+					i.e. to set the y axis as forward pass in glm::vec3( 0.0f, 1.0f, 0.0f )
+					i.e. to set the z axis as forward pass in glm::vec3( 0.0f, 0.0f, 1.0f )
+
+@notes None
+
+*********************/
+
+
+glm::vec3 Object::getRotationInWorld( glm::vec3 forward )
 {
 	glm::vec3 inverseScale;
 	glm::mat4 tmpMat;
@@ -691,7 +707,7 @@ glm::vec3 Object::getRotationInWorld( )
 
 	rotMat = glm::mat3( tmpMat );
 
-	return rotMat * glm::vec3( 1.0f, 1.0f, 1.0f );
+	return rotMat * forward;
 }
 
 int & Object::LightCode( )
