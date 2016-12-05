@@ -365,7 +365,7 @@ bool Graphics::Initialize
 	
     score = 0;
 
-    objectCollidedSound.loadSound("sounds/bumpSound.wav");
+    objectCollidedSound.loadSound("sounds/Canon_Fire.wav");
 
     modelRegistry.clear( );
 
@@ -733,9 +733,33 @@ void Graphics::Update(unsigned int dt)
 
 	for( index = 0; index < shipRegistry.size( ); index++ )
 	{
+		//right guns
+		if( shipRegistry[ index ].rightReloadTime > 0 )
+		{
+			shipRegistry[ index ].rightReloadTime -= dt;
+			//std::cout << "Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
+		}
+		else
+		{
+			shipRegistry[ index ].rightReloadTime = 0;
+		}
+
+		//left guns
+		if( shipRegistry[ index ].leftReloadTime > 0 )
+		{
+			shipRegistry[ index ].leftReloadTime -= dt;
+			//std::cout << "Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
+		}
+		else
+		{
+			shipRegistry[ index ].leftReloadTime = 0;
+		}
+
 		if( shipRegistry[ index ].healthPoints <= 0 )
 		{
 			std::cout << "Player " << index + 1 << " loses!" << std::endl;
+
+			playingStateFlag = false;
 		}
 	}
 	
@@ -1762,11 +1786,17 @@ void Graphics::fireGuns( size_t ship, bool left )
 	{
 		if( left )
 		{
-			shipRegistry[ ship ].firingLeft = true;
+			if( shipRegistry[ ship ].leftReloadTime <= 0 )
+			{
+				shipRegistry[ ship ].firingLeft = true;
+			}			
 		}
 		else
 		{
-			shipRegistry[ ship ].firingRight = true;
+			if( shipRegistry[ ship ].rightReloadTime <= 0 )
+			{
+				shipRegistry[ ship ].firingRight = true;
+			}
 		}
 		
 	}
@@ -2038,9 +2068,16 @@ void Graphics::applyShipForces( )
 			shipRegistry[ index ].rightHit = shipTarget + shipPosition;
 			shipRegistry[ index ].leftHit = -1.0f * shipTarget + shipPosition;
 
-			if( shipRegistry[ index ].firingLeft || shipRegistry[ index ].firingRight )
+			if( shipRegistry[ index ].firingLeft )
 			{
 				objectCollidedSound.launchSound( );
+				shipRegistry[ index ].leftReloadTime = ShipController::RELOAD_TIME_MS;
+			}
+
+			if( shipRegistry[ index ].firingRight )
+			{
+				objectCollidedSound.launchSound( );
+				shipRegistry[ index ].rightReloadTime = ShipController::RELOAD_TIME_MS;
 			}
 
 			//raytesting

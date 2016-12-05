@@ -95,6 +95,9 @@
     <ClInclude Include="include\HeightMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ShipController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
