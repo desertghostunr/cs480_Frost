@@ -183,8 +183,8 @@ void ProcessOcean( )
 	
 	//make this work on all 3 axes
 	waveRise.x = 2.0 * waveHeight.x  - 1.0;
-	waveRise.y = waveRise.x * 1.092;
-	waveRise.z = waveRise.x * 0.893;
+	waveRise.y = waveRise.x * 2.392;
+	waveRise.z = waveRise.x * 1.693;
 
 	waveRise = normalize( ( fN + waveRise ) ); //to do: add in anti-aliasing
 
@@ -194,9 +194,9 @@ void ProcessOcean( )
 
 	interp = 1.0 - dot( -normalize( fE ), waveRise );
 
-	mixLevel = clamp( 0.3 + pow( interp, 6.08 ), 0.0, 1.0 );
+	mixLevel = clamp( -0.284 + pow( interp, 6.08 ), 0.0, 1.0 );
 
-	frag_color = mix( vec4( 0.0, 0.123, 0.54, 1.0 ), reflColor, mixLevel );
+	frag_color = mix( vec4( 0.0, 0.32, 0.56, 1.0 ), reflColor, mixLevel );
 	// end waves /////////////////////////////////////////////////////////	
 
 	//lighting////////////////////////////////////////////////////////////
@@ -242,7 +242,7 @@ void ProcessOcean( )
 
 	//result
 
-	frag_color = mix( finalLight * vec4( 0.0, 0.123, 0.54, 1.0 ), frag_color, mixLevel );
+	frag_color = mix( finalLight * vec4( 0.0, 0.32, 0.56, 1.0 ), frag_color, mixLevel );
 }
 
 vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient )
