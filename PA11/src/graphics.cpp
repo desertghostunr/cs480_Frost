@@ -791,9 +791,11 @@ void Graphics::Render( unsigned int dt )
 			std::cout << "Error: too few spotLights!" << std::endl;
 		}
 
-		tmpVec = objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ) + glm::vec4( -100.0, 0.0, -100.0, 1.0 );
+		tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
+							shipRegistry[ index ].rightHit.getY( ), 
+							shipRegistry[ index ].rightHit.getZ( ), 1.0 );
 
-		glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x + 0.0,
+		glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
 					 tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
 
 		glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
@@ -805,9 +807,11 @@ void Graphics::Render( unsigned int dt )
 
 		glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
 
-		tmpVec = objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ) + glm::vec4( 100.0 , 0.0, 100.0, 1.0 );
+		tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
+							shipRegistry[ index ].leftHit.getY( ),
+							shipRegistry[ index ].leftHit.getZ( ), 1.0 );
 
-		glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x + 0.0,
+		glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
 					 tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
 
 		glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
@@ -827,7 +831,7 @@ void Graphics::Render( unsigned int dt )
     {
 		tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
 
-        glUniform4f( spotLight[ index ].followLoc, tmpVec.x + 0.0, 
+        glUniform4f( spotLight[ index ].followLoc, tmpVec.x, 
                      tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
 
         glUniform4f( spotLight[ index ].ambientLoc, spotLight[ index ].ambient.r, 
@@ -1815,6 +1819,12 @@ void Graphics::applyShipForces( )
 
 	btScalar hitFract;
 
+	btScalar modTrans[ 16 ];
+
+	glm::mat4 glModelMat;
+
+	glm::vec4 glPositionVector;
+
 	for( index = 0; index < shipRegistry.size( ); index++ )
 	{
 		shipPtr = &objectRegistry[ shipRegistry[ index ].index ];
@@ -1882,9 +1892,12 @@ void Graphics::applyShipForces( )
 			}
 
 			//dot product for wind power and ray testing
-			shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
 
-			windScalar = windDirection.dot( shipDirection.normalized( ) );
+			shipDirection = shipRot * btVector3( 1.0f, 0.0f, 0.0f );
+
+			shipDirection = shipDirection.normalized( );
+
+			windScalar = windDirection.dot( shipDirection );
 
 			//compute the maximum level of force possible based on sail position
 			windScalar = std::max( windScalar,
@@ -1993,9 +2006,7 @@ void Graphics::applyShipForces( )
 				shipRegistry[ index ].shipReversed = false;
 			}
 			else if( shipRegistry[ index ].force.length( ) > 0 )
-			{
-				
-				
+			{			
 
 				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
 														   ShipController::MAX_SPEED * 0.33333334f );
@@ -2014,16 +2025,18 @@ void Graphics::applyShipForces( )
 
 			shipBodyPtr->activate( );
 
+
+
 			shipTarget = shipDirection.cross( btVector3( 0, 1, 0 ) );
 
 			worldTransform = shipBodyPtr->getWorldTransform( );
 
 			shipPosition = worldTransform.getOrigin( );
 
-			shipTarget *= 50.0f;
+			shipTarget *= 150.0f;
 
-			shipRegistry[ index ].rightHit = shipTarget;
-			shipRegistry[ index ].leftHit = -1.0f * shipTarget;
+			shipRegistry[ index ].rightHit = shipTarget + shipPosition;
+			shipRegistry[ index ].leftHit = -1.0f * shipTarget + shipPosition;
 
 			if( shipRegistry[ index ].firingLeft || shipRegistry[ index ].firingRight )
 			{
@@ -2035,36 +2048,78 @@ void Graphics::applyShipForces( )
 				&& shipRayTest( shipPosition, shipRegistry[ index ].rightHit,
 							     hitPosition, hitObject, hitFract ) )
 			{
-				for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+
+				shipRegistry[ index ].rightHit = hitPosition;
+
+				if( shipRegistry[ index ].firingRight )
 				{
-					if( objectRegistry[ shipRegistry[ cIndex ].index ]
-						.CollisionInfo( ).rigidBody != shipBodyPtr && 
-						hitObject.getUserPointer( ) 
-						== objectRegistry[ shipRegistry[ cIndex ].index ]
-						.CollisionInfo( ).rigidBody->getUserPointer( ) )
+					for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
 					{
-						shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+						if( objectRegistry[ shipRegistry[ cIndex ].index ]
+							.CollisionInfo( ).rigidBody != shipBodyPtr &&
+							hitObject.getUserPointer( )
+							== objectRegistry[ shipRegistry[ cIndex ].index ]
+							.CollisionInfo( ).rigidBody->getUserPointer( ) )
+						{
+							shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+						}
 					}
+				}
+				else
+				{
+					std::cout << "In Range! " << index <<std::endl;
 				}
 			}
 
-			if( shipRegistry[ index ].firingLeft  
-				&& shipRayTest( shipPosition, shipRegistry[ index ].leftHit,
+			if( shipRayTest( shipPosition, shipRegistry[ index ].leftHit,
 							             hitPosition, hitObject, hitFract ) )
 			{
-				for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+				shipRegistry[ index ].leftHit = hitPosition;
+
+				if( shipRegistry[ index ].firingLeft )
 				{
-					if( objectRegistry[ shipRegistry[ cIndex ].index ]
-						.CollisionInfo( ).rigidBody != shipBodyPtr && 
-						hitObject.getUserPointer( )
-						== objectRegistry[ shipRegistry[ cIndex ].index ]
-						.CollisionInfo( ).rigidBody->getUserPointer( ) )
+					for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
 					{
-						shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+						if( objectRegistry[ shipRegistry[ cIndex ].index ]
+							.CollisionInfo( ).rigidBody != shipBodyPtr &&
+							hitObject.getUserPointer( )
+							== objectRegistry[ shipRegistry[ cIndex ].index ]
+							.CollisionInfo( ).rigidBody->getUserPointer( ) )
+						{
+							shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+						}
 					}
+				}
+				else
+				{
+					std::cout << "In Range! " << index << std::endl;
 				}
 			}
 
+			//convert hit positions into OpenGL space
+
+			worldTransform.setIdentity( );
+			worldTransform.setOrigin( shipRegistry[ index ].leftHit );
+			worldTransform.getOpenGLMatrix( modTrans );
+			glModelMat = glm::make_mat4( modTrans );
+			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+			shipRegistry[ index ].leftHit = btVector3( glPositionVector.x, 
+													   glPositionVector.y, 
+													   glPositionVector.z );
+
+			worldTransform.setIdentity( );
+			worldTransform.setOrigin( shipRegistry[ index ].rightHit );
+			worldTransform.getOpenGLMatrix( modTrans );
+			glModelMat = glm::make_mat4( modTrans );
+			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+			shipRegistry[ index ].rightHit = btVector3( glPositionVector.x,
+													    glPositionVector.y,
+													    glPositionVector.z );
+			
+
+			//we have fired
 			shipRegistry[ index ].firingLeft = false;
 
 			shipRegistry[ index ].firingRight = false;
