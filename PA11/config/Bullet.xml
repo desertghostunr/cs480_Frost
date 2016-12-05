@@ -222,12 +222,57 @@
       <zPosition>0.0</zPosition>
       <Ambient>
         <xPosition>0.70</xPosition>
-        <yPosition>0.65</yPosition>
-        <zPosition>0.70</zPosition>
+        <yPosition>0.25</yPosition>
+        <zPosition>0.25</zPosition>
       </Ambient>
     </Light>
-    <ConeAngle>23.5</ConeAngle>
-    <SpotHeight>80.0</SpotHeight>
+    <ConeAngle>40</ConeAngle>
+    <SpotHeight>15.0</SpotHeight>
     <FollowMe>ship</FollowMe>
-  </SpotLight> 
+  </SpotLight>
+  <SpotLight>
+    <Light>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.0</zPosition>
+      <Ambient>
+        <xPosition>0.70</xPosition>
+        <yPosition>0.25</yPosition>
+        <zPosition>0.25</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>40</ConeAngle>
+    <SpotHeight>15.0</SpotHeight>
+    <FollowMe>ship</FollowMe>
+  </SpotLight>
+  <SpotLight>
+    <Light>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.0</zPosition>
+      <Ambient>
+        <xPosition>0.70</xPosition>
+        <yPosition>0.25</yPosition>
+        <zPosition>0.25</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>40</ConeAngle>
+    <SpotHeight>15.0</SpotHeight>
+    <FollowMe>ship</FollowMe>
+  </SpotLight>
+  <SpotLight>
+    <Light>
+      <xPosition>0.0</xPosition>
+      <yPosition>-1.0</yPosition>
+      <zPosition>0.0</zPosition>
+      <Ambient>
+        <xPosition>0.70</xPosition>
+        <yPosition>0.25</yPosition>
+        <zPosition>0.25</zPosition>
+      </Ambient>
+    </Light>
+    <ConeAngle>40</ConeAngle>
+    <SpotHeight>15.0</SpotHeight>
+    <FollowMe>ship</FollowMe>
+  </SpotLight>
 </Configuration>

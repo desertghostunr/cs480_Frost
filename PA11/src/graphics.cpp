@@ -730,6 +730,14 @@ void Graphics::Update(unsigned int dt)
 		//////////////////////////////
 	}
 
+
+	for( index = 0; index < shipRegistry.size( ); index++ )
+	{
+		if( shipRegistry[ index ].healthPoints <= 0 )
+		{
+			std::cout << "Player " << index + 1 << " loses!" << std::endl;
+		}
+	}
 	
 }
 
@@ -776,7 +784,44 @@ void Graphics::Render( unsigned int dt )
                      lights[ index ].incoming.a );
     } 
 
-    for( index = 0; 
+	for( index = 0; index < shipRegistry.size( ); index += 1 )
+	{
+		if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
+		{
+			std::cout << "Error: too few spotLights!" << std::endl;
+		}
+
+		tmpVec = objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ) + glm::vec4( -100.0, 0.0, -100.0, 1.0 );
+
+		glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x + 0.0,
+					 tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
+
+		glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
+					 spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
+					 spotLight[ 2 * index ].ambient.a );
+
+		glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
+					 spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
+
+		glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
+
+		tmpVec = objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ) + glm::vec4( 100.0 , 0.0, 100.0, 1.0 );
+
+		glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x + 0.0,
+					 tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
+
+		glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
+					 spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
+					 spotLight[ ( 2 * index ) + 1 ].ambient.a );
+
+		glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
+					 spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
+
+		glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
+
+	}
+
+    for( index  = 2 * index; 
          index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
          index++ )
     {
@@ -1707,6 +1752,37 @@ void Graphics::stopShipsRotation( size_t ship )
 	}
 }
 
+void Graphics::fireGuns( size_t ship, bool left )
+{
+	if( ship < shipRegistry.size( ) )
+	{
+		if( left )
+		{
+			shipRegistry[ ship ].firingLeft = true;
+		}
+		else
+		{
+			shipRegistry[ ship ].firingRight = true;
+		}
+		
+	}
+}
+
+// APPLY SHIP FORCES /////////////////////
+/****************************************
+
+@brief applyShipForces
+
+@details handles all of the ship motion
+		 and force related management
+
+@param None
+
+@notes Also handles raytesting
+
+****************************************/
+
+
 void Graphics::applyShipForces( )
 {
 	Object* shipPtr = NULL;
@@ -1726,6 +1802,18 @@ void Graphics::applyShipForces( )
 	float angle;
 
 	size_t index, cIndex;
+
+	btVector3 shipPosition;
+
+	btVector3 shipTarget;
+
+	btTransform worldTransform;
+
+	btVector3 hitPosition;
+
+	btCollisionObject hitObject;
+
+	btScalar hitFract;
 
 	for( index = 0; index < shipRegistry.size( ); index++ )
 	{
@@ -1793,7 +1881,7 @@ void Graphics::applyShipForces( )
 				shipRegistry[ index ].slowDown = true;
 			}
 
-			//dot product for wind power
+			//dot product for wind power and ray testing
 			shipDirection = shipRot * btVector3( 1.0f, 0.0f, 1.0f );
 
 			windScalar = windDirection.dot( shipDirection.normalized( ) );
@@ -1834,7 +1922,6 @@ void Graphics::applyShipForces( )
 				}
 
 			}
-			
 
 			//turn the ship
 
@@ -1927,11 +2014,95 @@ void Graphics::applyShipForces( )
 
 			shipBodyPtr->activate( );
 
+			shipTarget = shipDirection.cross( btVector3( 0, 1, 0 ) );
+
+			worldTransform = shipBodyPtr->getWorldTransform( );
+
+			shipPosition = worldTransform.getOrigin( );
+
+			shipTarget *= 50.0f;
+
+			shipRegistry[ index ].rightHit = shipTarget;
+			shipRegistry[ index ].leftHit = -1.0f * shipTarget;
+
+			if( shipRegistry[ index ].firingLeft || shipRegistry[ index ].firingRight )
+			{
+				objectCollidedSound.launchSound( );
+			}
+
+			//raytesting
+			if( shipRegistry[ index ].firingRight 
+				&& shipRayTest( shipPosition, shipRegistry[ index ].rightHit,
+							     hitPosition, hitObject, hitFract ) )
+			{
+				for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+				{
+					if( objectRegistry[ shipRegistry[ cIndex ].index ]
+						.CollisionInfo( ).rigidBody != shipBodyPtr && 
+						hitObject.getUserPointer( ) 
+						== objectRegistry[ shipRegistry[ cIndex ].index ]
+						.CollisionInfo( ).rigidBody->getUserPointer( ) )
+					{
+						shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+					}
+				}
+			}
+
+			if( shipRegistry[ index ].firingLeft  
+				&& shipRayTest( shipPosition, shipRegistry[ index ].leftHit,
+							             hitPosition, hitObject, hitFract ) )
+			{
+				for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+				{
+					if( objectRegistry[ shipRegistry[ cIndex ].index ]
+						.CollisionInfo( ).rigidBody != shipBodyPtr && 
+						hitObject.getUserPointer( )
+						== objectRegistry[ shipRegistry[ cIndex ].index ]
+						.CollisionInfo( ).rigidBody->getUserPointer( ) )
+					{
+						shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+					}
+				}
+			}
+
+			shipRegistry[ index ].firingLeft = false;
+
+			shipRegistry[ index ].firingRight = false;
+
+
+
 		}
 
 		shipPtr = NULL;
 		shipBodyPtr = NULL;
 	}
+}
+
+bool Graphics::shipRayTest
+( 
+	const btVector3 & src, 
+	const btVector3 & dest, 
+	btVector3 & hit,
+	btCollisionObject& hitObject,
+	btScalar & hitFraction
+)
+{
+	btCollisionWorld::ClosestRayResultCallback rayCallback( src, dest );
+
+	dynamicsWorldPtr->rayTest( src, dest, rayCallback );
+
+	if( rayCallback.hasHit( ) )
+	{
+		hit = rayCallback.m_hitPointWorld;
+
+		hitObject = *rayCallback.m_collisionObject;
+
+		hitFraction = rayCallback.m_closestHitFraction;
+
+		return true;
+	}
+
+	return false;
 }
 
 bool Graphics::sameSign( float first, float second )

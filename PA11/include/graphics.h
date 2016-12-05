@@ -26,6 +26,8 @@ struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when k
 	static const float STD_REVERSE;
 	static const float STD_TORQUE;
 
+	static const int MAX_HEALTH = 100;
+
 	size_t index;
 
 	btVector3 force;
@@ -40,6 +42,13 @@ struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when k
 	float torqueAcc;
 	bool slowRotDown;
 
+	btVector3 rightHit;
+	btVector3 leftHit;
+
+	int healthPoints;
+
+	bool firingLeft;
+	bool firingRight;
 
 	ShipController( ): 
 		index( 0 ), 
@@ -51,7 +60,13 @@ struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when k
 		torque( btVector3( 0, 0, 0 ) ),
 		torqueOn( false ),
 		torqueAcc( 0 ),
-		slowRotDown( false ){ }
+		slowRotDown( false ),
+		rightHit( 0, 0, 0 ),
+		leftHit( 0, 0, 0 ),
+		healthPoints( MAX_HEALTH ), 
+		firingLeft( false ),
+		firingRight( false )
+	{ }
 
 	ShipController( size_t newIndex ): 
 		index( newIndex ), 
@@ -63,7 +78,13 @@ struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when k
 		torque( btVector3( 0, 0, 0 ) ),
 		torqueOn( false ),
 		torqueAcc( 0 ),
-		slowRotDown( false ){ }
+		slowRotDown( false ),
+		rightHit( 0, 0, 0 ),
+		leftHit( 0, 0, 0 ),
+		healthPoints( MAX_HEALTH ),
+		firingLeft( false ),
+		firingRight( false )
+	{ }
 
 	ShipController( const ShipController& src ): 
 		index( src.index ), 
@@ -75,7 +96,13 @@ struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when k
 		torque( src.torque ),
 		torqueOn( src.torqueOn ),
 		torqueAcc( src.torqueAcc ),
-		slowRotDown( src.slowRotDown ){ }
+		slowRotDown( src.slowRotDown ),
+		rightHit( src.rightHit ),
+		leftHit( src.leftHit ),
+		healthPoints( src.healthPoints ),
+		firingLeft( src.firingLeft ),
+		firingRight( src.firingRight )
+	{ }
 
 	const ShipController& operator=( const ShipController& src )
 	{
@@ -91,6 +118,11 @@ struct ShipController //TO DO: ADD a forceOn and torqueOn member to check when k
 			torqueOn = src.torqueOn;
 			torqueAcc = src.torqueAcc;
 			slowRotDown = src.slowRotDown;
+			rightHit = src.rightHit;
+			leftHit = src.leftHit;
+			healthPoints = src.healthPoints;
+			firingLeft = src.firingLeft;
+			firingRight = src.firingRight;
 		}
 
 		return *this;
@@ -163,9 +195,15 @@ class Graphics
 
 		void stopShipsRotation( size_t ship );
 
+		void fireGuns( size_t ship, bool left );
+
     private:
 		//helper functions
 		void applyShipForces( );
+
+		bool shipRayTest( const btVector3& src, const btVector3 &dest, 
+						  btVector3& hit, btCollisionObject& hitObject, 
+						  btScalar& hitFraction );
 
 		bool sameSign( float first, float second );
 
