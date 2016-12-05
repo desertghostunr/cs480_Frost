@@ -54,6 +54,8 @@ void Sound::loadSound( std::string soundPath )
 
 void Sound::playSound()
 {
+	soundPlaying = true;
+
     soundPosition = soundBuffer;
     soundRemaining = soundLength;
 
@@ -76,8 +78,6 @@ void Sound::launchSound( )
 	{
 		return;
 	}
-
-	soundPlaying = true;
 
 	if( threadManager != NULL )
     {
