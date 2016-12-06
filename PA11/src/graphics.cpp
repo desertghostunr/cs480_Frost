@@ -728,7 +728,9 @@ void Graphics::Update(unsigned int dt)
 	if( playingStateFlag )
 	{
 		//put camera stuff here ///////
-		m_camera->updateCamera( true, objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ) );
+		m_camera->updateCamera( true, glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x, 
+                                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y, 
+                                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ) );
 		//////////////////////////////
 	}
 
@@ -960,8 +962,7 @@ std::string Graphics::ErrorString(GLenum error)
 bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 {
     btTransform trans;
-    btScalar modTrans[ 16 ];
-    int tempScore = score;    
+    btScalar modTrans[ 16 ]; 
 
     if( ( objectID > objectRegistry.getSize( ) ) )
     {

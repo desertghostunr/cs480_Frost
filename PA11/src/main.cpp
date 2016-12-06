@@ -698,7 +698,6 @@ bool ProcessConfigAmbient( rapidxml::xml_node<>* parentNode, GraphicsInfo & prog
 bool ProcessWind( rapidxml::xml_node<>* parentNode, GraphicsInfo & progInfo )
 {
 	rapidxml::xml_node<> *childNode;
-	bool lightX = false, lightY = false, lightZ = false;
 
 	string tempStr;
 

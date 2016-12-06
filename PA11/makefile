@@ -20,7 +20,7 @@ PATHB=-I/usr/include/bullet
 CXXFLAGS=-g -Wall -std=c++0x
 
 # .o Compilation
-O_FILES=main.o camera.o engine.o graphics.o object.o shader.o window.o ObjectTable.o ObjectModel.o sound.o
+O_FILES=main.o camera.o engine.o graphics.o object.o shader.o window.o ObjectTable.o ObjectModel.o sound.o OpenSimplexNoise.o HeightMap.o
 
 # Point to includes of local directories
 INCLUDES=-I../include
@@ -62,6 +62,12 @@ ObjectTable.o: ../src/ObjectTable.cpp
 
 ObjectModel.o: ../src/ObjectModel.cpp
 	$(CC) $(CXXFLAGS) -c ../src/ObjectModel.cpp -o ObjectModel.o $(INCLUDES) $(PATHB)
+
+OpenSimplexNoise.o: ../src/OpenSimplexNoise.cpp
+	$(CC) $(CXXFLAGS) -c ../src/OpenSimplexNoise.cpp -o OpenSimplexNoise.o $(INCLUDES) $(PATHB)
+
+HeightMap.o: ../src/HeightMap.cpp
+	$(CC) $(CXXFLAGS) -c ../src/HeightMap.cpp -o HeightMap.o $(INCLUDES) $(PATHB)
 
 
 clean:
