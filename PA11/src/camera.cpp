@@ -187,4 +187,12 @@ glm::mat4 Camera::GetView()
     return view;
 }
 
+void Camera::rotate( glm::vec3 position, glm::vec4 whereToLook )
+{
+   
+   view = glm::lookAt( glm::vec3( whereToLook.x + position.x, position.y, whereToLook.z + position.z), //Eye Position
+                       glm::vec3( whereToLook.x , whereToLook.y, whereToLook.z ), //Focus point
+                       glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
+}
+
 

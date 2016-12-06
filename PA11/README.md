@@ -137,5 +137,5 @@ An example of running this program:
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./Pinball -c config/Bullet.xml
+/usr/NX/scripts/vgl/vglrun ./Broadside -c config/Bullet.xml
 ```

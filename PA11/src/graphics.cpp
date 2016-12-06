@@ -728,10 +728,14 @@ void Graphics::Update(unsigned int dt)
 	if( playingStateFlag )
 	{
 		//put camera stuff here ///////
-		m_camera->updateCamera( true, glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x, 
+		/*m_camera->updateCamera( true, glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x, 
                                                  objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y, 
                                                  objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ) );
-		//////////////////////////////
+		*/
+   
+                 m_camera->rotate( shipRegistry[ 0 ].cameraPosition, 
+                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld() );
+                //////////////////////////////
 	}
 
 
@@ -1757,8 +1761,12 @@ void Graphics::rotateShip( size_t ship, float torque )
 
 		shipRegistry[ ship ].slowRotDown = false;
 		shipRegistry[ ship ].torqueOn = true;
+                
+                
+
 
 	}
+              
 	
 }
 

@@ -87,7 +87,7 @@ struct ShipController
 		firingRight( false ),
 		leftReloadTime( 0 ),
 		rightReloadTime( 0 ),
-		cameraPosition( 0, 0, 0 )
+		cameraPosition( -10.0f, 0, 10 )
 	{
 	}
 

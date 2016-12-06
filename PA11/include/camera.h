@@ -17,6 +17,7 @@ class Camera
 	void moveDown();	
 	void zoomIn();
 	void zoomOut();
+        void rotate( glm::vec3 position, glm::vec4 whereToLook );
 
         void resetView( );
 
