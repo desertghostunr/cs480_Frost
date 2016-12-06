@@ -57,7 +57,7 @@ class Graphics
 
         void changeModelRegistryIndex( int i );
 
-        void chanceSpotLightSize( float increment );
+        void changeSpotLightSize( float increment );
 
         bool linkToCurrentShaderProgram( );
 

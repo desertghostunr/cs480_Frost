@@ -239,7 +239,7 @@ void Engine::Keyboard()
                 }
                 else if( spotLight )
                 {
-                    m_graphics->chanceSpotLightSize( 1 );
+                    m_graphics->changeSpotLightSize( 1 );
                 }
                 else if( viewControls )
                 {
@@ -258,7 +258,7 @@ void Engine::Keyboard()
                 }
                 else if( spotLight )
                 {
-                    m_graphics->chanceSpotLightSize( -1 );
+                    m_graphics->changeSpotLightSize( -1 );
                 }
                 else if( viewControls )
                 {

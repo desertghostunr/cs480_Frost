@@ -1195,6 +1195,9 @@ void Graphics::cycleShaderProgram( )
 void Graphics::changeBrightness( std::string lightSelect, float redParam, 
                                float greenParam, float blueParam )
 {
+
+    size_t index;
+
     if( lightSelect == "ambient" )
     {
         if( lights[ 0 ].ambient.r >= 0.95f && redParam > 0.0f )
@@ -1296,54 +1299,58 @@ void Graphics::changeBrightness( std::string lightSelect, float redParam,
 
     else if( lightSelect == "spot"  && !spotLight.empty( ) )
     {
-        std::cout << "Spot Light Brightness: ";
-        std::cout << spotLight[ 0 ].ambient.r << ", ";
-        std::cout << spotLight[ 0 ].ambient.g << ", ";
-        std::cout << spotLight[ 0 ].ambient.b << "." << std::endl;
+
+        for( index = 0; index < spotLight.size( ); index++ )
+        {
+            std::cout << "Spot Light Brightness: ";
+            std::cout << spotLight[ index ].ambient.r << ", ";
+            std::cout << spotLight[ index ].ambient.g << ", ";
+            std::cout << spotLight[ index ].ambient.b << "." << std::endl;
 
 
-        if( spotLight[ 0 ].ambient.r >= 0.95f && redParam > 0.0f )
-        {
-            spotLight[ 0 ].ambient.r = 1.0f;
-        }
-        else if( spotLight[ 0 ].ambient.r <= 0.05f && redParam < 0.0f )
-        {
-            spotLight[ 0 ].ambient.r = 0.0f;
-        }
-        else
-        {
-            spotLight[ 0 ].ambient.r = spotLight[ 0 ].ambient.r + redParam;
-        }
-
-
-
-        if( spotLight[ 0 ].ambient.g >= 0.95f && greenParam > 0.0f )
-        {
-            spotLight[ 0 ].ambient.g = 1.0f;
-        }
-        else if( spotLight[ 0 ].ambient.g <= 0.05f && greenParam < 0.0f )
-        {
-            spotLight[ 0 ].ambient.g = 0.0f;
-        }
-        else
-        {
-            spotLight[ 0 ].ambient.g = spotLight[ 0 ].ambient.g + greenParam;
-        }
+            if( spotLight[ index ].ambient.r >= 0.95f && redParam > 0.0f )
+            {
+                spotLight[ index ].ambient.r = 1.0f;
+            }
+            else if( spotLight[ index ].ambient.r <= 0.05f && redParam < 0.0f )
+            {
+                spotLight[ index ].ambient.r = 0.0f;
+            }
+            else
+            {
+                spotLight[ index ].ambient.r = spotLight[ index ].ambient.r + redParam;
+            }
 
 
 
-        if( spotLight[ 0 ].ambient.b >= 0.95f && blueParam > 0.0f )
-        {
-            spotLight[ 0 ].ambient.b = 1.0f;
-        }
-        else if( spotLight[ 0 ].ambient.b <= 0.05f && blueParam < 0.0f )
-        {
-            spotLight[ 0 ].ambient.b = 0.0f;
-        }
-        else
-        {
-            spotLight[ 0 ].ambient.b = spotLight[ 0 ].ambient.b + blueParam;
-        }   
+            if( spotLight[ index ].ambient.g >= 0.95f && greenParam > 0.0f )
+            {
+                spotLight[ index ].ambient.g = 1.0f;
+            }
+            else if( spotLight[ index ].ambient.g <= 0.05f && greenParam < 0.0f )
+            {
+                spotLight[ index ].ambient.g = 0.0f;
+            }
+            else
+            {
+                spotLight[ index ].ambient.g = spotLight[ index ].ambient.g + greenParam;
+            }
+
+
+
+            if( spotLight[ index ].ambient.b >= 0.95f && blueParam > 0.0f )
+            {
+                spotLight[ index ].ambient.b = 1.0f;
+            }
+            else if( spotLight[ index ].ambient.b <= 0.05f && blueParam < 0.0f )
+            {
+                spotLight[ index ].ambient.b = 0.0f;
+            }
+            else
+            {
+                spotLight[ index ].ambient.b = spotLight[ 0 ].ambient.b + blueParam;
+            }
+        }           
     }
 }
 
@@ -1364,27 +1371,34 @@ void Graphics::changeModelRegistryIndex( int i )
     std::cout << modelRegistry[ modelIndex ].modelPath << std::endl;
 }
 
-void Graphics::chanceSpotLightSize( float increment )
+void Graphics::changeSpotLightSize( float increment )
 {
+    size_t index;
+
     if( spotLight.empty( ) )
     {
         return;
     }
 
-    spotLight[ 0 ].coneAngle += increment;
-
-    std::cout << "Spot Light Angle: " << spotLight[ 0 ].coneAngle << std::endl;
-
-    if( spotLight[ 0 ].coneAngle < 0.0f )
+    for( index = 0; index < spotLight.size( ); index++ )
     {
-        spotLight[ 0 ].coneAngle = 0.0f;
-    }
-    else if( spotLight[ 0 ].coneAngle > 360.0f )
-    {
-        spotLight[ 0 ].coneAngle = 360.0f;
+        spotLight[ index ].coneAngle += increment;
+
+        std::cout << "Spot Light Angle: " << spotLight[ index ].coneAngle << std::endl;
+
+        if( spotLight[ index ].coneAngle < 0.0f )
+        {
+            spotLight[ index ].coneAngle = 0.0f;
+        }
+        else if( spotLight[ index ].coneAngle > 360.0f )
+        {
+            spotLight[ index ].coneAngle = 360.0f;
+        }
+
+        spotLight[ index ].cosine = glm::cos( glm::radians( spotLight[ index ].coneAngle ) );
     }
 
-    spotLight[ 0 ].cosine = glm::cos( glm::radians( spotLight[ 0 ].coneAngle ) );
+
 }
 
 
@@ -1693,7 +1707,7 @@ void Graphics::idleSplash( unsigned int dt )
 		m_camera->moveUp( );
 		numberOfUpCalls += dt;
 	}
-	else if( numberOfUpCalls > -1500 && goingRight )
+	else if( numberOfUpCalls > -500 && goingRight )
 	{
 		m_camera->moveDown( );
 		numberOfUpCalls -= dt;
