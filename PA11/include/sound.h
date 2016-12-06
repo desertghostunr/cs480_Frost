@@ -7,36 +7,35 @@
 
 #include <string>
 #include <thread>
-static Uint8 *soundPosition;
-static Uint32 soundRemaining;
+
 void myCallback( void *userData, Uint8 *stream, int length);
 
 class Sound
 {
-    public:
+	public:
 
-        Sound();
-        ~Sound();
+		Sound();
+		~Sound();
 
-        void loadSound( std::string soundPath );
-        void playSound();
+		void loadSound( std::string soundPath );
+		void playSound();
 
 		void launchSound( );
 
 		bool SoundPlaying( );
 
 
-    private:
+	private:
 
 		std::thread * threadManager;
-        
-        Uint32 soundLength;
-        Uint8 *soundBuffer;
-        SDL_AudioSpec soundSpec;
-        bool soundLoaded;
+		
+		Uint32 soundLength;
+		Uint8 *soundBuffer;
+		SDL_AudioSpec soundSpec;
+		bool soundLoaded;
 		bool soundPlaying;
 
-        friend void myCallback( void *userData, Uint8 *stream, int length);
+		friend void myCallback( void *userData, Uint8 *stream, int length);
  
 };
 
