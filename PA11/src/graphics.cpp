@@ -15,6 +15,8 @@ const float ShipController::MAX_ROT = 2.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 160;
+const float ShipController::CAMERA_FOLLOW_HEIGHT = 50;
 
 //glm::decompose
 //SDL window size
@@ -737,7 +739,7 @@ void Graphics::Update(unsigned int dt)
 		if( shipRegistry[ index ].rightReloadTime > 0 )
 		{
 			shipRegistry[ index ].rightReloadTime -= dt;
-			//std::cout << "Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
+			std::cout << "Ship "<< index  << ": Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
 		}
 		else
 		{
@@ -748,7 +750,7 @@ void Graphics::Update(unsigned int dt)
 		if( shipRegistry[ index ].leftReloadTime > 0 )
 		{
 			shipRegistry[ index ].leftReloadTime -= dt;
-			//std::cout << "Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
+			std::cout << "Ship " << index << ": Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
 		}
 		else
 		{
@@ -758,8 +760,6 @@ void Graphics::Update(unsigned int dt)
 		if( shipRegistry[ index ].healthPoints <= 0 )
 		{
 			std::cout << "Player " << index + 1 << " loses!" << std::endl;
-
-			playingStateFlag = false;
 		}
 	}
 	
@@ -1855,6 +1855,8 @@ void Graphics::applyShipForces( )
 
 	glm::vec4 glPositionVector;
 
+	btVector3 cameraPos;
+
 	for( index = 0; index < shipRegistry.size( ); index++ )
 	{
 		shipPtr = &objectRegistry[ shipRegistry[ index ].index ];
@@ -2154,7 +2156,23 @@ void Graphics::applyShipForces( )
 			shipRegistry[ index ].rightHit = btVector3( glPositionVector.x,
 													    glPositionVector.y,
 													    glPositionVector.z );
-			
+
+			//calculate camera position to follow the ship ////////////////////////
+
+			cameraPos = -1.0f * shipDirection;
+			cameraPos = ShipController::CAMERA_FOLLOW_DISTANCE * cameraPos;
+
+			worldTransform.setIdentity( );
+			worldTransform.setOrigin( cameraPos );
+			worldTransform.getOpenGLMatrix( modTrans );
+			glModelMat = glm::make_mat4( modTrans );
+			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+			shipRegistry[ index ].cameraPosition 
+				= glm::vec3( glPositionVector.x,
+							 glPositionVector.y + ShipController::CAMERA_FOLLOW_HEIGHT, 
+							 glPositionVector.z );
+			/////////////////////////////////////////////////////////////////////////
 
 			//we have fired
 			shipRegistry[ index ].firingLeft = false;

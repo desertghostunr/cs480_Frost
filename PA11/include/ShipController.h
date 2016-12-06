@@ -5,15 +5,19 @@
 
 struct ShipController
 {
-	static const float MAX_SPEED;
-	static const float MAX_ROT;
-	static const float STD_FORCE;
-	static const float STD_REVERSE;
-	static const float STD_TORQUE;
+	static const float MAX_SPEED; //value defined in graphics.cpp
+	static const float MAX_ROT; //value defined in graphics.cpp
+	static const float STD_FORCE; //value defined in graphics.cpp
+	static const float STD_REVERSE; //value defined in graphics.cpp
+	static const float STD_TORQUE; //value defined in graphics.cpp
 
 	static const int MAX_HEALTH = 100;
 
 	static const int RELOAD_TIME_MS = 15000;
+
+	static const float CAMERA_FOLLOW_DISTANCE; //value defined in graphics.cpp
+
+	static const float CAMERA_FOLLOW_HEIGHT; //value defined in graphics.cpp
 
 	size_t index;
 
@@ -39,6 +43,8 @@ struct ShipController
 
 	int leftReloadTime;
 	int rightReloadTime;
+
+	glm::vec3 cameraPosition;
 	
 
 	ShipController( ) :
@@ -58,7 +64,8 @@ struct ShipController
 		firingLeft( false ),
 		firingRight( false ),
 		leftReloadTime( 0 ),
-		rightReloadTime( 0 )
+		rightReloadTime( 0 ),
+		cameraPosition( 0, 0, 0 )
 	{
 	}
 
@@ -79,7 +86,8 @@ struct ShipController
 		firingLeft( false ),
 		firingRight( false ),
 		leftReloadTime( 0 ),
-		rightReloadTime( 0 )
+		rightReloadTime( 0 ),
+		cameraPosition( 0, 0, 0 )
 	{
 	}
 
@@ -100,7 +108,8 @@ struct ShipController
 		firingLeft( src.firingLeft ),
 		firingRight( src.firingRight ),
 		leftReloadTime( src.leftReloadTime ),
-		rightReloadTime( src.rightReloadTime )
+		rightReloadTime( src.rightReloadTime ),
+		cameraPosition( src.cameraPosition )
 	{
 	}
 
@@ -125,6 +134,7 @@ struct ShipController
 			firingRight = src.firingRight;
 			leftReloadTime = src.leftReloadTime;
 			rightReloadTime = src.rightReloadTime;
+			cameraPosition = src.cameraPosition;
 		}
 
 		return *this;

@@ -76,6 +76,7 @@ void Sound::launchSound( )
 {
 	if( soundPlaying )
 	{
+		std::cout << "SoundPlaying!" << std::endl;
 		return;
 	}
 
