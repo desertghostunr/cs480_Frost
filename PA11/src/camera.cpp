@@ -132,6 +132,28 @@ void Camera::resetView( )
                         glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 
+void Camera::followShip( glm::vec3 shipPosition, glm::vec3 cameraPosition, glm::vec3 leftView, glm::vec3 rightView, int viewSelect )
+{
+	glm::vec3 focalPoint;
+
+	if( viewSelect == LOOK_LEFT )
+	{
+		focalPoint = leftView;
+	}
+	else if( viewSelect == LOOK_RIGHT )
+	{
+		focalPoint = rightView;
+	}
+	else
+	{
+		focalPoint = shipPosition;
+	}
+
+	view = glm::lookAt( cameraPosition, //Eye Position
+						focalPoint, //Focus point
+						glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
+}
+
 void Camera::updateLookAt()
 {
    if( topDown )

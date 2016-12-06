@@ -728,9 +728,20 @@ void Graphics::Update(unsigned int dt)
 	if( playingStateFlag )
 	{
 		//put camera stuff here ///////
-		m_camera->updateCamera( true, glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x, 
+		/*m_camera->updateCamera( true, glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x, 
                                                  objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y, 
-                                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ) );
+                                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ) );*/
+
+		m_camera->followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x,
+										 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y,
+										 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ),
+							  shipRegistry[ 0 ].cameraPosition,
+							  glm::vec3( shipRegistry[ 0 ].leftHit.getX( ),
+										 shipRegistry[ 0 ].leftHit.getY( ),
+										 shipRegistry[ 0 ].leftHit.getZ( ) ),
+							  glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
+										 shipRegistry[ 0 ].rightHit.getY( ),
+										 shipRegistry[ 0 ].rightHit.getZ( ) ), 0 );
 		//////////////////////////////
 	}
 
@@ -2176,6 +2187,7 @@ void Graphics::applyShipForces( )
 
 			cameraPos = -1.0f * shipDirection;
 			cameraPos = ShipController::CAMERA_FOLLOW_DISTANCE * cameraPos;
+			cameraPos = shipPosition + cameraPos;
 
 			worldTransform.setIdentity( );
 			worldTransform.setOrigin( cameraPos );
