@@ -85,7 +85,11 @@ class Graphics
 
 		void stopShipsRotation( size_t ship );
 
-		void fireGuns( size_t ship, bool left );
+		void fireGuns( size_t ship );
+
+                void toggleLeft( int index );
+         
+                void toggleRight( int index );
 
     private:
 		//helper functions
@@ -104,6 +108,8 @@ class Graphics
 		HeightMap oceanHeightMap;
 
 		unsigned int cumultiveTime;
+ 
+               
 		
 
         //pinball game specific

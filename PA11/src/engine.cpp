@@ -383,13 +383,19 @@ void Engine::Keyboard()
 			m_graphics->rotateShip( 0, ( -1.0f * ShipController::STD_TORQUE ) );
 			//std::cout << "D down" << std::endl;
 		}
-		else if( m_event.key.keysym.sym == SDLK_e )
-		{
-			m_graphics->fireGuns( 0, false );
-		}
 		else if( m_event.key.keysym.sym == SDLK_q )
 		{
-			m_graphics->fireGuns( 0, true );
+			//m_graphics->fireGuns( 0, false );
+                        m_graphics->toggleLeft( 0 );
+		}
+		else if( m_event.key.keysym.sym == SDLK_e )
+		{
+			//m_graphics->fireGuns( 0, true );
+                        m_graphics->toggleRight( 0 );
+		}
+		else if( m_event.key.keysym.sym == SDLK_f )
+		{
+			m_graphics->fireGuns( 0 );
 		}
         else if( m_event.key.keysym.sym == SDLK_RSHIFT 
 				 || m_event.key.keysym.sym == SDLK_LSHIFT )

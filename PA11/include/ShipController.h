@@ -45,6 +45,9 @@ struct ShipController
 	int rightReloadTime;
 
 	glm::vec3 cameraPosition;
+
+        bool lookingLeft;
+        bool lookingRight;
 	
 
 	ShipController( ) :
@@ -65,7 +68,9 @@ struct ShipController
 		firingRight( false ),
 		leftReloadTime( 0 ),
 		rightReloadTime( 0 ),
-		cameraPosition( 0, 0, 0 )
+		cameraPosition( 0, 0, 0 ),
+                lookingLeft( false ),
+                lookingRight( false)
 	{
 	}
 
@@ -87,7 +92,9 @@ struct ShipController
 		firingRight( false ),
 		leftReloadTime( 0 ),
 		rightReloadTime( 0 ),
-		cameraPosition( -10.0f, 0, 10 )
+		cameraPosition( 0, 0, 0 ),
+                lookingLeft( false ),
+                lookingRight( false)
 	{
 	}
 
@@ -109,7 +116,9 @@ struct ShipController
 		firingRight( src.firingRight ),
 		leftReloadTime( src.leftReloadTime ),
 		rightReloadTime( src.rightReloadTime ),
-		cameraPosition( src.cameraPosition )
+		cameraPosition( src.cameraPosition ),
+                lookingLeft( src.lookingLeft ),
+                lookingRight( src.lookingRight )
 	{
 	}
 
@@ -135,6 +144,8 @@ struct ShipController
 			leftReloadTime = src.leftReloadTime;
 			rightReloadTime = src.rightReloadTime;
 			cameraPosition = src.cameraPosition;
+                        lookingLeft = src.lookingLeft;
+                        lookingRight = src.lookingRight;
 		}
 
 		return *this;

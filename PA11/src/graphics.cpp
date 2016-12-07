@@ -15,7 +15,7 @@ const float ShipController::MAX_ROT = 2.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
-const float ShipController::CAMERA_FOLLOW_DISTANCE = 160;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 125;
 const float ShipController::CAMERA_FOLLOW_HEIGHT = 50;
 
 //glm::decompose
@@ -689,6 +689,7 @@ bool Graphics::Initialize
 
 void Graphics::Update(unsigned int dt)
 {
+    int lookAt = 0;
     unsigned int index;
 
 	applyShipForces( );
@@ -728,14 +729,30 @@ void Graphics::Update(unsigned int dt)
 	if( playingStateFlag )
 	{
 		//put camera stuff here ///////
-		/*m_camera->updateCamera( true, glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x, 
-                                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y, 
-                                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ) );
-		*/
-   
-                 m_camera->rotate( shipRegistry[ 0 ].cameraPosition, 
-                                 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld() );
-                //////////////////////////////
+
+                if( shipRegistry[ 0 ].lookingLeft )
+                {
+                    lookAt = Camera::LOOK_LEFT;
+                }
+                else if( shipRegistry[ 0 ].lookingRight )
+                {
+                    lookAt = Camera::LOOK_RIGHT;
+                }
+                else
+                {
+                    lookAt = Camera::LOOK_AT_SHIP;
+                }                 
+		m_camera->followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x,
+										 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y,
+										 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ),
+							  shipRegistry[ 0 ].cameraPosition,
+							  glm::vec3( shipRegistry[ 0 ].leftHit.getX( ),
+										 shipRegistry[ 0 ].leftHit.getY( ),
+										 shipRegistry[ 0 ].leftHit.getZ( ) ),
+							  glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
+										 shipRegistry[ 0 ].rightHit.getY( ),
+										 shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
+		////
 	}
 
 
@@ -1803,18 +1820,18 @@ void Graphics::stopShipsRotation( size_t ship )
 	}
 }
 
-void Graphics::fireGuns( size_t ship, bool left )
+void Graphics::fireGuns( size_t ship )
 {
 	if( ship < shipRegistry.size( ) )
 	{
-		if( left )
+		if( shipRegistry[ ship ].lookingLeft )
 		{
 			if( shipRegistry[ ship ].leftReloadTime <= 0 )
 			{
 				shipRegistry[ ship ].firingLeft = true;
 			}			
 		}
-		else
+		else if( shipRegistry[ ship ].lookingRight )
 		{
 			if( shipRegistry[ ship ].rightReloadTime <= 0 )
 			{
@@ -2177,13 +2194,14 @@ void Graphics::applyShipForces( )
 			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
 
 			shipRegistry[ index ].rightHit = btVector3( glPositionVector.x,
-													    glPositionVector.y,
+									    glPositionVector.y,
 													    glPositionVector.z );
 
 			//calculate camera position to follow the ship ////////////////////////
 
 			cameraPos = -1.0f * shipDirection;
 			cameraPos = ShipController::CAMERA_FOLLOW_DISTANCE * cameraPos;
+			cameraPos = shipPosition + cameraPos;
 
 			worldTransform.setIdentity( );
 			worldTransform.setOrigin( cameraPos );
@@ -2349,7 +2367,19 @@ void Graphics::updateRightPaddle( unsigned int dt )
      }
         
 }
+void Graphics::toggleLeft( int index )
+{
+    shipRegistry[ index ].lookingRight = false;
+    shipRegistry[ index ].lookingLeft = !shipRegistry[ index ].lookingLeft;  
 
+}
+         
+void Graphics::toggleRight( int index )
+{
+    shipRegistry[ index ].lookingLeft = false;
+    shipRegistry[ index ].lookingRight = !shipRegistry[ index ].lookingRight;  
+
+}
 
 
 
