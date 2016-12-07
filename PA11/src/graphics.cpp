@@ -1971,6 +1971,24 @@ void Graphics::applyShipForces( )
 
 			windScalar = windDirection.dot( shipDirection );
 
+			//calculate the angle to rotate the sails
+
+			angle = glm::acos( windScalar );
+			
+			
+
+			if( angle >= glm::radians( 75.0f ) )
+			{
+				angle = glm::radians( 75.0f );
+			}
+
+			/*std::cout << "Wind-to-ship angle degrees: " << glm::degrees( angle ) << ", radians: " << angle << ", wind-ship-dot: " << windScalar << std::endl;
+			if( glm::sin( angle ) < 0 )
+			{
+				angle = 90.0f - angle;
+			}
+			std::cout << "Complemented angle: " << glm::degrees( angle ) << std::endl;*/
+
 			//compute the maximum level of force possible based on sail position
 			windScalar = std::max( windScalar,
 				( float ) std::max( windScalar
@@ -1980,21 +1998,10 @@ void Graphics::applyShipForces( )
 
 
 			windScalar = std::min( windScalar, 1.00f );
-			windScalar = std::max( windScalar, -1.00f );
 
 			windScalar = std::max( windScalar, 0.008f );
 
-			angle = glm::acos( windScalar );
-
-			if( angle <= glm::radians( 60.0f ) )
-			{
-				angle = 0.0f - ( angle );
-			}
-			else
-			{
-				angle = 0.0f - glm::radians( 60.0f );
-			}
-
+			//rotate the sails
 			for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
 			{
 				if( objectRegistry[
