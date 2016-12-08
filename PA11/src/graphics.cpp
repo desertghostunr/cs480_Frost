@@ -429,6 +429,8 @@ bool Graphics::Initialize
 		if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "sky" )
 		{
 			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::NO_LIGHTING;
+
+			objectRegistry[ objectRegistry.getSize( ) - 1 ].useParent( false );
 		}
 		else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "ocean" )
 		{
@@ -980,6 +982,12 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     btTransform trans;
     btScalar modTrans[ 16 ]; 
 
+	int cIndex, cID;
+
+	float newX, newY, newZ;
+
+	glm::vec4 shipPos;
+
     if( ( objectID > objectRegistry.getSize( ) ) )
     {
          return false;
@@ -1002,6 +1010,29 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
         objectRegistry[ objectID ].setBulletTransform( glm::make_mat4( modTrans ) );
 
         objectRegistry[ objectID ].commitBulletTransform( );
+
+		if( objectRegistry[ objectID ].getName( ) == "ship" )
+		{
+			for( cIndex = 0;
+				 cIndex < objectRegistry[ objectID ].getNumberOfChildren( );
+				 cIndex++ )
+			{
+				cID = objectRegistry[ objectID ].getChildsWorldID( cIndex );
+
+				if( objectRegistry[ cID ].getName( ) == "sky" )
+				{
+					shipPos = objectRegistry[ objectID ].getPositionInWorld( );
+
+					newY = objectRegistry[ cID ].getTransVec( ).y;
+					newX = shipPos.x;
+					newZ = shipPos.z;
+
+					objectRegistry[ cID ].setTranslationVector( glm::vec3( newX, newY, newZ ) );
+
+					break;
+				}
+			}
+		}
     }
 	else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
 	{

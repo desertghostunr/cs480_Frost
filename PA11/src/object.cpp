@@ -5,6 +5,8 @@ Object::Object()
 {
     model = glm::mat4(1.0f);
 
+	applyParent = true;
+
     bulletTransform = glm::mat4( 1.0f );
 
     rotationVector = glm::vec3( 0.0f, 1.0f, 0.0f );
@@ -25,7 +27,7 @@ Object::Object()
 
 Object::Object( int nType )
 {
-
+	applyParent = true;
 	model = glm::mat4( 1.0f );
 
 	bulletTransform = glm::mat4( 1.0f );
@@ -92,7 +94,14 @@ void Object::Update( unsigned int dt )
         rhMat = lhMat * rhMat;
     }
 
-    model = parentModel * rhMat;
+	if( applyParent )
+	{
+		model = parentModel * rhMat;
+	}
+	else
+	{
+		model = rhMat;
+	}
 
     transformVector.clear( );
 }
@@ -714,4 +723,9 @@ int & Object::LightCode( )
 void Object::setParentModel( const glm::mat4 & parent )
 {
 	parentModel = parent;
+}
+
+void Object::useParent( bool use )
+{
+	applyParent = use;
 }

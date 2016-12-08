@@ -164,6 +164,8 @@ class Object
 
 		void setParentModel( const glm::mat4& parent );
 
+		void useParent( bool use );
+
     private:		
         //model info
         glm::mat4 model;
@@ -201,6 +203,8 @@ class Object
 		int type;
 
 		int lightCode;
+
+		bool applyParent;
 };
 
 #endif /* OBJECT_H */

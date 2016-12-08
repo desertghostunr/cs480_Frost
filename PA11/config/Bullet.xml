@@ -24,6 +24,24 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
+    <Object path ="models/skybox.obj">
+      <name>sky</name>
+      <xScale>500</xScale>
+      <yScale>500</yScale>
+      <zScale>500</zScale>
+      <xBScale>0</xBScale>
+      <yBScale>0</yBScale>
+      <zBScale>0</zBScale>
+      <xPosition>0</xPosition>
+      <yPosition>-600</yPosition>
+      <zPosition>0</zPosition>
+      <xRotationAxis>1</xRotationAxis>
+      <yRotationAxis>0</yRotationAxis>
+      <zRotationAxis>0</zRotationAxis>
+      <xRotationAngle>0</xRotationAngle>
+      <yRotationAngle>0</yRotationAngle>
+      <zRotationAngle>0</zRotationAngle>
+    </Object>
     <Object path ="models/sail1.obj">
       <name>sail</name>
       <xScale>1</xScale>
@@ -96,6 +114,24 @@
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
+    <Object path ="models/skybox.obj">
+      <name>sky</name>
+      <xScale>500</xScale>
+      <yScale>500</yScale>
+      <zScale>500</zScale>
+      <xBScale>0</xBScale>
+      <yBScale>0</yBScale>
+      <zBScale>0</zBScale>
+      <xPosition>0</xPosition>
+      <yPosition>-600</yPosition>
+      <zPosition>0</zPosition>
+      <xRotationAxis>1</xRotationAxis>
+      <yRotationAxis>0</yRotationAxis>
+      <zRotationAxis>0</zRotationAxis>
+      <xRotationAngle>0</xRotationAngle>
+      <yRotationAngle>0</yRotationAngle>
+      <zRotationAngle>0</zRotationAngle>
+    </Object>
     <Object path ="models/sail1.obj">
       <name>sail</name>
       <xScale>1</xScale>
@@ -169,24 +205,6 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </PCObject>
-  <Object path ="models/skybox.obj">
-    <name>sky</name>
-    <xScale>500</xScale>
-    <yScale>500</yScale>
-    <zScale>500</zScale>
-    <xBScale>0</xBScale>
-    <yBScale>0</yBScale>
-    <zBScale>0</zBScale>
-    <xPosition>0</xPosition>
-    <yPosition>-600</yPosition>
-    <zPosition>0</zPosition>
-    <xRotationAxis>1</xRotationAxis>
-    <yRotationAxis>0</yRotationAxis>
-    <zRotationAxis>0</zRotationAxis>
-    <xRotationAngle>0</xRotationAngle>
-    <yRotationAngle>0</yRotationAngle>
-    <zRotationAngle>0</zRotationAngle>
-  </Object>
   <Shader>
     <Vertex>shaders/fLightingVertexShader.glsl</Vertex>
     <Fragment>shaders/fLightingFragmentShader.glsl</Fragment>
