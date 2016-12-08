@@ -23,6 +23,10 @@
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
+#if defined( _WIN64 ) || defined( _WIN32 )
+	#define M_PI 3.14159265358979323846264338327950288
+#endif
+
 struct Vertex
 {
     glm::vec3 vertex;

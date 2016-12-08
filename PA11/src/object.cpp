@@ -1,10 +1,6 @@
 #include "object.h"
 #include <algorithm>
 
-#if defined( _WIN64 ) || defined( _WIN32 )
-    #define M_PI 3.14159265358979323846264338327950288
-#endif
-
 Object::Object()
 {
     model = glm::mat4(1.0f);

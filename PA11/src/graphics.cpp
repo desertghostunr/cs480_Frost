@@ -2,16 +2,8 @@
 #include <algorithm>
 #include <sstream>
 
-#if defined( _WIN64 ) || ( _WIN32 )
-	#if defined( M_PI )
-		//do nothing
-	#else
-		#define M_PI 3.14159265359
-	#endif
-#endif
-
 const float ShipController::MAX_SPEED = 4.11f;
-const float ShipController::MAX_ROT = 2.5f;
+const float ShipController::MAX_ROT = 1.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
@@ -2091,7 +2083,6 @@ void Graphics::applyShipForces( unsigned int dt )
 					-= ccb::shipReg[ index ].maxSpeed 
 					* std::min( ( float ) ( dt / 500.0f ), 1.0f );
 
-				std::cout << dt << std::endl;
 				shipRegistry[ index ].shipReverseCounter = 0;
 			}
 			else if( shipRegistry[ index ].slowDown )
