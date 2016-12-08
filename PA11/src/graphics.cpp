@@ -1990,13 +1990,13 @@ void Graphics::applyShipForces( )
 				}
 			}
 			
-			if( angle >= glm::radians( 65.0f ) )
+			if( angle >= 1.13446f /*65 degrees in rads*/ )
 			{
-				angle = glm::radians( 65.0f );
+				angle = 1.13446f;
 			}
-			else if( angle <= glm::radians( -45.0f ) )
+			else if( angle <= -0.785398f /*45 degrees in rads*/ )
 			{
-				angle = glm::radians( -45.0f );
+				angle = -0.785398f;
 			}
 
 			//compute the maximum level of force possible based on sail position
