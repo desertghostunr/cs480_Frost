@@ -13,7 +13,7 @@
     <yScale>6</yScale>
     <zScale>6</zScale>
     <xBScale>35</xBScale>
-    <yBScale>8</yBScale>
+    <yBScale>10</yBScale>
     <zBScale>7</zBScale>
     <xPosition>74</xPosition>
     <yPosition>10</yPosition>
@@ -85,7 +85,7 @@
     <yScale>6</yScale>
     <zScale>6</zScale>
     <xBScale>35</xBScale>
-    <yBScale>8</yBScale>
+    <yBScale>10</yBScale>
     <zBScale>7</zBScale>
     <xPosition>-74</xPosition>
     <yPosition>10</yPosition>
@@ -133,7 +133,7 @@
       <zRotationAngle>0</zRotationAngle>
     </Object>
     <Object path ="models/sail3.obj">
-      <name>sail</name>
+      <name>sail_nt</name>
       <xScale>1</xScale>
       <yScale>1</yScale>
       <zScale>1</zScale>

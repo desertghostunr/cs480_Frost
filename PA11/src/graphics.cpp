@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include <algorithm>
 #include <sstream>
+#include <cmath>
 
 #if defined( _WIN64 ) || ( _WIN32 )
 	#if defined( M_PI )
@@ -1976,20 +1977,27 @@ void Graphics::applyShipForces( )
 			//calculate the angle to rotate the sails
 
 			angle = glm::acos( windScalar );
-			
-			
 
-			if( angle >= glm::radians( 75.0f ) )
+			if( shipDirection.getX( ) < 0 )
 			{
-				angle = glm::radians( 75.0f );
+				if( angle < 1.5708f /*90 degrees in rads*/ )
+				{
+					angle = ( 0.0f - angle ) + 0.1980947f;
+				}
+				else
+				{
+					angle = angle - ( 2.9377215 * ( 1.5708f / angle ) );
+				}
 			}
-
-			/*std::cout << "Wind-to-ship angle degrees: " << glm::degrees( angle ) << ", radians: " << angle << ", wind-ship-dot: " << windScalar << std::endl;
-			if( glm::sin( angle ) < 0 )
+			
+			if( angle >= glm::radians( 65.0f ) )
 			{
-				angle = 90.0f - angle;
+				angle = glm::radians( 65.0f );
 			}
-			std::cout << "Complemented angle: " << glm::degrees( angle ) << std::endl;*/
+			else if( angle <= glm::radians( -45.0f ) )
+			{
+				angle = glm::radians( -45.0f );
+			}
 
 			//compute the maximum level of force possible based on sail position
 			windScalar = std::max( windScalar,
