@@ -93,7 +93,7 @@ class Graphics
 
     private:
 		//helper functions
-		void applyShipForces( );
+		void applyShipForces( unsigned int dt );
 
 		bool shipRayTest( const btVector3& src, const btVector3 &dest, 
 						  btVector3& hit, btCollisionObject& hitObject, 

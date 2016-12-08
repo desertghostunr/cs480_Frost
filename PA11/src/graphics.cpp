@@ -1,7 +1,6 @@
 #include "graphics.h"
 #include <algorithm>
 #include <sstream>
-#include <cmath>
 
 #if defined( _WIN64 ) || ( _WIN32 )
 	#if defined( M_PI )
@@ -695,7 +694,8 @@ void Graphics::Update(unsigned int dt)
     int lookAt = 0;
     unsigned int index;
 
-	applyShipForces( );
+	//apply control forces on the ship
+	applyShipForces( dt );
 
 	if( gameOverStep )
 	{
@@ -1860,7 +1860,7 @@ void Graphics::fireGuns( size_t ship )
 ****************************************/
 
 
-void Graphics::applyShipForces( )
+void Graphics::applyShipForces( unsigned int dt )
 {
 	Object* shipPtr = NULL;
 	btRigidBody* shipBodyPtr = NULL;
@@ -1994,7 +1994,7 @@ void Graphics::applyShipForces( )
 			{
 				angle = 1.13446f;
 			}
-			else if( angle <= -0.785398f /*45 degrees in rads*/ )
+			else if( angle <= -0.785398f /*-45 degrees in rads*/ )
 			{
 				angle = -0.785398f;
 			}
@@ -2055,7 +2055,10 @@ void Graphics::applyShipForces( )
 						std::cout << "Error reducing speed!" << std::endl;
 					}
 
-					ccb::shipReg[ index ].maxAngSpeed -= ( ccb::shipReg[ index ].maxAngSpeed / 1.25f );
+					ccb::shipReg[ index ].maxAngSpeed 
+						-= ccb::shipReg[ index ].maxAngSpeed 
+						* std::min( ( float ) ( dt / 125.0f ), 1.0f );
+
 					shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
 					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
 
@@ -2084,7 +2087,11 @@ void Graphics::applyShipForces( )
 			if( velocity > 0.1f 
 				&& shipRegistry[ index ].slowDown )
 			{
-				ccb::shipReg[ index ].maxSpeed -= ( ccb::shipReg[ index ].maxSpeed / 50.0f );
+				ccb::shipReg[ index ].maxSpeed 
+					-= ccb::shipReg[ index ].maxSpeed 
+					* std::min( ( float ) ( dt / 500.0f ), 1.0f );
+
+				std::cout << dt << std::endl;
 				shipRegistry[ index ].shipReverseCounter = 0;
 			}
 			else if( shipRegistry[ index ].slowDown )
