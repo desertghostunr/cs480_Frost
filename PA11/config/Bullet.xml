@@ -218,9 +218,9 @@
     <yPosition>0.45</yPosition>
     <zPosition>-0.1</zPosition>    
     <Ambient>
-      <xPosition>0.15</xPosition>
-      <yPosition>0.15</yPosition>
-      <zPosition>0.15</zPosition>
+      <xPosition>0.63</xPosition>
+      <yPosition>0.60</yPosition>
+      <zPosition>0.63</zPosition>
     </Ambient>
   </Light>
   <SpotLight>
@@ -229,9 +229,9 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.70</xPosition>
-        <yPosition>0.25</yPosition>
-        <zPosition>0.25</zPosition>
+        <xPosition>1</xPosition>
+        <yPosition>1</yPosition>
+        <zPosition>1</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>40</ConeAngle>
@@ -244,9 +244,9 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.70</xPosition>
-        <yPosition>0.25</yPosition>
-        <zPosition>0.25</zPosition>
+        <xPosition>1</xPosition>
+        <yPosition>1</yPosition>
+        <zPosition>1</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>40</ConeAngle>
@@ -259,9 +259,9 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.70</xPosition>
-        <yPosition>0.25</yPosition>
-        <zPosition>0.25</zPosition>
+        <xPosition>1</xPosition>
+        <yPosition>1</yPosition>
+        <zPosition>1</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>40</ConeAngle>
@@ -274,9 +274,9 @@
       <yPosition>-1.0</yPosition>
       <zPosition>0.0</zPosition>
       <Ambient>
-        <xPosition>0.70</xPosition>
-        <yPosition>0.25</yPosition>
-        <zPosition>0.25</zPosition>
+        <xPosition>1</xPosition>
+        <yPosition>1</yPosition>
+        <zPosition>1</zPosition>
       </Ambient>
     </Light>
     <ConeAngle>40</ConeAngle>
