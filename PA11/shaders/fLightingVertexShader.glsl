@@ -117,11 +117,11 @@ void ProcessLitObject( )
 
 	for( index = 0; index < numLights; index++ )
 	{
-		fL[ index ] = light[ index ].position.xyz;
+		fL[ index ] = (viewMatrix * light[ index ].position).xyz;
 
 		if( light[ index ].position.w != 0.0 )
 		{
-			fL[ index ] = light[ index ].position.xyz - adjustedPos.xyz;
+			fL[ index ] = fL[ index ].xyz - adjustedPos.xyz;
 		}
 	}
 
