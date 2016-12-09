@@ -7,8 +7,8 @@ const float ShipController::MAX_ROT = 1.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
-const float ShipController::CAMERA_FOLLOW_DISTANCE = 125;
-const float ShipController::CAMERA_FOLLOW_HEIGHT = 50;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 35;
+const float ShipController::CAMERA_FOLLOW_HEIGHT = 15;
 
 //glm::decompose
 //SDL window size
@@ -17,69 +17,69 @@ const float ShipController::CAMERA_FOLLOW_HEIGHT = 50;
 //physics related callbacks
 namespace ccb
 {
-	struct Ship
-	{
-		btRigidBody* shipPtr;
-		btScalar maxSpeed;
-		btScalar maxAngSpeed;
+    struct Ship
+    {
+        btRigidBody* shipPtr;
+        btScalar maxSpeed;
+        btScalar maxAngSpeed;
 
-		Ship( ) : 
-			shipPtr( NULL ), 
-			maxSpeed( ShipController::MAX_SPEED ), 
-			maxAngSpeed( ShipController::MAX_SPEED )
-		{ }
+        Ship( ) : 
+            shipPtr( NULL ), 
+            maxSpeed( ShipController::MAX_SPEED ), 
+            maxAngSpeed( ShipController::MAX_SPEED )
+        { }
 
-		Ship( btRigidBody* bodyPtr, btScalar newMaxSpeed, btScalar newMaxAngSpeed ) 
-			: shipPtr( bodyPtr ),
-			maxSpeed( newMaxSpeed ),
-			maxAngSpeed( newMaxAngSpeed )
-		{ }
+        Ship( btRigidBody* bodyPtr, btScalar newMaxSpeed, btScalar newMaxAngSpeed ) 
+            : shipPtr( bodyPtr ),
+            maxSpeed( newMaxSpeed ),
+            maxAngSpeed( newMaxAngSpeed )
+        { }
 
-		Ship( const Ship& src ): 
-			shipPtr( src.shipPtr ), 
-			maxSpeed( src.maxSpeed ),
-			maxAngSpeed( src.maxAngSpeed )
-		{ }
-	};
+        Ship( const Ship& src ): 
+            shipPtr( src.shipPtr ), 
+            maxSpeed( src.maxSpeed ),
+            maxAngSpeed( src.maxAngSpeed )
+        { }
+    };
 
     std::vector<Ship> shipReg;
 
 
     void TickCallback( btDynamicsWorld * world, btScalar timeStep )
     {
-		size_t index;
+        size_t index;
         btVector3 velocity;
-		btVector3 angVelocity;
+        btVector3 angVelocity;
         btScalar speed;
-		btScalar angSpeed;
+        btScalar angSpeed;
 
-		for( index = 0; index < shipReg.size( ); index++ )
-		{
-			if( shipReg[ index ].shipPtr != NULL )
-			{
-				velocity = shipReg[ index ].shipPtr->getLinearVelocity( );
+        for( index = 0; index < shipReg.size( ); index++ )
+        {
+            if( shipReg[ index ].shipPtr != NULL )
+            {
+                velocity = shipReg[ index ].shipPtr->getLinearVelocity( );
 
-				speed = velocity.length( );
+                speed = velocity.length( );
 
-				if( speed > shipReg[ index ].maxSpeed 
-					&& shipReg[ index ].maxSpeed >= 0.0f )
-				{
-					velocity *= shipReg[ index ].maxSpeed / speed;
-					shipReg[ index ].shipPtr->setLinearVelocity( velocity );
-				}
+                if( speed > shipReg[ index ].maxSpeed 
+                    && shipReg[ index ].maxSpeed >= 0.0f )
+                {
+                    velocity *= shipReg[ index ].maxSpeed / speed;
+                    shipReg[ index ].shipPtr->setLinearVelocity( velocity );
+                }
 
-				angVelocity = shipReg[ index ].shipPtr->getAngularVelocity( );
+                angVelocity = shipReg[ index ].shipPtr->getAngularVelocity( );
 
-				angSpeed = angVelocity.length( );
+                angSpeed = angVelocity.length( );
 
-				if( angSpeed > shipReg[ index ].maxAngSpeed 
-					&& shipReg[ index ].maxAngSpeed >= 0.0f )
-				{
-					angVelocity *= shipReg[ index ].maxAngSpeed / angSpeed;
-					shipReg[ index ].shipPtr->setAngularVelocity( angVelocity );
-				}
-			}			
-		}
+                if( angSpeed > shipReg[ index ].maxAngSpeed 
+                    && shipReg[ index ].maxAngSpeed >= 0.0f )
+                {
+                    angVelocity *= shipReg[ index ].maxAngSpeed / angSpeed;
+                    shipReg[ index ].shipPtr->setAngularVelocity( angVelocity );
+                }
+            }			
+        }
 
         
     }
@@ -177,14 +177,14 @@ Graphics::Graphics()
 
     pauseNotifier = false;
 
-	activeIdleState = true;
+    activeIdleState = true;
 
-	numberOfRightCalls = 0;
-	numberOfUpCalls = 0;
+    numberOfRightCalls = 0;
+    numberOfUpCalls = 0;
 
-	goingUp = true;
-	goingRight = true;
-	gameOverStep = false;
+    goingUp = true;
+    goingRight = true;
+    gameOverStep = false;
     gameStarted = false;
 }
 
@@ -192,48 +192,48 @@ Graphics::~Graphics()
 {
     unsigned int index = 0;
 
-	if( dynamicsWorldPtr != NULL )
-	{
-		for( index = 0; index < objectRegistry.getSize( ); index++ )
-		{
-			if( objectRegistry[ index ].getObjectsID( ) == Object::PC_OBJECT )
-			{
-				if( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody != NULL )
-				{
-					dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody );
+    if( dynamicsWorldPtr != NULL )
+    {
+        for( index = 0; index < objectRegistry.getSize( ); index++ )
+        {
+            if( objectRegistry[ index ].getObjectsID( ) == Object::PC_OBJECT )
+            {
+                if( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody != NULL )
+                {
+                    dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody );
 
-					delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody->getMotionState( );
-					delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody;
-					objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = NULL;
-				}
+                    delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody->getMotionState( );
+                    delete objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody;
+                    objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = NULL;
+                }
 
-				if( objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape != NULL )
-				{
-					delete objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape;
-					objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape = NULL;
-				}
-			}
+                if( objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape != NULL )
+                {
+                    delete objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape;
+                    objectRegistry[ index ].CompoundCollisionInfo( ).collisionShape = NULL;
+                }
+            }
 
-			if( objectRegistry[ index ].getObjectsID( ) == Object::P_OBJECT )
-			{
-				if( objectRegistry[ index ].CollisionInfo( ).rigidBody != NULL )
-				{
-					dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CollisionInfo( ).rigidBody );
+            if( objectRegistry[ index ].getObjectsID( ) == Object::P_OBJECT )
+            {
+                if( objectRegistry[ index ].CollisionInfo( ).rigidBody != NULL )
+                {
+                    dynamicsWorldPtr->removeRigidBody( objectRegistry[ index ].CollisionInfo( ).rigidBody );
 
-					delete objectRegistry[ index ].CollisionInfo( ).rigidBody->getMotionState( );
-					delete objectRegistry[ index ].CollisionInfo( ).rigidBody;
-					objectRegistry[ index ].CollisionInfo( ).rigidBody = NULL;
-				}
+                    delete objectRegistry[ index ].CollisionInfo( ).rigidBody->getMotionState( );
+                    delete objectRegistry[ index ].CollisionInfo( ).rigidBody;
+                    objectRegistry[ index ].CollisionInfo( ).rigidBody = NULL;
+                }
 
-				if( objectRegistry[ index ].CollisionInfo( ).collisionShape != NULL )
-				{
-					delete objectRegistry[ index ].CollisionInfo( ).collisionShape;
+                if( objectRegistry[ index ].CollisionInfo( ).collisionShape != NULL )
+                {
+                    delete objectRegistry[ index ].CollisionInfo( ).collisionShape;
 
-					objectRegistry[ index ].CollisionInfo( ).collisionShape = NULL;
-				}
-			}
-		}
-	} 
+                    objectRegistry[ index ].CollisionInfo( ).collisionShape = NULL;
+                }
+            }
+        }
+    } 
 
     if( dynamicsWorldPtr != NULL )
     {
@@ -270,10 +270,10 @@ Graphics::~Graphics()
         broadphasePtr = NULL;
     }
 
-	while( objectCollidedSound.SoundPlaying( ) )
-	{
-		//wait for sound to finish
-	}
+    while( objectCollidedSound.SoundPlaying( ) )
+    {
+        //wait for sound to finish
+    }
 }
 
 bool Graphics::Initialize
@@ -281,7 +281,7 @@ bool Graphics::Initialize
     int width, 
     int height, 
     const GraphicsInfo& progInfo,
-	long long time
+    long long time
 )
 {
     // Used for the linux OS
@@ -324,29 +324,29 @@ bool Graphics::Initialize
     btVector3 inertia;
     btTransform transform;
 
-	oceanHeightMap = HeightMap( ( long ) time );
+    oceanHeightMap = HeightMap( ( long ) time );
 
-	oceanHeightMap.generateHeightMap( 1024, 1024 );
+    oceanHeightMap.generateHeightMap( 1024, 1024 );
 
-	//wind direction
-	std::cout << "Wind direction: " << progInfo.windDirection.x << ", ";
-	std::cout << progInfo.windDirection.y << ", " << progInfo.windDirection.z;
-	std::cout << "." << std::endl;
+    //wind direction
+    std::cout << "Wind direction: " << progInfo.windDirection.x << ", ";
+    std::cout << progInfo.windDirection.y << ", " << progInfo.windDirection.z;
+    std::cout << "." << std::endl;
 
-	windDirection = btVector3( progInfo.windDirection.x, 
-							   progInfo.windDirection.y, 
-							   progInfo.windDirection.z );
+    windDirection = btVector3( progInfo.windDirection.x, 
+                               progInfo.windDirection.y, 
+                               progInfo.windDirection.z );
 
-	windDirection = windDirection.normalized( );
+    windDirection = windDirection.normalized( );
 
-	if( progInfo.windForce <= 0.01f )
-	{
-		windForce = ShipController::STD_FORCE;
-	}
-	else
-	{
-		windForce = progInfo.windForce;
-	}
+    if( progInfo.windForce <= 0.01f )
+    {
+        windForce = ShipController::STD_FORCE;
+    }
+    else
+    {
+        windForce = progInfo.windForce;
+    }
 
     // Init Camera
     m_camera = new Camera();
@@ -356,7 +356,7 @@ bool Graphics::Initialize
         printf("Camera Failed to Initialize\n");
         return false;
     }
-	
+    
     score = 0;
 
     objectCollidedSound.loadSound("sounds/Canon_Fire.wav");
@@ -386,18 +386,18 @@ bool Graphics::Initialize
     
     for( pIndex = 0; pIndex < progInfo.objectData.size( ); pIndex++ )
     {
-		if( progInfo.objectData[ pIndex ].type == P_OBJECT_TYPE )
-		{
-			objectRegistry.addObject( -1, Object::P_OBJECT );
-		}
-		else if( progInfo.objectData[ pIndex ].type == P_C_OBJECT_TYPE )
-		{
-			objectRegistry.addObject( -1, Object::PC_OBJECT );
-		}
-		else
-		{
-			objectRegistry.addObject( -1, Object::BASE_OBJECT );
-		}
+        if( progInfo.objectData[ pIndex ].type == P_OBJECT_TYPE )
+        {
+            objectRegistry.addObject( -1, Object::P_OBJECT );
+        }
+        else if( progInfo.objectData[ pIndex ].type == P_C_OBJECT_TYPE )
+        {
+            objectRegistry.addObject( -1, Object::PC_OBJECT );
+        }
+        else
+        {
+            objectRegistry.addObject( -1, Object::BASE_OBJECT );
+        }
         
         if( progInfo.objectData[ pIndex ].modelID < modelRegistry.size( ) )
         {
@@ -425,21 +425,21 @@ bool Graphics::Initialize
 
         objectRegistry[ objectRegistry.getSize( ) - 1 ].Name( ) = progInfo.objectData[ pIndex ].name;
 
-		//set lighting code
-		if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "sky" )
-		{
-			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::NO_LIGHTING;
+        //set lighting code
+        if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "sky" )
+        {
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::NO_LIGHTING;
 
-			objectRegistry[ objectRegistry.getSize( ) - 1 ].useParent( false );
-		}
-		else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "ocean" )
-		{
-			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::WAVE;
-		}
-		else
-		{
-			objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
-		}
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].useParent( false );
+        }
+        else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "ocean" )
+        {
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::WAVE;
+        }
+        else
+        {
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
+        }
 
 
         objectRegistry[ objectRegistry.getSize( ) - 1 ].getBScale( ) = progInfo.objectData[ pIndex ].bScale;
@@ -575,8 +575,8 @@ bool Graphics::Initialize
 
     //enable depth testing
     glEnable(GL_DEPTH_TEST);
-	glEnable( GL_CULL_FACE );
-	glCullFace( GL_BACK );
+    glEnable( GL_CULL_FACE );
+    glCullFace( GL_BACK );
     glDepthFunc(GL_LESS);   
 
     // INITIALIZE BULLET //////////////////////////////////////////////
@@ -594,7 +594,7 @@ bool Graphics::Initialize
         {
             ballIndex = index;
 
-			tmpShapePtr = new btBoxShape( btVector3( objectRegistry[ index ].getBScale( ).x + 1, objectRegistry[ index ].getBScale( ).y + 1, objectRegistry[ index ].getBScale( ).z + 1 ) );
+            tmpShapePtr = new btBoxShape( btVector3( objectRegistry[ index ].getBScale( ).x + 1, objectRegistry[ index ].getBScale( ).y + 1, objectRegistry[ index ].getBScale( ).z + 1 ) );
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
             
@@ -615,15 +615,15 @@ bool Graphics::Initialize
             tmpRigidBody = new btRigidBody( rigidBodyConstruct );
 
             tmpRigidBody->setLinearFactor( btVector3( 1, 0, 1 ) );
-			tmpRigidBody->setAngularFactor( btVector3( 0, 1, 0 ) );
+            tmpRigidBody->setAngularFactor( btVector3( 0, 1, 0 ) );
 
             tmpRigidBody->setCollisionFlags( tmpRigidBody->getCollisionFlags( ) | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK );
 
-			//initialize Ship Registries
-			ccb::shipReg.push_back( ccb::Ship( tmpRigidBody, 
-											   ShipController::MAX_SPEED, 
-											   ShipController::MAX_ROT ) );
-			shipRegistry.push_back( index );
+            //initialize Ship Registries
+            ccb::shipReg.push_back( ccb::Ship( tmpRigidBody, 
+                                               ShipController::MAX_SPEED, 
+                                               ShipController::MAX_ROT ) );
+            shipRegistry.push_back( index );
         }
         else if( objectRegistry[ index ].getName( ) == "ocean" )
         {
@@ -666,11 +666,11 @@ bool Graphics::Initialize
             objectRegistry[ index ].CollisionInfo( ).rigidBody = tmpRigidBody;
         }        
 
-		if( objectRegistry[ index ].getObjectType( ) == Object::P_OBJECT 
-			|| objectRegistry[ index ].getObjectType( ) == Object::PC_OBJECT )
-		{
-			dynamicsWorldPtr->addRigidBody( tmpRigidBody );
-		}        
+        if( objectRegistry[ index ].getObjectType( ) == Object::P_OBJECT 
+            || objectRegistry[ index ].getObjectType( ) == Object::PC_OBJECT )
+        {
+            dynamicsWorldPtr->addRigidBody( tmpRigidBody );
+        }        
 
         tmpCompoundShape = NULL;
         tmpShapePtr = NULL;
@@ -688,14 +688,16 @@ void Graphics::Update(unsigned int dt)
     int lookAt = 0;
     unsigned int index;
 
-	//apply control forces on the ship
-	applyShipForces( dt );
+    float cameraWaveDifference = 0.0f;
 
-	if( gameOverStep )
-	{
-		dynamicsWorldPtr->stepSimulation( dt, 10 );
-		gameOverStep = false;
-	}
+    //apply control forces on the ship
+    applyShipForces( dt );
+
+    if( gameOverStep )
+    {
+        dynamicsWorldPtr->stepSimulation( dt, 10 );
+        gameOverStep = false;
+    }
 
     if( returnBall )
     {
@@ -709,10 +711,10 @@ void Graphics::Update(unsigned int dt)
         dynamicsWorldPtr->stepSimulation( dt, 10 );
 
     }
-	else if( activeIdleState )
-	{
-		idleSplash( dt );
-	}
+    else if( activeIdleState )
+    {
+        idleSplash( dt );
+    }
 
     // Update the objects
     for( index = 0; index < objectRegistry.getSize( ); index++ )
@@ -723,73 +725,98 @@ void Graphics::Update(unsigned int dt)
         }        
     }
 
-	if( playingStateFlag )
-	{
-		//put camera stuff here ///////
+    if( playingStateFlag )
+    {
+        //put camera stuff here ///////
 
-                if( shipRegistry[ 0 ].lookingLeft )
-                {
-                    lookAt = Camera::LOOK_LEFT;
-                }
-                else if( shipRegistry[ 0 ].lookingRight )
-                {
-                    lookAt = Camera::LOOK_RIGHT;
-                }
-                else
-                {
-                    lookAt = Camera::LOOK_AT_SHIP;
-                }                 
-		m_camera->followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x,
-										 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y,
-										 objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z ),
-							  shipRegistry[ 0 ].cameraPosition,
-							  glm::vec3( shipRegistry[ 0 ].leftHit.getX( ),
-										 shipRegistry[ 0 ].leftHit.getY( ),
-										 shipRegistry[ 0 ].leftHit.getZ( ) ),
-							  glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
-										 shipRegistry[ 0 ].rightHit.getY( ),
-										 shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
-		////
-	}
+        if( shipRegistry[ 0 ].lookingLeft )
+        {
+            lookAt = Camera::LOOK_LEFT;
+        }
+        else if( shipRegistry[ 0 ].lookingRight )
+        {
+            lookAt = Camera::LOOK_RIGHT;
+        }
+        else
+        {
+            lookAt = Camera::LOOK_AT_SHIP;
+        }
+        //wave viewing effect
+        if( shipRegistry[ 0 ].waveCycle >= 0.0f && !shipRegistry[ 0 ].waveUp )
+        {
+            shipRegistry[ 0 ].waveCycle -= std::min( ( float ) dt / 4500.0f, 0.25f );
+        }
+        else if( shipRegistry[ 0 ].waveCycle >= 1.0f && shipRegistry[ 0 ].waveUp )
+        {
+            shipRegistry[ 0 ].waveUp = false;
+        }
+        else if( shipRegistry[ 0 ].waveCycle <= 1.0f && shipRegistry[ 0 ].waveUp )
+        {
+            shipRegistry[ 0 ].waveCycle += std::min( ( float ) dt / 5000.0f, 0.25f );
+        }
+        else if( shipRegistry[ 0 ].waveCycle <= 0.00f && !shipRegistry[ 0 ].waveUp )
+        {
+            shipRegistry[ 0 ].waveUp = true;
+            shipRegistry[ 0 ].waveCycle = 0.0f;
+        }
+        
+
+        cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 0 ].waveCycle );
+
+        m_camera->followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x - 1.5,
+                                         objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y + 6,
+                                         objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z + 3 ),
+                              shipRegistry[ 0 ].cameraPosition 
+                              + glm::vec3( -0.15f * cameraWaveDifference,
+                                           0.35f * cameraWaveDifference, 
+                                           0.12f * cameraWaveDifference),
+                              glm::vec3( shipRegistry[ 0 ].leftHit.getX( ),
+                                         shipRegistry[ 0 ].leftHit.getY( ),
+                                         shipRegistry[ 0 ].leftHit.getZ( ) ),
+                              glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
+                                         shipRegistry[ 0 ].rightHit.getY( ),
+                                         shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
+        ////
+    }
 
 
-	for( index = 0; index < shipRegistry.size( ); index++ )
-	{
-		//right guns
-		if( shipRegistry[ index ].rightReloadTime > 0 )
-		{
-			shipRegistry[ index ].rightReloadTime -= dt;
-			std::cout << "Ship "<< index  << ": Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
-		}
-		else
-		{
-			shipRegistry[ index ].rightReloadTime = 0;
-		}
+    for( index = 0; index < shipRegistry.size( ); index++ )
+    {
+        //right guns
+        if( shipRegistry[ index ].rightReloadTime > 0 )
+        {
+            shipRegistry[ index ].rightReloadTime -= dt;
+            std::cout << "Ship "<< index  << ": Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
+        }
+        else
+        {
+            shipRegistry[ index ].rightReloadTime = 0;
+        }
 
-		//left guns
-		if( shipRegistry[ index ].leftReloadTime > 0 )
-		{
-			shipRegistry[ index ].leftReloadTime -= dt;
-			std::cout << "Ship " << index << ": Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
-		}
-		else
-		{
-			shipRegistry[ index ].leftReloadTime = 0;
-		}
+        //left guns
+        if( shipRegistry[ index ].leftReloadTime > 0 )
+        {
+            shipRegistry[ index ].leftReloadTime -= dt;
+            std::cout << "Ship " << index << ": Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
+        }
+        else
+        {
+            shipRegistry[ index ].leftReloadTime = 0;
+        }
 
-		if( shipRegistry[ index ].healthPoints <= 0 )
-		{
-			std::cout << "Player " << index + 1 << " loses!" << std::endl;
-		}
-	}
-	
+        if( shipRegistry[ index ].healthPoints <= 0 )
+        {
+            std::cout << "Player " << index + 1 << " loses!" << std::endl;
+        }
+    }
+    
 }
 
 void Graphics::Render( unsigned int dt )
 {
     unsigned int index;
-	int lightCode = -1;
-	float normedCTime;
+    int lightCode = -1;
+    float normedCTime;
 
     glm::vec4 tmpVec;
 
@@ -807,13 +834,13 @@ void Graphics::Render( unsigned int dt )
     glUniform1i( m_numLights, ( GLint ) lights.size( ) );
     glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
 
-	cumultiveTime += dt;
-	normedCTime = cumultiveTime;
-	normedCTime /= 1000000.0f;
+    cumultiveTime += dt;
+    normedCTime = cumultiveTime;
+    normedCTime /= 1000000.0f;
 
-	glUniform1f( m_time, normedCTime );
+    glUniform1f( m_time, normedCTime );
 
-	
+    
 
     for( index = 0; 
          index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
@@ -828,52 +855,52 @@ void Graphics::Render( unsigned int dt )
                      lights[ index ].incoming.a );
     } 
 
-	for( index = 0; index < shipRegistry.size( ); index += 1 )
-	{
-		if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
-		{
-			std::cout << "Error: too few spotLights!" << std::endl;
-		}
+    for( index = 0; index < shipRegistry.size( ); index += 1 )
+    {
+        if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
+        {
+            std::cout << "Error: too few spotLights!" << std::endl;
+        }
 
-		tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
-							shipRegistry[ index ].rightHit.getY( ), 
-							shipRegistry[ index ].rightHit.getZ( ), 1.0 );
+        tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
+                            shipRegistry[ index ].rightHit.getY( ), 
+                            shipRegistry[ index ].rightHit.getZ( ), 1.0 );
 
-		glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
-					 tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
+        glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
+                     tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
 
-		glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
-					 spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
-					 spotLight[ 2 * index ].ambient.a );
+        glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
+                     spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
+                     spotLight[ 2 * index ].ambient.a );
 
-		glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
-					 spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
+        glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
+                     spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
 
-		glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
+        glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
 
-		tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
-							shipRegistry[ index ].leftHit.getY( ),
-							shipRegistry[ index ].leftHit.getZ( ), 1.0 );
+        tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
+                            shipRegistry[ index ].leftHit.getY( ),
+                            shipRegistry[ index ].leftHit.getZ( ), 1.0 );
 
-		glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
-					 tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
+        glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
+                     tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
 
-		glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
-					 spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
-					 spotLight[ ( 2 * index ) + 1 ].ambient.a );
+        glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
+                     spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
+                     spotLight[ ( 2 * index ) + 1 ].ambient.a );
 
-		glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
-					 spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
+        glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
+                     spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
 
-		glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
+        glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
 
-	}
+    }
 
     for( index  = 2 * index; 
          index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
          index++ )
     {
-		tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
+        tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
 
         glUniform4f( spotLight[ index ].followLoc, tmpVec.x, 
                      tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
@@ -904,23 +931,23 @@ void Graphics::Render( unsigned int dt )
 
         glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
 
-		if( lightCode != objectRegistry[ index ].LightCode( ) )
-		{
-			lightCode = objectRegistry[ index ].LightCode( );
-			glUniform1i( m_objectType, lightCode );
-		}
+        if( lightCode != objectRegistry[ index ].LightCode( ) )
+        {
+            lightCode = objectRegistry[ index ].LightCode( );
+            glUniform1i( m_objectType, lightCode );
+        }
 
-		if( lightCode == Object::WAVE )
-		{
-			glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
-			glActiveTexture( GL_TEXTURE1 );
-		    glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
-		}
+        if( lightCode == Object::WAVE )
+        {
+            glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
+            glActiveTexture( GL_TEXTURE1 );
+            glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
+        }
 
         objectRegistry[index].Render();
     }
 
-	shaderRegistry[ shaderSelect ].Disable( );
+    shaderRegistry[ shaderSelect ].Disable( );
 
     // Get any errors from OpenGL
     auto error = glGetError();
@@ -982,11 +1009,11 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     btTransform trans;
     btScalar modTrans[ 16 ]; 
 
-	int cIndex, cID;
+    int cIndex, cID;
 
-	float newX, newY, newZ;
+    float newX, newY, newZ;
 
-	glm::vec4 shipPos;
+    glm::vec4 shipPos;
 
     if( ( objectID > objectRegistry.getSize( ) ) )
     {
@@ -1001,7 +1028,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     objectRegistry[ objectID ].commitScale( );
 
     if( objectRegistry[ objectID ].getObjectType( ) == Object::P_OBJECT 
-		&& !objectRegistry[ objectID ].CollisionInfo( ).empty( ) )
+        && !objectRegistry[ objectID ].CollisionInfo( ).empty( ) )
     {
         objectRegistry[ objectID ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( trans );
 
@@ -1011,49 +1038,49 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
         objectRegistry[ objectID ].commitBulletTransform( );
 
-		if( objectRegistry[ objectID ].getName( ) == "ship" )
-		{
-			for( cIndex = 0;
-				 cIndex < objectRegistry[ objectID ].getNumberOfChildren( );
-				 cIndex++ )
-			{
-				cID = objectRegistry[ objectID ].getChildsWorldID( cIndex );
+        if( objectRegistry[ objectID ].getName( ) == "ship" )
+        {
+            for( cIndex = 0;
+                 cIndex < objectRegistry[ objectID ].getNumberOfChildren( );
+                 cIndex++ )
+            {
+                cID = objectRegistry[ objectID ].getChildsWorldID( cIndex );
 
-				if( objectRegistry[ cID ].getName( ) == "sky" )
-				{
-					shipPos = objectRegistry[ objectID ].getPositionInWorld( );
+                if( objectRegistry[ cID ].getName( ) == "sky" )
+                {
+                    shipPos = objectRegistry[ objectID ].getPositionInWorld( );
 
-					newY = objectRegistry[ cID ].getTransVec( ).y;
-					newX = shipPos.x;
-					newZ = shipPos.z;
+                    newY = objectRegistry[ cID ].getTransVec( ).y;
+                    newX = shipPos.x;
+                    newZ = shipPos.z;
 
-					objectRegistry[ cID ].setTranslationVector( glm::vec3( newX, newY, newZ ) );
+                    objectRegistry[ cID ].setTranslationVector( glm::vec3( newX, newY, newZ ) );
 
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
     }
-	else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
-	{
-		if( objectRegistry[ objectID ].getName( ) == "sky" )
-		{
-			objectRegistry[ objectID ].incrementAngle( dt, 0.0065 );
-			objectRegistry[ objectID ].commitRotation( );
-			objectRegistry[ objectID ].commitTranslation( );
-		}
-		else if( objectRegistry[ objectID ].getName( ) == "sail" )
-		{
-			objectRegistry[ objectID ].commitRotation( );
-			objectRegistry[ objectID ].commitTranslation( );
-		}
-		else if( objectRegistry[ objectID ].getName( ) == "sail_nt" )
-		{
-			objectRegistry[ objectID ].commitTranslation( );
-		}
-		
-		
-	}    
+    else if( objectRegistry[ objectID ].getObjectType( ) == Object::BASE_OBJECT )
+    {
+        if( objectRegistry[ objectID ].getName( ) == "sky" )
+        {
+            objectRegistry[ objectID ].incrementAngle( dt, 0.0065 );
+            objectRegistry[ objectID ].commitRotation( );
+            objectRegistry[ objectID ].commitTranslation( );
+        }
+        else if( objectRegistry[ objectID ].getName( ) == "sail" )
+        {
+            objectRegistry[ objectID ].commitRotation( );
+            objectRegistry[ objectID ].commitTranslation( );
+        }
+        else if( objectRegistry[ objectID ].getName( ) == "sail_nt" )
+        {
+            objectRegistry[ objectID ].commitTranslation( );
+        }
+        
+        
+    }    
 
     objectRegistry[ objectID ].Update( dt );
     //////////////////////////////////////////////////
@@ -1096,7 +1123,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
 
          if( childsID < objectRegistry.getSize( ) )
          {
-			objectRegistry[ childsID ].setParentModel( objectRegistry[ objectID ].GetModel( ) );
+            objectRegistry[ childsID ].setParentModel( objectRegistry[ objectID ].GetModel( ) );
             
             noErrors = ( noErrors  && updateChildren( childsID, dt ) );
          }
@@ -1124,11 +1151,11 @@ void Graphics::ChangePerspectiveStatic( int position )
 {
     if( position == 1 )
     {
-	m_camera->LookTopDown();
+    m_camera->LookTopDown();
     }
     else if( position == 2 )
     {
-	m_camera->LookSideToSide();
+    m_camera->LookSideToSide();
     }
     m_camera->updateLookAt();
     cameraTracking = false;
@@ -1457,30 +1484,30 @@ bool Graphics::linkToCurrentShaderProgram( )
     std::ostringstream strStream;
 
 
-	m_time = shaderRegistry[ shaderSelect ].GetUniformLocation( "time" );
+    m_time = shaderRegistry[ shaderSelect ].GetUniformLocation( "time" );
 
-	if( m_time == -1 )
-	{
-		printf( "time not found!\n" );
-		return false;
-	}
+    if( m_time == -1 )
+    {
+        printf( "time not found!\n" );
+        return false;
+    }
 
-	tmpTextLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( "waveMap" );
+    tmpTextLoc = shaderRegistry[ shaderSelect ].GetUniformLocation( "waveMap" );
 
-	oceanHeightMap.HeightMapUniform( ) = tmpTextLoc;
+    oceanHeightMap.HeightMapUniform( ) = tmpTextLoc;
 
-	if( tmpTextLoc == -1 )
-	{
-		printf( "waveMap not found\n" );
-		return false;
-	}
+    if( tmpTextLoc == -1 )
+    {
+        printf( "waveMap not found\n" );
+        return false;
+    }
 
-	m_objectType = shaderRegistry[ shaderSelect ].GetUniformLocation( "typeOfObject" );
-	if( m_objectType == -1 )
-	{
-		printf( "object type code not found\n" );
-		return false;
-	}
+    m_objectType = shaderRegistry[ shaderSelect ].GetUniformLocation( "typeOfObject" );
+    if( m_objectType == -1 )
+    {
+        printf( "object type code not found\n" );
+        return false;
+    }
 
     m_numLights = shaderRegistry[ shaderSelect ].GetUniformLocation( "numberOfLights" );
 
@@ -1650,17 +1677,17 @@ void Graphics::startGame( )
 {
     if( !playingStateFlag )
     {
-		if( activeIdleState )
-		{
-			resetView( );
-		}
+        if( activeIdleState )
+        {
+            resetView( );
+        }
 
         playingStateFlag = true;
         pauseNotifier = false;
-		activeIdleState = false;
+        activeIdleState = false;
 
-		score = 0;
-		numberOfBalls = 3;
+        score = 0;
+        numberOfBalls = 3;
 
         gameStarted = true;
 
@@ -1678,20 +1705,20 @@ void Graphics::resetBall( )
     {
 
         playingStateFlag = false;
-		activeIdleState = true;
+        activeIdleState = true;
 
         std::cout << "Game over!" << std::endl;
         std::cout << "Press space to restart the game." << std::endl;
 
-		gameOverStep = true;
+        gameOverStep = true;
         gameStarted = false;
     }
-	else
-	{
-		gameOverStep = false;
-	}
+    else
+    {
+        gameOverStep = false;
+    }
 
-	numberOfBalls -= 1;
+    numberOfBalls -= 1;
 
     if( objectRegistry.getSize( ) > ballIndex && !objectRegistry[ ballIndex ].CollisionInfo( ).empty( ) )
     {
@@ -1749,123 +1776,123 @@ void Graphics::resetView( )
 
 void Graphics::idleSplash( unsigned int dt )
 {
-	if( numberOfUpCalls < 1500 && goingUp )
-	{
-		m_camera->moveUp( );
-		numberOfUpCalls += dt;
-	}
-	else if( numberOfUpCalls > -500 && goingRight )
-	{
-		m_camera->moveDown( );
-		numberOfUpCalls -= dt;
+    if( numberOfUpCalls < 1500 && goingUp )
+    {
+        m_camera->moveUp( );
+        numberOfUpCalls += dt;
+    }
+    else if( numberOfUpCalls > -500 && goingRight )
+    {
+        m_camera->moveDown( );
+        numberOfUpCalls -= dt;
 
-		goingUp = false;
-	}
-	else
-	{
-		goingUp = true;
-	}
+        goingUp = false;
+    }
+    else
+    {
+        goingUp = true;
+    }
 
-	if( numberOfRightCalls < 8000 && goingRight )
-	{
-		m_camera->moveRight( );
-		numberOfRightCalls += dt;
-	}
-	else if( numberOfRightCalls > -8000 && goingUp )
-	{
-		m_camera->moveLeft( );
-		numberOfRightCalls -= dt;
-		goingRight = false;
-	}
-	else
-	{
-		goingRight = true;
-	}
+    if( numberOfRightCalls < 8000 && goingRight )
+    {
+        m_camera->moveRight( );
+        numberOfRightCalls += dt;
+    }
+    else if( numberOfRightCalls > -8000 && goingUp )
+    {
+        m_camera->moveLeft( );
+        numberOfRightCalls -= dt;
+        goingRight = false;
+    }
+    else
+    {
+        goingRight = true;
+    }
 }
 
 void Graphics::turnOffSplash( )
 {
-	activeIdleState = false;
+    activeIdleState = false;
 }
 
 void Graphics::moveShip( size_t ship )
 {
-	shipRegistry[ ship ].slowDown = false;
-	shipRegistry[ ship ].shipReversed = false;
-	shipRegistry[ ship ].forceOn = true;
+    shipRegistry[ ship ].slowDown = false;
+    shipRegistry[ ship ].shipReversed = false;
+    shipRegistry[ ship ].forceOn = true;
 }
 
 void Graphics::rotateShip( size_t ship, float torque )
 {
-	if( ship < shipRegistry.size( ) 
-		&& !shipRegistry[ ship ].shipReversed )
-	{
-		shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
+    if( ship < shipRegistry.size( ) 
+        && !shipRegistry[ ship ].shipReversed )
+    {
+        shipRegistry[ ship ].torque = btVector3( 0.0f, torque, 0.0f );
 
-		shipRegistry[ ship ].slowRotDown = false;
-		shipRegistry[ ship ].torqueOn = true;
+        shipRegistry[ ship ].slowRotDown = false;
+        shipRegistry[ ship ].torqueOn = true;
                 
                 
 
 
-	}
+    }
               
-	
+    
 }
 
 void Graphics::slowShipToHalt( size_t ship )
 {
-	if( ship < shipRegistry.size( ) )
-	{
-		shipRegistry[ ship ].slowDown = true;
-		shipRegistry[ ship ].forceOn = false;
-		shipRegistry[ ship ].shipReverseCounter = 0;
-		std::cout << "Slowing!" << std::endl;
-	}
+    if( ship < shipRegistry.size( ) )
+    {
+        shipRegistry[ ship ].slowDown = true;
+        shipRegistry[ ship ].forceOn = false;
+        shipRegistry[ ship ].shipReverseCounter = 0;
+        std::cout << "Slowing!" << std::endl;
+    }
 }
 
 void Graphics::reverseShip( size_t ship )
 {
-	if( ship < shipRegistry.size( ) 
-		&& !shipRegistry[ ship ].slowDown 
-		&& !shipRegistry[ ship ].torqueOn )
-	{
-		shipRegistry[ ship ].shipReversed = true;
-		shipRegistry[ ship ].forceOn = true;
-	}
+    if( ship < shipRegistry.size( ) 
+        && !shipRegistry[ ship ].slowDown 
+        && !shipRegistry[ ship ].torqueOn )
+    {
+        shipRegistry[ ship ].shipReversed = true;
+        shipRegistry[ ship ].forceOn = true;
+    }
 
 }
 
 void Graphics::stopShipsRotation( size_t ship )
 {
-	if( ship < shipRegistry.size( ) )
-	{
-		shipRegistry[ ship ].slowRotDown = true;
-		shipRegistry[ ship ].torqueOn = false;
-		std::cout << "Stopping ship rotation!" << std::endl;
-	}
+    if( ship < shipRegistry.size( ) )
+    {
+        shipRegistry[ ship ].slowRotDown = true;
+        shipRegistry[ ship ].torqueOn = false;
+        std::cout << "Stopping ship rotation!" << std::endl;
+    }
 }
 
 void Graphics::fireGuns( size_t ship )
 {
-	if( ship < shipRegistry.size( ) )
-	{
-		if( shipRegistry[ ship ].lookingLeft )
-		{
-			if( shipRegistry[ ship ].leftReloadTime <= 0 )
-			{
-				shipRegistry[ ship ].firingLeft = true;
-			}			
-		}
-		else if( shipRegistry[ ship ].lookingRight )
-		{
-			if( shipRegistry[ ship ].rightReloadTime <= 0 )
-			{
-				shipRegistry[ ship ].firingRight = true;
-			}
-		}
-		
-	}
+    if( ship < shipRegistry.size( ) )
+    {
+        if( shipRegistry[ ship ].lookingLeft )
+        {
+            if( shipRegistry[ ship ].leftReloadTime <= 0 )
+            {
+                shipRegistry[ ship ].firingLeft = true;
+            }			
+        }
+        else if( shipRegistry[ ship ].lookingRight )
+        {
+            if( shipRegistry[ ship ].rightReloadTime <= 0 )
+            {
+                shipRegistry[ ship ].firingRight = true;
+            }
+        }
+        
+    }
 }
 
 // APPLY SHIP FORCES /////////////////////
@@ -1874,7 +1901,7 @@ void Graphics::fireGuns( size_t ship )
 @brief applyShipForces
 
 @details handles all of the ship motion
-		 and force related management
+         and force related management
 
 @param None
 
@@ -1885,432 +1912,432 @@ void Graphics::fireGuns( size_t ship )
 
 void Graphics::applyShipForces( unsigned int dt )
 {
-	Object* shipPtr = NULL;
-	btRigidBody* shipBodyPtr = NULL;
-
-	btVector3 rawVelocity;
-	btScalar velocity;
-	btScalar angVel;
-
-	btVector3 relativeForce;
-	btVector3 correctedForce;
-	btVector3 shipDirection;
-	btMatrix3x3 shipRot;
-
-	float windScalar;
-
-	float angle;
+    Object* shipPtr = NULL;
+    btRigidBody* shipBodyPtr = NULL;
+
+    btVector3 rawVelocity;
+    btScalar velocity;
+    btScalar angVel;
+
+    btVector3 relativeForce;
+    btVector3 correctedForce;
+    btVector3 shipDirection;
+    btMatrix3x3 shipRot;
+
+    float windScalar;
+
+    float angle;
 
-	size_t index, cIndex;
+    size_t index, cIndex;
 
-	btVector3 shipPosition;
+    btVector3 shipPosition;
 
-	btVector3 shipTarget;
-
-	btTransform worldTransform;
-
-	btVector3 hitPosition;
-
-	btCollisionObject hitObject;
-
-	btScalar hitFract;
-
-	btScalar modTrans[ 16 ];
-
-	glm::mat4 glModelMat;
-
-	glm::vec4 glPositionVector;
-
-	btVector3 cameraPos;
-
-	for( index = 0; index < shipRegistry.size( ); index++ )
-	{
-		shipPtr = &objectRegistry[ shipRegistry[ index ].index ];
-
-		if( !shipPtr->CollisionInfo( ).empty( ) )
-		{
-			shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
-		}
-
-		if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
-		{
-			shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
-		}
-
-		if( shipBodyPtr != NULL )
-		{
-			//information about the ships travel
-
-			rawVelocity = shipBodyPtr->getLinearVelocity( );
-			velocity = rawVelocity.length( );
-
-			angVel = shipBodyPtr->getAngularVelocity( ).length( );
-
-			shipRot = shipBodyPtr->getWorldTransform( ).getBasis( );
-
-			//check controller flags and alter force accordingly
-			if( shipRegistry[ index ].forceOn 
-				&& shipRegistry[ index ].torqueOn 
-				&& velocity >= ShipController::MAX_SPEED / 1.75f )
-			{
-				shipRegistry[ index ].slowDown = true;				
-			}
-			if( shipRegistry[ index ].forceOn
-				&& shipRegistry[ index ].torqueOn )
-			{
-				shipRegistry[ index ].slowDown = false;
-				shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
-			}
-			else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 1.25f )
-			{
-				shipRegistry[ index ].slowDown = true;
-			}
-			else if( shipRegistry[ index ].torqueOn )
-			{
-				shipRegistry[ index ].slowDown = false;
-				shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
-			}
-			else if( shipRegistry[ index ].forceOn )
-			{
-				shipRegistry[ index ].slowDown = false;
-				if( shipRegistry[ index ].shipReversed 
-					&& shipRegistry[ index ].shipReverseCounter <= 0 )
-				{
-					shipRegistry[ index ].force = btVector3( ShipController::STD_REVERSE, 0.0f, 0.0f );
-					shipRegistry[ index ].shipReverseCounter++;
-				}
-				else if( !shipRegistry[ index ].shipReversed )
-				{
-					shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
-				}
-			}
-			else if( velocity >= 0.1f )
-			{
-				shipRegistry[ index ].slowDown = true;
-			}
-
-			//dot product for wind power and ray testing
-
-			shipDirection = shipRot * btVector3( 1.0f, 0.0f, 0.0f );
-
-			shipDirection = shipDirection.normalized( );
-
-			windScalar = windDirection.dot( shipDirection );
-
-			//calculate the angle to rotate the sails
-
-			angle = glm::acos( windScalar );
-
-			if( shipDirection.getX( ) < 0 )
-			{
-				if( angle < 1.5708f /*90 degrees in rads*/ )
-				{
-					angle = ( 0.0f - angle ) + 0.1980947f;
-				}
-				else
-				{
-					angle = angle - ( 2.9377215 * ( 1.5708f / angle ) );
-				}
-			}
-			
-			if( angle >= 1.13446f /*65 degrees in rads*/ )
-			{
-				angle = 1.13446f;
-			}
-			else if( angle <= -0.785398f /*-45 degrees in rads*/ )
-			{
-				angle = -0.785398f;
-			}
-
-			//compute the maximum level of force possible based on sail position
-			windScalar = std::max( windScalar,
-				( float ) std::max( windScalar
-									+ glm::cos( glm::radians( 80.0f ) ),
-									windScalar
-									+ glm::cos( glm::radians( -80.0f ) ) ) );
-
-
-			windScalar = std::min( windScalar, 1.00f );
-
-			windScalar = std::max( windScalar, 0.008f );
-
-			//rotate the sails
-			for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
-			{
-				if( objectRegistry[
-					objectRegistry[
-						shipRegistry[ index ].index
-					].getChildsWorldID( cIndex )
-				].getName( ) == "sail" )
-				{
-					objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
-				}
-
-			}
-
-			//turn the ship
-
-			if( angVel >= ShipController::MAX_ROT
-				&& sameSign( shipRegistry[ index ].torque.getY( ),
-							 shipRegistry[ index ].torqueAcc )
-				&& !shipRegistry[ index ].slowRotDown )
-			{
-				ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
-			}
-			else if( shipRegistry[ index ].slowRotDown )
-			{
-				if( angVel > 0.01f )
-				{
-					if( shipRegistry[ index ].torqueAcc < 0.0f )
-					{
-						shipRegistry[ index ].torque
-							= btVector3( 0.0f, ShipController::MAX_ROT / 1.25f, 0.0f );
-
-					}
-					else if( shipRegistry[ index ].torqueAcc > 0.0f )
-					{
-						shipRegistry[ index ].torque
-							= btVector3( 0.0f, -1.0f * ( ShipController::MAX_ROT / 1.25f ), 0.0f );
-					}
-					else
-					{
-						shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-						std::cout << "Error reducing speed!" << std::endl;
-					}
-
-					ccb::shipReg[ index ].maxAngSpeed 
-						-= ccb::shipReg[ index ].maxAngSpeed 
-						* std::min( ( float ) ( dt / 125.0f ), 1.0f );
-
-					shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
-					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-
-					std::cout << "Slowing Rot" << std::endl;
-				}
-				else
-				{
-					shipRegistry[ index ].slowRotDown = false;
-					shipRegistry[ index ].torqueAcc = 0.0;
-					shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-					shipBodyPtr->setAngularVelocity( btVector3( 0.0f, 0.0f, 0.0f ) );
-					ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
-					std::cout << "Stopped Rot" << std::endl;
-				}
-
-			}
-			else
-			{
-				shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
-				shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
-				ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
-				shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-			}
-
-			//move forward or back
-			if( velocity > 0.1f 
-				&& shipRegistry[ index ].slowDown )
-			{
-				ccb::shipReg[ index ].maxSpeed 
-					-= ccb::shipReg[ index ].maxSpeed 
-					* std::min( ( float ) ( dt / 500.0f ), 1.0f );
-
-				shipRegistry[ index ].shipReverseCounter = 0;
-			}
-			else if( shipRegistry[ index ].slowDown )
-			{
-				std::cout << "Halted!" << std::endl;
-				shipBodyPtr->setLinearVelocity( btVector3( 0, 0, 0 ) );
-				shipRegistry[ index ].slowDown = false;
-				shipRegistry[ index ].shipReversed = false;
-			}
-			else if( shipRegistry[ index ].force.length( ) > 0 )
-			{			
-
-				ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
-														   ShipController::MAX_SPEED * 0.33333334f );
-
-				std::cout << "Wind Scalar: " << windScalar << std::endl;
-
-				relativeForce = ( windScalar * shipRegistry[ index ].force );
-
-				correctedForce = shipRot * relativeForce;
-
-				shipRegistry[ index ].force = correctedForce;
-
-				shipBodyPtr->applyCentralImpulse( shipRegistry[ index ].force );
-				shipRegistry[ index ].force = btVector3( 0, 0, 0 );
-			}
-
-			shipBodyPtr->activate( );
-
-
-
-			shipTarget = shipDirection.cross( btVector3( 0, 1, 0 ) );
-
-			worldTransform = shipBodyPtr->getWorldTransform( );
-
-			shipPosition = worldTransform.getOrigin( );
-
-			shipTarget *= 150.0f;
-
-			shipRegistry[ index ].rightHit = shipTarget + shipPosition;
-			shipRegistry[ index ].leftHit = -1.0f * shipTarget + shipPosition;
-
-			if( shipRegistry[ index ].firingLeft )
-			{
-				objectCollidedSound.launchSound( );
-				shipRegistry[ index ].leftReloadTime = ShipController::RELOAD_TIME_MS;
-			}
-
-			if( shipRegistry[ index ].firingRight )
-			{
-				objectCollidedSound.launchSound( );
-				shipRegistry[ index ].rightReloadTime = ShipController::RELOAD_TIME_MS;
-			}
-
-			//raytesting
-			if( shipRegistry[ index ].firingRight 
-				&& shipRayTest( shipPosition, shipRegistry[ index ].rightHit,
-							     hitPosition, hitObject, hitFract ) )
-			{
-
-				shipRegistry[ index ].rightHit = hitPosition;
-
-				if( shipRegistry[ index ].firingRight )
-				{
-					for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
-					{
-						if( objectRegistry[ shipRegistry[ cIndex ].index ]
-							.CollisionInfo( ).rigidBody != shipBodyPtr &&
-							hitObject.getUserPointer( )
-							== objectRegistry[ shipRegistry[ cIndex ].index ]
-							.CollisionInfo( ).rigidBody->getUserPointer( ) )
-						{
-							shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
-						}
-					}
-				}
-				else
-				{
-					std::cout << "In Range! " << index <<std::endl;
-				}
-			}
-
-			if( shipRayTest( shipPosition, shipRegistry[ index ].leftHit,
-							             hitPosition, hitObject, hitFract ) )
-			{
-				shipRegistry[ index ].leftHit = hitPosition;
-
-				if( shipRegistry[ index ].firingLeft )
-				{
-					for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
-					{
-						if( objectRegistry[ shipRegistry[ cIndex ].index ]
-							.CollisionInfo( ).rigidBody != shipBodyPtr &&
-							hitObject.getUserPointer( )
-							== objectRegistry[ shipRegistry[ cIndex ].index ]
-							.CollisionInfo( ).rigidBody->getUserPointer( ) )
-						{
-							shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
-						}
-					}
-				}
-				else
-				{
-					std::cout << "In Range! " << index << std::endl;
-				}
-			}
-
-			//convert hit positions into OpenGL space
-
-			worldTransform.setIdentity( );
-			worldTransform.setOrigin( shipRegistry[ index ].leftHit );
-			worldTransform.getOpenGLMatrix( modTrans );
-			glModelMat = glm::make_mat4( modTrans );
-			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-
-			shipRegistry[ index ].leftHit = btVector3( glPositionVector.x, 
-													   glPositionVector.y, 
-													   glPositionVector.z );
-
-			worldTransform.setIdentity( );
-			worldTransform.setOrigin( shipRegistry[ index ].rightHit );
-			worldTransform.getOpenGLMatrix( modTrans );
-			glModelMat = glm::make_mat4( modTrans );
-			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-
-			shipRegistry[ index ].rightHit = btVector3( glPositionVector.x,
-									    glPositionVector.y,
-													    glPositionVector.z );
-
-			//calculate camera position to follow the ship ////////////////////////
-
-			cameraPos = -1.0f * shipDirection;
-			cameraPos = ShipController::CAMERA_FOLLOW_DISTANCE * cameraPos;
-			cameraPos = shipPosition + cameraPos;
-
-			worldTransform.setIdentity( );
-			worldTransform.setOrigin( cameraPos );
-			worldTransform.getOpenGLMatrix( modTrans );
-			glModelMat = glm::make_mat4( modTrans );
-			glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
-
-			shipRegistry[ index ].cameraPosition 
-				= glm::vec3( glPositionVector.x,
-							 glPositionVector.y + ShipController::CAMERA_FOLLOW_HEIGHT, 
-							 glPositionVector.z );
-			/////////////////////////////////////////////////////////////////////////
-
-			//we have fired
-			shipRegistry[ index ].firingLeft = false;
-
-			shipRegistry[ index ].firingRight = false;
-
-
-
-		}
-
-		shipPtr = NULL;
-		shipBodyPtr = NULL;
-	}
+    btVector3 shipTarget;
+
+    btTransform worldTransform;
+
+    btVector3 hitPosition;
+
+    btCollisionObject hitObject;
+
+    btScalar hitFract;
+
+    btScalar modTrans[ 16 ];
+
+    glm::mat4 glModelMat;
+
+    glm::vec4 glPositionVector;
+
+    btVector3 cameraPos;
+
+    for( index = 0; index < shipRegistry.size( ); index++ )
+    {
+        shipPtr = &objectRegistry[ shipRegistry[ index ].index ];
+
+        if( !shipPtr->CollisionInfo( ).empty( ) )
+        {
+            shipBodyPtr = shipPtr->CollisionInfo( ).rigidBody;
+        }
+
+        if( !shipPtr->CompoundCollisionInfo( ).empty( ) )
+        {
+            shipBodyPtr = shipPtr->CompoundCollisionInfo( ).rigidBody;
+        }
+
+        if( shipBodyPtr != NULL )
+        {
+            //information about the ships travel
+
+            rawVelocity = shipBodyPtr->getLinearVelocity( );
+            velocity = rawVelocity.length( );
+
+            angVel = shipBodyPtr->getAngularVelocity( ).length( );
+
+            shipRot = shipBodyPtr->getWorldTransform( ).getBasis( );
+
+            //check controller flags and alter force accordingly
+            if( shipRegistry[ index ].forceOn 
+                && shipRegistry[ index ].torqueOn 
+                && velocity >= ShipController::MAX_SPEED / 1.75f )
+            {
+                shipRegistry[ index ].slowDown = true;				
+            }
+            if( shipRegistry[ index ].forceOn
+                && shipRegistry[ index ].torqueOn )
+            {
+                shipRegistry[ index ].slowDown = false;
+                shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
+            }
+            else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 1.25f )
+            {
+                shipRegistry[ index ].slowDown = true;
+            }
+            else if( shipRegistry[ index ].torqueOn )
+            {
+                shipRegistry[ index ].slowDown = false;
+                shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
+            }
+            else if( shipRegistry[ index ].forceOn )
+            {
+                shipRegistry[ index ].slowDown = false;
+                if( shipRegistry[ index ].shipReversed 
+                    && shipRegistry[ index ].shipReverseCounter <= 0 )
+                {
+                    shipRegistry[ index ].force = btVector3( ShipController::STD_REVERSE, 0.0f, 0.0f );
+                    shipRegistry[ index ].shipReverseCounter++;
+                }
+                else if( !shipRegistry[ index ].shipReversed )
+                {
+                    shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
+                }
+            }
+            else if( velocity >= 0.1f )
+            {
+                shipRegistry[ index ].slowDown = true;
+            }
+
+            //dot product for wind power and ray testing
+
+            shipDirection = shipRot * btVector3( 1.0f, 0.0f, 0.0f );
+
+            shipDirection = shipDirection.normalized( );
+
+            windScalar = windDirection.dot( shipDirection );
+
+            //calculate the angle to rotate the sails
+
+            angle = glm::acos( windScalar );
+
+            if( shipDirection.getX( ) < 0 )
+            {
+                if( angle < 1.5708f /*90 degrees in rads*/ )
+                {
+                    angle = ( 0.0f - angle ) + 0.1980947f;
+                }
+                else
+                {
+                    angle = angle - ( 2.9377215 * ( 1.5708f / angle ) );
+                }
+            }
+            
+            if( angle >= 1.13446f /*65 degrees in rads*/ )
+            {
+                angle = 1.13446f;
+            }
+            else if( angle <= -0.785398f /*-45 degrees in rads*/ )
+            {
+                angle = -0.785398f;
+            }
+
+            //compute the maximum level of force possible based on sail position
+            windScalar = std::max( windScalar,
+                ( float ) std::max( windScalar
+                                    + glm::cos( glm::radians( 80.0f ) ),
+                                    windScalar
+                                    + glm::cos( glm::radians( -80.0f ) ) ) );
+
+
+            windScalar = std::min( windScalar, 1.00f );
+
+            windScalar = std::max( windScalar, 0.008f );
+
+            //rotate the sails
+            for( cIndex = 0; cIndex < objectRegistry[ shipRegistry[ index ].index ].getNumberOfChildren( ); cIndex++ )
+            {
+                if( objectRegistry[
+                    objectRegistry[
+                        shipRegistry[ index ].index
+                    ].getChildsWorldID( cIndex )
+                ].getName( ) == "sail" )
+                {
+                    objectRegistry[ objectRegistry[ shipRegistry[ index ].index ].getChildsWorldID( cIndex ) ].setAngle( angle );
+                }
+
+            }
+
+            //turn the ship
+
+            if( angVel >= ShipController::MAX_ROT
+                && sameSign( shipRegistry[ index ].torque.getY( ),
+                             shipRegistry[ index ].torqueAcc )
+                && !shipRegistry[ index ].slowRotDown )
+            {
+                ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
+            }
+            else if( shipRegistry[ index ].slowRotDown )
+            {
+                if( angVel > 0.01f )
+                {
+                    if( shipRegistry[ index ].torqueAcc < 0.0f )
+                    {
+                        shipRegistry[ index ].torque
+                            = btVector3( 0.0f, ShipController::MAX_ROT / 1.25f, 0.0f );
+
+                    }
+                    else if( shipRegistry[ index ].torqueAcc > 0.0f )
+                    {
+                        shipRegistry[ index ].torque
+                            = btVector3( 0.0f, -1.0f * ( ShipController::MAX_ROT / 1.25f ), 0.0f );
+                    }
+                    else
+                    {
+                        shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+                        std::cout << "Error reducing speed!" << std::endl;
+                    }
+
+                    ccb::shipReg[ index ].maxAngSpeed 
+                        -= ccb::shipReg[ index ].maxAngSpeed 
+                        * std::min( ( float ) ( dt / 125.0f ), 1.0f );
+
+                    shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
+                    shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+
+                    std::cout << "Slowing Rot" << std::endl;
+                }
+                else
+                {
+                    shipRegistry[ index ].slowRotDown = false;
+                    shipRegistry[ index ].torqueAcc = 0.0;
+                    shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+                    shipBodyPtr->setAngularVelocity( btVector3( 0.0f, 0.0f, 0.0f ) );
+                    ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
+                    std::cout << "Stopped Rot" << std::endl;
+                }
+
+            }
+            else
+            {
+                shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
+                shipBodyPtr->applyTorque( shipRegistry[ index ].torque );
+                ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
+                shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
+            }
+
+            //move forward or back
+            if( velocity > 0.1f 
+                && shipRegistry[ index ].slowDown )
+            {
+                ccb::shipReg[ index ].maxSpeed 
+                    -= ccb::shipReg[ index ].maxSpeed 
+                    * std::min( ( float ) ( dt / 500.0f ), 1.0f );
+
+                shipRegistry[ index ].shipReverseCounter = 0;
+            }
+            else if( shipRegistry[ index ].slowDown )
+            {
+                std::cout << "Halted!" << std::endl;
+                shipBodyPtr->setLinearVelocity( btVector3( 0, 0, 0 ) );
+                shipRegistry[ index ].slowDown = false;
+                shipRegistry[ index ].shipReversed = false;
+            }
+            else if( shipRegistry[ index ].force.length( ) > 0 )
+            {			
+
+                ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
+                                                           ShipController::MAX_SPEED * 0.33333334f );
+
+                std::cout << "Wind Scalar: " << windScalar << std::endl;
+
+                relativeForce = ( windScalar * shipRegistry[ index ].force );
+
+                correctedForce = shipRot * relativeForce;
+
+                shipRegistry[ index ].force = correctedForce;
+
+                shipBodyPtr->applyCentralImpulse( shipRegistry[ index ].force );
+                shipRegistry[ index ].force = btVector3( 0, 0, 0 );
+            }
+
+            shipBodyPtr->activate( );
+
+
+
+            shipTarget = shipDirection.cross( btVector3( 0, 1, 0 ) );
+
+            worldTransform = shipBodyPtr->getWorldTransform( );
+
+            shipPosition = worldTransform.getOrigin( );
+
+            shipTarget *= 150.0f;
+
+            shipRegistry[ index ].rightHit = shipTarget + shipPosition;
+            shipRegistry[ index ].leftHit = -1.0f * shipTarget + shipPosition;
+
+            if( shipRegistry[ index ].firingLeft )
+            {
+                objectCollidedSound.launchSound( );
+                shipRegistry[ index ].leftReloadTime = ShipController::RELOAD_TIME_MS;
+            }
+
+            if( shipRegistry[ index ].firingRight )
+            {
+                objectCollidedSound.launchSound( );
+                shipRegistry[ index ].rightReloadTime = ShipController::RELOAD_TIME_MS;
+            }
+
+            //raytesting
+            if( shipRegistry[ index ].firingRight 
+                && shipRayTest( shipPosition, shipRegistry[ index ].rightHit,
+                                 hitPosition, hitObject, hitFract ) )
+            {
+
+                shipRegistry[ index ].rightHit = hitPosition;
+
+                if( shipRegistry[ index ].firingRight )
+                {
+                    for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+                    {
+                        if( objectRegistry[ shipRegistry[ cIndex ].index ]
+                            .CollisionInfo( ).rigidBody != shipBodyPtr &&
+                            hitObject.getUserPointer( )
+                            == objectRegistry[ shipRegistry[ cIndex ].index ]
+                            .CollisionInfo( ).rigidBody->getUserPointer( ) )
+                        {
+                            shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+                        }
+                    }
+                }
+                else
+                {
+                    std::cout << "In Range! " << index <<std::endl;
+                }
+            }
+
+            if( shipRayTest( shipPosition, shipRegistry[ index ].leftHit,
+                                         hitPosition, hitObject, hitFract ) )
+            {
+                shipRegistry[ index ].leftHit = hitPosition;
+
+                if( shipRegistry[ index ].firingLeft )
+                {
+                    for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+                    {
+                        if( objectRegistry[ shipRegistry[ cIndex ].index ]
+                            .CollisionInfo( ).rigidBody != shipBodyPtr &&
+                            hitObject.getUserPointer( )
+                            == objectRegistry[ shipRegistry[ cIndex ].index ]
+                            .CollisionInfo( ).rigidBody->getUserPointer( ) )
+                        {
+                            shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+                        }
+                    }
+                }
+                else
+                {
+                    std::cout << "In Range! " << index << std::endl;
+                }
+            }
+
+            //convert hit positions into OpenGL space
+
+            worldTransform.setIdentity( );
+            worldTransform.setOrigin( shipRegistry[ index ].leftHit );
+            worldTransform.getOpenGLMatrix( modTrans );
+            glModelMat = glm::make_mat4( modTrans );
+            glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+            shipRegistry[ index ].leftHit = btVector3( glPositionVector.x, 
+                                                       glPositionVector.y, 
+                                                       glPositionVector.z );
+
+            worldTransform.setIdentity( );
+            worldTransform.setOrigin( shipRegistry[ index ].rightHit );
+            worldTransform.getOpenGLMatrix( modTrans );
+            glModelMat = glm::make_mat4( modTrans );
+            glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+            shipRegistry[ index ].rightHit = btVector3( glPositionVector.x,
+                                        glPositionVector.y,
+                                                        glPositionVector.z );
+
+            //calculate camera position to follow the ship ////////////////////////
+
+            cameraPos = -1.0f * shipDirection;
+            cameraPos = ShipController::CAMERA_FOLLOW_DISTANCE * cameraPos;
+            cameraPos = shipPosition + cameraPos;
+
+            worldTransform.setIdentity( );
+            worldTransform.setOrigin( cameraPos );
+            worldTransform.getOpenGLMatrix( modTrans );
+            glModelMat = glm::make_mat4( modTrans );
+            glPositionVector = glModelMat * glm::vec4( 0.0, 0.0, 0.0, 1.0 );
+
+            shipRegistry[ index ].cameraPosition 
+                = glm::vec3( glPositionVector.x,
+                             glPositionVector.y + ShipController::CAMERA_FOLLOW_HEIGHT, 
+                             glPositionVector.z );
+            /////////////////////////////////////////////////////////////////////////
+
+            //we have fired
+            shipRegistry[ index ].firingLeft = false;
+
+            shipRegistry[ index ].firingRight = false;
+
+
+
+        }
+
+        shipPtr = NULL;
+        shipBodyPtr = NULL;
+    }
 }
 
 bool Graphics::shipRayTest
 ( 
-	const btVector3 & src, 
-	const btVector3 & dest, 
-	btVector3 & hit,
-	btCollisionObject& hitObject,
-	btScalar & hitFraction
+    const btVector3 & src, 
+    const btVector3 & dest, 
+    btVector3 & hit,
+    btCollisionObject& hitObject,
+    btScalar & hitFraction
 )
 {
-	btCollisionWorld::ClosestRayResultCallback rayCallback( src, dest );
+    btCollisionWorld::ClosestRayResultCallback rayCallback( src, dest );
 
-	dynamicsWorldPtr->rayTest( src, dest, rayCallback );
+    dynamicsWorldPtr->rayTest( src, dest, rayCallback );
 
-	if( rayCallback.hasHit( ) )
-	{
-		hit = rayCallback.m_hitPointWorld;
+    if( rayCallback.hasHit( ) )
+    {
+        hit = rayCallback.m_hitPointWorld;
 
-		hitObject = *rayCallback.m_collisionObject;
+        hitObject = *rayCallback.m_collisionObject;
 
-		hitFraction = rayCallback.m_closestHitFraction;
+        hitFraction = rayCallback.m_closestHitFraction;
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool Graphics::sameSign( float first, float second )
 {
-	if( ( first >= 0.0f && second >= 0.0f ) 
-		|| ( first < 0.0f && second < 0.0f ) )
-	{
-		return true;
-	}
+    if( ( first >= 0.0f && second >= 0.0f ) 
+        || ( first < 0.0f && second < 0.0f ) )
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 void Graphics::updateLeftPaddle( unsigned int dt )

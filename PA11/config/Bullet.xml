@@ -26,9 +26,9 @@
     <zRotationAngle>0</zRotationAngle>
     <Object path ="models/skybox.obj">
       <name>sky</name>
-      <xScale>500</xScale>
-      <yScale>500</yScale>
-      <zScale>500</zScale>
+      <xScale>400</xScale>
+      <yScale>400</yScale>
+      <zScale>400</zScale>
       <xBScale>0</xBScale>
       <yBScale>0</yBScale>
       <zBScale>0</zBScale>
@@ -116,9 +116,9 @@
     <zRotationAngle>0</zRotationAngle>
     <Object path ="models/skybox.obj">
       <name>sky</name>
-      <xScale>500</xScale>
-      <yScale>500</yScale>
-      <zScale>500</zScale>
+      <xScale>400</xScale>
+      <yScale>400</yScale>
+      <zScale>400</zScale>
       <xBScale>0</xBScale>
       <yBScale>0</yBScale>
       <zBScale>0</zBScale>
@@ -214,23 +214,13 @@
     <Fragment>shaders/vLightingFragmentShader.glsl</Fragment>
   </Shader>
   <Light>
-    <xPosition>0</xPosition>
-    <yPosition>45</yPosition>
-    <zPosition>-25</zPosition>    
+    <xPosition>0.35</xPosition>
+    <yPosition>0.45</yPosition>
+    <zPosition>-0.1</zPosition>    
     <Ambient>
-      <xPosition>0.07</xPosition>
-      <yPosition>0.07</yPosition>
-      <zPosition>0.07</zPosition>
-    </Ambient>
-  </Light>
-  <Light>
-    <xPosition>350</xPosition>
-    <yPosition>400</yPosition>
-    <zPosition>-400</zPosition>    
-    <Ambient>
-      <xPosition>0.0009</xPosition>
-      <yPosition>0.0000</yPosition>
-      <zPosition>0.0009</zPosition>
+      <xPosition>0.15</xPosition>
+      <yPosition>0.15</yPosition>
+      <zPosition>0.15</zPosition>
     </Ambient>
   </Light>
   <SpotLight>
