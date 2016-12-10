@@ -226,7 +226,7 @@ void ProcessOcean( )
 
 	for( index = 0; index < numLights; index++ )
 	{
-		normedL = normalize( light[ index ].position.xyz - pos );
+		normedL = normalize( (viewMatrix * light[ index ].position).xyz - pos );
 		halfVec = normalize( normedL + normedE );
 
 		color += getLight( normedL, halfVec, normedNormal, light[ index ].ambient );

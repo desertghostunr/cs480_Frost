@@ -11,9 +11,6 @@ const float ShipController::STD_TORQUE = 0.75f;
 const float ShipController::CAMERA_FOLLOW_DISTANCE = 38;
 const float ShipController::CAMERA_FOLLOW_HEIGHT = 14;
 
-//glm::decompose
-//SDL window size
-//convexTriangleMesh or convexhullshape for dynamic triangle mesh
 
 //physics related callbacks
 namespace ccb
@@ -1798,12 +1795,12 @@ void Graphics::resetView( )
 
 void Graphics::idleSplash( unsigned int dt )
 {
-    if( numberOfUpCalls < 1500 && goingUp )
+    if( numberOfUpCalls < 550 && goingUp )
     {
         m_camera->moveUp( );
         numberOfUpCalls += dt;
     }
-    else if( numberOfUpCalls > -500 && goingRight )
+    else if( numberOfUpCalls > -400 && goingRight )
     {
         m_camera->moveDown( );
         numberOfUpCalls -= dt;

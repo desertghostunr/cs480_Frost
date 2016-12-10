@@ -69,6 +69,10 @@ vec4 getLight( vec3 incoming, vec3 halfway, vec3 normal, vec4 ambient );
 
 vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, int index );
 
+vec3 getWaveHeight( vec2 hmPos );
+
+float getOctave( vec2 coord, float persistence, int numberOfOctaves );
+
 void main(void)
 {
 	
@@ -173,20 +177,16 @@ void ProcessOcean( )
 	*************************************************************************/
 	vec3 waveRise = vec3( 0, 0, 0 );
 	vec2 waveUV;
-	vec4 waveHeight;
 	vec3 reflection;
 	vec4 reflColor;
 	float interp;
 
 	waveUV = vec2( uv.x + 0.32 * time, uv.y + 0.22 * time );
-	waveHeight = texture2D( waveMap, waveUV );
 	
-	//make this work on all 3 axes
-	waveRise.x = 2.0 * waveHeight.x  - 1.0;
-	waveRise.y = waveRise.x * 2.392;
-	waveRise.z = waveRise.x * 1.693;
+    //get wave height
+    waveRise = getWaveHeight( waveUV );
 
-	waveRise = normalize( ( fN + waveRise ) ); //to do: add in anti-aliasing
+	waveRise = normalize( ( fN + waveRise ) );
 
 	reflection = reflect( fE, waveRise );
 
@@ -318,4 +318,59 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, int index )
 
     return finalColor;
 
+}
+
+vec3 getWaveHeight( vec2 hmPos )
+{
+    vec3 retWaveHeight;    
+    retWaveHeight.y = getOctave( hmPos, 0.923, 6 );
+    retWaveHeight.x = getOctave( hmPos, 6.9997, 16 );
+    retWaveHeight.z = getOctave( hmPos, 10.75, 5 );
+
+    return retWaveHeight;
+}
+
+/**********************
+
+@brief getOctave
+
+@details an implementation of a perlin noise octave
+
+@param in: coord: the coordinate to use
+
+@param in: persistence: the level of persistence of the noise
+
+@param in: numberOfOctaves: the number of octaves to run
+
+@Note based on the description of perlin noise by Hugo Elias
+
+***********************/
+
+float getOctave( vec2 coord, float persistence, int numberOfOctaves )
+{
+    int index;
+    float maxV;
+    float totalV;
+    float amp;
+    float freq;
+    vec2 sampleCoord;
+    vec4 rawWaveHeight;
+
+    maxV = totalV = 0;
+    amp = freq = 1;
+
+    for( index = 0; index < numberOfOctaves; index++ )
+    {
+        sampleCoord = freq * coord;
+
+        rawWaveHeight = texture2D( waveMap, sampleCoord );
+
+        totalV += rawWaveHeight.x * amp;
+
+        maxV += amp;
+        freq *= 2;
+        amp *= persistence;
+    }
+
+    return ( totalV / maxV );
 }

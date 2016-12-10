@@ -25,7 +25,7 @@ bool Camera::Initialize(int w, int h)
     upDown = 0.0;
     zoom = 255.0;
     topDown = false;
-    view = glm::lookAt( glm::vec3( leftRight, 147.22  + upDown, zoom ), //Eye Position
+    view = glm::lookAt( glm::vec3( leftRight, 40  + upDown, zoom ), //Eye Position
                         glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                         glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 
@@ -72,7 +72,7 @@ void Camera::moveLeft()
       leftRight = leftRight - 1.0;
    }
 
-   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, 255 ), //Eye Position
+   view = glm::lookAt( glm::vec3( leftRight, 40 + upDown, 255 ), //Eye Position
                        glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
@@ -87,21 +87,21 @@ void Camera::moveRight()
       leftRight = leftRight + 1.0;
    }
 
-   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, 255 ), //Eye Position
+   view = glm::lookAt( glm::vec3( leftRight, 40 + upDown, 255 ), //Eye Position
                        glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 void Camera::moveUp()
 {
    upDown = upDown + 1.0;
-   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, zoom ), //Eye Position
+   view = glm::lookAt( glm::vec3( leftRight, 40 + upDown, zoom ), //Eye Position
                        glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 void Camera::moveDown()
 {
    upDown = upDown - 1.0;
-   view = glm::lookAt( glm::vec3( leftRight, 147.22 + upDown, zoom ), //Eye Position
+   view = glm::lookAt( glm::vec3( leftRight, 40 + upDown, zoom ), //Eye Position
                        glm::vec3( 0.0, 0.0, 0.0 ), //Focus point
                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
