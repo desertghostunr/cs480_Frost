@@ -1,14 +1,15 @@
 #include "graphics.h"
 #include <algorithm>
 #include <sstream>
+#include <random>
 
 const float ShipController::MAX_SPEED = 4.11f;
 const float ShipController::MAX_ROT = 1.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
-const float ShipController::CAMERA_FOLLOW_DISTANCE = 35;
-const float ShipController::CAMERA_FOLLOW_HEIGHT = 15;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 38;
+const float ShipController::CAMERA_FOLLOW_HEIGHT = 14;
 
 //glm::decompose
 //SDL window size
@@ -689,6 +690,7 @@ void Graphics::Update(unsigned int dt)
     unsigned int index;
 
     float cameraWaveDifference = 0.0f;
+    float time;
 
     //apply control forces on the ship
     applyShipForces( dt );
@@ -727,7 +729,7 @@ void Graphics::Update(unsigned int dt)
 
     if( playingStateFlag )
     {
-        //put camera stuff here ///////
+        //put camera stuff here /////////////////////////////////////////////////////////////////////
 
         if( shipRegistry[ 0 ].lookingLeft )
         {
@@ -741,10 +743,16 @@ void Graphics::Update(unsigned int dt)
         {
             lookAt = Camera::LOOK_AT_SHIP;
         }
+
+
         //wave viewing effect
+
+        srand( cumultiveTime );
+        time = (float) ( ( rand( ) % 1500 ) + 2500 );
+
         if( shipRegistry[ 0 ].waveCycle >= 0.0f && !shipRegistry[ 0 ].waveUp )
         {
-            shipRegistry[ 0 ].waveCycle -= std::min( ( float ) dt / 4500.0f, 0.25f );
+            shipRegistry[ 0 ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
         }
         else if( shipRegistry[ 0 ].waveCycle >= 1.0f && shipRegistry[ 0 ].waveUp )
         {
@@ -752,7 +760,7 @@ void Graphics::Update(unsigned int dt)
         }
         else if( shipRegistry[ 0 ].waveCycle <= 1.0f && shipRegistry[ 0 ].waveUp )
         {
-            shipRegistry[ 0 ].waveCycle += std::min( ( float ) dt / 5000.0f, 0.25f );
+            shipRegistry[ 0 ].waveCycle += std::min( ( float ) dt / time, 0.25f );
         }
         else if( shipRegistry[ 0 ].waveCycle <= 0.00f && !shipRegistry[ 0 ].waveUp )
         {
@@ -763,8 +771,10 @@ void Graphics::Update(unsigned int dt)
 
         cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 0 ].waveCycle );
 
+        objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
+
         m_camera->followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x - 1.5,
-                                         objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y + 6,
+                                         objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y + 8.5f,
                                          objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z + 3 ),
                               shipRegistry[ 0 ].cameraPosition 
                               + glm::vec3( -0.15f * cameraWaveDifference,
@@ -776,7 +786,8 @@ void Graphics::Update(unsigned int dt)
                               glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
                                          shipRegistry[ 0 ].rightHit.getY( ),
                                          shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
-        ////
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
 
@@ -837,6 +848,11 @@ void Graphics::Render( unsigned int dt )
     cumultiveTime += dt;
     normedCTime = cumultiveTime;
     normedCTime /= 1000000.0f;
+
+    if( cumultiveTime > 1000000 )
+    {
+        cumultiveTime = 0;
+    }
 
     glUniform1f( m_time, normedCTime );
 
@@ -1030,6 +1046,12 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
     if( objectRegistry[ objectID ].getObjectType( ) == Object::P_OBJECT 
         && !objectRegistry[ objectID ].CollisionInfo( ).empty( ) )
     {
+
+        if( objectRegistry[ objectID ].getName( ) == "ship" )
+        {
+            objectRegistry[ objectID ].commitRotation( );
+        }
+
         objectRegistry[ objectID ].CollisionInfo( ).rigidBody->getMotionState( )->getWorldTransform( trans );
 
         trans.getOpenGLMatrix( modTrans );

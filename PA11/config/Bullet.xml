@@ -18,8 +18,8 @@
     <xPosition>74</xPosition>
     <yPosition>10</yPosition>
     <zPosition>87</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
+    <xRotationAxis>1</xRotationAxis>
+    <yRotationAxis>0</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
@@ -108,8 +108,8 @@
     <xPosition>-74</xPosition>
     <yPosition>10</yPosition>
     <zPosition>-87</zPosition>
-    <xRotationAxis>0</xRotationAxis>
-    <yRotationAxis>1</yRotationAxis>
+    <xRotationAxis>1</xRotationAxis>
+    <yRotationAxis>0</yRotationAxis>
     <zRotationAxis>0</zRotationAxis>
     <xRotationAngle>0</xRotationAngle>
     <yRotationAngle>0</yRotationAngle>
