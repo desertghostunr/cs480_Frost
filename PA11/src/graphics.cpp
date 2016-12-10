@@ -396,19 +396,22 @@ bool Graphics::Initialize
         {
             objectRegistry.addObject( -1, Object::BASE_OBJECT );
         }
-        
-        if( progInfo.objectData[ pIndex ].modelID < modelRegistry.size( ) )
-        {
 
-            objectRegistry[ objectRegistry.getSize( ) - 1 ]
-                .Initialize( &modelRegistry[ progInfo.objectData[ pIndex ].modelID ].objModel );
-
-            modelRegistry[ modelRegistry.size( ) - 1 ].objModel.incrementReference( );
-        }
-        else
+        for( sIndex = 0; sIndex < progInfo.objectData[ pIndex ].modelID.size( ); sIndex++ )
         {
-            std::cout << "Invalid model ID provided!" << std::endl;
-            return false;
+            if( progInfo.objectData[ pIndex ].modelID[ sIndex ] < modelRegistry.size( ) )
+            {
+
+                objectRegistry[ objectRegistry.getSize( ) - 1 ]
+                    .Initialize( &modelRegistry[ progInfo.objectData[ pIndex ].modelID[ sIndex ] ].objModel );
+
+                modelRegistry[ modelRegistry.size( ) - 1 ].objModel.incrementReference( );
+            }
+            else
+            {
+                std::cout << "Invalid model ID provided!" << std::endl;
+                return false;
+            }
         }
 
         objectRegistry[ objectRegistry.getSize( ) - 1

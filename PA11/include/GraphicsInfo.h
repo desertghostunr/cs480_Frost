@@ -22,7 +22,7 @@ const std::string P_C_OBJECT_TYPE = "PCObject";
 
 struct ObjectInfo
 {
-    unsigned int modelID; //the ID of the model in the model vector
+    std::vector<unsigned int> modelID; //the ID of the model in the model vector
 
     std::vector<unsigned int> childID; //children IDs that correspond to others in the table
 
@@ -36,7 +36,7 @@ struct ObjectInfo
 	std::string type;
 
     ObjectInfo( ) :
-        modelID( -1 ),
+        modelID( ),
         childID(  ),
         scale( glm::vec3( 1.0f, 1.0f, 1.0f ) ),
         bScale( glm::vec3( 1.0f, 1.0f, 1.0f ) ),

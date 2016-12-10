@@ -393,6 +393,8 @@ bool ProcessConfigurationFileHelper
 
     unsigned int pIndex = 0, mIndex = 0;
 
+    bool modelFound;
+
     if( parentNode == NULL )
     {
         return true;
@@ -410,19 +412,26 @@ bool ProcessConfigurationFileHelper
 
 	progInfo.objectData[ pIndex ].type = parentNode->name( );
 
+    modelFound = false;
+
     for( mIndex = 0; mIndex < progInfo.modelVector.size( ); mIndex++ )
     {
         if( tempStr == progInfo.modelVector[ mIndex ] )
         {
-            progInfo.objectData[ pIndex ].modelID = mIndex;
+            progInfo.objectData[ pIndex ].modelID.push_back( mIndex );
+
+            modelFound = true;
         }
     }
-    if( ( int )progInfo.objectData[ pIndex ].modelID == -1 )
+
+    if( !modelFound )
     {
         progInfo.modelVector.push_back( tempStr );
 
-        progInfo.objectData[ pIndex ].modelID = progInfo.modelVector.size( ) - 1;
-    }    
+        progInfo.objectData[ pIndex ].modelID.push_back( progInfo.modelVector.size( ) - 1 );
+    }
+
+    modelFound = false;
 
     for( childNode = parentNode->first_node( 0 ); childNode;
          childNode = childNode->next_sibling( ) )
