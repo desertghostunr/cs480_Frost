@@ -1108,7 +1108,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
             objectRegistry[ objectID ].commitRotation( );
             objectRegistry[ objectID ].commitTranslation( );
         }
-        else if( objectRegistry[ objectID ].getName( ) == "sail_nt" )
+        else
         {
             objectRegistry[ objectID ].commitTranslation( );
         }

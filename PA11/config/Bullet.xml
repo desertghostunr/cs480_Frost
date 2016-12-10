@@ -59,6 +59,24 @@
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
+      <Object path ="models/sail1Cloth.obj">
+        <name>sailCloth</name>
+        <xScale>1</xScale>
+        <yScale>1</yScale>
+        <zScale>1</zScale>
+        <xBScale>1</xBScale>
+        <yBScale>1</yBScale>
+        <zBScale>1</zBScale>
+        <xPosition>0</xPosition>
+        <yPosition>0</yPosition>
+        <zPosition>0</zPosition>
+        <xRotationAxis>0</xRotationAxis>
+        <yRotationAxis>1</yRotationAxis>
+        <zRotationAxis>0</zRotationAxis>
+        <xRotationAngle>0</xRotationAngle>
+        <yRotationAngle>0</yRotationAngle>
+        <zRotationAngle>0</zRotationAngle>
+      </Object>
     </Object>
     <Object path ="models/sail2.obj">
       <name>sail</name>
@@ -77,6 +95,24 @@
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
+      <Object path ="models/sail2Cloth.obj">
+        <name>sailCloth</name>
+        <xScale>1</xScale>
+        <yScale>1</yScale>
+        <zScale>1</zScale>
+        <xBScale>1</xBScale>
+        <yBScale>1</yBScale>
+        <zBScale>1</zBScale>
+        <xPosition>0</xPosition>
+        <yPosition>0</yPosition>
+        <zPosition>0</zPosition>
+        <xRotationAxis>0</xRotationAxis>
+        <yRotationAxis>1</yRotationAxis>
+        <zRotationAxis>0</zRotationAxis>
+        <xRotationAngle>0</xRotationAngle>
+        <yRotationAngle>0</yRotationAngle>
+        <zRotationAngle>0</zRotationAngle>
+      </Object>
     </Object>
     <Object path ="models/sail3.obj">
       <name>sail</name>
@@ -95,6 +131,24 @@
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
+      <Object path ="models/sail3Cloth.obj">
+        <name>sailCloth</name>
+        <xScale>1</xScale>
+        <yScale>1</yScale>
+        <zScale>1</zScale>
+        <xBScale>1</xBScale>
+        <yBScale>1</yBScale>
+        <zBScale>1</zBScale>
+        <xPosition>0</xPosition>
+        <yPosition>0</yPosition>
+        <zPosition>0</zPosition>
+        <xRotationAxis>0</xRotationAxis>
+        <yRotationAxis>1</yRotationAxis>
+        <zRotationAxis>0</zRotationAxis>
+        <xRotationAngle>0</xRotationAngle>
+        <yRotationAngle>0</yRotationAngle>
+        <zRotationAngle>0</zRotationAngle>
+      </Object>
     </Object>
   </PObject>
   <PObject path ="models/Ship.obj">
@@ -149,6 +203,24 @@
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
+      <Object path ="models/sail1Cloth.obj">
+        <name>sailCloth</name>
+        <xScale>1</xScale>
+        <yScale>1</yScale>
+        <zScale>1</zScale>
+        <xBScale>1</xBScale>
+        <yBScale>1</yBScale>
+        <zBScale>1</zBScale>
+        <xPosition>0</xPosition>
+        <yPosition>0</yPosition>
+        <zPosition>0</zPosition>
+        <xRotationAxis>0</xRotationAxis>
+        <yRotationAxis>1</yRotationAxis>
+        <zRotationAxis>0</zRotationAxis>
+        <xRotationAngle>0</xRotationAngle>
+        <yRotationAngle>0</yRotationAngle>
+        <zRotationAngle>0</zRotationAngle>
+      </Object>
     </Object>
     <Object path ="models/sail2.obj">
       <name>sail</name>
@@ -167,6 +239,24 @@
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
+      <Object path ="models/sail2Cloth.obj">
+        <name>sailCloth</name>
+        <xScale>1</xScale>
+        <yScale>1</yScale>
+        <zScale>1</zScale>
+        <xBScale>1</xBScale>
+        <yBScale>1</yBScale>
+        <zBScale>1</zBScale>
+        <xPosition>0</xPosition>
+        <yPosition>0</yPosition>
+        <zPosition>0</zPosition>
+        <xRotationAxis>0</xRotationAxis>
+        <yRotationAxis>1</yRotationAxis>
+        <zRotationAxis>0</zRotationAxis>
+        <xRotationAngle>0</xRotationAngle>
+        <yRotationAngle>0</yRotationAngle>
+        <zRotationAngle>0</zRotationAngle>
+      </Object>
     </Object>
     <Object path ="models/sail3.obj">
       <name>sail</name>
@@ -185,6 +275,24 @@
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
+      <Object path ="models/sail3Cloth.obj">
+        <name>sailCloth</name>
+        <xScale>1</xScale>
+        <yScale>1</yScale>
+        <zScale>1</zScale>
+        <xBScale>1</xBScale>
+        <yBScale>1</yBScale>
+        <zBScale>1</zBScale>
+        <xPosition>0</xPosition>
+        <yPosition>0</yPosition>
+        <zPosition>0</zPosition>
+        <xRotationAxis>0</xRotationAxis>
+        <yRotationAxis>1</yRotationAxis>
+        <zRotationAxis>0</zRotationAxis>
+        <xRotationAngle>0</xRotationAngle>
+        <yRotationAngle>0</yRotationAngle>
+        <zRotationAngle>0</zRotationAngle>
+      </Object>
     </Object>
   </PObject>
   <PCObject path ="models/ocean.obj">
