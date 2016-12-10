@@ -79,16 +79,16 @@
       <zRotationAngle>0</zRotationAngle>
     </Object>
     <Object path ="models/sail3.obj">
-      <name>sail_nt</name>
+      <name>sail</name>
       <xScale>1</xScale>
       <yScale>1</yScale>
       <zScale>1</zScale>
       <xBScale>1</xBScale>
       <yBScale>1</yBScale>
       <zBScale>1</zBScale>
-      <xPosition>-4.38433</xPosition>
+      <xPosition>-4.72433</xPosition>
       <yPosition>0</yPosition>
-      <zPosition>0.06836</zPosition>
+      <zPosition>0.04136</zPosition>
       <xRotationAxis>0</xRotationAxis>
       <yRotationAxis>1</yRotationAxis>
       <zRotationAxis>0</zRotationAxis>
@@ -169,16 +169,16 @@
       <zRotationAngle>0</zRotationAngle>
     </Object>
     <Object path ="models/sail3.obj">
-      <name>sail_nt</name>
+      <name>sail</name>
       <xScale>1</xScale>
       <yScale>1</yScale>
       <zScale>1</zScale>
       <xBScale>1</xBScale>
       <yBScale>1</yBScale>
       <zBScale>1</zBScale>
-      <xPosition>-4.38433</xPosition>
+      <xPosition>-4.72433</xPosition>
       <yPosition>0</yPosition>
-      <zPosition>0.06836</zPosition>
+      <zPosition>0.04136</zPosition>
       <xRotationAxis>0</xRotationAxis>
       <yRotationAxis>1</yRotationAxis>
       <zRotationAxis>0</zRotationAxis>
@@ -214,9 +214,9 @@
     <Fragment>shaders/vLightingFragmentShader.glsl</Fragment>
   </Shader>
   <Light>
-    <xPosition>0.35</xPosition>
-    <yPosition>0.45</yPosition>
-    <zPosition>-0.1</zPosition>    
+    <xPosition>100</xPosition>
+    <yPosition>100</yPosition>
+    <zPosition>-100</zPosition>    
     <Ambient>
       <xPosition>0.63</xPosition>
       <yPosition>0.60</yPosition>

@@ -18,7 +18,7 @@ Object::Object()
 
     angle = 0.0f;
 
-    objModelPtr = NULL;
+    objModelSelect = 0;
 
 	type = BASE_OBJECT;
 
@@ -41,7 +41,7 @@ Object::Object( int nType )
 
 	angle = 0.0f;
 
-	objModelPtr = NULL;
+    objModelSelect = 0;
 
 	if( nType == BASE_OBJECT || nType == P_OBJECT || nType == PC_OBJECT )
 	{
@@ -57,12 +57,19 @@ Object::Object( int nType )
 
 Object::~Object()
 {
+    size_t index;
 
-    if( objModelPtr != NULL )
+    for( index = 0; index < objModelPtr.size( ); index++ )
     {
-        objModelPtr->decrementReference( );
+
+        if( objModelPtr[ index ] != NULL )
+        {
+            objModelPtr[ index ]->decrementReference( );
+        }
+
+
+        objModelPtr[ index ] = NULL;
     }
-    objModelPtr = NULL;
 }
 
 void Object::Update( unsigned int dt )
@@ -150,7 +157,7 @@ Origin Object::getOrigin( )
 ***************************************/
 ObjectModel & Object::getObjectModel( )
 {
-    return *objModelPtr;
+    return *objModelPtr[ objModelSelect ];
 }
 
 
@@ -168,7 +175,9 @@ ObjectModel & Object::getObjectModel( )
 ***************************************/
 bool Object::hasObjectModel( )
 {
-    if( objModelPtr != NULL )
+    if( objModelPtr.size( ) > 0 
+        && objModelSelect < objModelPtr.size( ) 
+        && objModelPtr[ objModelSelect ] != NULL )
     {
         return true;
     }
@@ -196,9 +205,11 @@ bool Object::Initialize( ObjectModel * const srcPtr )
         return false;
     }
 
-    objModelPtr = srcPtr;
+    objModelPtr.push_back( srcPtr );
 
-    objModelPtr->incrementReference( );
+    objModelSelect = objModelPtr.size( ) - 1;
+
+    objModelPtr[ objModelSelect ]->incrementReference( );
 
     return true;
 }
@@ -211,7 +222,7 @@ void Object::Render()
     unsigned int index;
 
     //no model, nothing to render
-    if( objModelPtr == NULL )
+    if( !hasObjectModel( ) )
     {
         return;
     }
@@ -220,7 +231,7 @@ void Object::Render()
     glEnableVertexAttribArray( 1 );
     glEnableVertexAttribArray( 2 );
 
-    glBindBuffer( GL_ARRAY_BUFFER, objModelPtr->vertexBuffer( ) );
+    glBindBuffer( GL_ARRAY_BUFFER, objModelPtr[ objModelSelect ]->vertexBuffer( ) );
     glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), 0 );
     glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof( Vertex ),
                            ( void* ) offsetof( Vertex, uv ) );
@@ -228,25 +239,25 @@ void Object::Render()
                            ( void* ) offsetof( Vertex, normal ) );
 
     for( index = 0; 
-         index < std::max( objModelPtr->getNumberOfIBs( ), //get max size
-                                      objModelPtr->getNumberOfTextures( ) ); 
+         index < std::max( objModelPtr[ objModelSelect ]->getNumberOfIBs( ), //get max size
+                                      objModelPtr[ objModelSelect ]->getNumberOfTextures( ) );
          index++ )
     {
-        if( index < objModelPtr->getNumberOfTextures( ) )
+        if( index < objModelPtr[ objModelSelect ]->getNumberOfTextures( ) )
         {
-            glUniform1i( objModelPtr->TextureUniformLocation( ), 0 );
+            glUniform1i( objModelPtr[ objModelSelect ]->TextureUniformLocation( ), 0 );
             glActiveTexture( GL_TEXTURE0 );
-            glBindTexture( GL_TEXTURE_2D, objModelPtr->Texture( index ) );
+            glBindTexture( GL_TEXTURE_2D, objModelPtr[ objModelSelect ]->Texture( index ) );
         }
         
         
 
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr->indexBuffer( 
-            std::min( index, objModelPtr->getNumberOfIBs( ) - 1 ) ) ); //prevent out of bounds
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, objModelPtr[ objModelSelect ]->indexBuffer(
+            std::min( index, objModelPtr[ objModelSelect ]->getNumberOfIBs( ) - 1 ) ) ); //prevent out of bounds
 
         //draw faces associated with a texture
         glDrawElements( GL_TRIANGLES,
-                        objModelPtr->getIndices( index ).size( ), 
+                        objModelPtr[ objModelSelect ]->getIndices( index ).size( ),
                         GL_UNSIGNED_INT, 0 );        
     }
 

@@ -169,7 +169,8 @@ class Object
     private:		
         //model info
         glm::mat4 model;
-        ObjectModel* objModelPtr;
+        std::vector<ObjectModel*> objModelPtr;
+        unsigned int objModelSelect;
 
 		glm::mat4 parentModel;
 

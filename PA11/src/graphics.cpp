@@ -8,8 +8,8 @@ const float ShipController::MAX_ROT = 1.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
-const float ShipController::CAMERA_FOLLOW_DISTANCE = 38;
-const float ShipController::CAMERA_FOLLOW_HEIGHT = 14;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 28;
+const float ShipController::CAMERA_FOLLOW_HEIGHT = 7.5f;
 
 
 //physics related callbacks
@@ -501,7 +501,7 @@ bool Graphics::Initialize
             }
         }
 
-        if( (int)sIndex == -1 )
+        if( ( int )sIndex == -1 )
         {
             for( index = 0; index < objectRegistry.getSize( ); index++ )
             {
@@ -542,9 +542,8 @@ bool Graphics::Initialize
 
         for( index = 0; index < progInfo.shaderVector[ sIndex ].size( ); index++ )
         {
-            if( !shaderRegistry[ sIndex ].
-                AddShader( progInfo.shaderVector[ sIndex ][ index ].first, 
-                           progInfo.shaderVector[ sIndex ][ index ].second ) )
+            if( !shaderRegistry[ sIndex ].AddShader( progInfo.shaderVector[ sIndex ][ index ].first, 
+                                                     progInfo.shaderVector[ sIndex ][ index ].second ) )
             {
                 if( progInfo.shaderVector[ sIndex ][ index ].first == GL_VERTEX_SHADER )
                 {
@@ -579,10 +578,18 @@ bool Graphics::Initialize
 
     // INITIALIZE BULLET //////////////////////////////////////////////
     broadphasePtr = new btDbvtBroadphase( );
+
     collisionConfigPtr = new btDefaultCollisionConfiguration( );
+
     dispatcherPtr = new btCollisionDispatcher( collisionConfigPtr );
+
     solverPtr = new btSequentialImpulseConstraintSolver( );
-    dynamicsWorldPtr = new btDiscreteDynamicsWorld( dispatcherPtr, broadphasePtr, solverPtr, collisionConfigPtr );
+
+    dynamicsWorldPtr = new btDiscreteDynamicsWorld( dispatcherPtr, 
+                                                    broadphasePtr, 
+                                                    solverPtr, 
+                                                    collisionConfigPtr );
+
     dynamicsWorldPtr->setGravity( btVector3( 0.0f, -9.8f, 0.0f ) );
     ///////////////////////////////////////////////////////////////////
 
@@ -592,7 +599,9 @@ bool Graphics::Initialize
         {
             ballIndex = index;
 
-            tmpShapePtr = new btBoxShape( btVector3( objectRegistry[ index ].getBScale( ).x + 1, objectRegistry[ index ].getBScale( ).y + 1, objectRegistry[ index ].getBScale( ).z + 1 ) );
+            tmpShapePtr = new btBoxShape( btVector3( objectRegistry[ index ].getBScale( ).x + 1, 
+                                                     objectRegistry[ index ].getBScale( ).y + 1, 
+                                                     objectRegistry[ index ].getBScale( ).z + 1 ) );
 
             tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
             
@@ -604,7 +613,10 @@ bool Graphics::Initialize
             tmpShapePtr->calculateLocalInertia( mass, inertia );
 
 
-            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, tmpMotionState, tmpShapePtr, inertia );
+            btRigidBody::btRigidBodyConstructionInfo rigidBodyConstruct( mass, 
+                                                                         tmpMotionState, 
+                                                                         tmpShapePtr, 
+                                                                         inertia );
 
             rigidBodyConstruct.m_restitution = 0.015f;
             rigidBodyConstruct.m_friction = 100.0f;
@@ -681,7 +693,7 @@ bool Graphics::Initialize
     return true;
 }
 
-void Graphics::Update(unsigned int dt)
+void Graphics::Update( unsigned int dt )
 {
     int lookAt = 0;
     unsigned int index;
@@ -829,15 +841,15 @@ void Graphics::Render( unsigned int dt )
     glm::vec4 tmpVec;
 
     //clear the screen
-    glClearColor(0.2, 0.15, 0.2, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor( 0.2, 0.15, 0.2, 1.0 );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     // Start the correct program
     shaderRegistry[ shaderSelect ].Enable( );
 
     // Send in the projection and view to the shader
-    glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
-    glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
+    glUniformMatrix4fv( m_projectionMatrix, 1, GL_FALSE, glm::value_ptr( m_camera->GetProjection( ) ) ); 
+    glUniformMatrix4fv( m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView( ) ) );
 
     glUniform1i( m_numLights, ( GLint ) lights.size( ) );
     glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
@@ -932,7 +944,7 @@ void Graphics::Render( unsigned int dt )
     for( index = 0; index < objectRegistry.getSize( ); index++ )
     {
         glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
-                            glm::value_ptr(objectRegistry[index].GetModel()));
+                            glm::value_ptr( objectRegistry[index].GetModel( ) ) );
 
         tmpVec = objectRegistry[ index ].getObjectModel( ).getDiffuse( );
 
@@ -1795,12 +1807,12 @@ void Graphics::resetView( )
 
 void Graphics::idleSplash( unsigned int dt )
 {
-    if( numberOfUpCalls < 550 && goingUp )
+    if( numberOfUpCalls < 500 && goingUp )
     {
         m_camera->moveUp( );
         numberOfUpCalls += dt;
     }
-    else if( numberOfUpCalls > -400 && goingRight )
+    else if( numberOfUpCalls > -500 && goingRight )
     {
         m_camera->moveDown( );
         numberOfUpCalls -= dt;
