@@ -45,6 +45,7 @@ class ObjectModel
         GLuint& indexBuffer( unsigned int index );
         GLuint& Texture( unsigned int index );
         std::vector<Vertex>& vertices( );
+        std::vector<std::vector<unsigned int>>& indicesBuffer(  );
         std::vector<unsigned int>& indices( unsigned int index );
 
         GLint& TextureUniformLocation( );

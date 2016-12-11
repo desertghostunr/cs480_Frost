@@ -240,7 +240,7 @@ void Object::Render()
 
     for( index = 0; 
          index < std::max( objModelPtr[ objModelSelect ]->getNumberOfIBs( ), //get max size
-                                      objModelPtr[ objModelSelect ]->getNumberOfTextures( ) );
+                           objModelPtr[ objModelSelect ]->getNumberOfTextures( ) );
          index++ )
     {
         if( index < objModelPtr[ objModelSelect ]->getNumberOfTextures( ) )
@@ -258,7 +258,7 @@ void Object::Render()
         //draw faces associated with a texture
         glDrawElements( GL_TRIANGLES,
                         objModelPtr[ objModelSelect ]->getIndices( index ).size( ),
-                        GL_UNSIGNED_INT, 0 );        
+                        GL_UNSIGNED_INT, 0 );
     }
 
     glDisableVertexAttribArray( 0 );
@@ -739,4 +739,35 @@ void Object::setParentModel( const glm::mat4 & parent )
 void Object::useParent( bool use )
 {
 	applyParent = use;
+}
+
+bool Object::setObjectModel( unsigned int oSelect )
+{
+    if( oSelect >= objModelPtr.size( ) )
+    {
+        return false;
+    }
+
+    objModelSelect = oSelect;
+
+    return true;
+}
+
+bool Object::interpolateModels( float interpValue, size_t startModel, size_t endModel )
+{
+    if( objModelPtr.size( ) <= endModel || objModelPtr.size( ) <= startModel )
+    {
+        return false;
+    }
+
+    if( interpValue >= 0.5f )
+    {
+        objModelSelect = endModel;
+    }
+    else if( interpValue < 0.5f )
+    {
+        objModelSelect = startModel;
+    }
+    
+    return true;
 }

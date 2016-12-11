@@ -8,8 +8,8 @@ const float ShipController::MAX_ROT = 1.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
-const float ShipController::CAMERA_FOLLOW_DISTANCE = 135;
-const float ShipController::CAMERA_FOLLOW_HEIGHT = 42;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 60;
+const float ShipController::CAMERA_FOLLOW_HEIGHT = 25;
 
 
 //physics related callbacks
@@ -449,7 +449,6 @@ bool Graphics::Initialize
             objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
         }
 
-
         objectRegistry[ objectRegistry.getSize( ) - 1 ].getBScale( ) = progInfo.objectData[ pIndex ].bScale;
     }
     
@@ -831,15 +830,15 @@ void Graphics::Update( unsigned int dt )
 
             cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 0 ].waveCycle );
 
-            objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
+            objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0222234f  );
 
             m_camera[1].followShip( glm::vec3( objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).x - 1.5,
-                                         objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).y + 8.5f,
+                                         objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).y + 12.5f,
                                          objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).z + 3 ),
                               shipRegistry[ 1 ].cameraPosition 
-                              + glm::vec3( -0.15f * cameraWaveDifference,
-                                           0.35f * cameraWaveDifference, 
-                                           0.12f * cameraWaveDifference),
+                              + glm::vec3( -1.15f * cameraWaveDifference,
+                                           1.35f * cameraWaveDifference, 
+                                           1.12f * cameraWaveDifference),
                               glm::vec3( shipRegistry[ 1 ].leftHit.getX( ),
                                          shipRegistry[ 1 ].leftHit.getY( ),
                                          shipRegistry[ 1 ].leftHit.getZ( ) ),
@@ -1033,24 +1032,24 @@ void Graphics::Render( unsigned int dt )
         {
             cameraIndex++;
         }
-        if( cameraIndex == 0 && splitScreen )
+        else if( cameraIndex == 1 && splitScreen )
         {
             glViewport( 0, 0, screenWidth / 2, screenHeight );
             
         }
-        if( cameraIndex == 1 && splitScreen )
+        else if( cameraIndex == 0 && splitScreen )
         {
             glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
             
         }
     }
-        // Get any errors from OpenGL
-        auto error = glGetError();
-        if ( error != GL_NO_ERROR )
-        {
-            string val = ErrorString( error );
-            std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
-        }
+   // Get any errors from OpenGL
+   auto error = glGetError();
+   if ( error != GL_NO_ERROR )
+   {
+      string val = ErrorString( error );
+      std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+   }
         
    
 }
@@ -1175,6 +1174,26 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
         else if( objectRegistry[ objectID ].getName( ) == "sail" )
         {
             objectRegistry[ objectID ].commitRotation( );
+            objectRegistry[ objectID ].commitTranslation( );
+        }
+        else if( objectRegistry[ objectID ].getName( ) == "sailCloth" )
+        {
+            for( cIndex = 0; cIndex < shipRegistry.size( ); cIndex++ )
+            {
+                if( objectRegistry[objectRegistry[ objectID ].getParentsWorldID( ) 
+                                  ].getParentsWorldID( ) == shipRegistry[ cIndex ].index )
+                {
+                    if( shipRegistry[ cIndex ].forceOn || shipRegistry[ cIndex ].torqueOn )
+                    {
+                        objectRegistry[ objectID ].interpolateModels( 0.0f, 0, 1 );;
+                    }
+                    else
+                    {
+                        objectRegistry[ objectID ].interpolateModels( 1.0f, 0, 1 );
+                    }
+                }
+            }
+
             objectRegistry[ objectID ].commitTranslation( );
         }
         else
@@ -1758,10 +1777,9 @@ bool Graphics::linkToCurrentShaderProgram( )
         return false;
     }
 
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
+    for( index = 0; index < modelRegistry.size( ); index++ )
     {
-        objectRegistry[ index ]
-            .getObjectModel( ).TextureUniformLocation( ) = tmpTextLoc;
+        modelRegistry[ index ].objModel.TextureUniformLocation( ) = tmpTextLoc;
     }
 
     return true;

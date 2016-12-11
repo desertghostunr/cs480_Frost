@@ -33,6 +33,8 @@ struct Vertex
     glm::vec2 uv;
     glm::vec3 normal;
 
+    Vertex( ):vertex( 0 ), uv( 0 ), normal( 0 ){ }
+
     Vertex(glm::vec3 v, glm::vec2 u, glm::vec3 n): vertex(v), uv(u), normal(n) {}
 };
 

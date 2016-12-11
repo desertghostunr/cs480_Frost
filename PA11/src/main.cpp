@@ -47,6 +47,7 @@ const string WINDOW_INFO = "Window";
 const string WIDTH = "width";
 const string HEIGHT = "height";
 const string WIND_DIRECTION = "Wind_Direction";
+const string ALT_MODEL = "alternateModel";
 
 // free function prototypes ////////////////
 bool ProcessCommandLineParameters( int argCount, char **argVector, 
@@ -509,6 +510,12 @@ bool ProcessConfigurationFileHelper
             progInfo.objectData[ pIndex ].childID.push_back( progInfo.objectData.size( ) );
 
             noError = ( noError && ProcessConfigurationFileHelper( childNode, progInfo ) );
+        }
+        else if( childNode->name( ) == ALT_MODEL )
+        {
+            progInfo.modelVector.push_back( tempStr );
+
+            progInfo.objectData[ pIndex ].modelID.push_back( progInfo.modelVector.size( ) - 1 );
         }
     }
 

@@ -166,6 +166,10 @@ class Object
 
 		void useParent( bool use );
 
+        bool setObjectModel( unsigned int oSelect );
+
+        bool interpolateModels( float interpValue, size_t startModel, size_t endModel );
+
     private:		
         //model info
         glm::mat4 model;

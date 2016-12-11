@@ -61,6 +61,7 @@
       <zRotationAngle>0</zRotationAngle>
       <Object path ="models/sail1Cloth.obj">
         <name>sailCloth</name>
+        <alternateModel>models/sail1ClothClosed.obj</alternateModel>
         <xScale>1</xScale>
         <yScale>1</yScale>
         <zScale>1</zScale>
@@ -97,6 +98,7 @@
       <zRotationAngle>0</zRotationAngle>
       <Object path ="models/sail2Cloth.obj">
         <name>sailCloth</name>
+        <alternateModel>models/sail2ClothClosed.obj</alternateModel>
         <xScale>1</xScale>
         <yScale>1</yScale>
         <zScale>1</zScale>
@@ -133,6 +135,7 @@
       <zRotationAngle>0</zRotationAngle>
       <Object path ="models/sail3Cloth.obj">
         <name>sailCloth</name>
+        <alternateModel>models/sail3ClothClosed.obj</alternateModel>
         <xScale>1</xScale>
         <yScale>1</yScale>
         <zScale>1</zScale>
@@ -205,6 +208,7 @@
       <zRotationAngle>0</zRotationAngle>
       <Object path ="models/sail1Cloth.obj">
         <name>sailCloth</name>
+        <alternateModel>models/sail1ClothClosed.obj</alternateModel>
         <xScale>1</xScale>
         <yScale>1</yScale>
         <zScale>1</zScale>
@@ -241,6 +245,7 @@
       <zRotationAngle>0</zRotationAngle>
       <Object path ="models/sail2Cloth.obj">
         <name>sailCloth</name>
+        <alternateModel>models/sail2ClothClosed.obj</alternateModel>
         <xScale>1</xScale>
         <yScale>1</yScale>
         <zScale>1</zScale>
@@ -277,6 +282,7 @@
       <zRotationAngle>0</zRotationAngle>
       <Object path ="models/sail3Cloth.obj">
         <name>sailCloth</name>
+        <alternateModel>models/sail3ClothClosed.obj</alternateModel>
         <xScale>1</xScale>
         <yScale>1</yScale>
         <zScale>1</zScale>

@@ -286,6 +286,11 @@ std::vector<Vertex>& ObjectModel::vertices( )
     return Vertices;
 }
 
+std::vector<std::vector<unsigned int>>& ObjectModel::indicesBuffer( )
+{
+    return Indices;
+}
+
 
 // INDICES ///////////////////
 /***************************************
