@@ -34,7 +34,8 @@ class Graphics
 						 long long time = 0 );
 
         void Update(unsigned int dt);
-        void Render( unsigned int dt );
+        void RenderA( unsigned int dt );
+        void RenderB( unsigned int dt );
 
         bool updateList( unsigned int objectID, unsigned int dt );
 
@@ -91,6 +92,8 @@ class Graphics
          
                 void toggleRight( int index );
 
+                void startSplitScreen( int width, int height );
+
     private:
 		//helper functions
 		void applyShipForces( unsigned int dt );
@@ -108,6 +111,10 @@ class Graphics
 		HeightMap oceanHeightMap;
 
 		unsigned int cumultiveTime;
+
+                bool splitScreen;
+                int screenWidth;
+                int screenHeight;
  
                
 		

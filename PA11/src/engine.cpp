@@ -98,8 +98,8 @@ void Engine::Run()
 
         // Update and render the graphics
         m_graphics->Update(m_DT);
-        m_graphics->Render(m_DT);
-
+        m_graphics->RenderA(m_DT);
+        //m_graphics->RenderB(m_DT);
         // Swap to the Window
         m_window->Swap();
     }
@@ -396,6 +396,10 @@ void Engine::Keyboard()
 		else if( m_event.key.keysym.sym == SDLK_f )
 		{
 			m_graphics->fireGuns( 0 );
+		}
+		else if( m_event.key.keysym.sym == SDLK_4 )
+		{
+			m_graphics->startSplitScreen( m_WINDOW_WIDTH, m_WINDOW_HEIGHT );
 		}
         else if( m_event.key.keysym.sym == SDLK_RSHIFT 
 				 || m_event.key.keysym.sym == SDLK_LSHIFT )

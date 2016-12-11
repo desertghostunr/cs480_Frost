@@ -217,4 +217,12 @@ void Camera::rotate( glm::vec3 position, glm::vec4 whereToLook )
                        glm::vec3( 0.0, 1.0, 0.0 ) ); //Positive Y is up
 }
 
+void Camera::changePerspective( int width, int height )
+{
+    projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
+                                   float(width)/float(height), //Aspect Ratio, so Circles stay Circular
+                                   0.015f, //Distance to the near plane, normally a small value like this
+                                   5000.0f); //Distance to the far plane, 
+}
+
 
