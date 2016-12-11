@@ -184,6 +184,8 @@ Graphics::Graphics()
     goingRight = true;
     gameOverStep = false;
     gameStarted = false;
+
+    splitScreen = false;
 }
 
 Graphics::~Graphics()
@@ -349,9 +351,13 @@ bool Graphics::Initialize
     }
 
     // Init Camera
-    m_camera = new Camera();
+    screenWidth = width;
+    screenHeight = height;
+
+
+    m_camera = new Camera [2];
     cameraTracking = false;
-    if(!m_camera->Initialize(width, height))
+    if(!m_camera[0].Initialize(width/2, height))
     {
         printf("Camera Failed to Initialize\n");
         return false;
@@ -786,7 +792,7 @@ void Graphics::Update( unsigned int dt )
 
         objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
 
-        m_camera->followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x - 1.5,
+        m_camera[0].followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x - 1.5,
                                          objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y + 8.5f,
                                          objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z + 3 ),
                               shipRegistry[ 0 ].cameraPosition 
@@ -799,7 +805,48 @@ void Graphics::Update( unsigned int dt )
                               glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
                                          shipRegistry[ 0 ].rightHit.getY( ),
                                          shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
+        if( splitScreen )
+        {
+           srand( cumultiveTime );
+           time = (float) ( ( rand( ) % 1500 ) + 2500 );
 
+           if( shipRegistry[ 0 ].waveCycle >= 0.0f && !shipRegistry[ 0 ].waveUp )
+           {
+               shipRegistry[ 0 ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
+           }
+           else if( shipRegistry[ 0 ].waveCycle >= 1.0f && shipRegistry[ 0 ].waveUp )
+           {
+               shipRegistry[ 0 ].waveUp = false;
+           }
+           else if( shipRegistry[ 0 ].waveCycle <= 1.0f && shipRegistry[ 0 ].waveUp )
+           {
+                shipRegistry[ 0 ].waveCycle += std::min( ( float ) dt / time, 0.25f );
+           }
+           else if( shipRegistry[ 0 ].waveCycle <= 0.00f && !shipRegistry[ 0 ].waveUp )
+           {
+                shipRegistry[ 0 ].waveUp = true;
+                shipRegistry[ 0 ].waveCycle = 0.0f;
+           }
+        
+
+            cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 0 ].waveCycle );
+
+            objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
+
+            m_camera[1].followShip( glm::vec3( objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).x - 1.5,
+                                         objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).y + 8.5f,
+                                         objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).z + 3 ),
+                              shipRegistry[ 1 ].cameraPosition 
+                              + glm::vec3( -0.15f * cameraWaveDifference,
+                                           0.35f * cameraWaveDifference, 
+                                           0.12f * cameraWaveDifference),
+                              glm::vec3( shipRegistry[ 1 ].leftHit.getX( ),
+                                         shipRegistry[ 1 ].leftHit.getY( ),
+                                         shipRegistry[ 1 ].leftHit.getZ( ) ),
+                              glm::vec3( shipRegistry[ 1 ].rightHit.getX( ),
+                                         shipRegistry[ 1 ].rightHit.getY( ),
+                                         shipRegistry[ 1 ].rightHit.getZ( ) ), lookAt );
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -836,156 +883,335 @@ void Graphics::Update( unsigned int dt )
     
 }
 
-void Graphics::Render( unsigned int dt )
+void Graphics::RenderA( unsigned int dt )
 {
     unsigned int index;
     int lightCode = -1;
     float normedCTime;
 
     glm::vec4 tmpVec;
-
+ 
+    
     //clear the screen
-    glClearColor( 0.2, 0.15, 0.2, 1.0 );
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+        glClearColor(0.2, 0.15, 0.2, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
+    {
 
     // Start the correct program
-    shaderRegistry[ shaderSelect ].Enable( );
+        shaderRegistry[ shaderSelect ].Enable( );
 
     // Send in the projection and view to the shader
-    glUniformMatrix4fv( m_projectionMatrix, 1, GL_FALSE, glm::value_ptr( m_camera->GetProjection( ) ) ); 
-    glUniformMatrix4fv( m_viewMatrix, 1, GL_FALSE, glm::value_ptr( m_camera->GetView( ) ) );
+        glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[cameraIndex].GetProjection())); 
+        glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[cameraIndex].GetView()));
 
-    glUniform1i( m_numLights, ( GLint ) lights.size( ) );
-    glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
+        glUniform1i( m_numLights, ( GLint ) lights.size( ) );
+        glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
 
-    cumultiveTime += dt;
-    normedCTime = cumultiveTime;
-    normedCTime /= 1000000.0f;
+        cumultiveTime += dt;
+        normedCTime = cumultiveTime;
+        normedCTime /= 1000000.0f;
 
-    if( cumultiveTime > 1000000 )
-    {
-        cumultiveTime = 0;
-    }
+        if( cumultiveTime > 1000000 )
+        {
+            cumultiveTime = 0;
+        }
 
-    glUniform1f( m_time, normedCTime );
+        glUniform1f( m_time, normedCTime );
 
     
 
-    for( index = 0; 
-         index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
-         index++ )
-    {
-        glUniform4f( lights[ index ].ambientLoc, lights[ index ].ambient.r, 
-                     lights[ index ].ambient.g, lights[ index ].ambient.b, 
-                     lights[ index ].ambient.a );
-
-        glUniform4f( lights[ index ].incomingLoc, lights[ index ].incoming.r, 
-                     lights[ index ].incoming.g, lights[ index ].incoming.b, 
-                     lights[ index ].incoming.a );
-    } 
-
-    for( index = 0; index < shipRegistry.size( ); index += 1 )
-    {
-        if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
+        for( index = 0; 
+             index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
+             index++ )
         {
-            std::cout << "Error: too few spotLights!" << std::endl;
+            glUniform4f( lights[ index ].ambientLoc, lights[ index ].ambient.r, 
+                         lights[ index ].ambient.g, lights[ index ].ambient.b, 
+                         lights[ index ].ambient.a );
+
+            glUniform4f( lights[ index ].incomingLoc, lights[ index ].incoming.r, 
+                         lights[ index ].incoming.g, lights[ index ].incoming.b, 
+                         lights[ index ].incoming.a );
+        } 
+
+        for( index = 0; index < shipRegistry.size( ); index += 1 )
+        {
+            if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
+            {
+                std::cout << "Error: too few spotLights!" << std::endl;
+            }
+
+            tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
+                                shipRegistry[ index ].rightHit.getY( ), 
+                                shipRegistry[ index ].rightHit.getZ( ), 1.0 );
+
+            glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
+                         tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
+
+            glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
+                         spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
+                         spotLight[ 2 * index ].ambient.a );
+
+            glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
+                         spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
+
+            glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
+
+            tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
+                                shipRegistry[ index ].leftHit.getY( ),
+                                shipRegistry[ index ].leftHit.getZ( ), 1.0 );
+
+            glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
+                         tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
+
+            glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
+                         spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
+                         spotLight[ ( 2 * index ) + 1 ].ambient.a );
+
+            glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
+                         spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
+
+            glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
+
         }
 
-        tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
-                            shipRegistry[ index ].rightHit.getY( ), 
-                            shipRegistry[ index ].rightHit.getZ( ), 1.0 );
-
-        glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
-                     tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
-
-        glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
-                     spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
-                     spotLight[ 2 * index ].ambient.a );
-
-        glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
-                     spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
-
-        glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
-
-        tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
-                            shipRegistry[ index ].leftHit.getY( ),
-                            shipRegistry[ index ].leftHit.getZ( ), 1.0 );
-
-        glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
-                     tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
-
-        glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
-                     spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
-                     spotLight[ ( 2 * index ) + 1 ].ambient.a );
-
-        glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
-                     spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
-
-        glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
-
-    }
-
-    for( index  = 2 * index; 
-         index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
-         index++ )
-    {
-        tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
-
-        glUniform4f( spotLight[ index ].followLoc, tmpVec.x, 
-                     tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
-
-        glUniform4f( spotLight[ index ].ambientLoc, spotLight[ index ].ambient.r, 
-                     spotLight[ index ].ambient.g, spotLight[ index ].ambient.b, 
-                     spotLight[ index ].ambient.a );
-
-        glUniform3f( spotLight[ index ].incomingLoc, spotLight[ index ].incoming.r, 
-                     spotLight[ index ].incoming.g, spotLight[ index ].incoming.b );
-
-        glUniform1f( spotLight[ index ].cosineLoc, spotLight[ index ].cosine );
-    }    
-
-    // Render the objects
-    for( index = 0; index < objectRegistry.getSize( ); index++ )
-    {
-        glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
-                            glm::value_ptr( objectRegistry[index].GetModel( ) ) );
-
-        tmpVec = objectRegistry[ index ].getObjectModel( ).getDiffuse( );
-
-        glUniform4f( m_diffuse, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
-
-        tmpVec = objectRegistry[ index ].getObjectModel( ).getSpecular( );
-
-        glUniform4f( m_specular, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
-
-        glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
-
-        if( lightCode != objectRegistry[ index ].LightCode( ) )
+        for( index  = 2 * index; 
+             index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
+             index++ )
         {
-            lightCode = objectRegistry[ index ].LightCode( );
-            glUniform1i( m_objectType, lightCode );
+            tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
+
+            glUniform4f( spotLight[ index ].followLoc, tmpVec.x, 
+                         tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
+
+            glUniform4f( spotLight[ index ].ambientLoc, spotLight[ index ].ambient.r, 
+                         spotLight[ index ].ambient.g, spotLight[ index ].ambient.b, 
+                         spotLight[ index ].ambient.a );
+
+            glUniform3f( spotLight[ index ].incomingLoc, spotLight[ index ].incoming.r, 
+                         spotLight[ index ].incoming.g, spotLight[ index ].incoming.b );
+
+            glUniform1f( spotLight[ index ].cosineLoc, spotLight[ index ].cosine );
+        }    
+
+        // Render the objects
+        for( index = 0; index < objectRegistry.getSize( ); index++ )
+        {
+            glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
+                                glm::value_ptr(objectRegistry[index].GetModel()));
+
+            tmpVec = objectRegistry[ index ].getObjectModel( ).getDiffuse( );  
+
+            glUniform4f( m_diffuse, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
+
+            tmpVec = objectRegistry[ index ].getObjectModel( ).getSpecular( );
+
+            glUniform4f( m_specular, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
+
+            glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
+
+            if( lightCode != objectRegistry[ index ].LightCode( ) )
+            {
+                lightCode = objectRegistry[ index ].LightCode( );
+                glUniform1i( m_objectType, lightCode );
+            }
+
+            if( lightCode == Object::WAVE )
+            {
+                glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
+                glActiveTexture( GL_TEXTURE1 );
+                glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
+            }
+
+            objectRegistry[index].Render();
         }
 
-        if( lightCode == Object::WAVE )
+        shaderRegistry[ shaderSelect ].Disable( );
+        if( !splitScreen )
         {
-            glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
-            glActiveTexture( GL_TEXTURE1 );
-            glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
+            cameraIndex++;
         }
-
-        objectRegistry[index].Render();
+        if( cameraIndex == 0 && splitScreen )
+        {
+            glViewport(0,0,screenWidth/2,screenHeight);
+            
+        }
+        if( cameraIndex == 1 && splitScreen )
+        {
+            glViewport(screenWidth/2,0,screenWidth,screenHeight);
+            
+        }
     }
-
-    shaderRegistry[ shaderSelect ].Disable( );
-
-    // Get any errors from OpenGL
-    auto error = glGetError();
-    if ( error != GL_NO_ERROR )
-    {
-        string val = ErrorString( error );
-        std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
-    }
+        // Get any errors from OpenGL
+        auto error = glGetError();
+        if ( error != GL_NO_ERROR )
+        {
+            string val = ErrorString( error );
+            std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+        }
+        
+   
 }
+/*void Graphics::RenderB( unsigned int dt )
+{
+    unsigned int index;
+    int lightCode = -1;
+    float normedCTime;
+
+    glm::vec4 tmpVec;
+    //for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
+    {
+    
+    //clear the screen
+        glClearColor(0.2, 0.15, 0.2, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Start the correct program
+        shaderRegistry[ shaderSelect ].Enable( );
+
+    // Send in the projection and view to the shader
+        glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[1].GetProjection())); 
+        glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[1].GetView()));
+
+        glUniform1i( m_numLights, ( GLint ) lights.size( ) );
+        glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
+
+        cumultiveTime += dt;
+        normedCTime = cumultiveTime;
+        normedCTime /= 1000000.0f;
+
+        if( cumultiveTime > 1000000 )
+        {
+            cumultiveTime = 0;
+        }
+
+        glUniform1f( m_time, normedCTime );
+
+    
+
+        for( index = 0; 
+             index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
+             index++ )
+        {
+            glUniform4f( lights[ index ].ambientLoc, lights[ index ].ambient.r, 
+                         lights[ index ].ambient.g, lights[ index ].ambient.b, 
+                         lights[ index ].ambient.a );
+
+            glUniform4f( lights[ index ].incomingLoc, lights[ index ].incoming.r, 
+                         lights[ index ].incoming.g, lights[ index ].incoming.b, 
+                         lights[ index ].incoming.a );
+        } 
+
+        for( index = 0; index < shipRegistry.size( ); index += 1 )
+        {
+            if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
+            {
+                std::cout << "Error: too few spotLights!" << std::endl;
+            }
+
+            tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
+                                shipRegistry[ index ].rightHit.getY( ), 
+                                shipRegistry[ index ].rightHit.getZ( ), 1.0 );
+
+            glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
+                         tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
+
+            glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
+                         spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
+                         spotLight[ 2 * index ].ambient.a );
+
+            glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
+                         spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
+
+            glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
+
+            tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
+                                shipRegistry[ index ].leftHit.getY( ),
+                                shipRegistry[ index ].leftHit.getZ( ), 1.0 );
+
+            glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
+                         tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
+
+            glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
+                         spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
+                         spotLight[ ( 2 * index ) + 1 ].ambient.a );
+
+            glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
+                         spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
+
+            glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
+
+        }
+
+        for( index  = 2 * index; 
+             index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
+             index++ )
+        {
+            tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
+
+            glUniform4f( spotLight[ index ].followLoc, tmpVec.x, 
+                         tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
+
+            glUniform4f( spotLight[ index ].ambientLoc, spotLight[ index ].ambient.r, 
+                         spotLight[ index ].ambient.g, spotLight[ index ].ambient.b, 
+                         spotLight[ index ].ambient.a );
+
+            glUniform3f( spotLight[ index ].incomingLoc, spotLight[ index ].incoming.r, 
+                         spotLight[ index ].incoming.g, spotLight[ index ].incoming.b );
+
+            glUniform1f( spotLight[ index ].cosineLoc, spotLight[ index ].cosine );
+        }    
+
+        // Render the objects
+        for( index = 0; index < objectRegistry.getSize( ); index++ )
+        {
+            glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
+                                glm::value_ptr(objectRegistry[index].GetModel()));
+
+            tmpVec = objectRegistry[ index ].getObjectModel( ).getDiffuse( );  
+
+            glUniform4f( m_diffuse, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
+
+            tmpVec = objectRegistry[ index ].getObjectModel( ).getSpecular( );
+
+            glUniform4f( m_specular, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
+
+            glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
+
+            if( lightCode != objectRegistry[ index ].LightCode( ) )
+            {
+                lightCode = objectRegistry[ index ].LightCode( );
+                glUniform1i( m_objectType, lightCode );
+            }
+
+            if( lightCode == Object::WAVE )
+            {
+                glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
+                glActiveTexture( GL_TEXTURE1 );
+                glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
+            }
+
+            objectRegistry[index].Render();
+        }
+
+        shaderRegistry[ shaderSelect ].Disable( );
+
+
+        glViewport(screenWidth/2, screenHeight/2 ,screenWidth,screenHeight);
+        glMatrixMode( GL_PROJECTION );
+        glLoadIdentity();
+        gluPerspective( 45.0, float(screenWidth)/float(screenHeight), .1f, 500.0 );
+        
+        // Get any errors from OpenGL
+        auto error = glGetError();
+        if ( error != GL_NO_ERROR )
+        {
+            string val = ErrorString( error );
+            std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+        }
+        glFlush();
+   //}
+}*/
 
 std::string Graphics::ErrorString(GLenum error)
 {
@@ -1186,13 +1412,13 @@ void Graphics::ChangePerspectiveStatic( int position )
 {
     if( position == 1 )
     {
-    m_camera->LookTopDown();
+    m_camera[0].LookTopDown();
     }
     else if( position == 2 )
     {
-    m_camera->LookSideToSide();
+    m_camera[0].LookSideToSide();
     }
-    m_camera->updateLookAt();
+    m_camera[0].updateLookAt();
     cameraTracking = false;
         
 }
@@ -1201,13 +1427,13 @@ void Graphics::cameraLeftOrRight( bool left )
 {
    if( left )
    {
-      m_camera->moveLeft();  
+      m_camera[0].moveLeft();  
    }
    else
    {
-      m_camera->moveRight();
+      m_camera[0].moveRight();
    }
-   //m_camera->updateLookAt();
+   //m_camera[0]->updateLookAt();
    cameraTracking = false;
 }
 
@@ -1215,13 +1441,13 @@ void Graphics::cameraUpOrDown( bool up)
 {
    if( up )
    {
-      m_camera->moveUp();  
+      m_camera[0].moveUp();  
    }
    else
    {
-      m_camera->moveDown();
+      m_camera[0].moveDown();
    }
-   //m_camera->updateLookAt();
+   //m_camera[0]->updateLookAt();
    cameraTracking = false;
 }
 
@@ -1229,13 +1455,13 @@ void Graphics::cameraZoomInOrOut(bool in)
 {
    if( in )
    {
-      m_camera->zoomIn();  
+      m_camera[0].zoomIn();  
    }
    else
    {
-      m_camera->zoomOut();
+      m_camera[0].zoomOut();
    }
-   m_camera->updateLookAt();
+   m_camera[0].updateLookAt();
    
 }
 
@@ -1806,19 +2032,19 @@ void Graphics::turnPaddle( bool select )
 
 void Graphics::resetView( )
 {
-    m_camera->resetView( );
+    m_camera[0].resetView( );
 }
 
 void Graphics::idleSplash( unsigned int dt )
 {
     if( numberOfUpCalls < 500 && goingUp )
     {
-        m_camera->moveUp( );
+        m_camera[0].moveUp( );
         numberOfUpCalls += dt;
     }
     else if( numberOfUpCalls > -500 && goingRight )
     {
-        m_camera->moveDown( );
+        m_camera[0].moveDown( );
         numberOfUpCalls -= dt;
 
         goingUp = false;
@@ -1830,12 +2056,12 @@ void Graphics::idleSplash( unsigned int dt )
 
     if( numberOfRightCalls < 8000 && goingRight )
     {
-        m_camera->moveRight( );
+        m_camera[0].moveRight( );
         numberOfRightCalls += dt;
     }
     else if( numberOfRightCalls > -8000 && goingUp )
     {
-        m_camera->moveLeft( );
+        m_camera[0].moveLeft( );
         numberOfRightCalls -= dt;
         goingRight = false;
     }
@@ -2489,6 +2715,17 @@ void Graphics::toggleRight( int index )
 
 }
 
+void Graphics::startSplitScreen( int width, int height )
+{
+
+    m_camera[0].changePerspective( width/2, height );
+    if( !splitScreen )
+    {
+        m_camera[1].Initialize(width/2, height);
+        
+        splitScreen = true;
+    }
+}
 
 
 

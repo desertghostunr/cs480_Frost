@@ -31,6 +31,8 @@ class Camera
 		
  	void updateLookAt();
 	void updateCamera( bool isOn, glm::vec3 planet );
+        void changePerspective( int width, int height );
+
         glm::mat4 GetProjection();
         glm::mat4 GetView();
 
