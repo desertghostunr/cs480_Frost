@@ -761,7 +761,7 @@ void Graphics::Update( unsigned int dt )
         {
             lookAt = Camera::LOOK_AT_SHIP;
         }
-
+  
 
         //wave viewing effect
 
@@ -806,31 +806,43 @@ void Graphics::Update( unsigned int dt )
                                          shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
         if( splitScreen )
         {
+           if( shipRegistry[ 1 ].lookingLeft )
+           {
+               lookAt = Camera::LOOK_LEFT;
+           }
+           else if( shipRegistry[ 1 ].lookingRight )
+           {
+               lookAt = Camera::LOOK_RIGHT;
+           }
+           else
+           {
+                lookAt = Camera::LOOK_AT_SHIP;
+           }
            srand( cumultiveTime );
            time = (float) ( ( rand( ) % 1500 ) + 2500 );
 
-           if( shipRegistry[ 0 ].waveCycle >= 0.0f && !shipRegistry[ 0 ].waveUp )
+           if( shipRegistry[ 1 ].waveCycle >= 0.0f && !shipRegistry[ 1 ].waveUp )
            {
-               shipRegistry[ 0 ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
+               shipRegistry[ 1 ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
            }
-           else if( shipRegistry[ 0 ].waveCycle >= 1.0f && shipRegistry[ 0 ].waveUp )
+           else if( shipRegistry[ 1 ].waveCycle >= 1.0f && shipRegistry[ 1 ].waveUp )
            {
-               shipRegistry[ 0 ].waveUp = false;
+               shipRegistry[ 1 ].waveUp = false;
            }
-           else if( shipRegistry[ 0 ].waveCycle <= 1.0f && shipRegistry[ 0 ].waveUp )
+           else if( shipRegistry[ 1 ].waveCycle <= 1.0f && shipRegistry[ 1 ].waveUp )
            {
-                shipRegistry[ 0 ].waveCycle += std::min( ( float ) dt / time, 0.25f );
+                shipRegistry[ 1 ].waveCycle += std::min( ( float ) dt / time, 0.25f );
            }
-           else if( shipRegistry[ 0 ].waveCycle <= 0.00f && !shipRegistry[ 0 ].waveUp )
+           else if( shipRegistry[ 1 ].waveCycle <= 0.00f && !shipRegistry[ 1 ].waveUp )
            {
-                shipRegistry[ 0 ].waveUp = true;
-                shipRegistry[ 0 ].waveCycle = 0.0f;
+                shipRegistry[ 1 ].waveUp = true;
+                shipRegistry[ 1 ].waveCycle = 0.0f;
            }
         
 
-            cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 0 ].waveCycle );
+            cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 1 ].waveCycle );
 
-            objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0222234f  );
+            objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
 
             m_camera[1].followShip( glm::vec3( objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).x - 1.5,
                                          objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).y + 12.5f,
@@ -1032,15 +1044,27 @@ void Graphics::Render( unsigned int dt )
         {
             cameraIndex++;
         }
-        else if( cameraIndex == 1 && splitScreen )
+        if( cameraIndex == 1 && splitScreen )
         {
-            glViewport( 0, 0, screenWidth / 2, screenHeight );
-            
+            if( wideView )
+            {
+                glViewport( 0, 0, screenWidth, screenHeight / 2 );
+            }
+            else
+            {
+                glViewport( 0, 0, screenWidth / 2, screenHeight );
+            }
         }
-        else if( cameraIndex == 0 && splitScreen )
-        {
-            glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
-            
+        if( cameraIndex == 0 && splitScreen )
+        { 
+            if( wideView)
+            {
+                glViewport( 0, screenHeight / 2, screenWidth, screenHeight / 2 );
+            }
+            else
+            {
+                glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
+            }
         }
     }
    // Get any errors from OpenGL
@@ -2585,6 +2609,23 @@ void Graphics::startSplitScreen( int width, int height )
         
         splitScreen = true;
     }
+    wideView = false;
+}
+
+void Graphics::toggleSplitScreenView()
+{
+    wideView = !wideView;
+    if( wideView )
+    {
+        m_camera[0].changePerspective( screenWidth, screenHeight/2 );
+        m_camera[1].changePerspective( screenWidth, screenHeight/2 );
+    }
+    else
+    {
+        m_camera[0].changePerspective( screenWidth/2, screenHeight );
+        m_camera[1].changePerspective( screenWidth/2, screenHeight );
+    }
+    
 }
 
 
