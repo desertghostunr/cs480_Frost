@@ -355,7 +355,7 @@ bool Graphics::Initialize
 
     m_camera = new Camera [2];
     cameraTracking = false;
-    if(!m_camera[0].Initialize(width/2, height))
+    if(!m_camera[0].Initialize(width, height))
     {
         printf("Camera Failed to Initialize\n");
         return false;
@@ -867,7 +867,7 @@ void Graphics::Update(unsigned int dt)
     
 }
 
-void Graphics::RenderA( unsigned int dt )
+void Graphics::Render( unsigned int dt )
 {
     unsigned int index;
     int lightCode = -1;
@@ -1022,7 +1022,7 @@ void Graphics::RenderA( unsigned int dt )
         }
         if( cameraIndex == 1 && splitScreen )
         {
-            glViewport(screenWidth/2,0,screenWidth,screenHeight);
+            glViewport(screenWidth/2,0,screenWidth/2,screenHeight);
             
         }
     }
