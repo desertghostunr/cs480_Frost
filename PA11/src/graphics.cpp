@@ -357,7 +357,7 @@ bool Graphics::Initialize
 
     m_camera = new Camera [2];
     cameraTracking = false;
-    if(!m_camera[0].Initialize(width/2, height))
+    if(!m_camera[0].Initialize(width, height))
     {
         printf("Camera Failed to Initialize\n");
         return false;
