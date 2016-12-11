@@ -370,6 +370,7 @@ bool Graphics::Initialize
     score = 0;
 
     objectCollidedSound.loadSound("sounds/Canon_Fire.wav");
+    objectCollidedSound2.loadSound( "sounds/Canon_Fire.wav" );
 
     modelRegistry.clear( );
 

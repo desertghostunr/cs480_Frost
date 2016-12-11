@@ -188,6 +188,7 @@ class Graphics
         ObjectTable objectRegistry; //holds the scene's objects
  
         Sound objectCollidedSound;
+        Sound objectCollidedSound2;
 
         std::vector<Instance> modelRegistry;
 

@@ -8,8 +8,6 @@
 #include <string>
 #include <thread>
 
-void myCallback( void *userData, Uint8 *stream, int length);
-
 class Sound
 {
 	public:
@@ -26,7 +24,6 @@ class Sound
 
 
 	private:
-
 		std::thread * threadManager;
 		
 		Uint32 soundLength;
@@ -34,8 +31,11 @@ class Sound
 		SDL_AudioSpec soundSpec;
 		bool soundLoaded;
 		bool soundPlaying;
+        bool soundInterrupt;
 
-		friend void myCallback( void *userData, Uint8 *stream, int length);
+        bool alive;
+
+        SDL_AudioDeviceID dev;
  
 };
 
