@@ -572,7 +572,6 @@ bool ObjectModel::loadModelFromFile
 
         if( textureIsAlreadyLoaded[ textureIsAlreadyLoaded.size( ) - 1 ] != -1 )
         {
-            std::cout << "Found a texture" << std::endl;
             tmpImg = cv::Mat( cv::Size( 0, 0 ), CV_8UC4 );
         }
         else if( textureFileNames[ tIndex ] == "No Texture" )
