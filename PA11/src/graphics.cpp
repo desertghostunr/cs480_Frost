@@ -8,8 +8,8 @@ const float ShipController::MAX_ROT = 1.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
-const float ShipController::CAMERA_FOLLOW_DISTANCE = 28;
-const float ShipController::CAMERA_FOLLOW_HEIGHT = 7.5f;
+const float ShipController::CAMERA_FOLLOW_DISTANCE = 135;
+const float ShipController::CAMERA_FOLLOW_HEIGHT = 42;
 
 
 //physics related callbacks
