@@ -355,12 +355,16 @@ bool Graphics::Initialize
     screenHeight = height;
 
 
-    m_camera = new Camera [2];
+    m_camera.resize( 2 );
     cameraTracking = false;
-    if(!m_camera[0].Initialize(width, height))
+
+    for( index = 0; index < 2; index++ )
     {
-        printf("Camera Failed to Initialize\n");
-        return false;
+        if( !m_camera[ index ].Initialize( width, height ) )
+        {
+            printf( "Camera Failed to Initialize\n" );
+            return false;
+        }
     }
     
     score = 0;
@@ -699,13 +703,30 @@ bool Graphics::Initialize
 
     dynamicsWorldPtr->setInternalTickCallback( ccb::TickCallback );
 
+
+    for( sIndex = 0; sIndex < shipRegistry.size( ); sIndex++ )
+    {
+        for( index = 0; 
+             index < objectRegistry[ shipRegistry[ sIndex ].index ].getNumberOfChildren( ); 
+             index++ )
+        {
+            pIndex = objectRegistry[ shipRegistry[ sIndex ].index ].getChildsWorldID( index );
+
+            if( objectRegistry[ pIndex ].getName( ) == "sky" )
+            {
+                shipRegistry[ sIndex ].skyIndex = pIndex;
+            }
+        }
+    }
+
+
     return true;
 }
 
 void Graphics::Update( unsigned int dt )
 {
     int lookAt = 0;
-    unsigned int index;
+    unsigned int index, stop;
 
     float cameraWaveDifference = 0.0f;
     float time;
@@ -749,114 +770,72 @@ void Graphics::Update( unsigned int dt )
     {
         //put camera stuff here /////////////////////////////////////////////////////////////////////
 
-        if( shipRegistry[ 0 ].lookingLeft )
+        if( splitScreen )
         {
-            lookAt = Camera::LOOK_LEFT;
-        }
-        else if( shipRegistry[ 0 ].lookingRight )
-        {
-            lookAt = Camera::LOOK_RIGHT;
+            stop = 2;
         }
         else
         {
-            lookAt = Camera::LOOK_AT_SHIP;
+            stop = 1;
         }
-  
 
-        //wave viewing effect
-
-        srand( cumultiveTime );
-        time = (float) ( ( rand( ) % 1500 ) + 2500 );
-
-        if( shipRegistry[ 0 ].waveCycle >= 0.0f && !shipRegistry[ 0 ].waveUp )
+        for( index = 0; index < stop; index++ )
         {
-            shipRegistry[ 0 ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
-        }
-        else if( shipRegistry[ 0 ].waveCycle >= 1.0f && shipRegistry[ 0 ].waveUp )
-        {
-            shipRegistry[ 0 ].waveUp = false;
-        }
-        else if( shipRegistry[ 0 ].waveCycle <= 1.0f && shipRegistry[ 0 ].waveUp )
-        {
-            shipRegistry[ 0 ].waveCycle += std::min( ( float ) dt / time, 0.25f );
-        }
-        else if( shipRegistry[ 0 ].waveCycle <= 0.00f && !shipRegistry[ 0 ].waveUp )
-        {
-            shipRegistry[ 0 ].waveUp = true;
-            shipRegistry[ 0 ].waveCycle = 0.0f;
-        }
-        
-
-        cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 0 ].waveCycle );
-
-        objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
-
-        m_camera[0].followShip( glm::vec3( objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).x - 1.5,
-                                         objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).y + 8.5f,
-                                         objectRegistry[ shipRegistry[ 0 ].index ].getPositionInWorld( ).z + 3 ),
-                              shipRegistry[ 0 ].cameraPosition 
-                              + glm::vec3( -0.15f * cameraWaveDifference,
-                                           0.35f * cameraWaveDifference, 
-                                           0.12f * cameraWaveDifference),
-                              glm::vec3( shipRegistry[ 0 ].leftHit.getX( ),
-                                         shipRegistry[ 0 ].leftHit.getY( ),
-                                         shipRegistry[ 0 ].leftHit.getZ( ) ),
-                              glm::vec3( shipRegistry[ 0 ].rightHit.getX( ),
-                                         shipRegistry[ 0 ].rightHit.getY( ),
-                                         shipRegistry[ 0 ].rightHit.getZ( ) ), lookAt );
-        if( splitScreen )
-        {
-           if( shipRegistry[ 1 ].lookingLeft )
-           {
-               lookAt = Camera::LOOK_LEFT;
-           }
-           else if( shipRegistry[ 1 ].lookingRight )
-           {
-               lookAt = Camera::LOOK_RIGHT;
-           }
-           else
-           {
+            if( shipRegistry[ index ].lookingLeft )
+            {
+                lookAt = Camera::LOOK_LEFT;
+            }
+            else if( shipRegistry[ index ].lookingRight )
+            {
+                lookAt = Camera::LOOK_RIGHT;
+            }
+            else
+            {
                 lookAt = Camera::LOOK_AT_SHIP;
-           }
-           srand( cumultiveTime );
-           time = (float) ( ( rand( ) % 1500 ) + 2500 );
+            }
 
-           if( shipRegistry[ 1 ].waveCycle >= 0.0f && !shipRegistry[ 1 ].waveUp )
-           {
-               shipRegistry[ 1 ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
-           }
-           else if( shipRegistry[ 1 ].waveCycle >= 1.0f && shipRegistry[ 1 ].waveUp )
-           {
-               shipRegistry[ 1 ].waveUp = false;
-           }
-           else if( shipRegistry[ 1 ].waveCycle <= 1.0f && shipRegistry[ 1 ].waveUp )
-           {
-                shipRegistry[ 1 ].waveCycle += std::min( ( float ) dt / time, 0.25f );
-           }
-           else if( shipRegistry[ 1 ].waveCycle <= 0.00f && !shipRegistry[ 1 ].waveUp )
-           {
-                shipRegistry[ 1 ].waveUp = true;
-                shipRegistry[ 1 ].waveCycle = 0.0f;
-           }
-        
 
-            cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ 1 ].waveCycle );
+            //wave viewing effect
 
-            objectRegistry[ shipRegistry[ 0 ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f  );
+            srand( cumultiveTime );
+            time = ( float ) ( ( rand( ) % 1500 ) + 2500 );
 
-            m_camera[1].followShip( glm::vec3( objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).x - 1.5,
-                                         objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).y + 12.5f,
-                                         objectRegistry[ shipRegistry[ 1 ].index ].getPositionInWorld( ).z + 3 ),
-                              shipRegistry[ 1 ].cameraPosition 
-                              + glm::vec3( -1.15f * cameraWaveDifference,
-                                           1.35f * cameraWaveDifference, 
-                                           1.12f * cameraWaveDifference),
-                              glm::vec3( shipRegistry[ 1 ].leftHit.getX( ),
-                                         shipRegistry[ 1 ].leftHit.getY( ),
-                                         shipRegistry[ 1 ].leftHit.getZ( ) ),
-                              glm::vec3( shipRegistry[ 1 ].rightHit.getX( ),
-                                         shipRegistry[ 1 ].rightHit.getY( ),
-                                         shipRegistry[ 1 ].rightHit.getZ( ) ), lookAt );
+            if( shipRegistry[ index ].waveCycle >= 0.0f && !shipRegistry[ index ].waveUp )
+            {
+                shipRegistry[ index ].waveCycle -= std::min( ( float ) dt / time, 0.25f );
+            }
+            else if( shipRegistry[ index ].waveCycle >= 1.0f && shipRegistry[ index ].waveUp )
+            {
+                shipRegistry[ index ].waveUp = false;
+            }
+            else if( shipRegistry[ index ].waveCycle <= 1.0f && shipRegistry[ index ].waveUp )
+            {
+                shipRegistry[ index ].waveCycle += std::min( ( float ) dt / time, 0.25f );
+            }
+            else if( shipRegistry[ index ].waveCycle <= 0.00f && !shipRegistry[ index ].waveUp )
+            {
+                shipRegistry[ index ].waveUp = true;
+                shipRegistry[ index ].waveCycle = 0.0f;
+            }
+
+
+            cameraWaveDifference = glm::smoothstep( 0.0f, 1.0f, shipRegistry[ index ].waveCycle );
+
+            objectRegistry[ shipRegistry[ index ].index ].setAngle( ( 0.5f - cameraWaveDifference ) * 0.0174533f );
+
+            m_camera[ index ].followShip( glm::vec3( objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ).x - 1.5,
+                                                 objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ).y + 8.5f,
+                                                 objectRegistry[ shipRegistry[ index ].index ].getPositionInWorld( ).z + 3 ),
+                                      shipRegistry[ index ].cameraPosition
+                                      + glm::vec3( -0.15f * cameraWaveDifference,
+                                                   0.35f * cameraWaveDifference,
+                                                   0.12f * cameraWaveDifference ),
+                                      glm::vec3( shipRegistry[ index ].leftHit.getX( ),
+                                                 shipRegistry[ index ].leftHit.getY( ),
+                                                 shipRegistry[ index ].leftHit.getZ( ) ),
+                                      glm::vec3( shipRegistry[ index ].rightHit.getX( ),
+                                                 shipRegistry[ index ].rightHit.getY( ),
+                                                 shipRegistry[ index ].rightHit.getZ( ) ), lookAt );
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
     }
@@ -909,6 +888,7 @@ void Graphics::Render( unsigned int dt )
 
     for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
     {
+        objectRegistry[ shipRegistry[ cameraIndex ].skyIndex ].setRender( false );
 
         // Start the correct program
         shaderRegistry[ shaderSelect ].Enable( );
@@ -1044,7 +1024,7 @@ void Graphics::Render( unsigned int dt )
         {
             cameraIndex++;
         }
-        if( cameraIndex == 1 && splitScreen )
+        else if( cameraIndex == 1 && splitScreen )
         {
             if( wideView )
             {
@@ -1055,7 +1035,7 @@ void Graphics::Render( unsigned int dt )
                 glViewport( 0, 0, screenWidth / 2, screenHeight );
             }
         }
-        if( cameraIndex == 0 && splitScreen )
+        else if( cameraIndex == 0 && splitScreen )
         { 
             if( wideView)
             {
@@ -1066,6 +1046,8 @@ void Graphics::Render( unsigned int dt )
                 glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
             }
         }
+
+        objectRegistry[ shipRegistry[ cameraIndex ].skyIndex ].setRender( true );
     }
    // Get any errors from OpenGL
    auto error = glGetError();
@@ -2626,6 +2608,11 @@ void Graphics::toggleSplitScreenView()
         m_camera[1].changePerspective( screenWidth/2, screenHeight );
     }
     
+}
+
+bool Graphics::isPlaying( )
+{
+    return playingStateFlag;
 }
 
 

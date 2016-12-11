@@ -170,6 +170,8 @@ class Object
 
         bool interpolateModels( float interpValue, size_t startModel, size_t endModel );
 
+        void setRender( bool renderMe );
+
     private:		
         //model info
         glm::mat4 model;
@@ -210,6 +212,8 @@ class Object
 		int lightCode;
 
 		bool applyParent;
+
+        bool render;
 };
 
 #endif /* OBJECT_H */

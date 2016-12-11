@@ -23,6 +23,8 @@ Object::Object()
 	type = BASE_OBJECT;
 
 	parentModel = glm::mat4( 1.0f );
+
+    render = true;
 }
 
 Object::Object( int nType )
@@ -53,6 +55,8 @@ Object::Object( int nType )
 	}
 
 	parentModel = glm::mat4( 1.0f );
+
+    render = true;
 }
 
 Object::~Object()
@@ -222,7 +226,7 @@ void Object::Render()
     unsigned int index;
 
     //no model, nothing to render
-    if( !hasObjectModel( ) )
+    if( !hasObjectModel( ) || !render )
     {
         return;
     }
@@ -770,4 +774,9 @@ bool Object::interpolateModels( float interpValue, size_t startModel, size_t end
     }
     
     return true;
+}
+
+void Object::setRender( bool renderMe )
+{
+    render = renderMe;
 }

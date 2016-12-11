@@ -89,13 +89,15 @@ class Graphics
 
 		void fireGuns( size_t ship );
 
-                void toggleLeft( int index );
+        void toggleLeft( int index );
          
-                void toggleRight( int index );
+        void toggleRight( int index );
 
-                void startSplitScreen( int width, int height );
+        void startSplitScreen( int width, int height );
                 
-                void toggleSplitScreenView();
+        void toggleSplitScreenView();
+
+        bool isPlaying( );
 
     private:
 		//helper functions
@@ -115,10 +117,10 @@ class Graphics
 
 		unsigned int cumultiveTime;
 
-                bool splitScreen;
-                int screenWidth;
-                int screenHeight;
-                bool wideView;
+        bool splitScreen;
+        int screenWidth;
+        int screenHeight;
+        bool wideView;
  
                
 		
@@ -167,7 +169,7 @@ class Graphics
 	
         bool cameraTracking;
 
-        Camera *m_camera;
+        std::vector<Camera> m_camera;
 
         std::vector<Shader> shaderRegistry;
         unsigned int shaderSelect;

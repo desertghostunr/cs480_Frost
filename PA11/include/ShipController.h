@@ -57,6 +57,9 @@ struct ShipController
 
     float cameraDistance;
 
+    unsigned int skyIndex;
+
+
     ShipController( ) :
         index( 0 ),
         force( btVector3( 0, 0, 0 ) ),
@@ -79,7 +82,10 @@ struct ShipController
         lookingLeft( false ),
         lookingRight( false),
         waveCycle( 0 ),
-        waveUp( true )
+        waveUp( true ),
+        cameraHeight( 0 ),
+        cameraDistance( 0 ),
+        skyIndex( -1 )
     {
     }
 
@@ -105,7 +111,11 @@ struct ShipController
         lookingLeft( false ),
         lookingRight( false),
         waveCycle( 0 ),
-        waveUp( true )
+        waveUp( true ),
+        cameraHeight( 0 ),
+        cameraDistance( 0 ),
+        skyIndex( -1 )
+        
     {
     }
 
@@ -131,7 +141,10 @@ struct ShipController
         lookingLeft( src.lookingLeft ),
         lookingRight( src.lookingRight ),
         waveCycle( src.waveCycle ),
-        waveUp( src.waveUp )
+        waveUp( src.waveUp ),
+        cameraHeight( src.cameraHeight ),
+        cameraDistance( src.cameraDistance ),
+        skyIndex( src.skyIndex )
     {
     }
 
@@ -161,6 +174,9 @@ struct ShipController
             lookingRight = src.lookingRight;
             waveCycle = src.waveCycle;
             waveUp = src.waveUp;
+            cameraHeight = src.cameraHeight;
+            cameraDistance = src.cameraDistance;
+            skyIndex = src.skyIndex;
         }
 
         return *this;
