@@ -135,16 +135,4 @@ void myCallback( void *userData, Uint8 *stream, int length)
 
     SDL_AtomicSet( &audioCallbackLeft, localAudioCbLeft );
 
-	/*if( soundRemaining == 0 )
-	{
-		return;
-	}
-
-	length = ( length > soundRemaining ? soundRemaining : length );
-
-	SDL_MixAudio( stream, soundPosition, length, SDL_MIX_MAXVOLUME );
-
-	soundPosition += length;
-	soundRemaining -= length;*/
-
 }

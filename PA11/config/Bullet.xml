@@ -26,9 +26,9 @@
     <zRotationAngle>0</zRotationAngle>
     <Object path ="models/skybox.obj">
       <name>sky</name>
-      <xScale>400</xScale>
-      <yScale>400</yScale>
-      <zScale>400</zScale>
+      <xScale>350</xScale>
+      <yScale>350</yScale>
+      <zScale>350</zScale>
       <xBScale>0</xBScale>
       <yBScale>0</yBScale>
       <zBScale>0</zBScale>
@@ -173,9 +173,9 @@
     <zRotationAngle>0</zRotationAngle>
     <Object path ="models/skybox.obj">
       <name>sky</name>
-      <xScale>400</xScale>
-      <yScale>400</yScale>
-      <zScale>400</zScale>
+      <xScale>350</xScale>
+      <yScale>350</yScale>
+      <zScale>350</zScale>
       <xBScale>0</xBScale>
       <yBScale>0</yBScale>
       <zBScale>0</zBScale>
