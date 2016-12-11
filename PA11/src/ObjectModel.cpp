@@ -50,14 +50,19 @@ ObjectModel::ObjectModel( ): reference( 0 ), Vertices( ), Indices( )
 
 @param in: fileName: the name of the file
 
+@param in: textureRegistry: a pointer to the texture registry
+
 @notes None
 
 ***************************************/
-ObjectModel::ObjectModel( const std::string & fileName ): reference( 0 ), 
-                                                          Vertices( ), Indices( )
+ObjectModel::ObjectModel
+( 
+    const std::string & fileName, 
+    std::vector<TextureUnit> * const textureRegistry 
+): reference( 0 ), Vertices( ), Indices( )
                                                           
 {
-    loadModelFromFile( fileName );
+    loadModelFromFile( fileName, textureRegistry );
 }
 
 // COPY CONSTRUCTOR //////////////////
@@ -381,7 +386,11 @@ unsigned int ObjectModel::getReferenceCount( )
 @notes File must have triangular faces
 
 ***************************************/
-bool ObjectModel::loadModelFromFile( const std::string& fileName )
+bool ObjectModel::loadModelFromFile
+( 
+    const std::string& fileName,
+    std::vector<TextureUnit> * const textureRegistry 
+)
 {
     //assimp
     Assimp::Importer importer;
@@ -405,7 +414,7 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
 
     //indexing
-    unsigned int mIndex, fIndex, vIndex, iIndex, tIndex, offset;
+    unsigned int mIndex, fIndex, vIndex, iIndex, tIndex, offset, nIndex;
 
     //image container using opencv
     cv::Mat tmpImg;
@@ -415,6 +424,8 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     double addedValue = 0.0, multipliedValue= 1.0;
 
     std::string pathString = fileName.substr( 0, fileName.find_last_of( "\\/" ) + 1 );
+
+    std::vector<int> textureIsAlreadyLoaded;
 
     if( scene == NULL )
     {
@@ -546,91 +557,112 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
     //the 8-bit, 16-bit, 32-bit types can be signed or unsigned
     for( tIndex = 0; tIndex < textureFileNames.size( ); tIndex++ )
     {
-        if( textureFileNames[ tIndex ] == "No Texture" )
+        textureIsAlreadyLoaded.push_back( -1 );
+
+        if( textureRegistry != NULL )
+        {
+            for( nIndex = 0; nIndex < textureRegistry->size( ); nIndex++ )
+            {
+                if( textureFileNames[ tIndex ] == textureRegistry[ 0 ][ nIndex ].name )
+                {
+                    textureIsAlreadyLoaded[ textureIsAlreadyLoaded.size( ) - 1 ] = nIndex;
+                }
+            }
+        }
+
+        if( textureIsAlreadyLoaded[ textureIsAlreadyLoaded.size( ) - 1 ] != -1 )
+        {
+            std::cout << "Found a texture" << std::endl;
+            tmpImg = cv::Mat( cv::Size( 0, 0 ), CV_8UC4 );
+        }
+        else if( textureFileNames[ tIndex ] == "No Texture" )
         {            
             tmpImg = cv::Mat( 256, 256, CV_8UC4 );
-            tmpImg.setTo( cv::Scalar( 255 * color.b, 255 * color.g, 255 * color.r, 255 * color.a ) );
+
+            tmpImg.setTo( cv::Scalar( 255 * color.b, 
+                                      255 * color.g, 
+                                      255 * color.r, 
+                                      255 * color.a ) );
         }
         else
         {
             tmpImg = cv::imread( pathString + textureFileNames[ tIndex ],
                                  CV_LOAD_IMAGE_UNCHANGED );
-        }
-        
 
-        if( tmpImg.type( ) != CV_8UC4 )
-        {
-            switch( tmpImg.channels( ) )
+            if( tmpImg.type( ) != CV_8UC4 )
             {
-                case 1:
+                switch( tmpImg.channels( ) )
                 {
-                    cv::cvtColor( tmpImg.clone( ), tmpImg, cv::COLOR_GRAY2BGRA );
-                    break;
-                }
-                case 3:
-                {
-                    cv::cvtColor( tmpImg.clone( ), tmpImg, cv::COLOR_BGR2BGRA );
-                    break;
-                }
-                case 4:
-                {
-                    //nothing to do
-                    break;
-                }
-                default:
-                {
-                    std::cout << "Invalid Texture: " << pathString + textureFileNames[ tIndex ] << std::endl;
-                    std::cout << "This image has an invalid number of channels: " << tmpImg.channels( ) << std::endl;
-                    return false;
-                }
-            }
-
-            switch( tmpImg.depth( ) )
-            {
-                case CV_8U:
-                {
-                    addedValue = 0.0;
-                    multipliedValue = 1.0;
-                    break;
-                }
-                case CV_8S:
-                {
-                    addedValue = 128.0;
-                    multipliedValue = 1.0;
-                    break;
-                }
-                case CV_16U:
-                {
-                    addedValue = 0.0;
-                    multipliedValue = 255.0 / 65535.0;
-                    break;
-                }
-                case CV_16S:
-                {
-                    addedValue = 128.0;
-                    multipliedValue = 255.0 / 65535.0;
-                    break;
-                }
-                case CV_32F:
-                {
-                    addedValue = 0.0;
-                    multipliedValue = 255.0;
-                    break;
-                }
-                default:
-                {
-                    std::cout << "Invalid Texture: " << pathString + textureFileNames[ tIndex ] << std::endl;
-                    std::cout << "This image has an invalid channel depth!" <<std::endl;
-                    return false;
+                    case 1:
+                    {
+                        cv::cvtColor( tmpImg.clone( ), tmpImg, cv::COLOR_GRAY2BGRA );
+                        break;
+                    }
+                    case 3:
+                    {
+                        cv::cvtColor( tmpImg.clone( ), tmpImg, cv::COLOR_BGR2BGRA );
+                        break;
+                    }
+                    case 4:
+                    {
+                        //nothing to do
+                        break;
+                    }
+                    default:
+                    {
+                        std::cout << "Invalid Texture: " << pathString + textureFileNames[ tIndex ] << std::endl;
+                        std::cout << "This image has an invalid number of channels: " << tmpImg.channels( ) << std::endl;
+                        return false;
+                    }
                 }
 
-                if( multipliedValue == 1.0 && addedValue == 0.0 )
+                switch( tmpImg.depth( ) )
                 {
-                    //don't convert
-                }
-                else
-                {
-                    tmpImg.convertTo( tmpImg, CV_8U, multipliedValue, addedValue );
+                    case CV_8U:
+                    {
+                        addedValue = 0.0;
+                        multipliedValue = 1.0;
+                        break;
+                    }
+                    case CV_8S:
+                    {
+                        addedValue = 128.0;
+                        multipliedValue = 1.0;
+                        break;
+                    }
+                    case CV_16U:
+                    {
+                        addedValue = 0.0;
+                        multipliedValue = 255.0 / 65535.0;
+                        break;
+                    }
+                    case CV_16S:
+                    {
+                        addedValue = 128.0;
+                        multipliedValue = 255.0 / 65535.0;
+                        break;
+                    }
+                    case CV_32F:
+                    {
+                        addedValue = 0.0;
+                        multipliedValue = 255.0;
+                        break;
+                    }
+                    default:
+                    {
+                        std::cout << "Invalid Texture: " << pathString + textureFileNames[ tIndex ] << std::endl;
+                        std::cout << "This image has an invalid channel depth!" << std::endl;
+                        return false;
+                    }
+
+                    if( multipliedValue == 1.0 && addedValue == 0.0 )
+                    {
+                        //don't convert
+                    }
+                    else
+                    {
+                        tmpImg.convertTo( tmpImg, CV_8U, multipliedValue, addedValue );
+                    }
                 }
             }
         }
@@ -638,13 +670,6 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
         textureImg.push_back( tmpImg.clone( ) );
 
         tmpImg.release( );
-    }
-
-
-    //in the case that the loading of the texture image failed
-    if( textureImg.empty( ) )
-    {
-        std::cout << "Error opening texture file(s)." << std::endl;
     }
 
     glGenBuffers( 1, &VB );
@@ -670,18 +695,35 @@ bool ObjectModel::loadModelFromFile( const std::string& fileName )
 
     for( tIndex = 0; tIndex < texture.size( ); tIndex++ )
     {
-        glGenTextures( 1, &texture[ tIndex ] );        
+        if( textureIsAlreadyLoaded[ tIndex ] == -1 /* Not Already Loaded */ )
+        {
+            glGenTextures( 1, &texture[ tIndex ] );
 
-        glBindTexture( GL_TEXTURE_2D, texture[ tIndex ] );
+            glBindTexture( GL_TEXTURE_2D, texture[ tIndex ] );
 
-        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, 
-                      textureImg[ tIndex ].size( ).width, 
-                      textureImg[ tIndex ].size( ).height, 0, 
-                      GL_BGRA, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );        
+            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
+                          textureImg[ tIndex ].size( ).width,
+                          textureImg[ tIndex ].size( ).height, 0,
+                          GL_BGRA, GL_UNSIGNED_BYTE, textureImg[ tIndex ].data );
 
-        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
-        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+            if( textureRegistry != NULL && textureFileNames[ tIndex ] != "No Texture" )
+            {
+                textureRegistry->push_back( TextureUnit( ) );
+                textureRegistry[ 0 ][ textureRegistry->size( ) - 1 ].name = textureFileNames[ tIndex ];
+                textureRegistry[ 0 ][ textureRegistry->size( ) - 1 ].texture = texture[ tIndex ];
+            }
+        }
+        else
+        {
+            if( textureRegistry != NULL )
+            {
+                texture[ tIndex ] = textureRegistry[ 0 ][ textureIsAlreadyLoaded[ tIndex ] ].texture;
+            }            
+        }
 
         textureImg[ tIndex ].release( );
     }

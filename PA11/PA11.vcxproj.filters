@@ -98,6 +98,9 @@
     <ClInclude Include="include\ShipController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\TextureUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

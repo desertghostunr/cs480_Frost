@@ -322,6 +322,8 @@ bool Graphics::Initialize
     btVector3 inertia;
     btTransform transform;
 
+    std::vector<TextureUnit> textReg;
+
     oceanHeightMap = HeightMap( ( long ) time );
 
     oceanHeightMap.generateHeightMap( 1024, 1024 );
@@ -365,11 +367,10 @@ bool Graphics::Initialize
     for( index = 0; index < progInfo.modelVector.size( ); index++ )
     {
         modelRegistry.push_back( Instance( ) );
-        modelRegistry[ modelRegistry.size( ) - 1 ].modelPath
-                                                = progInfo.modelVector[ index ];
+        modelRegistry[ modelRegistry.size( ) - 1 ].modelPath = progInfo.modelVector[ index ];
 
         successFlag = modelRegistry[ modelRegistry.size( ) - 1 ]
-                        .objModel.loadModelFromFile( progInfo.modelVector[ index ] );
+                        .objModel.loadModelFromFile( progInfo.modelVector[ index ], &textReg );
         
 
         if( !successFlag )
@@ -852,7 +853,7 @@ void Graphics::Render( unsigned int dt )
 
     // Send in the projection and view to the shader
     glUniformMatrix4fv( m_projectionMatrix, 1, GL_FALSE, glm::value_ptr( m_camera->GetProjection( ) ) ); 
-    glUniformMatrix4fv( m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView( ) ) );
+    glUniformMatrix4fv( m_viewMatrix, 1, GL_FALSE, glm::value_ptr( m_camera->GetView( ) ) );
 
     glUniform1i( m_numLights, ( GLint ) lights.size( ) );
     glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );

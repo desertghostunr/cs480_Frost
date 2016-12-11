@@ -15,6 +15,7 @@
 #include<vector>
 #include<string>
 #include"graphics_headers.h"
+#include"TextureUnit.h"
 
 // class definition ///////////////////////
 
@@ -23,7 +24,8 @@ class ObjectModel
     public:
         //contructors
         ObjectModel( );
-        ObjectModel( const std::string& fileName );
+        ObjectModel( const std::string& fileName, 
+                     std::vector<TextureUnit> * const textureRegistry );
         ObjectModel( const ObjectModel& src );
         
         //destructor
@@ -55,7 +57,8 @@ class ObjectModel
         unsigned int getReferenceCount( );
 
         //file I/O
-        bool loadModelFromFile( const std::string& fileName );
+        bool loadModelFromFile( const std::string& fileName, 
+                                std::vector<TextureUnit> * const textureRegistry );
 
         //clear
         void clear( );

@@ -198,6 +198,7 @@ xcopy "$(ProjectDir)sounds" "$(ProjectDir)build\sounds" /s /i /y</Command>
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\ShipController.h" />
     <ClInclude Include="include\sound.h" />
+    <ClInclude Include="include\TextureUnit.h" />
     <ClInclude Include="include\window.h" />
   </ItemGroup>
   <ItemGroup>

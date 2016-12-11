@@ -20,6 +20,8 @@ using namespace std;
 
 #include "ShipController.h"
 
+#include"TextureUnit.h"
+
 class Graphics
 {
     public:
