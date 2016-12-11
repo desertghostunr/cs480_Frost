@@ -7,6 +7,7 @@ Engine::Engine(string name, int width, int height)
     m_WINDOW_WIDTH = width;
     m_WINDOW_HEIGHT = height;
     m_FULLSCREEN = false;
+    splitScreen = false;
 
     m_graphics = NULL;
     m_window = NULL;
@@ -18,6 +19,7 @@ Engine::Engine(string name)
     m_WINDOW_HEIGHT = 0;
     m_WINDOW_WIDTH = 0;
     m_FULLSCREEN = true;
+    splitScreen = false;
 
     m_graphics = NULL;
     m_window = NULL;
@@ -123,7 +125,12 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {                
-                if( ambientLight )
+                
+                if( splitScreen )
+                {
+                    m_graphics->moveShip( 1 );
+                }
+                else if( ambientLight )
                 {
                     if( redLight )
                     {
@@ -178,7 +185,12 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                if( ambientLight )
+                
+                if( splitScreen )
+                {
+                    //m_graphics->reverseShip( 0 );
+                }
+                else if( ambientLight )
                 {
                     if( redLight )
                     {
@@ -233,7 +245,12 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {   
-                if( specularLight )
+                
+                if( splitScreen )
+                {
+                    m_graphics->rotateShip( 1, ( -1.0f * ShipController::STD_TORQUE ) );
+                }
+                else if( specularLight )
                 {
                     m_graphics->changeModelRegistryIndex( 1 );
                 }
@@ -252,7 +269,11 @@ void Engine::Keyboard()
         {
             if( m_graphics != NULL )
             {
-                if( specularLight )
+                if( splitScreen )
+                {
+                    m_graphics->rotateShip( 1, ShipController::STD_TORQUE );
+                }
+                else if( specularLight )
                 {
                     m_graphics->changeModelRegistryIndex( -1 );
                 }
@@ -397,15 +418,35 @@ void Engine::Keyboard()
 		{
 			m_graphics->fireGuns( 0 );
 		}
+                else if( splitScreen && m_event.key.keysym.sym == SDLK_LEFTBRACKET )
+                {
+	                //m_graphics->fireGuns( 0, false );
+                        m_graphics->toggleLeft( 1 );
+		}
+		else if( splitScreen && m_event.key.keysym.sym == SDLK_RIGHTBRACKET )
+		{
+			//m_graphics->fireGuns( 0, true );
+                        m_graphics->toggleRight( 1 );
+		}
+		else if( splitScreen && m_event.key.keysym.sym == SDLK_BACKSLASH )
+		{
+			m_graphics->fireGuns( 1 );
+		}
+                
 		else if( m_event.key.keysym.sym == SDLK_4 )
 		{
 			m_graphics->startSplitScreen( m_WINDOW_WIDTH, m_WINDOW_HEIGHT );
+                        splitScreen = true;
 		}
-        else if( m_event.key.keysym.sym == SDLK_RSHIFT 
+                else if( m_event.key.keysym.sym == SDLK_RSHIFT 
 				 || m_event.key.keysym.sym == SDLK_LSHIFT )
-        {
-            m_graphics->resetView( );
-        }
+                {
+                m_graphics->resetView( );
+                }
+                else if( splitScreen && m_event.key.keysym.sym == SDLK_TAB )
+		{
+			m_graphics->toggleSplitScreenView();
+		}
 		else if( m_event.key.keysym.sym == SDLK_RETURN 
 				 || m_event.key.keysym.sym == SDLK_RETURN )
 		{
@@ -424,7 +465,7 @@ void Engine::Keyboard()
 			}
 			else if( m_event.key.keysym.sym == SDLK_s )
 			{
-				m_graphics->slowShipToHalt( 0 );
+				//m_graphics->slowShipToHalt( 0 );
 				//std::cout << "S up" << std::endl;
 			}
 			else if( m_event.key.keysym.sym == SDLK_a )
@@ -437,6 +478,29 @@ void Engine::Keyboard()
 				m_graphics->stopShipsRotation( 0 );
 				//std::cout << "D up" << std::endl;
 			}
+                        if( splitScreen )
+                        {
+			    if( m_event.key.keysym.sym == SDLK_UP )
+			    {
+				m_graphics->slowShipToHalt( 1 );
+				//std::cout << "W up" << std::endl;
+			    }
+			    else if( m_event.key.keysym.sym == SDLK_DOWN )
+			    {
+				//m_graphics->slowShipToHalt( 0 );
+				//std::cout << "S up" << std::endl;
+			    }
+			    else if( m_event.key.keysym.sym == SDLK_LEFT )
+			    {
+				m_graphics->stopShipsRotation( 1 );
+				//std::cout << "A up" << std::endl;
+			    }
+			    else if( m_event.key.keysym.sym == SDLK_RIGHT )
+			    {
+				m_graphics->stopShipsRotation( 1 );
+				//std::cout << "D up" << std::endl;
+			    }
+                       }
 		}		
 	}
 

@@ -94,6 +94,8 @@ class Graphics
                 void toggleRight( int index );
 
                 void startSplitScreen( int width, int height );
+                
+                void toggleSplitScreenView();
 
     private:
 		//helper functions
@@ -116,6 +118,7 @@ class Graphics
                 bool splitScreen;
                 int screenWidth;
                 int screenHeight;
+                bool wideView;
  
                
 		

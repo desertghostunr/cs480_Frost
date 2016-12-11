@@ -53,6 +53,10 @@ struct ShipController
 
     bool waveUp;
 
+    float cameraHeight;
+
+    float cameraDistance;
+
     ShipController( ) :
         index( 0 ),
         force( btVector3( 0, 0, 0 ) ),

@@ -80,6 +80,7 @@ class Engine
         bool ambientLight;
         bool spotLight;
         bool viewControls;
+        bool splitScreen;
 
         bool redLight;
         bool greenLight;
