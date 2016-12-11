@@ -42,6 +42,24 @@
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
     </Object>
+    <Object path ="models/WindHud.obj">
+      <name>windHud</name>
+      <xScale>0.25</xScale>
+      <yScale>0.25</yScale>
+      <zScale>0.25</zScale>
+      <xBScale>1</xBScale>
+      <yBScale>1</yBScale>
+      <zBScale>1</zBScale>
+      <xPosition>-7.0</xPosition>
+      <yPosition>2.0</yPosition>
+      <zPosition>1.0</zPosition>
+      <xRotationAxis>0</xRotationAxis>
+      <yRotationAxis>1</yRotationAxis>
+      <zRotationAxis>0</zRotationAxis>
+      <xRotationAngle>0</xRotationAngle>
+      <yRotationAngle>0</yRotationAngle>
+      <zRotationAngle>0</zRotationAngle>
+    </Object>
     <Object path ="models/sail1.obj">
       <name>sail</name>
       <xScale>1</xScale>
@@ -184,6 +202,24 @@
       <zPosition>0</zPosition>
       <xRotationAxis>1</xRotationAxis>
       <yRotationAxis>0</yRotationAxis>
+      <zRotationAxis>0</zRotationAxis>
+      <xRotationAngle>0</xRotationAngle>
+      <yRotationAngle>0</yRotationAngle>
+      <zRotationAngle>0</zRotationAngle>
+    </Object>
+    <Object path ="models/WindHud.obj">
+      <name>windHud</name>
+      <xScale>0.25</xScale>
+      <yScale>0.25</yScale>
+      <zScale>0.25</zScale>
+      <xBScale>1</xBScale>
+      <yBScale>1</yBScale>
+      <zBScale>1</zBScale>
+      <xPosition>-7.0</xPosition>
+      <yPosition>2.0</yPosition>
+      <zPosition>1.0</zPosition>
+      <xRotationAxis>0</xRotationAxis>
+      <yRotationAxis>1</yRotationAxis>
       <zRotationAxis>0</zRotationAxis>
       <xRotationAngle>0</xRotationAngle>
       <yRotationAngle>0</yRotationAngle>

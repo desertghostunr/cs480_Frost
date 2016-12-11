@@ -370,7 +370,6 @@ bool Graphics::Initialize
     score = 0;
 
     objectCollidedSound.loadSound("sounds/Canon_Fire.wav");
-    objectCollidedSound2.loadSound( "sounds/Canon_Fire.wav" );
 
     modelRegistry.clear( );
 
@@ -448,6 +447,15 @@ bool Graphics::Initialize
         else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "ocean" )
         {
             objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::WAVE;
+        }
+        else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "windHud" )
+        {
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
+
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].setRender( false );
+
+            hud.push_back( HUD( ) );
+            hud[ hud.size( ) - 1 ].windHud = objectRegistry.getSize( ) - 1;
         }
         else
         {
@@ -884,11 +892,12 @@ void Graphics::Render( unsigned int dt )
  
     
     //clear the screen
-    glClearColor(0.2, 0.15, 0.2, 1.0);
+    glClearColor(0.5, 0.5, 0.5, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
-    {
+    {        
+
         objectRegistry[ shipRegistry[ cameraIndex ].skyIndex ].setRender( false );
 
         // Start the correct program
@@ -1037,8 +1046,8 @@ void Graphics::Render( unsigned int dt )
             }
         }
         else if( cameraIndex == 0 && splitScreen )
-        { 
-            if( wideView)
+        {
+            if( wideView )
             {
                 glViewport( 0, screenHeight / 2, screenWidth, screenHeight / 2 );
             }
@@ -1047,9 +1056,57 @@ void Graphics::Render( unsigned int dt )
                 glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
             }
         }
+        
 
         objectRegistry[ shipRegistry[ cameraIndex ].skyIndex ].setRender( true );
     }
+
+    //HUDs
+    if( splitScreen )
+    {
+
+        for( index = 0; index < hud.size( ); index++ )
+        {
+            if( index == 1 )
+            {
+                if( wideView )
+                {
+                    glViewport( 0, screenHeight / 2, screenWidth, screenHeight / 2 );
+                }
+                else
+                {
+                    glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
+                }
+            }
+
+            if( lightCode != objectRegistry[ index ].LightCode( ) )
+            {
+                lightCode = objectRegistry[ index ].LightCode( );
+                glUniform1i( m_objectType, lightCode );
+            }
+
+            glUniformMatrix4fv( m_projectionMatrix, 1, GL_FALSE, glm::value_ptr( m_camera[ index ].GetProjection( ) ) );
+            glUniformMatrix4fv( m_viewMatrix, 1, GL_FALSE, glm::value_ptr( m_camera[ index ].GetView( ) ) );
+
+            glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
+                                glm::value_ptr( objectRegistry[ hud[ index ].windHud ].GetModel( ) ) );
+
+            objectRegistry[ hud[ index ].windHud ].setRender( true );
+
+            objectRegistry[ hud[ index ].windHud ].Render( );
+
+            objectRegistry[ hud[ index ].windHud ].setRender( false );
+        }
+
+        if( wideView )
+        {
+            glViewport( 0, 0, screenWidth, screenHeight / 2 );
+        }
+        else
+        {
+            glViewport( 0, 0, screenWidth / 2, screenHeight );
+        }
+    } 
    // Get any errors from OpenGL
    auto error = glGetError();
    if ( error != GL_NO_ERROR )
@@ -1178,7 +1235,7 @@ bool Graphics::updateList( unsigned int objectID, unsigned int dt )
             objectRegistry[ objectID ].commitRotation( );
             objectRegistry[ objectID ].commitTranslation( );
         }
-        else if( objectRegistry[ objectID ].getName( ) == "sail" )
+        else if( objectRegistry[ objectID ].getName( ) == "sail" || objectRegistry[ objectID ].getName( ) == "windHud" )
         {
             objectRegistry[ objectID ].commitRotation( );
             objectRegistry[ objectID ].commitTranslation( );
@@ -2003,7 +2060,7 @@ void Graphics::stopShipsRotation( size_t ship )
 
 void Graphics::fireGuns( size_t ship )
 {
-    if( ship < shipRegistry.size( ) )
+    if( ship < shipRegistry.size( ) && !objectCollidedSound.SoundPlaying( ) )
     {
         if( shipRegistry[ ship ].lookingLeft )
         {
@@ -2123,7 +2180,7 @@ void Graphics::applyShipForces( unsigned int dt )
             else if( shipRegistry[ index ].torqueOn )
             {
                 shipRegistry[ index ].slowDown = false;
-                shipRegistry[ index ].force = btVector3( ShipController::STD_FORCE, 0.0f, 0.0f );
+                shipRegistry[ index ].force = btVector3( ShipController::MAX_SPEED, 0.0f, 0.0f );
             }
             else if( shipRegistry[ index ].forceOn )
             {
@@ -2158,14 +2215,21 @@ void Graphics::applyShipForces( unsigned int dt )
 
             if( shipDirection.getX( ) < 0 )
             {
+                objectRegistry[ hud[ index ].windHud ].setAngle( 0.0f - angle );
+
                 if( angle < 1.5708f /*90 degrees in rads*/ )
                 {
                     angle = ( 0.0f - angle ) + 0.1980947f;
+
                 }
                 else
                 {
                     angle = angle - ( 2.9377215 * ( 1.5708f / angle ) );
                 }
+            }
+            else
+            {
+                objectRegistry[ hud[ index ].windHud ].setAngle( angle );
             }
             
             if( angle >= 1.13446f /*65 degrees in rads*/ )
@@ -2414,7 +2478,6 @@ void Graphics::applyShipForces( unsigned int dt )
                 = glm::vec3( glPositionVector.x,
                              glPositionVector.y + ShipController::CAMERA_FOLLOW_HEIGHT, 
                              glPositionVector.z );
-            /////////////////////////////////////////////////////////////////////////
 
             //we have fired
             shipRegistry[ index ].firingLeft = false;

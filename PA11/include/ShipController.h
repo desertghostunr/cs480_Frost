@@ -183,6 +183,22 @@ struct ShipController
     }
 };
 
+struct HUD
+{
+    unsigned int windHud;
+
+    HUD( ) :windHud( -1 )
+    {
+
+    }
+
+    HUD( const HUD& src ) : 
+        windHud( src.windHud )
+    {
+
+    }
+};
+
 
 #endif // !SHIPCONTROLLER_H
 
