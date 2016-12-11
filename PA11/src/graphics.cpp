@@ -4,7 +4,7 @@
 #include <random>
 
 const float ShipController::MAX_SPEED = 4.11f;
-const float ShipController::MAX_ROT = 1.5f;
+const float ShipController::MAX_ROT = 2.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
 const float ShipController::STD_TORQUE = 0.75f;
