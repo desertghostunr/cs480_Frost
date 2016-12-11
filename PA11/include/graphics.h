@@ -36,8 +36,7 @@ class Graphics
 						 long long time = 0 );
 
         void Update(unsigned int dt);
-        void RenderA( unsigned int dt );
-        void RenderB( unsigned int dt );
+        void Render( unsigned int dt );
 
         bool updateList( unsigned int objectID, unsigned int dt );
 

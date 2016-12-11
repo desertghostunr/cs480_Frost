@@ -883,7 +883,7 @@ void Graphics::Update( unsigned int dt )
     
 }
 
-void Graphics::RenderA( unsigned int dt )
+void Graphics::Render( unsigned int dt )
 {
     unsigned int index;
     int lightCode = -1;
@@ -893,15 +893,16 @@ void Graphics::RenderA( unsigned int dt )
  
     
     //clear the screen
-        glClearColor(0.2, 0.15, 0.2, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
+    glClearColor(0.2, 0.15, 0.2, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
     {
 
-    // Start the correct program
+        // Start the correct program
         shaderRegistry[ shaderSelect ].Enable( );
 
-    // Send in the projection and view to the shader
+        // Send in the projection and view to the shader
         glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[cameraIndex].GetProjection())); 
         glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[cameraIndex].GetView()));
 
@@ -1027,18 +1028,19 @@ void Graphics::RenderA( unsigned int dt )
         }
 
         shaderRegistry[ shaderSelect ].Disable( );
+
         if( !splitScreen )
         {
             cameraIndex++;
         }
         if( cameraIndex == 0 && splitScreen )
         {
-            glViewport(0,0,screenWidth/2,screenHeight);
+            glViewport( 0, 0, screenWidth / 2, screenHeight );
             
         }
         if( cameraIndex == 1 && splitScreen )
         {
-            glViewport(screenWidth/2,0,screenWidth,screenHeight);
+            glViewport( screenWidth / 2, 0, screenWidth / 2, screenHeight );
             
         }
     }
@@ -1052,166 +1054,6 @@ void Graphics::RenderA( unsigned int dt )
         
    
 }
-/*void Graphics::RenderB( unsigned int dt )
-{
-    unsigned int index;
-    int lightCode = -1;
-    float normedCTime;
-
-    glm::vec4 tmpVec;
-    //for( int cameraIndex = 0; cameraIndex < 2; cameraIndex++)
-    {
-    
-    //clear the screen
-        glClearColor(0.2, 0.15, 0.2, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Start the correct program
-        shaderRegistry[ shaderSelect ].Enable( );
-
-    // Send in the projection and view to the shader
-        glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[1].GetProjection())); 
-        glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera[1].GetView()));
-
-        glUniform1i( m_numLights, ( GLint ) lights.size( ) );
-        glUniform1i( m_numSpotLights, ( GLint ) spotLight.size( ) );
-
-        cumultiveTime += dt;
-        normedCTime = cumultiveTime;
-        normedCTime /= 1000000.0f;
-
-        if( cumultiveTime > 1000000 )
-        {
-            cumultiveTime = 0;
-        }
-
-        glUniform1f( m_time, normedCTime );
-
-    
-
-        for( index = 0; 
-             index < std::min( numberOfLights, ( unsigned int )lights.size( ) ); 
-             index++ )
-        {
-            glUniform4f( lights[ index ].ambientLoc, lights[ index ].ambient.r, 
-                         lights[ index ].ambient.g, lights[ index ].ambient.b, 
-                         lights[ index ].ambient.a );
-
-            glUniform4f( lights[ index ].incomingLoc, lights[ index ].incoming.r, 
-                         lights[ index ].incoming.g, lights[ index ].incoming.b, 
-                         lights[ index ].incoming.a );
-        } 
-
-        for( index = 0; index < shipRegistry.size( ); index += 1 )
-        {
-            if( 2 * index > spotLight.size( ) || ( 2 * index ) + 1 > spotLight.size( ) )
-            {
-                std::cout << "Error: too few spotLights!" << std::endl;
-            }
-
-            tmpVec = glm::vec4( shipRegistry[ index ].rightHit.getX( ), 
-                                shipRegistry[ index ].rightHit.getY( ), 
-                                shipRegistry[ index ].rightHit.getZ( ), 1.0 );
-
-            glUniform4f( spotLight[ 2 * index ].followLoc, tmpVec.x,
-                         tmpVec.y + spotLight[ 2 * index ].spotHeight, tmpVec.z, 1.0 );
-
-            glUniform4f( spotLight[ 2 * index ].ambientLoc, spotLight[ 2 * index ].ambient.r,
-                         spotLight[ 2 * index ].ambient.g, spotLight[ 2 * index ].ambient.b,
-                         spotLight[ 2 * index ].ambient.a );
-
-            glUniform3f( spotLight[ 2 * index ].incomingLoc, spotLight[ 2 * index ].incoming.r,
-                         spotLight[ 2 * index ].incoming.g, spotLight[ 2 * index ].incoming.b );
-
-            glUniform1f( spotLight[ 2 * index ].cosineLoc, spotLight[ 2 * index ].cosine );
-
-            tmpVec = glm::vec4( shipRegistry[ index ].leftHit.getX( ),
-                                shipRegistry[ index ].leftHit.getY( ),
-                                shipRegistry[ index ].leftHit.getZ( ), 1.0 );
-
-            glUniform4f( spotLight[ ( 2 * index ) + 1 ].followLoc, tmpVec.x,
-                         tmpVec.y + spotLight[ ( 2 * index ) + 1 ].spotHeight, tmpVec.z, 1.0 );
-
-            glUniform4f( spotLight[ ( 2 * index ) + 1].ambientLoc, spotLight[ ( 2 * index ) + 1 ].ambient.r,
-                         spotLight[ ( 2 * index ) + 1].ambient.g, spotLight[ ( 2 * index ) + 1 ].ambient.b,
-                         spotLight[ ( 2 * index ) + 1 ].ambient.a );
-
-            glUniform3f( spotLight[ ( 2 * index ) + 1 ].incomingLoc, spotLight[ ( 2 * index ) + 1 ].incoming.r,
-                         spotLight[ ( 2 * index ) + 1 ].incoming.g, spotLight[ ( 2 * index ) + 1 ].incoming.b );
-
-            glUniform1f( spotLight[ ( 2 * index ) + 1 ].cosineLoc, spotLight[ ( 2 * index ) + 1 ].cosine );
-
-        }
-
-        for( index  = 2 * index; 
-             index < std::min( numberOfSpotLights, (unsigned int )spotLight.size( ) ); 
-             index++ )
-        {
-            tmpVec = objectRegistry[ spotLight[ index ].oTFIndex ].getPositionInWorld( );
-
-            glUniform4f( spotLight[ index ].followLoc, tmpVec.x, 
-                         tmpVec.y + spotLight[ index ].spotHeight, tmpVec.z, 1.0 );
-
-            glUniform4f( spotLight[ index ].ambientLoc, spotLight[ index ].ambient.r, 
-                         spotLight[ index ].ambient.g, spotLight[ index ].ambient.b, 
-                         spotLight[ index ].ambient.a );
-
-            glUniform3f( spotLight[ index ].incomingLoc, spotLight[ index ].incoming.r, 
-                         spotLight[ index ].incoming.g, spotLight[ index ].incoming.b );
-
-            glUniform1f( spotLight[ index ].cosineLoc, spotLight[ index ].cosine );
-        }    
-
-        // Render the objects
-        for( index = 0; index < objectRegistry.getSize( ); index++ )
-        {
-            glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
-                                glm::value_ptr(objectRegistry[index].GetModel()));
-
-            tmpVec = objectRegistry[ index ].getObjectModel( ).getDiffuse( );  
-
-            glUniform4f( m_diffuse, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
-
-            tmpVec = objectRegistry[ index ].getObjectModel( ).getSpecular( );
-
-            glUniform4f( m_specular, tmpVec.r, tmpVec.g, tmpVec.b, tmpVec.a );
-
-            glUniform1f( m_shininess, objectRegistry[ index ].getObjectModel( ).getShininess( ) );
-
-            if( lightCode != objectRegistry[ index ].LightCode( ) )
-            {
-                lightCode = objectRegistry[ index ].LightCode( );
-                glUniform1i( m_objectType, lightCode );
-            }
-
-            if( lightCode == Object::WAVE )
-            {
-                glUniform1i( oceanHeightMap.HeightMapUniform( ), 1 );
-                glActiveTexture( GL_TEXTURE1 );
-                glBindTexture( GL_TEXTURE_2D, oceanHeightMap.HeightMapTexture( ) );
-            }
-
-            objectRegistry[index].Render();
-        }
-
-        shaderRegistry[ shaderSelect ].Disable( );
-
-
-        glViewport(screenWidth/2, screenHeight/2 ,screenWidth,screenHeight);
-        glMatrixMode( GL_PROJECTION );
-        glLoadIdentity();
-        gluPerspective( 45.0, float(screenWidth)/float(screenHeight), .1f, 500.0 );
-        
-        // Get any errors from OpenGL
-        auto error = glGetError();
-        if ( error != GL_NO_ERROR )
-        {
-            string val = ErrorString( error );
-            std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
-        }
-        glFlush();
-   //}
-}*/
 
 std::string Graphics::ErrorString(GLenum error)
 {

@@ -98,7 +98,7 @@ void Engine::Run()
 
         // Update and render the graphics
         m_graphics->Update(m_DT);
-        m_graphics->RenderA(m_DT);
+        m_graphics->Render(m_DT);
         //m_graphics->RenderB(m_DT);
         // Swap to the Window
         m_window->Swap();
