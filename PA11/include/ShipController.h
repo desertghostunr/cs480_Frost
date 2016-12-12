@@ -83,8 +83,8 @@ struct ShipController
         lookingRight( false),
         waveCycle( 0 ),
         waveUp( true ),
-        cameraHeight( 0 ),
-        cameraDistance( 0 ),
+        cameraHeight( 25 ),
+        cameraDistance( 60 ),
         skyIndex( -1 )
     {
     }
@@ -112,8 +112,8 @@ struct ShipController
         lookingRight( false),
         waveCycle( 0 ),
         waveUp( true ),
-        cameraHeight( 0 ),
-        cameraDistance( 0 ),
+        cameraHeight( 25 ),
+        cameraDistance( 60 ),
         skyIndex( -1 )
         
     {

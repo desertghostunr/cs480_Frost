@@ -4,10 +4,10 @@
 #include <random>
 
 const float ShipController::MAX_SPEED = 4.11f;
-const float ShipController::MAX_ROT = 2.5f;
+const float ShipController::MAX_ROT = 15.5f;
 const float ShipController::STD_FORCE = 0.75f;
 const float ShipController::STD_REVERSE = -1.0f;
-const float ShipController::STD_TORQUE = 0.75f;
+const float ShipController::STD_TORQUE = 10.75f;
 const float ShipController::CAMERA_FOLLOW_DISTANCE = 60;
 const float ShipController::CAMERA_FOLLOW_HEIGHT = 25;
 
@@ -857,10 +857,23 @@ void Graphics::Update( unsigned int dt )
         {
             shipRegistry[ index ].rightReloadTime -= dt;
             std::cout << "Ship "<< index  << ": Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
+            if( shipRegistry[ index ].lookingRight )
+            {
+                spotLight[ ( index*2 ) ].coneAngle = 0.0f;
+    
+                spotLight[ index*2 ].cosine = glm::cos( glm::radians( spotLight[ index*2 ].coneAngle ) );
+            }
+
         }
         else
         {
             shipRegistry[ index ].rightReloadTime = 0;
+            if( shipRegistry[ index ].lookingRight )
+            {
+                spotLight[ ( index*2 ) ].coneAngle = savedSpotLightSize;
+    
+                spotLight[ index*2 ].cosine = glm::cos( glm::radians( spotLight[ index*2 ].coneAngle ) );
+            }
         }
 
         //left guns
@@ -868,10 +881,22 @@ void Graphics::Update( unsigned int dt )
         {
             shipRegistry[ index ].leftReloadTime -= dt;
             std::cout << "Ship " << index << ": Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
+            if( shipRegistry[ index ].lookingLeft )
+            {
+                spotLight[ ( index*2 ) + 1 ].coneAngle = 0.0f;
+    
+                spotLight[ index*2 + 1 ].cosine = glm::cos( glm::radians( spotLight[ index*2 + 1 ].coneAngle ) );
+            }
         }
         else
         {
             shipRegistry[ index ].leftReloadTime = 0;
+            if( shipRegistry[ index ].lookingLeft )
+            {
+                spotLight[ ( index*2 ) + 1 ].coneAngle = savedSpotLightSize;
+    
+                spotLight[ index*2 + 1 ].cosine = glm::cos( glm::radians( spotLight[ index*2 + 1 ].coneAngle ) );
+            }
         }
 
         if( shipRegistry[ index ].healthPoints <= 0 )
@@ -1873,6 +1898,14 @@ void Graphics::startGame( )
 
         score = 0;
         numberOfBalls = 3;
+        savedSpotLightSize = spotLight[ 0 ].coneAngle;
+
+        for( int index = 0; index < 4; index++ )
+        {
+            spotLight[ index ].coneAngle = 0.0f;
+    
+            spotLight[ index ].cosine = glm::cos( glm::radians( spotLight[ index ].coneAngle ) );
+        }
 
         gameStarted = true;
 
@@ -2465,7 +2498,7 @@ void Graphics::applyShipForces( unsigned int dt )
             //calculate camera position to follow the ship ////////////////////////
 
             cameraPos = -1.0f * shipDirection;
-            cameraPos = ShipController::CAMERA_FOLLOW_DISTANCE * cameraPos;
+            cameraPos = shipRegistry[ index ].cameraDistance * cameraPos;
             cameraPos = shipPosition + cameraPos;
 
             worldTransform.setIdentity( );
@@ -2476,7 +2509,7 @@ void Graphics::applyShipForces( unsigned int dt )
 
             shipRegistry[ index ].cameraPosition 
                 = glm::vec3( glPositionVector.x,
-                             glPositionVector.y + ShipController::CAMERA_FOLLOW_HEIGHT, 
+                             glPositionVector.y + shipRegistry[ index ].cameraHeight, 
                              glPositionVector.z );
 
             //we have fired
@@ -2634,14 +2667,48 @@ void Graphics::updateRightPaddle( unsigned int dt )
 void Graphics::toggleLeft( int index )
 {
     shipRegistry[ index ].lookingRight = false;
-    shipRegistry[ index ].lookingLeft = !shipRegistry[ index ].lookingLeft;  
+    spotLight[ index*2 ].coneAngle = 0.0f;
+    spotLight[ index*2 ].cosine = glm::cos( glm::radians( spotLight[ index*2 ].coneAngle ) );
+    shipRegistry[ index ].lookingLeft = !shipRegistry[ index ].lookingLeft;
+
+    if(shipRegistry[ index ].lookingLeft)
+    {
+        shipRegistry[ index ].cameraDistance = 10;
+        shipRegistry[ index ].cameraHeight = 5;
+        spotLight[ index*2 + 1].coneAngle = savedSpotLightSize;
+    }
+    else
+    {
+        shipRegistry[ index ].cameraDistance = ShipController::CAMERA_FOLLOW_DISTANCE;
+        shipRegistry[ index ].cameraHeight = ShipController::CAMERA_FOLLOW_HEIGHT;
+        spotLight[ index*2 + 1].coneAngle = 0.0f;
+    } 
+    spotLight[ index*2 + 1 ].cosine = glm::cos( glm::radians( spotLight[ index*2 + 1 ].coneAngle ) );
 
 }
          
 void Graphics::toggleRight( int index )
 {
     shipRegistry[ index ].lookingLeft = false;
-    shipRegistry[ index ].lookingRight = !shipRegistry[ index ].lookingRight;  
+ 
+    spotLight[ index*2 + 1].coneAngle = 0.0f;
+    spotLight[ index*2 + 1 ].cosine = glm::cos( glm::radians( spotLight[ index*2 + 1 ].coneAngle ) );
+
+    shipRegistry[ index ].lookingRight = !shipRegistry[ index ].lookingRight; 
+
+    if(shipRegistry[ index ].lookingRight)
+    {
+        shipRegistry[ index ].cameraDistance = 10;
+        shipRegistry[ index ].cameraHeight = 5;
+        spotLight[ ( index*2 ) ].coneAngle = savedSpotLightSize;
+    }
+    else
+    {
+        shipRegistry[ index ].cameraDistance = ShipController::CAMERA_FOLLOW_DISTANCE;
+        shipRegistry[ index ].cameraHeight = ShipController::CAMERA_FOLLOW_HEIGHT;
+        spotLight[ ( index*2 ) ].coneAngle = 0.0f;
+    }
+    spotLight[ index*2 ].cosine = glm::cos( glm::radians( spotLight[ index*2 ].coneAngle ) );
 
 }
 

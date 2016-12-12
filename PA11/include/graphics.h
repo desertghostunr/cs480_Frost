@@ -169,6 +169,8 @@ class Graphics
 	
         bool cameraTracking;
 
+        float savedSpotLightSize;
+
         std::vector<Camera> m_camera;
 
         std::vector<Shader> shaderRegistry;

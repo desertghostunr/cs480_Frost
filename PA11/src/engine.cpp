@@ -335,8 +335,8 @@ void Engine::Keyboard()
             if( !m_graphics->isPlaying( ))
             {
                 m_graphics->startGame( );
-                m_graphics->startSplitScreen( m_WINDOW_WIDTH, m_WINDOW_HEIGHT );
-                splitScreen = true;
+                //m_graphics->startSplitScreen( m_WINDOW_WIDTH, m_WINDOW_HEIGHT );
+                //splitScreen = true;
                 
             }
         }
