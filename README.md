@@ -49,3 +49,16 @@ See PA9 README.md for more information.
 
 Contributors: Andy Frost, J.J. Sibley
 
+## PA10: Pinball
+
+See PA10 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
+
+
+## PA11: Broadside
+
+See PA11 README.md for more information.
+
+Contributors: Andy Frost, J.J. Sibley
+

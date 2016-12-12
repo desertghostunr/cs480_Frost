@@ -80,23 +80,41 @@ An example of running this program:
 ## Controls
 
 ### Movement Controls:
-* Move the mouse to move the plunger.
-
 * Press the right mouse button to show the cursor.
 
 * Press the left mouse button to hide the cursor.
 
-* NOTE: It might be necessary to show the cursor and run the plunger into a wall until the cursor is over it. This keeps the cursor from going off of the screen and hindering use of the program.
+* Press w: moves player 1's ship forward
 
-* Press d: rotates the right paddle.
+* Press d: moves player 1's ship right
 
-* Press a: rotates the left paddle.
+* Press a: moves player 1's ship left
+
+* Press f: fires player 1's guns based on the view
+
+* Press q: toggles player 1's view left
+
+* Press e: toggles player 1's view right
+
+* Press c: moves player 1's view forward
+
+* Press up arrow: moves player 2's ship forward
+
+* Press right arrow: moves player 2's ship right
+
+* Press left arrow: moves player 2's ship left
+
+* Press \: fires player 2's guns based on the view
+
+* Press [: toggles player 2's view left
+
+* Press ]: toggles player 2's view right
+
+* Press enter: moves player 2's view forward
 
 * Press space bar: starts the game.
 
 * Press p: pauses the game.
-
-* Press enter: resets the ball.
 
 ### Lighting and View Controls
 * Note: the objects selected will be printed out in the terminal.
