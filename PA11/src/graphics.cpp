@@ -331,6 +331,8 @@ bool Graphics::Initialize
 
     unsigned int indice;
 
+    size_t hudIndex = 0;
+
     btVector3 v1, v2, v3;
 
     oceanHeightMap = HeightMap( ( long ) time );
@@ -400,6 +402,8 @@ bool Graphics::Initialize
 
     }
     
+    hudIndex = 0;
+
     for( pIndex = 0; pIndex < progInfo.objectData.size( ); pIndex++ )
     {
         if( progInfo.objectData[ pIndex ].type == P_OBJECT_TYPE )
@@ -462,7 +466,18 @@ bool Graphics::Initialize
             objectRegistry[ objectRegistry.getSize( ) - 1 ].setRender( false );
 
             hud.push_back( HUD( ) );
+
             hud[ hud.size( ) - 1 ].windHud = objectRegistry.getSize( ) - 1;
+        }
+        else if( objectRegistry[ objectRegistry.getSize( ) - 1 ].getName( ) == "hb" )
+        {
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].LightCode( ) = Object::DEFAULT_LIGHTING;
+
+            objectRegistry[ objectRegistry.getSize( ) - 1 ].setRender( false );
+
+            hud[ hudIndex ].healthBar = objectRegistry.getSize( ) - 1;
+
+            hudIndex++;
         }
         else
         {
@@ -621,6 +636,8 @@ bool Graphics::Initialize
 
     dynamicsWorldPtr->setGravity( btVector3( 0.0f, -9.8f, 0.0f ) );
     ///////////////////////////////////////////////////////////////////
+
+    
 
     for( index = 0; index < objectRegistry.getSize( ); index++ )
     {
@@ -942,8 +959,10 @@ void Graphics::Update( unsigned int dt )
             playingStateFlag = false;
             activeIdleState = true;
             gameOverStep = true;
+            splitScreen = false;
+            glViewport( 0, 0, screenWidth, screenHeight );
 
-            objectRegistry[ shipRegistry[ index ].index ].setAngle( glm::radians( 97.0f ) );
+            objectRegistry[ shipRegistry[ index ].index ].setAngle( glm::radians( 80.0f ) );
         }
     }
     
@@ -1146,6 +1165,8 @@ void Graphics::Render( unsigned int dt )
                 }
             }
 
+            //wind pointer
+
             if( lightCode != objectRegistry[ index ].LightCode( ) )
             {
                 lightCode = objectRegistry[ index ].LightCode( );
@@ -1163,6 +1184,23 @@ void Graphics::Render( unsigned int dt )
             objectRegistry[ hud[ index ].windHud ].Render( );
 
             objectRegistry[ hud[ index ].windHud ].setRender( false );
+
+            //health bar
+
+            if( lightCode != objectRegistry[ index ].LightCode( ) )
+            {
+                lightCode = objectRegistry[ index ].LightCode( );
+                glUniform1i( m_objectType, lightCode );
+            }
+
+            glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE,
+                                glm::value_ptr( objectRegistry[ hud[ index ].healthBar ].GetModel( ) ) );
+
+            objectRegistry[ hud[ index ].healthBar ].setRender( true );
+
+            objectRegistry[ hud[ index ].healthBar ].Render( );
+
+            objectRegistry[ hud[ index ].healthBar ].setRender( false );
         }
 
         if( wideView )
@@ -2041,7 +2079,7 @@ void Graphics::idleSplash( unsigned int dt )
         m_camera[0].moveUp( );
         numberOfUpCalls += dt;
     }
-    else if( numberOfUpCalls > -100 && goingRight )
+    else if( numberOfUpCalls > -10 && goingRight )
     {
         m_camera[0].moveDown( );
         numberOfUpCalls -= dt;
@@ -2478,6 +2516,9 @@ void Graphics::applyShipForces( unsigned int dt )
                         {
                             shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
 
+                            objectRegistry[ hud[ cIndex ].healthBar ].setScale( objectRegistry[ hud[ cIndex ].healthBar ].getScale( ) 
+                                                                                * glm::vec3( 1.0f, 1.0f, ( float ) shipRegistry[ cIndex ].healthPoints / 100.0f ) );
+
                             std::cout << "Hit!" << std::endl;
                         }
                     }
@@ -2500,6 +2541,9 @@ void Graphics::applyShipForces( unsigned int dt )
                             .CollisionInfo( ).rigidBody->getUserPointer( ) )
                         {
                             shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+
+                            objectRegistry[ hud[ cIndex ].healthBar ].setScale( objectRegistry[ hud[ cIndex ].healthBar ].getScale( ) 
+                                                                                * glm::vec3( 1.0f, 1.0f, ( float ) shipRegistry[ cIndex ].healthPoints / 100.0f ) );
 
                             std::cout << "Hit!" << std::endl;
                         }
@@ -2744,6 +2788,24 @@ void Graphics::toggleRight( int index )
     }
     spotLight[ index*2 ].cosine = glm::cos( glm::radians( spotLight[ index*2 ].coneAngle ) );
 
+}
+
+void Graphics::lookForward( int index )
+{
+    if( index >= shipRegistry.size( ) )
+    {
+        return;
+    }
+
+    if( shipRegistry[ index ].lookingLeft )
+    {
+        toggleLeft( index );
+    }
+
+    if( shipRegistry[ index ].lookingRight )
+    {
+        toggleRight( index );
+    }
 }
 
 void Graphics::startSplitScreen( int width, int height )

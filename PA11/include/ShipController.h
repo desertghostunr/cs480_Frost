@@ -186,14 +186,15 @@ struct ShipController
 struct HUD
 {
     unsigned int windHud;
+    unsigned int healthBar;
 
-    HUD( ) :windHud( -1 )
+    HUD( ) :windHud( -1 ), healthBar( -1 )
     {
 
     }
 
     HUD( const HUD& src ) : 
-        windHud( src.windHud )
+        windHud( src.windHud ), healthBar( src.healthBar )
     {
 
     }

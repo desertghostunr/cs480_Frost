@@ -330,6 +330,10 @@ void Engine::Keyboard()
                 m_graphics->cycleShaderProgram( );
             }
         }
+        else if( ( m_event.key.keysym.sym == SDLK_c ) )
+        {
+            m_graphics->lookForward( 0 );
+        }
         else if( m_event.key.keysym.sym == SDLK_SPACE )
         {
             if( !m_graphics->isPlaying( ))
@@ -437,8 +441,11 @@ void Engine::Keyboard()
                 
         else if( m_event.key.keysym.sym == SDLK_4 )
         {
-            m_graphics->startSplitScreen( m_WINDOW_WIDTH, m_WINDOW_HEIGHT );
-            splitScreen = true;
+            if( m_graphics->isPlaying( ) )
+            {
+                m_graphics->startSplitScreen( m_WINDOW_WIDTH, m_WINDOW_HEIGHT );
+                splitScreen = true;
+            }            
         }
         else if( m_event.key.keysym.sym == SDLK_RSHIFT 
                  || m_event.key.keysym.sym == SDLK_LSHIFT )
@@ -452,7 +459,7 @@ void Engine::Keyboard()
         else if( m_event.key.keysym.sym == SDLK_RETURN 
                  || m_event.key.keysym.sym == SDLK_RETURN )
         {
-            
+            m_graphics->lookForward( 1 );
         }
  
     }

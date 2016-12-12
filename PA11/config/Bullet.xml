@@ -60,6 +60,24 @@
       <yRotationAngle>0</yRotationAngle>
       <zRotationAngle>0</zRotationAngle>
     </Object>
+    <Object path ="models/healthBar.obj">
+      <name>hb</name>
+      <xScale>0.1</xScale>
+      <yScale>0.1</yScale>
+      <zScale>0.15</zScale>
+      <xBScale>1</xBScale>
+      <yBScale>1</yBScale>
+      <zBScale>1</zBScale>
+      <xPosition>-7.25</xPosition>
+      <yPosition>4.5</yPosition>
+      <zPosition>-0.25</zPosition>
+      <xRotationAxis>0</xRotationAxis>
+      <yRotationAxis>1</yRotationAxis>
+      <zRotationAxis>0</zRotationAxis>
+      <xRotationAngle>0</xRotationAngle>
+      <yRotationAngle>0</yRotationAngle>
+      <zRotationAngle>0</zRotationAngle>
+    </Object>
     <Object path ="models/sail1.obj">
       <name>sail</name>
       <xScale>1</xScale>
@@ -218,6 +236,24 @@
       <xPosition>-7.0</xPosition>
       <yPosition>2.0</yPosition>
       <zPosition>1.0</zPosition>
+      <xRotationAxis>0</xRotationAxis>
+      <yRotationAxis>1</yRotationAxis>
+      <zRotationAxis>0</zRotationAxis>
+      <xRotationAngle>0</xRotationAngle>
+      <yRotationAngle>0</yRotationAngle>
+      <zRotationAngle>0</zRotationAngle>
+    </Object>
+    <Object path ="models/healthBar.obj">
+      <name>hb</name>
+      <xScale>0.1</xScale>
+      <yScale>0.1</yScale>
+      <zScale>0.15</zScale>
+      <xBScale>1</xBScale>
+      <yBScale>1</yBScale>
+      <zBScale>1</zBScale>
+      <xPosition>-7.25</xPosition>
+      <yPosition>4.5</yPosition>
+      <zPosition>-0.25</zPosition>
       <xRotationAxis>0</xRotationAxis>
       <yRotationAxis>1</yRotationAxis>
       <zRotationAxis>0</zRotationAxis>

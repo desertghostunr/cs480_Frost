@@ -93,6 +93,8 @@ class Graphics
          
         void toggleRight( int index );
 
+        void lookForward( int index );
+
         void startSplitScreen( int width, int height );
                 
         void toggleSplitScreenView();
