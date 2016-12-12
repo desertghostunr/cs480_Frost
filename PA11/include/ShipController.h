@@ -13,7 +13,7 @@ struct ShipController
 
     static const int MAX_HEALTH = 100;
 
-    static const int RELOAD_TIME_MS = 15000;
+    static const int RELOAD_TIME_MS = 7500;
 
     static const float CAMERA_FOLLOW_DISTANCE; //value defined in graphics.cpp
 

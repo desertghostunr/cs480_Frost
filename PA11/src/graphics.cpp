@@ -7,7 +7,7 @@ const float ShipController::MAX_SPEED = 4.11f;
 const float ShipController::MAX_ROT = 2.5f;
 const float ShipController::STD_FORCE = 10.0f;
 const float ShipController::STD_REVERSE = -1.0f;
-const float ShipController::STD_TORQUE = 0.75f;
+const float ShipController::STD_TORQUE = 1.05f;
 const float ShipController::CAMERA_FOLLOW_DISTANCE = 60;
 const float ShipController::CAMERA_FOLLOW_HEIGHT = 25;
 
@@ -792,18 +792,6 @@ void Graphics::Update( unsigned int dt )
     //apply control forces on the ship
     applyShipForces( dt );
 
-    if( gameOverStep )
-    {
-        dynamicsWorldPtr->stepSimulation( dt, 10 );
-        gameOverStep = false;
-    }
-
-    if( returnBall )
-    {
-        resetBall( );
-        dynamicsWorldPtr->stepSimulation( dt, 10 );
-    }
-
     if( playingStateFlag )
     {
 
@@ -905,7 +893,7 @@ void Graphics::Update( unsigned int dt )
         if( shipRegistry[ index ].rightReloadTime > 0 )
         {
             shipRegistry[ index ].rightReloadTime -= dt;
-            std::cout << "Ship "<< index  << ": Right guns reloading: " << shipRegistry[ index ].rightReloadTime << std::endl;
+            
             if( shipRegistry[ index ].lookingRight )
             {
                 spotLight[ ( index*2 ) ].coneAngle = 0.0f;
@@ -929,7 +917,7 @@ void Graphics::Update( unsigned int dt )
         if( shipRegistry[ index ].leftReloadTime > 0 )
         {
             shipRegistry[ index ].leftReloadTime -= dt;
-            std::cout << "Ship " << index << ": Left guns reloading: " << shipRegistry[ index ].leftReloadTime << std::endl;
+
             if( shipRegistry[ index ].lookingLeft )
             {
                 spotLight[ ( index*2 ) + 1 ].coneAngle = 0.0f;
@@ -951,6 +939,10 @@ void Graphics::Update( unsigned int dt )
         if( shipRegistry[ index ].healthPoints <= 0 )
         {
             std::cout << "Player " << index + 1 << " loses!" << std::endl;
+            playingStateFlag = false;
+            activeIdleState = true;
+
+            objectRegistry[ shipRegistry[ index ].index ].setAngle( glm::radians( 97.0f ) );
         }
     }
     
@@ -2043,12 +2035,12 @@ void Graphics::resetView( )
 
 void Graphics::idleSplash( unsigned int dt )
 {
-    if( numberOfUpCalls < 500 && goingUp )
+    if( numberOfUpCalls < 1000 && goingUp )
     {
         m_camera[0].moveUp( );
         numberOfUpCalls += dt;
     }
-    else if( numberOfUpCalls > -500 && goingRight )
+    else if( numberOfUpCalls > -100 && goingRight )
     {
         m_camera[0].moveDown( );
         numberOfUpCalls -= dt;
@@ -2484,12 +2476,10 @@ void Graphics::applyShipForces( unsigned int dt )
                             .CollisionInfo( ).rigidBody->getUserPointer( ) )
                         {
                             shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+
+                            std::cout << "Hit!" << std::endl;
                         }
                     }
-                }
-                else
-                {
-                    std::cout << "In Range! " << index <<std::endl;
                 }
             }
 
@@ -2509,12 +2499,10 @@ void Graphics::applyShipForces( unsigned int dt )
                             .CollisionInfo( ).rigidBody->getUserPointer( ) )
                         {
                             shipRegistry[ cIndex ].healthPoints -= ( 50 * hitFract );
+
+                            std::cout << "Hit!" << std::endl;
                         }
                     }
-                }
-                else
-                {
-                    std::cout << "In Range! " << index << std::endl;
                 }
             }
 
