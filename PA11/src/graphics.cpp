@@ -4,10 +4,10 @@
 #include <random>
 
 const float ShipController::MAX_SPEED = 4.11f;
-const float ShipController::MAX_ROT = 15.5f;
-const float ShipController::STD_FORCE = 0.75f;
+const float ShipController::MAX_ROT = 2.5f;
+const float ShipController::STD_FORCE = 10.0f;
 const float ShipController::STD_REVERSE = -1.0f;
-const float ShipController::STD_TORQUE = 10.75f;
+const float ShipController::STD_TORQUE = 0.75f;
 const float ShipController::CAMERA_FOLLOW_DISTANCE = 60;
 const float ShipController::CAMERA_FOLLOW_HEIGHT = 25;
 
@@ -2204,7 +2204,7 @@ void Graphics::applyShipForces( unsigned int dt )
                 && shipRegistry[ index ].torqueOn )
             {
                 shipRegistry[ index ].slowDown = false;
-                shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
+                shipRegistry[ index ].force = btVector3( ( windForce + ShipController::STD_FORCE ) * std::min( ( float ) ( dt / 250.0f ), 1.0f ), 0.0f, 0.0f );
             }
             else if( shipRegistry[ index ].torqueOn && velocity >= ShipController::MAX_SPEED / 1.25f )
             {
@@ -2213,7 +2213,7 @@ void Graphics::applyShipForces( unsigned int dt )
             else if( shipRegistry[ index ].torqueOn )
             {
                 shipRegistry[ index ].slowDown = false;
-                shipRegistry[ index ].force = btVector3( ShipController::MAX_SPEED, 0.0f, 0.0f );
+                shipRegistry[ index ].force = btVector3( ( windForce + ShipController::STD_FORCE ) * std::min( ( float ) ( dt / 250.0f ), 1.0f ), 0.0f, 0.0f );
             }
             else if( shipRegistry[ index ].forceOn )
             {
@@ -2226,7 +2226,7 @@ void Graphics::applyShipForces( unsigned int dt )
                 }
                 else if( !shipRegistry[ index ].shipReversed )
                 {
-                    shipRegistry[ index ].force = btVector3( windForce, 0.0f, 0.0f );
+                    shipRegistry[ index ].force = btVector3( ( windForce + ShipController::STD_FORCE ) * std::min( ( float ) ( dt / 250.0f ), 1.0f ), 0.0f, 0.0f );
                 }
             }
             else if( velocity >= 0.1f )
@@ -2316,13 +2316,15 @@ void Graphics::applyShipForces( unsigned int dt )
                     if( shipRegistry[ index ].torqueAcc < 0.0f )
                     {
                         shipRegistry[ index ].torque
-                            = btVector3( 0.0f, ShipController::MAX_ROT / 1.25f, 0.0f );
+                            = btVector3( 0.0f, ( windForce + ShipController::STD_TORQUE ) 
+                                         * windScalar * std::min( ( float ) ( dt / 250.0f ), 1.0f ), 0.0f );
 
                     }
                     else if( shipRegistry[ index ].torqueAcc > 0.0f )
                     {
                         shipRegistry[ index ].torque
-                            = btVector3( 0.0f, -1.0f * ( ShipController::MAX_ROT / 1.25f ), 0.0f );
+                            = btVector3( 0.0f, -1.0f * ( ( windForce + ShipController::STD_TORQUE )
+                                                         * windScalar * std::min( ( float )( dt / 250.0f ), 1.0f ) ), 0.0f );
                     }
                     else
                     {
@@ -2715,14 +2717,14 @@ void Graphics::toggleRight( int index )
 void Graphics::startSplitScreen( int width, int height )
 {
 
-    m_camera[0].changePerspective( width/2, height );
+    m_camera[0].changePerspective( width, height / 2 );
     if( !splitScreen )
     {
-        m_camera[1].Initialize(width/2, height);
+        m_camera[1].Initialize(width, height / 2 );
         
         splitScreen = true;
     }
-    wideView = false;
+    wideView = true;
 }
 
 void Graphics::toggleSplitScreenView()
