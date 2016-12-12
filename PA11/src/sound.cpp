@@ -11,7 +11,6 @@ Sound::Sound()
 	 soundLoaded = false;
 	 soundPlaying = false;
      alive = true;
-     soundInterrupt = false;
 
 	 threadManager = NULL;
 }
@@ -76,21 +75,14 @@ void Sound::playSound()
 
             SDL_PauseAudioDevice( dev, 0 );
 
-            while( soundRemaining > 0 && !soundInterrupt )
+            while( soundRemaining > 0 )
             {
-                SDL_Delay( 200 );
+                SDL_Delay( 1000 );
             }
 
             SDL_PauseAudioDevice( dev, 1 );
 
             soundPlaying = false;
-
-
-            if( soundInterrupt )
-            {
-                soundInterrupt = false;
-                soundPlaying = true;
-            }
         }
     }
  
@@ -100,7 +92,6 @@ void Sound::launchSound( )
 {   
     if( soundPlaying )
     {
-        soundInterrupt = true;
         return;
     }
 

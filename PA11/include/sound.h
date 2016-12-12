@@ -31,7 +31,6 @@ class Sound
 		SDL_AudioSpec soundSpec;
 		bool soundLoaded;
 		bool soundPlaying;
-        bool soundInterrupt;
 
         bool alive;
 
