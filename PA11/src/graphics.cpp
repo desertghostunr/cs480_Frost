@@ -326,6 +326,13 @@ bool Graphics::Initialize
 
     std::vector<TextureUnit> textReg;
 
+    btTriangleMesh* trimesh = NULL;
+    glm::vec3 tmpVec;
+
+    unsigned int indice;
+
+    btVector3 v1, v2, v3;
+
     oceanHeightMap = HeightMap( ( long ) time );
 
     oceanHeightMap.generateHeightMap( 1024, 1024 );
@@ -689,6 +696,48 @@ bool Graphics::Initialize
             objectRegistry[ index ].CompoundCollisionInfo( ).rigidBody = tmpRigidBody;
 
 
+        }
+        else if( objectRegistry[ index ].getName( ) == "terrain" )
+        {
+            trimesh = new btTriangleMesh( );
+
+            for( sIndex = 0; 
+                 sIndex < objectRegistry[ index ].getObjectModel( ).getNumberOfIBs( ); 
+                 sIndex++ )
+            {
+                for( pIndex = 0; 
+                     pIndex < objectRegistry[ index ].getObjectModel( ).getIndices( sIndex ).size( ); 
+                     pIndex += 3 )
+                {
+                    indice = objectRegistry[ index ].getObjectModel( ).getIndices( sIndex )[ pIndex ];
+                    tmpVec = objectRegistry[ index ].getObjectModel( ).getVertices( )[ indice ].vertex;
+                    v1 = btVector3( tmpVec.x, tmpVec.y, tmpVec.z );
+
+                    indice = objectRegistry[ index ].getObjectModel( ).getIndices( sIndex )[ pIndex + 1 ];
+                    tmpVec = objectRegistry[ index ].getObjectModel( ).getVertices( )[ indice ].vertex;
+                    v2 = btVector3( tmpVec.x, tmpVec.y, tmpVec.z );
+
+                    indice = objectRegistry[ index ].getObjectModel( ).getIndices( sIndex )[ pIndex + 2 ];
+                    tmpVec = objectRegistry[ index ].getObjectModel( ).getVertices( )[ indice ].vertex;
+                    v3 = btVector3( tmpVec.x, tmpVec.y, tmpVec.z );
+
+                    trimesh->addTriangle( v1, v2, v3 );
+                }
+
+                tmpMotionState = new btDefaultMotionState( btTransform( btQuaternion( 0, 0, 0, 1 ), btVector3( objectRegistry[ index ].getTransVec( ).x, objectRegistry[ index ].getTransVec( ).y, objectRegistry[ index ].getTransVec( ).z ) ) );
+
+                transform.setIdentity( );
+                transform.setOrigin( btVector3( 0, 0, 0 ) );
+
+                tmpShapePtr = new btBvhTriangleMeshShape( trimesh, true );
+                mass = 0;
+
+                inertia = btVector3( 0, 0, 0 );
+
+                tmpShapePtr->calculateLocalInertia( mass, inertia );
+
+                tmpRigidBody = new btRigidBody( mass, tmpMotionState, tmpShapePtr, inertia );
+            }
         }
 
 
@@ -2338,8 +2387,6 @@ void Graphics::applyShipForces( unsigned int dt )
 
                     shipRegistry[ index ].torqueAcc += shipRegistry[ index ].torque.getY( );
                     shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
-
-                    std::cout << "Slowing Rot" << std::endl;
                 }
                 else
                 {
@@ -2348,7 +2395,6 @@ void Graphics::applyShipForces( unsigned int dt )
                     shipRegistry[ index ].torque = btVector3( 0.0f, 0.0f, 0.0f );
                     shipBodyPtr->setAngularVelocity( btVector3( 0.0f, 0.0f, 0.0f ) );
                     ccb::shipReg[ index ].maxAngSpeed = ShipController::MAX_ROT;
-                    std::cout << "Stopped Rot" << std::endl;
                 }
 
             }
@@ -2372,7 +2418,6 @@ void Graphics::applyShipForces( unsigned int dt )
             }
             else if( shipRegistry[ index ].slowDown )
             {
-                std::cout << "Halted!" << std::endl;
                 shipBodyPtr->setLinearVelocity( btVector3( 0, 0, 0 ) );
                 shipRegistry[ index ].slowDown = false;
                 shipRegistry[ index ].shipReversed = false;
@@ -2382,8 +2427,6 @@ void Graphics::applyShipForces( unsigned int dt )
 
                 ccb::shipReg[ index ].maxSpeed = std::max( ShipController::MAX_SPEED * windScalar, 
                                                            ShipController::MAX_SPEED * 0.33333334f );
-
-                std::cout << "Wind Scalar: " << windScalar << std::endl;
 
                 relativeForce = ( windScalar * shipRegistry[ index ].force );
 

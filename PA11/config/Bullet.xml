@@ -355,6 +355,24 @@
     <yRotationAngle>0</yRotationAngle>
     <zRotationAngle>0</zRotationAngle>
   </PCObject>
+  <PObject path ="models/Terrain.obj">
+    <name>terrain</name>
+    <xScale>1</xScale>
+    <yScale>1</yScale>
+    <zScale>1</zScale>
+    <xBScale>1</xBScale>
+    <yBScale>1</yBScale>
+    <zBScale>1</zBScale>
+    <xPosition>0</xPosition>
+    <yPosition>10</yPosition>
+    <zPosition>0</zPosition>
+    <xRotationAxis>0</xRotationAxis>
+    <yRotationAxis>1</yRotationAxis>
+    <zRotationAxis>0</zRotationAxis>
+    <xRotationAngle>0</xRotationAngle>
+    <yRotationAngle>0</yRotationAngle>
+    <zRotationAngle>0</zRotationAngle>
+  </PObject>
   <Shader>
     <Vertex>shaders/fLightingVertexShader.glsl</Vertex>
     <Fragment>shaders/fLightingFragmentShader.glsl</Fragment>

@@ -323,9 +323,9 @@ vec4 getSpotLight( vec3 incoming, vec3 halfway, vec3 normal, int index )
 vec3 getWaveHeight( vec2 hmPos )
 {
     vec3 retWaveHeight;    
-    retWaveHeight.y = getOctave( hmPos, 0.923, 6 );
-    retWaveHeight.x = getOctave( hmPos, 6.9997, 16 );
-    retWaveHeight.z = getOctave( hmPos, 10.75, 5 );
+    retWaveHeight.y = getOctave( hmPos, 1.245, 5 );
+    retWaveHeight.x = getOctave( hmPos, 6.9997, 12 );
+    retWaveHeight.z = getOctave( hmPos, 9.75, 3 );
 
     return retWaveHeight;
 }
