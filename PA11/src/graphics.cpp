@@ -941,6 +941,7 @@ void Graphics::Update( unsigned int dt )
             std::cout << "Player " << index + 1 << " loses!" << std::endl;
             playingStateFlag = false;
             activeIdleState = true;
+            gameOverStep = true;
 
             objectRegistry[ shipRegistry[ index ].index ].setAngle( glm::radians( 97.0f ) );
         }
@@ -1926,7 +1927,7 @@ void Graphics::togglePausedState( )
 
 void Graphics::startGame( )
 {
-    if( !playingStateFlag )
+    if( !playingStateFlag && !gameOverStep )
     {
         if( activeIdleState )
         {
