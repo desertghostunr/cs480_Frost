@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
-  <Window width ="1200" height ="760">Broadside</Window>
+  <Window width ="1600" height ="900">Broadside</Window>
   <Wind_Direction>
     <xScale>10</xScale>
     <xPosition>0.1</xPosition>

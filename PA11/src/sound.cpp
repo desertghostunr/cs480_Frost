@@ -115,7 +115,7 @@ void myCallback( void *userData, Uint8 *stream, int length)
 
         localAudioCbLeft++;
 
-        if( localAudioCbLeft == soundRemaining )
+        if( localAudioCbLeft >= soundRemaining )
         {
             localAudioCbLeft = 0;
             soundRemaining = 0;
