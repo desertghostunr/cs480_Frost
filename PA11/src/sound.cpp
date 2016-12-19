@@ -77,7 +77,7 @@ void Sound::playSound()
 
             while( soundRemaining > 0 )
             {
-                SDL_Delay( 1000 );
+                SDL_Delay( 50 );
             }
 
             SDL_PauseAudioDevice( dev, 1 );
