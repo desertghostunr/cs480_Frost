@@ -84,7 +84,7 @@ void main(void)
 	else if( typeOfObject == WAVE_TYPE )
 	{
 		//ProcessWave( );
-		ProcessLitObject( );		
+		//ProcessLitObject( );		
 		ProcessOcean( );
 	}
 	else
